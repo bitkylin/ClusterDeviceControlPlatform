@@ -2,11 +2,29 @@ package cc.bitky.streamadapter.server.netty.channelhandler;
 
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
-import io.netty.channel.SimpleChannelInboundHandler;
+import io.netty.handler.codec.MessageToMessageDecoder;
+import java.nio.charset.Charset;
+import java.util.List;
 
+public class MessageIdentifierChannelInboundHandler extends MessageToMessageDecoder<ByteBuf> {
 
-public class MessageIdentifierChannelInboundHandler extends SimpleChannelInboundHandler<ByteBuf> {
-  @Override protected void channelRead0(ChannelHandlerContext ctx, ByteBuf msg) throws Exception {
+  private final Charset charset;
 
+  public MessageIdentifierChannelInboundHandler() {
+    this(Charset.defaultCharset());
+  }
+
+  public MessageIdentifierChannelInboundHandler(Charset charset) {
+    if (charset == null) {
+      throw new NullPointerException("charset");
+    }
+    this.charset = charset;
+  }
+
+  @Override
+  protected void decode(ChannelHandlerContext ctx, ByteBuf msg, List<Object> out) throws Exception {
+    out.add(msg.toString(charset));
   }
 }
+
+

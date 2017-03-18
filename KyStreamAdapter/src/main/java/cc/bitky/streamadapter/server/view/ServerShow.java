@@ -31,7 +31,8 @@ public class ServerShow {
       serverView.setLaunchSuccessfulListener(isSuccess -> {
         if (isSuccess) {
           System.out.println("端口绑定成功");
-          newThreadKeyIn();
+         // newThreadKeyIn();
+          newThreadToMain();
         } else {
           System.out.println("端口绑定出错");
           running = false;
@@ -49,7 +50,7 @@ public class ServerShow {
   private void keyIn(Scanner scanner) {
     while (true) {
       welcomeTo();
-      String inputMsg = scanner.nextLine();
+      String inputMsg = scanner.next();
       switch (inputMsg) {
 
         case "return":

@@ -28,11 +28,11 @@
   <component name="ExecutionTargetManager" SELECTED_TARGET="default_target" />
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="DemoMain.java" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/src/main/java/cc/bitky/streamadapter/DemoMain.java">
+      <file leaf-file-name="Main.java" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/src/main/java/cc/bitky/streamadapter/Main.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="436">
-              <caret line="34" column="30" lean-forward="false" selection-start-line="34" selection-start-column="30" selection-end-line="34" selection-end-column="30" />
+            <state relative-caret-position="322">
+              <caret line="18" column="36" lean-forward="false" selection-start-line="18" selection-start-column="36" selection-end-line="18" selection-end-column="36" />
               <folding />
             </state>
           </provider>
@@ -44,6 +44,7 @@
     <option name="RECENT_TEMPLATES">
       <list>
         <option value="Enum" />
+        <option value="Interface" />
         <option value="Class" />
       </list>
     </option>
@@ -73,18 +74,35 @@
         <option value="$PROJECT_DIR$/src/main/java/cc/bitky/streamadapter/util/LaunchSuccessfulListener.java" />
         <option value="$PROJECT_DIR$/src/main/java/cc/bitky/streamadapter/util/FinishSuccessfulListener.java" />
         <option value="$PROJECT_DIR$/src/main/java/cc/bitky/streamadapter/server/netty/ServerContract.java" />
-        <option value="$PROJECT_DIR$/src/main/java/cc/bitky/streamadapter/server/netty/KyServer.java" />
-        <option value="$PROJECT_DIR$/src/main/java/cc/bitky/streamadapter/server/view/ServerShow.java" />
-        <option value="$PROJECT_DIR$/src/main/java/cc/bitky/streamadapter/Main.java" />
         <option value="$PROJECT_DIR$/src/main/java/cc/bitky/streamadapter/util/listener/LaunchSuccessfulListener.java" />
         <option value="$PROJECT_DIR$/src/main/java/cc/bitky/streamadapter/util/KyLog.java" />
         <option value="$PROJECT_DIR$/src/main/java/cc/bitky/streamadapter/util/enumky/FrameReceivedEnum.java" />
         <option value="$PROJECT_DIR$/src/main/java/cc/bitky/streamadapter/util/exception/FrameLoadException.java" />
         <option value="$PROJECT_DIR$/src/main/java/cc/bitky/streamadapter/server/netty/channelhandler/KyFrameChannelInboundHandler.java" />
-        <option value="$PROJECT_DIR$/src/main/java/cc/bitky/streamadapter/server/netty/channelhandler/MessageIdentifierChannelInboundHandler.java" />
         <option value="$PROJECT_DIR$/src/main/java/cc/bitky/streamadapter/server/netty/channelhandler/FrameIdentifierChannelInboundHandler.java" />
         <option value="$PROJECT_DIR$/src/main/java/cc/bitky/streamadapter/server/netty/channelhandler/ServerChannelInitializer.java" />
+        <option value="$PROJECT_DIR$/src/main/java/cc/bitky/streamadapter/util/enumky/ChargeStatusEnum.java" />
+        <option value="$PROJECT_DIR$/src/main/java/cc/bitky/streamadapter/util/enumky/MsgTypeEnum.java" />
+        <option value="$PROJECT_DIR$/src/main/java/cc/bitky/streamadapter/util/bean/message/ChangeStatus.java" />
+        <option value="$PROJECT_DIR$/src/main/java/cc/bitky/streamadapter/server/netty/channelhandler/MessageIdentifierChannelInboundHandler.java" />
+        <option value="$PROJECT_DIR$/src/main/java/cc/bitky/streamadapter/util/enumky/MsgType.java" />
+        <option value="$PROJECT_DIR$/src/main/java/cc/bitky/streamadapter/util/bean/message/MessageBuilder.java" />
+        <option value="$PROJECT_DIR$/src/main/java/cc/bitky/streamadapter/util/bean/Message.java" />
+        <option value="$PROJECT_DIR$/src/main/java/cc/bitky/streamadapter/server/netty/KyServer.java" />
+        <option value="$PROJECT_DIR$/src/main/java/cc/bitky/streamadapter/client/test/ClientContract.java" />
+        <option value="$PROJECT_DIR$/src/main/java/cc/bitky/streamadapter/util/bean/message/HeartBeat.java" />
+        <option value="$PROJECT_DIR$/src/main/java/cc/bitky/streamadapter/util/bean/database/MineLampShelf.java" />
+        <option value="$PROJECT_DIR$/src/main/java/cc/bitky/streamadapter/util/bean/RamDb.java" />
+        <option value="$PROJECT_DIR$/src/main/java/cc/bitky/streamadapter/util/bean/database/DoorInfo.java" />
         <option value="$PROJECT_DIR$/src/main/java/cc/bitky/streamadapter/DemoMain.java" />
+        <option value="$PROJECT_DIR$/src/main/java/cc/bitky/streamadapter/util/bean/message/IMessage.java" />
+        <option value="$PROJECT_DIR$/src/main/java/cc/bitky/streamadapter/util/bean/message/BaseMessage.java" />
+        <option value="$PROJECT_DIR$/src/main/java/cc/bitky/streamadapter/util/bean/message/ChargeStatus.java" />
+        <option value="$PROJECT_DIR$/src/main/java/cc/bitky/streamadapter/server/dynamickeeper/Maintainer.java" />
+        <option value="$PROJECT_DIR$/src/main/java/cc/bitky/streamadapter/util/bean/database/MineLampShelfBuilder.java" />
+        <option value="$PROJECT_DIR$/src/main/java/cc/bitky/streamadapter/client/test/ClientTest.java" />
+        <option value="$PROJECT_DIR$/src/main/java/cc/bitky/streamadapter/server/view/ServerShow.java" />
+        <option value="$PROJECT_DIR$/src/main/java/cc/bitky/streamadapter/Main.java" />
       </list>
     </option>
   </component>
@@ -137,7 +155,6 @@
     </navigator>
     <panes>
       <pane id="Scratches" />
-      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <PATH>
@@ -234,6 +251,146 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
+              <option name="myItemId" value="util" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="KyStreamAdapter" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="KyStreamAdapter" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="main" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="java" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="streamadapter" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="util" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="bean" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="KyStreamAdapter" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="KyStreamAdapter" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="main" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="java" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="streamadapter" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="util" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="bean" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="message" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="KyStreamAdapter" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="KyStreamAdapter" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="main" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="java" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="streamadapter" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="util" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="bean" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="database" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="KyStreamAdapter" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="KyStreamAdapter" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="main" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="java" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="streamadapter" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
               <option name="myItemId" value="server" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
@@ -276,15 +433,110 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="KyStreamAdapter" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="KyStreamAdapter" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="main" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="java" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="streamadapter" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="server" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="dynamickeeper" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="KyStreamAdapter" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="KyStreamAdapter" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="main" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="java" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="streamadapter" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="test" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="KyStreamAdapter" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="KyStreamAdapter" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="main" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="java" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="streamadapter" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="base" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
         </subPane>
       </pane>
       <pane id="PackagesPane" />
+      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="aspect.path.notification.shown" value="true" />
-    <property name="settings.editor.selected.configurable" value="reference.projectsettings.compiler.javacompiler" />
+    <property name="settings.editor.selected.configurable" value="project.propVCSSupport.Mappings" />
     <property name="project.structure.last.edited" value="Modules" />
     <property name="project.structure.proportion" value="0.18120301" />
     <property name="project.structure.side.proportion" value="0.23982301" />
@@ -757,7 +1009,7 @@
       <option name="ENABLE_SWING_INSPECTOR" value="false" />
       <option name="ENV_VARIABLES" />
       <option name="PASS_PARENT_ENVS" value="true" />
-      <module name="MvnAdapter" />
+      <module name="KyStreamAdapter" />
       <envs />
       <method />
     </configuration>
@@ -787,12 +1039,14 @@
       <workItem from="1489670858337" duration="3278000" />
       <workItem from="1489674293018" duration="137000" />
       <workItem from="1489676093728" duration="531000" />
-      <workItem from="1489676652574" duration="95000" />
+      <workItem from="1489676652574" duration="2593000" />
+      <workItem from="1489716396147" duration="1290000" />
+      <workItem from="1489732593462" duration="23173000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="60588000" />
+    <option name="totallyTimeSpent" value="87549000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -810,6 +1064,7 @@
       <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32902467" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
       <window_info id="Nl-Palette" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32902467" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Palette&#9;" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Image Layers" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Capture Analysis" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
@@ -821,8 +1076,9 @@
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
       <window_info id="Capture Tool" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.2738478" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.27652735" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.329582" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.24973205" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.24973205" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="UI Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
@@ -833,10 +1089,8 @@
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
-      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32902467" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Coverage" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.26312968" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
-      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
     </layout>
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -847,10 +1101,54 @@
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/cc/bitky/streamadapter/util/enumky/ChargeStatusEnum.java</url>
+          <line>6</line>
+          <properties />
+          <option name="timeStamp" value="26" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/cc/bitky/streamadapter/server/dynamickeeper/Maintainer.java</url>
+          <line>19</line>
+          <properties />
+          <option name="timeStamp" value="27" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/cc/bitky/streamadapter/server/dynamickeeper/Maintainer.java</url>
+          <line>58</line>
+          <properties />
+          <option name="timeStamp" value="28" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/cc/bitky/streamadapter/server/dynamickeeper/Maintainer.java</url>
+          <line>48</line>
+          <properties />
+          <option name="timeStamp" value="29" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/cc/bitky/streamadapter/client/test/ClientTest.java</url>
+          <line>59</line>
+          <properties />
+          <option name="timeStamp" value="31" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/cc/bitky/streamadapter/client/test/ClientTest.java</url>
+          <line>26</line>
+          <properties />
+          <option name="timeStamp" value="33" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/cc/bitky/streamadapter/client/test/ClientTest.java</url>
+          <line>28</line>
+          <properties />
+          <option name="timeStamp" value="34" />
+        </line-breakpoint>
+      </breakpoints>
       <breakpoints-dialog>
         <breakpoints-dialog />
       </breakpoints-dialog>
-      <option name="time" value="19" />
+      <option name="time" value="35" />
     </breakpoint-manager>
     <watches-manager />
   </component>
@@ -859,144 +1157,6 @@
     <option name="FILTER_TARGETS" value="false" />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/src/main/java/cc/bitky/streamadapter/server/netty/KyServer.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="736">
-          <caret line="32" column="28" lean-forward="true" selection-start-line="32" selection-start-column="28" selection-end-line="32" selection-end-column="28" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/cc/bitky/streamadapter/server/netty/channelhandler/ServerChannelInitializer.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="230">
-          <caret line="16" column="62" lean-forward="false" selection-start-line="16" selection-start-column="62" selection-end-line="16" selection-end-column="62" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/cc/bitky/streamadapter/server/netty/channelhandler/MessageIdentifierChannelInboundHandler.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="115">
-          <caret line="5" column="74" lean-forward="false" selection-start-line="5" selection-start-column="74" selection-end-line="5" selection-end-column="74" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/cc/bitky/streamadapter/server/netty/channelhandler/FrameIdentifierChannelInboundHandler.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="713">
-          <caret line="31" column="88" lean-forward="true" selection-start-line="31" selection-start-column="88" selection-end-line="31" selection-end-column="88" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/cc/bitky/streamadapter/Main.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="644">
-          <caret line="28" column="11" lean-forward="true" selection-start-line="28" selection-start-column="11" selection-end-line="28" selection-end-column="11" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/cc/bitky/streamadapter/server/view/ServerShow.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1794">
-          <caret line="78" column="1" lean-forward="true" selection-start-line="78" selection-start-column="1" selection-end-line="78" selection-end-column="1" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/pom.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="253">
-          <caret line="11" column="10" lean-forward="true" selection-start-line="11" selection-start-column="10" selection-end-line="11" selection-end-column="10" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/cc/bitky/streamadapter/base/BasePresenter.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/cc/bitky/streamadapter/base/BaseView.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="69">
-          <caret line="3" column="7" lean-forward="false" selection-start-line="3" selection-start-column="7" selection-end-line="3" selection-end-column="7" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="uml://MAVEN/cc.bitky:MvnAdapter:1.0-SNAPSHOT">
-      <provider selected="true" editor-type-id="UmlEditorProvider">
-        <state>
-          <ID>MAVEN</ID>
-          <OriginalElement>cc.bitky:MvnAdapter:1.0-SNAPSHOT</OriginalElement>
-          <nodes>
-            <node x="" y="">cc.bitky:MvnAdapter:1.0-SNAPSHOT</node>
-          </nodes>
-          <notes />
-          <edges />
-          <settings layout="Hierarchic Group" zoom="1.0" x="67.0" y="18.0" />
-          <SelectedNodes />
-          <Categories />
-          <SCOPE>All</SCOPE>
-          <VISIBILITY>All</VISIBILITY>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/MvnAdapter.iml" />
-    <entry file="file://$PROJECT_DIR$/pom.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="610">
-          <caret line="32" column="17" lean-forward="true" selection-start-line="32" selection-start-column="17" selection-end-line="32" selection-end-column="17" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="jar://$MAVEN_REPOSITORY$/io/netty/netty-all/4.1.8.Final/netty-all-4.1.8.Final-sources.jar!/io/netty/channel/ChannelHandlerContext.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="283">
-          <caret line="174" column="26" lean-forward="false" selection-start-line="174" selection-start-column="26" selection-end-line="174" selection-end-column="26" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="jar://C:/Program Files/Java/jdk1.8.0_102/src.zip!/java/lang/Cloneable.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="666">
-          <caret line="52" column="28" lean-forward="true" selection-start-line="52" selection-start-column="28" selection-end-line="52" selection-end-column="28" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="jar://C:/Program Files/Java/jdk1.8.0_102/src.zip!/java/lang/Object.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="283">
-          <caret line="211" column="28" lean-forward="false" selection-start-line="211" selection-start-column="28" selection-end-line="211" selection-end-column="28" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/cc/bitky/streamadapter/util/listener/FinishSuccessfulListener.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="69">
-          <caret line="3" column="17" lean-forward="false" selection-start-line="3" selection-start-column="17" selection-end-line="3" selection-end-column="17" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/cc/bitky/streamadapter/server/view/ServerShow.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="897">
-          <caret line="41" column="20" lean-forward="false" selection-start-line="41" selection-start-column="20" selection-end-line="41" selection-end-column="20" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="jar://$MAVEN_REPOSITORY$/io/netty/netty-all/4.1.8.Final/netty-all-4.1.8.Final-sources.jar!/io/netty/channel/ChannelHandlerAdapter.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="207">
-          <caret line="25" column="22" lean-forward="false" selection-start-line="25" selection-start-column="22" selection-end-line="25" selection-end-column="22" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="jar://$MAVEN_REPOSITORY$/io/netty/netty-all/4.1.8.Final/netty-all-4.1.8.Final-sources.jar!/io/netty/buffer/ByteBufAllocator.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="161">
-          <caret line="21" column="17" lean-forward="false" selection-start-line="21" selection-start-column="17" selection-end-line="21" selection-end-column="17" />
-        </state>
-      </provider>
-    </entry>
     <entry file="jar://$MAVEN_REPOSITORY$/io/netty/netty-all/4.1.8.Final/netty-all-4.1.8.Final-sources.jar!/io/netty/util/internal/logging/Slf4JLoggerFactory.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="436">
@@ -1032,13 +1192,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="jar://$MAVEN_REPOSITORY$/io/netty/netty-all/4.1.8.Final/netty-all-4.1.8.Final-sources.jar!/io/netty/buffer/ByteBuf.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="168">
-          <caret line="579" column="26" lean-forward="false" selection-start-line="579" selection-start-column="26" selection-end-line="579" selection-end-column="26" />
-        </state>
-      </provider>
-    </entry>
     <entry file="jar://$MAVEN_REPOSITORY$/io/netty/netty-all/4.1.8.Final/netty-all-4.1.8.Final-sources.jar!/io/netty/util/internal/StringUtil.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="212">
@@ -1053,31 +1206,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/cc/bitky/streamadapter/util/enumky/FrameReceivedEnum.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="184">
-          <caret line="8" column="9" lean-forward="false" selection-start-line="8" selection-start-column="9" selection-end-line="8" selection-end-column="9" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/cc/bitky/streamadapter/util/exception/FrameLoadException.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="230">
           <caret line="10" column="0" lean-forward="true" selection-start-line="10" selection-start-column="0" selection-end-line="10" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="jar://$MAVEN_REPOSITORY$/io/netty/netty-all/4.1.8.Final/netty-all-4.1.8.Final-sources.jar!/io/netty/buffer/ByteBufUtil.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="283">
-          <caret line="902" column="0" lean-forward="false" selection-start-line="902" selection-start-column="0" selection-end-line="902" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/cc/bitky/streamadapter/util/KyLog.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="184">
-          <caret line="8" column="13" lean-forward="false" selection-start-line="8" selection-start-column="13" selection-end-line="8" selection-end-column="13" />
         </state>
       </provider>
     </entry>
@@ -1088,31 +1220,47 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/cc/bitky/streamadapter/server/netty/KyServerPresenter.java">
+    <entry file="file://$PROJECT_DIR$/text/helloworld/src/main/java/com/mycompany/helloworld/App.java" />
+    <entry file="file://$PROJECT_DIR$/text/helloworld/src/test/java/com/mycompany/helloworld/AppTest.java" />
+    <entry file="jar://C:/Program Files/Java/jdk1.8.0_102/src.zip!/java/nio/charset/Charset.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="92">
-          <caret line="5" column="13" lean-forward="false" selection-start-line="5" selection-start-column="13" selection-end-line="5" selection-end-column="13" />
+        <state relative-caret-position="283">
+          <caret line="603" column="26" lean-forward="false" selection-start-line="603" selection-start-column="26" selection-end-line="603" selection-end-column="26" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/cc/bitky/streamadapter/server/netty/ServerContract.java">
+    <entry file="jar://$MAVEN_REPOSITORY$/io/netty/netty-all/4.1.8.Final/netty-all-4.1.8.Final-sources.jar!/io/netty/buffer/ByteBuf.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="230">
-          <caret line="13" column="9" lean-forward="false" selection-start-line="13" selection-start-column="9" selection-end-line="13" selection-end-column="9" />
+        <state relative-caret-position="421">
+          <caret line="2301" column="27" lean-forward="false" selection-start-line="2301" selection-start-column="27" selection-end-line="2301" selection-end-column="27" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/cc/bitky/streamadapter/Main.java">
+    <entry file="file://$PROJECT_DIR$/src/main/java/cc/bitky/streamadapter/util/KyLog.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="575">
-          <caret line="27" column="33" lean-forward="true" selection-start-line="27" selection-start-column="33" selection-end-line="27" selection-end-column="33" />
+        <state relative-caret-position="184">
+          <caret line="9" column="33" lean-forward="true" selection-start-line="9" selection-start-column="33" selection-end-line="9" selection-end-column="33" />
         </state>
       </provider>
     </entry>
     <entry file="jar://$MAVEN_REPOSITORY$/io/netty/netty-all/4.1.8.Final/netty-all-4.1.8.Final-sources.jar!/io/netty/buffer/AbstractByteBuf.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="283">
-          <caret line="164" column="0" lean-forward="false" selection-start-line="164" selection-start-column="0" selection-end-line="164" selection-end-column="0" />
+        <state relative-caret-position="387">
+          <caret line="1212" column="0" lean-forward="false" selection-start-line="1212" selection-start-column="0" selection-end-line="1212" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://C:/Program Files/Java/jdk1.8.0_102/src.zip!/java/nio/charset/CharsetDecoder.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-614">
+          <caret line="565" column="29" lean-forward="false" selection-start-line="565" selection-start-column="29" selection-end-line="565" selection-end-column="29" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://$MAVEN_REPOSITORY$/io/netty/netty-all/4.1.8.Final/netty-all-4.1.8.Final-sources.jar!/io/netty/buffer/ByteBufUtil.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="318">
+          <caret line="632" column="40" lean-forward="false" selection-start-line="632" selection-start-column="40" selection-end-line="632" selection-end-column="40" />
         </state>
       </provider>
     </entry>
@@ -1120,6 +1268,25 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="490">
           <caret line="114" column="0" lean-forward="false" selection-start-line="114" selection-start-column="0" selection-end-line="114" selection-end-column="0" />
+          <folding>
+            <marker date="1485788132000" expanded="false" signature="0:634" ph="/.../" />
+            <marker date="1485788132000" expanded="false" signature="669:754" ph="..." />
+            <marker date="1485788132000" expanded="true" signature="756:1868" ph="/**...*/" />
+            <marker date="1485788132000" expanded="true" signature="2054:2163" ph="/**...*/" />
+            <marker date="1485788132000" expanded="false" signature="2207:2218" ph=" { " />
+            <marker date="1485788132000" expanded="false" signature="2229:2235" ph=" }" />
+            <marker date="1485788132000" expanded="true" signature="2241:2557" ph="/**...*/" />
+            <marker date="1485788132000" expanded="true" signature="2621:2759" ph="{...}" />
+            <marker date="1485788132000" expanded="true" signature="2765:2877" ph="/**...*/" />
+            <marker date="1485788132000" expanded="true" signature="2959:3006" ph="{...}" />
+            <marker date="1485788132000" expanded="true" signature="3012:3326" ph="/**...*/" />
+            <marker date="1485788132000" expanded="true" signature="3429:3540" ph="{...}" />
+            <marker date="1485788132000" expanded="true" signature="3546:3741" ph="/**...*/" />
+            <marker date="1485788132000" expanded="true" signature="3811:3853" ph="{...}" />
+            <marker date="1485788132000" expanded="true" signature="3953:4418" ph="{...}" />
+            <marker date="1485788132000" expanded="false" signature="4062:4092" ph="/unchecked/" />
+            <marker date="1485788132000" expanded="true" signature="4424:4904" ph="/**...*/" />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -1127,6 +1294,56 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="352">
           <caret line="233" column="0" lean-forward="false" selection-start-line="233" selection-start-column="0" selection-end-line="233" selection-end-column="0" />
+          <folding>
+            <marker date="1485788132000" expanded="false" signature="0:634" ph="/.../" />
+            <marker date="1485788132000" expanded="false" signature="677:1333" ph="..." />
+            <marker date="1485788132000" expanded="true" signature="1335:1480" ph="/**...*/" />
+            <marker date="1485788132000" expanded="true" signature="1481:1594" ph="@{...}" />
+            <marker date="1485788132000" expanded="true" signature="1857:1996" ph="/**...*/" />
+            <marker date="1485788132000" expanded="false" signature="2024:2035" ph=" { " />
+            <marker date="1485788132000" expanded="false" signature="2055:2061" ph=" }" />
+            <marker date="1485788132000" expanded="true" signature="2067:2225" ph="/**...*/" />
+            <marker date="1485788132000" expanded="true" signature="2268:2509" ph="{...}" />
+            <marker date="1485788132000" expanded="true" signature="2515:2690" ph="/**...*/" />
+            <marker date="1485788132000" expanded="false" signature="2732:2743" ph=" { " />
+            <marker date="1485788132000" expanded="false" signature="2770:2776" ph=" }" />
+            <marker date="1485788132000" expanded="true" signature="2782:2958" ph="/**...*/" />
+            <marker date="1485788132000" expanded="true" signature="3017:3345" ph="{...}" />
+            <marker date="1485788132000" expanded="true" signature="3351:3522" ph="/**...*/" />
+            <marker date="1485788132000" expanded="false" signature="3561:3572" ph=" { " />
+            <marker date="1485788132000" expanded="false" signature="3598:3604" ph=" }" />
+            <marker date="1485788132000" expanded="true" signature="3610:3787" ph="/**...*/" />
+            <marker date="1485788132000" expanded="true" signature="3843:4168" ph="{...}" />
+            <marker date="1485788132000" expanded="true" signature="4174:4251" ph="/**...*/" />
+            <marker date="1485788132000" expanded="false" signature="4279:4290" ph=" { " />
+            <marker date="1485788132000" expanded="false" signature="4303:4309" ph=" }" />
+            <marker date="1485788132000" expanded="true" signature="4403:4570" ph="{...}" />
+            <marker date="1485788132000" expanded="true" signature="4666:4837" ph="{...}" />
+            <marker date="1485788132000" expanded="true" signature="4927:5086" ph="{...}" />
+            <marker date="1485788132000" expanded="true" signature="5178:5341" ph="{...}" />
+            <marker date="1485788132000" expanded="true" signature="5450:5633" ph="{...}" />
+            <marker date="1485788132000" expanded="true" signature="5740:5916" ph="{...}" />
+            <marker date="1485788132000" expanded="true" signature="6049:6228" ph="{...}" />
+            <marker date="1485788132000" expanded="true" signature="6418:6633" ph="{...}" />
+            <marker date="1485788132000" expanded="true" signature="6744:6907" ph="{...}" />
+            <marker date="1485788132000" expanded="true" signature="7013:7166" ph="{...}" />
+            <marker date="1485788132000" expanded="true" signature="7277:7440" ph="{...}" />
+            <marker date="1485788132000" expanded="true" signature="7540:7707" ph="{...}" />
+            <marker date="1485788132000" expanded="true" signature="7825:7988" ph="{...}" />
+            <marker date="1485788132000" expanded="true" signature="8070:8216" ph="{...}" />
+            <marker date="1485788132000" expanded="true" signature="8222:8345" ph="/**...*/" />
+            <marker date="1485788132000" expanded="true" signature="8419:8657" ph="{...}" />
+            <marker date="1485788132000" expanded="true" signature="8663:8836" ph="/**...*/" />
+            <marker date="1485788132000" expanded="true" signature="8922:9241" ph="{...}" />
+            <marker date="1485788132000" expanded="true" signature="9247:9650" ph="/**...*/" />
+            <marker date="1485788132000" expanded="true" signature="9759:10304" ph="{...}" />
+            <marker date="1485788132000" expanded="true" signature="10310:10422" ph="/**...*/" />
+            <marker date="1485788132000" expanded="true" signature="10521:11266" ph="{...}" />
+            <marker date="1485788132000" expanded="true" signature="11272:11390" ph="/**...*/" />
+            <marker date="1485788132000" expanded="true" signature="11501:12472" ph="{...}" />
+            <marker date="1485788132000" expanded="true" signature="12478:12592" ph="/**...*/" />
+            <marker date="1485788132000" expanded="true" signature="12689:13003" ph="{...}" />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -1134,6 +1351,170 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="364">
           <caret line="357" column="0" lean-forward="false" selection-start-line="357" selection-start-column="0" selection-end-line="357" selection-end-column="0" />
+          <folding>
+            <marker date="1485788132000" expanded="false" signature="0:634" ph="/.../" />
+            <marker date="1485788132000" expanded="false" signature="669:1466" ph="..." />
+            <marker date="1485788132000" expanded="true" signature="2037:2137" ph="/**...*/" />
+            <marker date="1485788132000" expanded="true" signature="2188:2277" ph="/**...*/" />
+            <marker date="1485788132000" expanded="true" signature="2329:2420" ph="/**...*/" />
+            <marker date="1485788132000" expanded="true" signature="2475:2644" ph="/**...*/" />
+            <marker date="1485788132000" expanded="true" signature="3685:4080" ph="{...}" />
+            <marker date="1485788132000" expanded="false" signature="4124:4135" ph=" { " />
+            <marker date="1485788132000" expanded="false" signature="4161:4167" ph=" }" />
+            <marker date="1485788132000" expanded="false" signature="4220:4231" ph=" { " />
+            <marker date="1485788132000" expanded="false" signature="4247:4253" ph=" }" />
+            <marker date="1485788132000" expanded="false" signature="4304:4315" ph=" { " />
+            <marker date="1485788132000" expanded="false" signature="4356:4362" ph=" }" />
+            <marker date="1485788132000" expanded="true" signature="4414:4551" ph="{...}" />
+            <marker date="1485788132000" expanded="false" signature="4591:4602" ph=" { " />
+            <marker date="1485788132000" expanded="false" signature="4614:4620" ph=" }" />
+            <marker date="1485788132000" expanded="true" signature="4693:4776" ph="{...}" />
+            <marker date="1485788132000" expanded="true" signature="4860:5220" ph="{...}" />
+            <marker date="1485788132000" expanded="false" signature="5040:5139" ph="run() → { " />
+            <marker date="1485788132000" expanded="false" signature="5170:5202" ph=" }" />
+            <marker date="1485788132000" expanded="true" signature="5265:5555" ph="{...}" />
+            <marker date="1485788132000" expanded="true" signature="5630:5715" ph="{...}" />
+            <marker date="1485788132000" expanded="true" signature="5801:6165" ph="{...}" />
+            <marker date="1485788132000" expanded="false" signature="5983:6082" ph="run() → { " />
+            <marker date="1485788132000" expanded="false" signature="6115:6147" ph=" }" />
+            <marker date="1485788132000" expanded="true" signature="6212:6506" ph="{...}" />
+            <marker date="1485788132000" expanded="true" signature="6575:6711" ph="{...}" />
+            <marker date="1485788132000" expanded="true" signature="6791:7143" ph="{...}" />
+            <marker date="1485788132000" expanded="false" signature="6967:7066" ph="run() → { " />
+            <marker date="1485788132000" expanded="false" signature="7093:7125" ph=" }" />
+            <marker date="1485788132000" expanded="true" signature="7184:7466" ph="{...}" />
+            <marker date="1485788132000" expanded="true" signature="7537:7618" ph="{...}" />
+            <marker date="1485788132000" expanded="true" signature="7700:8056" ph="{...}" />
+            <marker date="1485788132000" expanded="false" signature="7878:7977" ph="run() → { " />
+            <marker date="1485788132000" expanded="false" signature="8006:8038" ph=" }" />
+            <marker date="1485788132000" expanded="true" signature="8099:8385" ph="{...}" />
+            <marker date="1485788132000" expanded="true" signature="8477:8549" ph="{...}" />
+            <marker date="1485788132000" expanded="true" signature="8654:9411" ph="{...}" />
+            <marker date="1485788132000" expanded="false" signature="8908:8994" ph="run() → {" />
+            <marker date="1485788132000" expanded="false" signature="9070:9093" ph="}" />
+            <marker date="1485788132000" expanded="true" signature="9475:10417" ph="{...}" />
+            <marker date="1485788132000" expanded="true" signature="10509:10600" ph="{...}" />
+            <marker date="1485788132000" expanded="true" signature="10705:11126" ph="{...}" />
+            <marker date="1485788132000" expanded="false" signature="10940:11018" ph="run() → {" />
+            <marker date="1485788132000" expanded="false" signature="10940:11039" ph="() → { " />
+            <marker date="1485788132000" expanded="false" signature="11076:11108" ph=" }" />
+            <marker date="1485788132000" expanded="false" signature="11089:11108" ph="}" />
+            <marker date="1485788132000" expanded="true" signature="11184:11488" ph="{...}" />
+            <marker date="1485788132000" expanded="true" signature="11571:11653" ph="{...}" />
+            <marker date="1485788132000" expanded="true" signature="11743:12182" ph="{...}" />
+            <marker date="1485788132000" expanded="false" signature="12007:12106" ph="run() → { " />
+            <marker date="1485788132000" expanded="false" signature="12132:12164" ph=" }" />
+            <marker date="1485788132000" expanded="true" signature="12231:12517" ph="{...}" />
+            <marker date="1485788132000" expanded="true" signature="12592:12677" ph="{...}" />
+            <marker date="1485788132000" expanded="true" signature="12763:13323" ph="{...}" />
+            <marker date="1485788132000" expanded="false" signature="13072:13158" ph="run() → {" />
+            <marker date="1485788132000" expanded="false" signature="13233:13256" ph="}" />
+            <marker date="1485788132000" expanded="true" signature="13370:13664" ph="{...}" />
+            <marker date="1485788132000" expanded="true" signature="13745:13836" ph="{...}" />
+            <marker date="1485788132000" expanded="true" signature="13928:14516" ph="{...}" />
+            <marker date="1485788132000" expanded="false" signature="14259:14345" ph="run() → {" />
+            <marker date="1485788132000" expanded="false" signature="14426:14449" ph="}" />
+            <marker date="1485788132000" expanded="true" signature="14569:14875" ph="{...}" />
+            <marker date="1485788132000" expanded="true" signature="14949:15005" ph="{...}" />
+            <marker date="1485788132000" expanded="true" signature="15083:15143" ph="{...}" />
+            <marker date="1485788132000" expanded="true" signature="15249:15323" ph="{...}" />
+            <marker date="1485788132000" expanded="false" signature="15376:15387" ph=" { " />
+            <marker date="1485788132000" expanded="false" signature="15419:15425" ph=" }" />
+            <marker date="1485788132000" expanded="false" signature="15473:15484" ph=" { " />
+            <marker date="1485788132000" expanded="false" signature="15511:15517" ph=" }" />
+            <marker date="1485788132000" expanded="false" signature="15570:15581" ph=" { " />
+            <marker date="1485788132000" expanded="false" signature="15613:15619" ph=" }" />
+            <marker date="1485788132000" expanded="true" signature="15729:16441" ph="{...}" />
+            <marker date="1485788132000" expanded="false" signature="16214:16292" ph="run() → {" />
+            <marker date="1485788132000" expanded="false" signature="16365:16384" ph="}" />
+            <marker date="1485788132000" expanded="true" signature="16523:16845" ph="{...}" />
+            <marker date="1485788132000" expanded="true" signature="16947:17008" ph="{...}" />
+            <marker date="1485788132000" expanded="true" signature="17169:17920" ph="{...}" />
+            <marker date="1485788132000" expanded="false" signature="17675:17753" ph="run() → {" />
+            <marker date="1485788132000" expanded="false" signature="17844:17863" ph="}" />
+            <marker date="1485788132000" expanded="true" signature="18034:18392" ph="{...}" />
+            <marker date="1485788132000" expanded="true" signature="18474:19549" ph="{...}" />
+            <marker date="1485788132000" expanded="true" signature="18762:18924" ph="//..." />
+            <marker date="1485788132000" expanded="false" signature="19159:19237" ph="run() → {" />
+            <marker date="1485788132000" expanded="false" signature="19473:19492" ph="}" />
+            <marker date="1485788132000" expanded="true" signature="19609:19915" ph="{...}" />
+            <marker date="1485788132000" expanded="true" signature="19992:20573" ph="{...}" />
+            <marker date="1485788132000" expanded="false" signature="20358:20436" ph="run() → {" />
+            <marker date="1485788132000" expanded="false" signature="20496:20515" ph="}" />
+            <marker date="1485788132000" expanded="true" signature="20628:20924" ph="{...}" />
+            <marker date="1485788132000" expanded="true" signature="21006:21597" ph="{...}" />
+            <marker date="1485788132000" expanded="false" signature="21377:21455" ph="run() → {" />
+            <marker date="1485788132000" expanded="false" signature="21520:21539" ph="}" />
+            <marker date="1485788132000" expanded="true" signature="21657:21963" ph="{...}" />
+            <marker date="1485788132000" expanded="true" signature="22019:22615" ph="{...}" />
+            <marker date="1485788132000" expanded="false" signature="22357:22443" ph="run() → {" />
+            <marker date="1485788132000" expanded="false" signature="22503:22526" ph="}" />
+            <marker date="1485788132000" expanded="true" signature="22647:22908" ph="{...}" />
+            <marker date="1485788132000" expanded="false" signature="22966:22977" ph=" { " />
+            <marker date="1485788132000" expanded="false" signature="23009:23015" ph=" }" />
+            <marker date="1485788132000" expanded="true" signature="23110:23571" ph="{...}" />
+            <marker date="1485788132000" expanded="true" signature="23638:23776" ph="{...}" />
+            <marker date="1485788132000" expanded="true" signature="23844:24039" ph="{...}" />
+            <marker date="1485788132000" expanded="true" signature="24096:24732" ph="{...}" />
+            <marker date="1485788132000" expanded="false" signature="24437:24523" ph="run() → {" />
+            <marker date="1485788132000" expanded="false" signature="24584:24607" ph="}" />
+            <marker date="1485788132000" expanded="true" signature="24765:24879" ph="{...}" />
+            <marker date="1485788132000" expanded="true" signature="24913:25077" ph="{...}" />
+            <marker date="1485788132000" expanded="true" signature="25168:25480" ph="{...}" />
+            <marker date="1485788132000" expanded="true" signature="25555:25729" ph="{...}" />
+            <marker date="1485788132000" expanded="true" signature="25805:26493" ph="{...}" />
+            <marker date="1485788132000" expanded="false" signature="26559:26570" ph=" { " />
+            <marker date="1485788132000" expanded="false" signature="26610:26616" ph=" }" />
+            <marker date="1485788132000" expanded="true" signature="26714:26859" ph="{...}" />
+            <marker date="1485788132000" expanded="true" signature="26918:27273" ph="{...}" />
+            <marker date="1485788132000" expanded="true" signature="27337:27852" ph="{...}" />
+            <marker date="1485788132000" expanded="false" signature="27906:27917" ph=" { " />
+            <marker date="1485788132000" expanded="false" signature="27973:27979" ph=" }" />
+            <marker date="1485788132000" expanded="true" signature="28056:28139" ph="{...}" />
+            <marker date="1485788132000" expanded="true" signature="28201:28455" ph="{...}" />
+            <marker date="1485788132000" expanded="true" signature="28529:28606" ph="{...}" />
+            <marker date="1485788132000" expanded="true" signature="28694:30056" ph="{...}" />
+            <marker date="1485788132000" expanded="true" signature="28837:29045" ph="//..." />
+            <marker date="1485788132000" expanded="true" signature="30121:30271" ph="{...}" />
+            <marker date="1485788132000" expanded="true" signature="30337:30488" ph="{...}" />
+            <marker date="1485788132000" expanded="false" signature="30543:30554" ph=" { " />
+            <marker date="1485788132000" expanded="false" signature="30585:30591" ph=" }" />
+            <marker date="1485788132000" expanded="false" signature="30620:30631" ph=" { " />
+            <marker date="1485788132000" expanded="false" signature="30662:30668" ph=" }" />
+            <marker date="1485788132000" expanded="true" signature="30702:31187" ph="{...}" />
+            <marker date="1485788132000" expanded="true" signature="30776:31017" ph="//..." />
+            <marker date="1485788132000" expanded="true" signature="31220:31431" ph="{...}" />
+            <marker date="1485788132000" expanded="true" signature="31437:31985" ph="/**...*/" />
+            <marker date="1485788132000" expanded="true" signature="32022:32226" ph="{...}" />
+            <marker date="1485788132000" expanded="false" signature="32272:32283" ph=" { " />
+            <marker date="1485788132000" expanded="false" signature="32322:32328" ph=" }" />
+            <marker date="1485788132000" expanded="false" signature="32397:32408" ph=" { " />
+            <marker date="1485788132000" expanded="false" signature="32435:32441" ph=" }" />
+            <marker date="1485788132000" expanded="false" signature="32508:32519" ph=" { " />
+            <marker date="1485788132000" expanded="false" signature="32549:32555" ph=" }" />
+            <marker date="1485788132000" expanded="true" signature="32672:32984" ph="{...}" />
+            <marker date="1485788132000" expanded="true" signature="33033:33115" ph="{...}" />
+            <marker date="1485788132000" expanded="true" signature="33160:33277" ph="{...}" />
+            <marker date="1485788132000" expanded="true" signature="33343:35883" ph="{...}" />
+            <marker date="1485788132000" expanded="false" signature="33988:34018" ph="/unchecked/" />
+            <marker date="1485788132000" expanded="true" signature="34106:34188" ph="{...}" />
+            <marker date="1485788132000" expanded="true" signature="34355:35035" ph="{...}" />
+            <marker date="1485788132000" expanded="true" signature="35087:35721" ph="{...}" />
+            <marker date="1485788132000" expanded="true" signature="35823:35877" ph="{...}" />
+            <marker date="1485788132000" expanded="true" signature="35995:36614" ph="{...}" />
+            <marker date="1485788132000" expanded="false" signature="36058:36177" ph="newObject(handle) → {" />
+            <marker date="1485788132000" expanded="false" signature="36232:36247" ph="}" />
+            <marker date="1485788132000" expanded="true" signature="36383:36507" ph="{...}" />
+            <marker date="1485788132000" expanded="false" signature="36569:36584" ph=" { " />
+            <marker date="1485788132000" expanded="false" signature="36598:36608" ph=" }" />
+            <marker date="1485788132000" expanded="true" signature="36683:37578" ph="{...}" />
+            <marker date="1485788132000" expanded="false" signature="36754:36897" ph="newObject(handle) → {" />
+            <marker date="1485788132000" expanded="false" signature="36960:36975" ph="}" />
+            <marker date="1485788132000" expanded="true" signature="37120:37252" ph="{...}" />
+            <marker date="1485788132000" expanded="false" signature="37330:37345" ph=" { " />
+            <marker date="1485788132000" expanded="false" signature="37359:37369" ph=" }" />
+            <marker date="1485788132000" expanded="true" signature="37486:37572" ph="{...}" />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -1141,6 +1522,211 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="283">
           <caret line="926" column="0" lean-forward="false" selection-start-line="926" selection-start-column="0" selection-end-line="926" selection-end-column="0" />
+          <folding>
+            <marker date="1485788132000" expanded="false" signature="0:634" ph="/.../" />
+            <marker date="1485788132000" expanded="false" signature="669:1457" ph="..." />
+            <marker date="1485788132000" expanded="true" signature="1459:1620" ph="/**...*/" />
+            <marker date="1485788132000" expanded="false" signature="2040:2191" ph="initialValue() → { " />
+            <marker date="1485788132000" expanded="false" signature="2234:2250" ph=" }" />
+            <marker date="1485788132000" expanded="true" signature="2724:3190" ph="/**...*/" />
+            <marker date="1485788132000" expanded="true" signature="3259:3405" ph="/**...*/" />
+            <marker date="1485788132000" expanded="true" signature="3493:3829" ph="{...}" />
+            <marker date="1485788132000" expanded="true" signature="3887:4061" ph="{...}" />
+            <marker date="1485788132000" expanded="true" signature="4134:4207" ph="{...}" />
+            <marker date="1485788132000" expanded="true" signature="4325:4424" ph="{...}" />
+            <marker date="1485788132000" expanded="true" signature="4492:5486" ph="{...}" />
+            <marker date="1485788132000" expanded="true" signature="5100:5242" ph="//..." />
+            <marker date="1485788132000" expanded="false" signature="5535:5546" ph=" { " />
+            <marker date="1485788132000" expanded="false" signature="5561:5567" ph=" }" />
+            <marker date="1485788132000" expanded="true" signature="5662:5715" ph="{...}" />
+            <marker date="1485788132000" expanded="true" signature="5836:7013" ph="{...}" />
+            <marker date="1485788132000" expanded="true" signature="6107:6375" ph="//..." />
+            <marker date="1485788132000" expanded="false" signature="6719:6830" ph="run() → { " />
+            <marker date="1485788132000" expanded="false" signature="6856:6896" ph=" }" />
+            <marker date="1485788132000" expanded="true" signature="7080:7264" ph="{...}" />
+            <marker date="1485788132000" expanded="true" signature="7358:7410" ph="{...}" />
+            <marker date="1485788132000" expanded="true" signature="7530:8681" ph="{...}" />
+            <marker date="1485788132000" expanded="true" signature="7775:8043" ph="//..." />
+            <marker date="1485788132000" expanded="false" signature="8387:8498" ph="run() → { " />
+            <marker date="1485788132000" expanded="false" signature="8524:8564" ph=" }" />
+            <marker date="1485788132000" expanded="true" signature="8747:8922" ph="{...}" />
+            <marker date="1485788132000" expanded="true" signature="9035:9099" ph="{...}" />
+            <marker date="1485788132000" expanded="true" signature="9251:10528" ph="{...}" />
+            <marker date="1485788132000" expanded="true" signature="9622:9890" ph="//..." />
+            <marker date="1485788132000" expanded="false" signature="10234:10345" ph="run() → { " />
+            <marker date="1485788132000" expanded="false" signature="10371:10411" ph=" }" />
+            <marker date="1485788132000" expanded="true" signature="10638:10763" ph="{...}" />
+            <marker date="1485788132000" expanded="true" signature="10832:10974" ph="{...}" />
+            <marker date="1485788132000" expanded="true" signature="11086:11149" ph="{...}" />
+            <marker date="1485788132000" expanded="true" signature="11300:12583" ph="{...}" />
+            <marker date="1485788132000" expanded="true" signature="11671:11946" ph="//..." />
+            <marker date="1485788132000" expanded="false" signature="12289:12400" ph="run() → { " />
+            <marker date="1485788132000" expanded="false" signature="12426:12466" ph=" }" />
+            <marker date="1485788132000" expanded="true" signature="12692:12817" ph="{...}" />
+            <marker date="1485788132000" expanded="true" signature="12903:12951" ph="{...}" />
+            <marker date="1485788132000" expanded="true" signature="13066:13596" ph="{...}" />
+            <marker date="1485788132000" expanded="true" signature="13681:13728" ph="{...}" />
+            <marker date="1485788132000" expanded="true" signature="13842:14129" ph="{...}" />
+            <marker date="1485788132000" expanded="true" signature="14187:15063" ph="{...}" />
+            <marker date="1485788132000" expanded="true" signature="14478:14665" ph="//..." />
+            <marker date="1485788132000" expanded="true" signature="15127:15197" ph="{...}" />
+            <marker date="1485788132000" expanded="true" signature="15277:15347" ph="{...}" />
+            <marker date="1485788132000" expanded="true" signature="15415:15478" ph="{...}" />
+            <marker date="1485788132000" expanded="true" signature="15484:15528" ph="@{...}" />
+            <marker date="1485788132000" expanded="true" signature="15604:15678" ph="{...}" />
+            <marker date="1485788132000" expanded="true" signature="15770:16708" ph="{...}" />
+            <marker date="1485788132000" expanded="true" signature="15885:16160" ph="//..." />
+            <marker date="1485788132000" expanded="false" signature="16418:16529" ph="run() → { " />
+            <marker date="1485788132000" expanded="false" signature="16554:16594" ph=" }" />
+            <marker date="1485788132000" expanded="true" signature="16777:16946" ph="{...}" />
+            <marker date="1485788132000" expanded="true" signature="17008:17150" ph="{...}" />
+            <marker date="1485788132000" expanded="true" signature="17211:17353" ph="{...}" />
+            <marker date="1485788132000" expanded="true" signature="17480:17575" ph="{...}" />
+            <marker date="1485788132000" expanded="true" signature="17690:17768" ph="{...}" />
+            <marker date="1485788132000" expanded="true" signature="17774:17818" ph="@{...}" />
+            <marker date="1485788132000" expanded="true" signature="17954:18043" ph="{...}" />
+            <marker date="1485788132000" expanded="true" signature="18177:20380" ph="{...}" />
+            <marker date="1485788132000" expanded="true" signature="18751:19077" ph="//..." />
+            <marker date="1485788132000" expanded="false" signature="19400:19486" ph="run() → {" />
+            <marker date="1485788132000" expanded="true" signature="19511:19802" ph="//..." />
+            <marker date="1485788132000" expanded="false" signature="19920:19943" ph="}" />
+            <marker date="1485788132000" expanded="true" signature="20016:20275" ph="//..." />
+            <marker date="1485788132000" expanded="true" signature="20491:21232" ph="{...}" />
+            <marker date="1485788132000" expanded="true" signature="20674:21007" ph="//..." />
+            <marker date="1485788132000" expanded="true" signature="21300:21735" ph="{...}" />
+            <marker date="1485788132000" expanded="true" signature="21813:22925" ph="{...}" />
+            <marker date="1485788132000" expanded="true" signature="23005:23419" ph="{...}" />
+            <marker date="1485788132000" expanded="true" signature="23465:23827" ph="{...}" />
+            <marker date="1485788132000" expanded="true" signature="23601:23765" ph="//..." />
+            <marker date="1485788132000" expanded="true" signature="23883:24040" ph="{...}" />
+            <marker date="1485788132000" expanded="true" signature="24110:24264" ph="{...}" />
+            <marker date="1485788132000" expanded="true" signature="24319:24476" ph="{...}" />
+            <marker date="1485788132000" expanded="true" signature="24545:24692" ph="{...}" />
+            <marker date="1485788132000" expanded="true" signature="24757:24928" ph="{...}" />
+            <marker date="1485788132000" expanded="true" signature="24934:24978" ph="@{...}" />
+            <marker date="1485788132000" expanded="true" signature="25051:25233" ph="{...}" />
+            <marker date="1485788132000" expanded="true" signature="25309:25438" ph="{...}" />
+            <marker date="1485788132000" expanded="true" signature="25525:25904" ph="{...}" />
+            <marker date="1485788132000" expanded="true" signature="26012:26426" ph="{...}" />
+            <marker date="1485788132000" expanded="true" signature="26480:26760" ph="{...}" />
+            <marker date="1485788132000" expanded="false" signature="26523:26531" ph="&lt;~&gt;" />
+            <marker date="1485788132000" expanded="true" signature="26829:27156" ph="{...}" />
+            <marker date="1485788132000" expanded="false" signature="26890:26914" ph="&lt;~&gt;" />
+            <marker date="1485788132000" expanded="true" signature="27244:27297" ph="{...}" />
+            <marker date="1485788132000" expanded="true" signature="27303:27381" ph="/**...*/" />
+            <marker date="1485788132000" expanded="true" signature="27431:28084" ph="{...}" />
+            <marker date="1485788132000" expanded="true" signature="28157:28254" ph="{...}" />
+            <marker date="1485788132000" expanded="true" signature="28329:28428" ph="{...}" />
+            <marker date="1485788132000" expanded="true" signature="28434:28926" ph="/**...*/" />
+            <marker date="1485788132000" expanded="false" signature="28966:28977" ph=" { " />
+            <marker date="1485788132000" expanded="false" signature="29005:29011" ph=" }" />
+            <marker date="1485788132000" expanded="true" signature="29096:29903" ph="{...}" />
+            <marker date="1485788132000" expanded="false" signature="29609:29720" ph="run() → { " />
+            <marker date="1485788132000" expanded="false" signature="29746:29786" ph=" }" />
+            <marker date="1485788132000" expanded="true" signature="30012:30927" ph="{...}" />
+            <marker date="1485788132000" expanded="false" signature="30607:30693" ph="run() → {" />
+            <marker date="1485788132000" expanded="false" signature="30787:30810" ph="}" />
+            <marker date="1485788132000" expanded="true" signature="30996:31089" ph="{...}" />
+            <marker date="1485788132000" expanded="true" signature="31160:31255" ph="{...}" />
+            <marker date="1485788132000" expanded="true" signature="31341:31443" ph="{...}" />
+            <marker date="1485788132000" expanded="true" signature="31529:31634" ph="{...}" />
+            <marker date="1485788132000" expanded="true" signature="31711:31807" ph="{...}" />
+            <marker date="1485788132000" expanded="true" signature="31882:31981" ph="{...}" />
+            <marker date="1485788132000" expanded="true" signature="32062:32167" ph="{...}" />
+            <marker date="1485788132000" expanded="false" signature="32246:32257" ph=" { " />
+            <marker date="1485788132000" expanded="false" signature="32288:32294" ph=" }" />
+            <marker date="1485788132000" expanded="true" signature="32378:32429" ph="{...}" />
+            <marker date="1485788132000" expanded="true" signature="32541:32606" ph="{...}" />
+            <marker date="1485788132000" expanded="false" signature="32665:32676" ph=" { " />
+            <marker date="1485788132000" expanded="false" signature="32701:32707" ph=" }" />
+            <marker date="1485788132000" expanded="false" signature="32761:32772" ph=" { " />
+            <marker date="1485788132000" expanded="false" signature="32792:32798" ph=" }" />
+            <marker date="1485788132000" expanded="false" signature="32857:32868" ph=" { " />
+            <marker date="1485788132000" expanded="false" signature="32893:32899" ph=" }" />
+            <marker date="1485788132000" expanded="true" signature="32956:33006" ph="{...}" />
+            <marker date="1485788132000" expanded="true" signature="33110:33166" ph="{...}" />
+            <marker date="1485788132000" expanded="true" signature="33274:33334" ph="{...}" />
+            <marker date="1485788132000" expanded="true" signature="33483:33557" ph="{...}" />
+            <marker date="1485788132000" expanded="true" signature="33639:33687" ph="{...}" />
+            <marker date="1485788132000" expanded="false" signature="33763:33774" ph=" { " />
+            <marker date="1485788132000" expanded="false" signature="33801:33807" ph=" }" />
+            <marker date="1485788132000" expanded="true" signature="33895:33943" ph="{...}" />
+            <marker date="1485788132000" expanded="true" signature="33999:34048" ph="{...}" />
+            <marker date="1485788132000" expanded="false" signature="34112:34123" ph=" { " />
+            <marker date="1485788132000" expanded="false" signature="34146:34152" ph=" }" />
+            <marker date="1485788132000" expanded="true" signature="34241:34289" ph="{...}" />
+            <marker date="1485788132000" expanded="true" signature="34386:34442" ph="{...}" />
+            <marker date="1485788132000" expanded="false" signature="34514:34525" ph=" { " />
+            <marker date="1485788132000" expanded="false" signature="34556:34562" ph=" }" />
+            <marker date="1485788132000" expanded="false" signature="34622:34633" ph=" { " />
+            <marker date="1485788132000" expanded="false" signature="34675:34681" ph=" }" />
+            <marker date="1485788132000" expanded="true" signature="34764:34833" ph="{...}" />
+            <marker date="1485788132000" expanded="false" signature="34900:34911" ph=" { " />
+            <marker date="1485788132000" expanded="false" signature="34934:34940" ph=" }" />
+            <marker date="1485788132000" expanded="true" signature="35020:35089" ph="{...}" />
+            <marker date="1485788132000" expanded="false" signature="35150:35161" ph=" { " />
+            <marker date="1485788132000" expanded="false" signature="35180:35186" ph=" }" />
+            <marker date="1485788132000" expanded="true" signature="35237:35375" ph="{...}" />
+            <marker date="1485788132000" expanded="true" signature="35441:35701" ph="{...}" />
+            <marker date="1485788132000" expanded="true" signature="35774:36002" ph="{...}" />
+            <marker date="1485788132000" expanded="true" signature="36086:36341" ph="{...}" />
+            <marker date="1485788132000" expanded="true" signature="36446:36698" ph="{...}" />
+            <marker date="1485788132000" expanded="true" signature="36750:37578" ph="{...}" />
+            <marker date="1485788132000" expanded="true" signature="37152:37407" ph="//..." />
+            <marker date="1485788132000" expanded="true" signature="37672:38178" ph="{...}" />
+            <marker date="1485788132000" expanded="true" signature="38184:38394" ph="/**...*/" />
+            <marker date="1485788132000" expanded="true" signature="38459:38828" ph="{...}" />
+            <marker date="1485788132000" expanded="true" signature="38834:39151" ph="/**...*/" />
+            <marker date="1485788132000" expanded="true" signature="39209:39506" ph="{...}" />
+            <marker date="1485788132000" expanded="true" signature="39680:41450" ph="{...}" />
+            <marker date="1485788132000" expanded="true" signature="39736:39836" ph="{...}" />
+            <marker date="1485788132000" expanded="false" signature="39895:39910" ph=" { " />
+            <marker date="1485788132000" expanded="false" signature="39922:39932" ph=" }" />
+            <marker date="1485788132000" expanded="true" signature="40778:40998" ph="{...}" />
+            <marker date="1485788132000" expanded="true" signature="40792:40943" ph="//..." />
+            <marker date="1485788132000" expanded="true" signature="41115:41174" ph="{...}" />
+            <marker date="1485788132000" expanded="true" signature="41282:41337" ph="{...}" />
+            <marker date="1485788132000" expanded="true" signature="41587:45502" ph="{...}" />
+            <marker date="1485788132000" expanded="true" signature="41681:41831" ph="{...}" />
+            <marker date="1485788132000" expanded="false" signature="41890:41905" ph=" { " />
+            <marker date="1485788132000" expanded="false" signature="41917:41927" ph=" }" />
+            <marker date="1485788132000" expanded="true" signature="42024:42055" ph="{...}" />
+            <marker date="1485788132000" expanded="true" signature="42154:42185" ph="{...}" />
+            <marker date="1485788132000" expanded="true" signature="42359:42418" ph="{...}" />
+            <marker date="1485788132000" expanded="true" signature="42640:42717" ph="{...}" />
+            <marker date="1485788132000" expanded="true" signature="42836:42887" ph="{...}" />
+            <marker date="1485788132000" expanded="true" signature="43001:43047" ph="{...}" />
+            <marker date="1485788132000" expanded="true" signature="43166:43217" ph="{...}" />
+            <marker date="1485788132000" expanded="false" signature="43288:43303" ph=" { " />
+            <marker date="1485788132000" expanded="false" signature="43322:43332" ph=" }" />
+            <marker date="1485788132000" expanded="true" signature="43458:43509" ph="{...}" />
+            <marker date="1485788132000" expanded="true" signature="43599:43638" ph="{...}" />
+            <marker date="1485788132000" expanded="true" signature="43755:43810" ph="{...}" />
+            <marker date="1485788132000" expanded="true" signature="43912:44006" ph="{...}" />
+            <marker date="1485788132000" expanded="true" signature="44110:44330" ph="{...}" />
+            <marker date="1485788132000" expanded="true" signature="44428:44509" ph="{...}" />
+            <marker date="1485788132000" expanded="true" signature="44609:44659" ph="{...}" />
+            <marker date="1485788132000" expanded="true" signature="44767:44816" ph="{...}" />
+            <marker date="1485788132000" expanded="true" signature="44920:45007" ph="{...}" />
+            <marker date="1485788132000" expanded="true" signature="45049:45155" ph="{...}" />
+            <marker date="1485788132000" expanded="true" signature="45270:45326" ph="{...}" />
+            <marker date="1485788132000" expanded="true" signature="45436:45496" ph="{...}" />
+            <marker date="1485788132000" expanded="true" signature="45581:45815" ph="{...}" />
+            <marker date="1485788132000" expanded="false" signature="45735:45750" ph=" { " />
+            <marker date="1485788132000" expanded="false" signature="45765:45775" ph=" }" />
+            <marker date="1485788132000" expanded="true" signature="45896:46825" ph="{...}" />
+            <marker date="1485788132000" expanded="false" signature="45965:45980" ph=" { " />
+            <marker date="1485788132000" expanded="false" signature="45991:46001" ph=" }" />
+            <marker date="1485788132000" expanded="false" signature="46046:46061" ph=" { " />
+            <marker date="1485788132000" expanded="false" signature="46084:46094" ph=" }" />
+            <marker date="1485788132000" expanded="true" signature="46137:46819" ph="{...}" />
+            <marker date="1485788132000" expanded="true" signature="46908:47933" ph="{...}" />
+            <marker date="1485788132000" expanded="false" signature="46979:46994" ph=" { " />
+            <marker date="1485788132000" expanded="false" signature="47005:47015" ph=" }" />
+            <marker date="1485788132000" expanded="false" signature="47060:47075" ph=" { " />
+            <marker date="1485788132000" expanded="false" signature="47100:47110" ph=" }" />
+            <marker date="1485788132000" expanded="true" signature="47153:47927" ph="{...}" />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -1148,50 +1734,512 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="272">
           <caret line="151" column="0" lean-forward="false" selection-start-line="151" selection-start-column="0" selection-end-line="151" selection-end-column="0" />
+          <folding>
+            <marker date="1485788132000" expanded="false" signature="0:634" ph="/.../" />
+            <marker date="1485788132000" expanded="false" signature="673:1311" ph="..." />
+            <marker date="1485788132000" expanded="true" signature="1313:1405" ph="/**...*/" />
+            <marker date="1485788132000" expanded="true" signature="1795:2051" ph="/**...*/" />
+            <marker date="1485788132000" expanded="true" signature="2127:2183" ph="{...}" />
+            <marker date="1485788132000" expanded="true" signature="2189:2247" ph="/**...*/" />
+            <marker date="1485788132000" expanded="false" signature="2360:2371" ph=" { " />
+            <marker date="1485788132000" expanded="false" signature="2398:2404" ph=" }" />
+            <marker date="1485788132000" expanded="false" signature="2457:2468" ph=" { " />
+            <marker date="1485788132000" expanded="false" signature="2484:2490" ph=" }" />
+            <marker date="1485788132000" expanded="true" signature="2552:5888" ph="{...}" />
+            <marker date="1485788132000" expanded="true" signature="2614:3104" ph="{...}" />
+            <marker date="1485788132000" expanded="true" signature="3279:3808" ph="{...}" />
+            <marker date="1485788132000" expanded="true" signature="3861:5882" ph="{...}" />
+            <marker date="1485788132000" expanded="true" signature="5316:5744" ph="//..." />
+            <marker date="1485788132000" expanded="true" signature="5974:8937" ph="{...}" />
+            <marker date="1485788132000" expanded="true" signature="9014:9452" ph="{...}" />
+            <marker date="1485788132000" expanded="true" signature="9515:10078" ph="{...}" />
+            <marker date="1485788132000" expanded="false" signature="9844:9955" ph="run() → { " />
+            <marker date="1485788132000" expanded="false" signature="9963:10003" ph=" }" />
+            <marker date="1485788132000" expanded="true" signature="10084:10282" ph="/**...*/" />
+            <marker date="1485788132000" expanded="true" signature="10371:10454" ph="/**...*/" />
+            <marker date="1485788132000" expanded="true" signature="10530:10787" ph="/**...*/" />
+            <marker date="1485788132000" expanded="true" signature="10898:11388" ph="{...}" />
+            <marker date="1485788132000" expanded="true" signature="10957:11137" ph="//..." />
+            <marker date="1485788132000" expanded="true" signature="11430:11921" ph="{...}" />
+            <marker date="1485788132000" expanded="true" signature="11489:11669" ph="//..." />
+          </folding>
         </state>
       </provider>
     </entry>
     <entry file="jar://$MAVEN_REPOSITORY$/io/netty/netty-all/4.1.8.Final/netty-all-4.1.8.Final-sources.jar!/io/netty/channel/nio/NioEventLoop.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="479">
-          <caret line="452" column="0" lean-forward="false" selection-start-line="452" selection-start-column="0" selection-end-line="452" selection-end-column="0" />
+          <caret line="429" column="0" lean-forward="false" selection-start-line="429" selection-start-column="0" selection-end-line="429" selection-end-column="0" />
+          <folding>
+            <marker date="1485788132000" expanded="false" signature="0:634" ph="/.../" />
+            <marker date="1485788132000" expanded="false" signature="673:1858" ph="..." />
+            <marker date="1485788132000" expanded="true" signature="1860:2038" ph="/**...*/" />
+            <marker date="1485788132000" expanded="false" signature="2643:2737" ph="() → { " />
+            <marker date="1485788132000" expanded="false" signature="2756:2772" ph=" }" />
+            <marker date="1485788132000" expanded="false" signature="2833:2925" ph="() → {" />
+            <marker date="1485788132000" expanded="false" signature="2984:2995" ph="}" />
+            <marker date="1485788132000" expanded="true" signature="3002:3158" ph="//..." />
+            <marker date="1485788132000" expanded="true" signature="3170:4342" ph="{...}" />
+            <marker date="1485788132000" expanded="false" signature="3379:3479" ph="(PrivilegedAction) () → {" />
+            <marker date="1485788132000" expanded="false" signature="3586:3609" ph="}" />
+            <marker date="1485788132000" expanded="true" signature="4348:4392" ph="/**...*/" />
+            <marker date="1485788132000" expanded="true" signature="4517:4776" ph="/**...*/" />
+            <marker date="1485788132000" expanded="true" signature="5192:5617" ph="{...}" />
+            <marker date="1485788132000" expanded="true" signature="5655:8973" ph="{...}" />
+            <marker date="1485788132000" expanded="false" signature="6113:6201" ph="(PrivilegedAction) () → {" />
+            <marker date="1485788132000" expanded="false" signature="6531:6546" ph="}" />
+            <marker date="1485788132000" expanded="false" signature="7215:7303" ph="(PrivilegedAction) () → {" />
+            <marker date="1485788132000" expanded="true" signature="8068:8283" ph="//..." />
+            <marker date="1485788132000" expanded="false" signature="8534:8549" ph="}" />
+            <marker date="1485788132000" expanded="true" signature="8979:9100" ph="/**...*/" />
+            <marker date="1485788132000" expanded="false" signature="9147:9158" ph=" { " />
+            <marker date="1485788132000" expanded="false" signature="9174:9180" ph=" }" />
+            <marker date="1485788132000" expanded="true" signature="9260:9381" ph="{...}" />
+            <marker date="1485788132000" expanded="true" signature="9427:9896" ph="{...}" />
+            <marker date="1485788132000" expanded="true" signature="9437:9713" ph="//..." />
+            <marker date="1485788132000" expanded="true" signature="9902:10231" ph="/**...*/" />
+            <marker date="1485788132000" expanded="true" signature="10331:11140" ph="{...}" />
+            <marker date="1485788132000" expanded="true" signature="11146:11250" ph="/**...*/" />
+            <marker date="1485788132000" expanded="false" signature="11278:11289" ph=" { " />
+            <marker date="1485788132000" expanded="false" signature="11304:11310" ph=" }" />
+            <marker date="1485788132000" expanded="true" signature="11316:11557" ph="/**...*/" />
+            <marker date="1485788132000" expanded="true" signature="11598:11799" ph="{...}" />
+            <marker date="1485788132000" expanded="true" signature="11805:11972" ph="/**...*/" />
+            <marker date="1485788132000" expanded="true" signature="12007:12275" ph="{...}" />
+            <marker date="1485788132000" expanded="false" signature="12059:12158" ph="() → { " />
+            <marker date="1485788132000" expanded="false" signature="12177:12209" ph=" }" />
+            <marker date="1485788132000" expanded="true" signature="12313:14370" ph="{...}" />
+            <marker date="1485788132000" expanded="false" signature="13719:13749" ph="/unchecked/" />
+            <marker date="1485788132000" expanded="true" signature="14411:18119" ph="{...}" />
+            <marker date="1485788132000" expanded="true" signature="14756:16597" ph="//..." />
+            <marker date="1485788132000" expanded="true" signature="18178:18488" ph="{...}" />
+            <marker date="1485788132000" expanded="true" signature="18259:18360" ph="//..." />
+            <marker date="1485788132000" expanded="true" signature="18529:18725" ph="{...}" />
+            <marker date="1485788132000" expanded="true" signature="18770:18924" ph="{...}" />
+            <marker date="1485788132000" expanded="true" signature="18960:19144" ph="{...}" />
+            <marker date="1485788132000" expanded="true" signature="19194:19335" ph="{...}" />
+            <marker date="1485788132000" expanded="true" signature="19411:20700" ph="{...}" />
+            <marker date="1485788132000" expanded="true" signature="19421:19636" ph="//..." />
+            <marker date="1485788132000" expanded="false" signature="20051:20081" ph="/unchecked/" />
+            <marker date="1485788132000" expanded="true" signature="20777:22363" ph="{...}" />
+            <marker date="1485788132000" expanded="true" signature="20942:21083" ph="//..." />
+            <marker date="1485788132000" expanded="false" signature="21318:21348" ph="/unchecked/" />
+            <marker date="1485788132000" expanded="true" signature="21545:21692" ph="//..." />
+            <marker date="1485788132000" expanded="true" signature="21959:22252" ph="//..." />
+            <marker date="1485788132000" expanded="true" signature="22440:24982" ph="{...}" />
+            <marker date="1485788132000" expanded="true" signature="22694:22946" ph="//..." />
+            <marker date="1485788132000" expanded="true" signature="22997:23339" ph="//..." />
+            <marker date="1485788132000" expanded="true" signature="23647:23836" ph="//..." />
+            <marker date="1485788132000" expanded="true" signature="23914:24068" ph="//..." />
+            <marker date="1485788132000" expanded="true" signature="24605:24721" ph="//..." />
+            <marker date="1485788132000" expanded="true" signature="25076:25712" ph="{...}" />
+            <marker date="1485788132000" expanded="true" signature="25742:26478" ph="{...}" />
+            <marker date="1485788132000" expanded="false" signature="25880:25900" ph="&lt;~&gt;" />
+            <marker date="1485788132000" expanded="false" signature="26161:26191" ph="/unchecked/" />
+            <marker date="1485788132000" expanded="true" signature="26596:26813" ph="{...}" />
+            <marker date="1485788132000" expanded="true" signature="26876:26990" ph="{...}" />
+            <marker date="1485788132000" expanded="true" signature="27031:27250" ph="{...}" />
+            <marker date="1485788132000" expanded="true" signature="27315:31488" ph="{...}" />
+            <marker date="1485788132000" expanded="true" signature="27924:28317" ph="//..." />
+            <marker date="1485788132000" expanded="true" signature="28740:28936" ph="//..." />
+            <marker date="1485788132000" expanded="true" signature="29046:29375" ph="//..." />
+            <marker date="1485788132000" expanded="true" signature="30214:30343" ph="//..." />
+            <marker date="1485788132000" expanded="true" signature="31521:31717" ph="{...}" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://$MAVEN_REPOSITORY$/io/netty/netty-all/4.1.8.Final/netty-all-4.1.8.Final-sources.jar!/io/netty/handler/codec/MessageToMessageDecoder.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1334">
+          <caret line="80" column="64" lean-forward="true" selection-start-line="80" selection-start-column="64" selection-end-line="80" selection-end-column="64" />
+          <folding>
+            <marker date="1485788132000" expanded="false" signature="0:634" ph="/.../" />
+            <marker date="1485788132000" expanded="false" signature="675:1012" ph="..." />
+            <marker date="1485788132000" expanded="true" signature="1014:1963" ph="/**...*/" />
+            <marker date="1485788132000" expanded="true" signature="2106:2230" ph="/**...*/" />
+            <marker date="1485788132000" expanded="true" signature="2271:2365" ph="{...}" />
+            <marker date="1485788132000" expanded="true" signature="2371:2498" ph="/**...*/" />
+            <marker date="1485788132000" expanded="true" signature="2576:2647" ph="{...}" />
+            <marker date="1485788132000" expanded="true" signature="2653:2848" ph="/**...*/" />
+            <marker date="1485788132000" expanded="true" signature="2918:2960" ph="{...}" />
+            <marker date="1485788132000" expanded="true" signature="3060:3841" ph="{...}" />
+            <marker date="1485788132000" expanded="false" signature="3198:3228" ph="/unchecked/" />
+            <marker date="1485788132000" expanded="true" signature="3847:4331" ph="/**...*/" />
+          </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/cc/bitky/streamadapter/server/netty/channelhandler/FrameIdentifierChannelInboundHandler.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1771">
-          <caret line="79" column="31" lean-forward="true" selection-start-line="79" selection-start-column="31" selection-end-line="79" selection-end-column="31" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/cc/bitky/streamadapter/server/netty/channelhandler/MessageIdentifierChannelInboundHandler.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="161">
-          <caret line="7" column="51" lean-forward="false" selection-start-line="7" selection-start-column="13" selection-end-line="7" selection-end-column="51" />
+        <state relative-caret-position="804">
+          <caret line="68" column="32" lean-forward="true" selection-start-line="68" selection-start-column="32" selection-end-line="68" selection-end-column="32" />
+          <folding>
+            <marker date="1489673780808" expanded="false" signature="68:393" ph="..." />
+            <marker date="1489673780808" expanded="true" signature="395:444" ph="/**...*/" />
+            <marker date="1489673780808" expanded="false" signature="803:810" ph=" { " />
+            <marker date="1489673780808" expanded="false" signature="818:822" ph=" }" />
+            <marker date="1489673780808" expanded="true" signature="882:971" ph="{...}" />
+            <marker date="1489673780808" expanded="true" signature="1085:2859" ph="{...}" />
+            <marker date="1489673780808" expanded="true" signature="1539:1585" ph="//..." />
+            <marker date="1489673780808" expanded="true" signature="2114:2162" ph="//..." />
+            <marker date="1489673780808" expanded="true" signature="2911:3159" ph="{...}" />
+          </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/cc/bitky/streamadapter/server/netty/channelhandler/ServerChannelInitializer.java">
       <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="230">
+          <caret line="15" column="59" lean-forward="false" selection-start-line="15" selection-start-column="59" selection-end-line="15" selection-end-column="59" />
+          <folding>
+            <marker date="1489733743474" expanded="false" signature="68:339" ph="..." />
+            <marker date="1489733743474" expanded="true" signature="504:1327" ph="{...}" />
+            <marker date="1489733743474" expanded="false" signature="846:1001" ph="(SimpleChannelInboundHandler) (ctx, msg) → {" />
+            <marker date="1489733743474" expanded="false" signature="1312:1321" ph="}" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/cc/bitky/streamadapter/util/enumky/FrameReceivedEnum.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="184">
+          <caret line="8" column="9" lean-forward="false" selection-start-line="8" selection-start-column="9" selection-end-line="8" selection-end-column="9" />
+          <folding>
+            <marker date="1489645298495" expanded="true" signature="45:86" ph="/**...*/" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://$MAVEN_REPOSITORY$/io/netty/netty-all/4.1.8.Final/netty-all-4.1.8.Final-sources.jar!/io/netty/handler/codec/string/StringDecoder.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="104">
+          <caret line="54" column="0" lean-forward="false" selection-start-line="54" selection-start-column="0" selection-end-line="81" selection-end-column="0" />
+          <folding>
+            <marker date="1485788132000" expanded="false" signature="0:634" ph="/.../" />
+            <marker date="1485788132000" expanded="false" signature="682:1118" ph="..." />
+            <marker date="1485788132000" expanded="true" signature="1120:2076" ph="/**...*/" />
+            <marker date="1485788132000" expanded="true" signature="2238:2318" ph="/**...*/" />
+            <marker date="1485788132000" expanded="false" signature="2345:2356" ph=" { " />
+            <marker date="1485788132000" expanded="false" signature="2387:2393" ph=" }" />
+            <marker date="1485788132000" expanded="true" signature="2399:2474" ph="/**...*/" />
+            <marker date="1485788132000" expanded="true" signature="2517:2652" ph="{...}" />
+            <marker date="1485788132000" expanded="true" signature="2769:2816" ph="{...}" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/cc/bitky/streamadapter/server/netty/channelhandler/MessageIdentifierChannelInboundHandler.java">
+      <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="552">
-          <caret line="30" column="0" lean-forward="true" selection-start-line="30" selection-start-column="0" selection-end-line="30" selection-end-column="0" />
+          <caret line="24" column="100" lean-forward="true" selection-start-line="24" selection-start-column="100" selection-end-line="24" selection-end-column="100" />
+          <folding>
+            <marker date="1489740628777" expanded="true" signature="68:250" ph="..." />
+            <marker date="1489740628777" expanded="true" signature="431:438" ph=" { " />
+            <marker date="1489740628777" expanded="true" signature="469:473" ph=" }" />
+            <marker date="1489740628777" expanded="true" signature="540:655" ph="{...}" />
+            <marker date="1489740628777" expanded="true" signature="768:809" ph="{...}" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/cc/bitky/streamadapter/util/enumky/MsgType.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="92">
+          <caret line="4" column="39" lean-forward="false" selection-start-line="4" selection-start-column="26" selection-end-line="4" selection-end-column="39" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/cc/bitky/streamadapter/util/bean/message/MessageBuilder.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="518">
+          <caret line="29" column="16" lean-forward="false" selection-start-line="29" selection-start-column="16" selection-end-line="29" selection-end-column="16" />
+          <folding>
+            <marker date="1489807181883" expanded="true" signature="267:384" ph="{...}" />
+            <marker date="1489807181883" expanded="true" signature="412:542" ph="{...}" />
+            <marker date="1489807181883" expanded="true" signature="605:628" ph="{...}" />
+            <marker date="1489807181883" expanded="true" signature="675:721" ph="{...}" />
+            <marker date="1489807181883" expanded="true" signature="762:810" ph="{...}" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/cc/bitky/streamadapter/server/netty/KyServerPresenter.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="391">
+          <caret line="18" column="0" lean-forward="true" selection-start-line="18" selection-start-column="0" selection-end-line="18" selection-end-column="0" />
+          <folding>
+            <marker date="1489395802706" expanded="false" signature="53:192" ph="..." />
+            <marker date="1489395802706" expanded="true" signature="322:391" ph="{...}" />
+            <marker date="1489395802706" expanded="true" signature="425:431" ph="{...}" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/cc/bitky/streamadapter/base/BaseView.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="46">
+          <caret line="2" column="17" lean-forward="false" selection-start-line="2" selection-start-column="17" selection-end-line="2" selection-end-column="17" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/cc/bitky/streamadapter/server/netty/ServerContract.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="391">
+          <caret line="20" column="3" lean-forward="true" selection-start-line="9" selection-start-column="0" selection-end-line="20" selection-end-column="3" />
+          <folding>
+            <marker date="1489589606075" expanded="false" signature="53:280" ph="..." />
+            <marker date="1489589606075" expanded="true" signature="379:593" ph="{...}" />
+            <marker date="1489589606075" expanded="true" signature="646:652" ph="{...}" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/cc/bitky/streamadapter/client/test/ClientContract.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="69">
+          <caret line="3" column="0" lean-forward="false" selection-start-line="3" selection-start-column="0" selection-end-line="3" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/cc/bitky/streamadapter/util/bean/Message.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="69">
+          <caret line="3" column="0" lean-forward="true" selection-start-line="3" selection-start-column="0" selection-end-line="3" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/cc/bitky/streamadapter/util/bean/RamDb.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="69">
+          <caret line="3" column="1" lean-forward="false" selection-start-line="3" selection-start-column="1" selection-end-line="3" selection-end-column="1" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/cc/bitky/streamadapter/util/bean/database/DoorInfo.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="69">
+          <caret line="3" column="30" lean-forward="false" selection-start-line="3" selection-start-column="30" selection-end-line="3" selection-end-column="30" />
+          <folding>
+            <marker date="1489823635729" expanded="false" signature="211:218" ph=" { " />
+            <marker date="1489823635729" expanded="false" signature="239:243" ph=" }" />
+            <marker date="1489823635729" expanded="false" signature="297:304" ph=" { " />
+            <marker date="1489823635729" expanded="false" signature="334:338" ph=" }" />
+            <marker date="1489823635729" expanded="false" signature="369:376" ph=" { " />
+            <marker date="1489823635729" expanded="false" signature="394:398" ph=" }" />
+            <marker date="1489823635729" expanded="false" signature="444:451" ph=" { " />
+            <marker date="1489823635729" expanded="false" signature="475:479" ph=" }" />
+            <marker date="1489823635729" expanded="false" signature="514:521" ph=" { " />
+            <marker date="1489823635729" expanded="false" signature="544:548" ph=" }" />
+            <marker date="1489823635729" expanded="false" signature="603:610" ph=" { " />
+            <marker date="1489823635729" expanded="false" signature="644:648" ph=" }" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/cc/bitky/streamadapter/DemoMain.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="230">
+          <caret line="16" column="50" lean-forward="false" selection-start-line="16" selection-start-column="50" selection-end-line="16" selection-end-column="50" />
+          <folding>
+            <marker date="1489823644074" expanded="false" signature="40:283" ph="..." />
+            <marker date="1489823644074" expanded="true" signature="481:831" ph="{...}" />
+            <marker date="1489823644074" expanded="true" signature="738:827" ph="//..." />
+            <marker date="1489823644074" expanded="true" signature="862:1384" ph="{...}" />
+            <marker date="1489823644074" expanded="true" signature="1414:1713" ph="{...}" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/cc/bitky/streamadapter/util/bean/message/IMessage.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="46">
+          <caret line="2" column="21" lean-forward="true" selection-start-line="2" selection-start-column="21" selection-end-line="2" selection-end-column="21" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/cc/bitky/streamadapter/util/bean/message/BaseMessage.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="414">
+          <caret line="24" column="11" lean-forward="false" selection-start-line="24" selection-start-column="11" selection-end-line="24" selection-end-column="11" />
+          <folding>
+            <marker date="1489824199573" expanded="true" signature="217:265" ph="{...}" />
+            <marker date="1489824199573" expanded="false" signature="293:300" ph=" { " />
+            <marker date="1489824199573" expanded="false" signature="323:327" ph=" }" />
+            <marker date="1489824199573" expanded="false" signature="362:369" ph=" { " />
+            <marker date="1489824199573" expanded="false" signature="382:386" ph=" }" />
+            <marker date="1489824199573" expanded="false" signature="431:438" ph=" { " />
+            <marker date="1489824199573" expanded="false" signature="457:461" ph=" }" />
+            <marker date="1489824199573" expanded="false" signature="498:505" ph=" { " />
+            <marker date="1489824199573" expanded="false" signature="520:524" ph=" }" />
+            <marker date="1489824199573" expanded="false" signature="549:556" ph=" { " />
+            <marker date="1489824199573" expanded="false" signature="569:573" ph=" }" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/cc/bitky/streamadapter/util/bean/database/MineLampShelf.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="92">
+          <caret line="4" column="13" lean-forward="false" selection-start-line="4" selection-start-column="13" selection-end-line="4" selection-end-column="13" />
+          <folding>
+            <marker date="1489822310823" expanded="false" signature="304:311" ph=" { " />
+            <marker date="1489822310823" expanded="false" signature="328:332" ph=" }" />
+            <marker date="1489822310823" expanded="false" signature="376:383" ph=" { " />
+            <marker date="1489822310823" expanded="false" signature="410:414" ph=" }" />
+            <marker date="1489822310823" expanded="false" signature="438:445" ph=" { " />
+            <marker date="1489822310823" expanded="false" signature="457:461" ph=" }" />
+            <marker date="1489822310823" expanded="false" signature="494:501" ph=" { " />
+            <marker date="1489822310823" expanded="false" signature="518:522" ph=" }" />
+            <marker date="1489822310823" expanded="false" signature="550:557" ph=" { " />
+            <marker date="1489822310823" expanded="false" signature="573:577" ph=" }" />
+            <marker date="1489822310823" expanded="false" signature="618:625" ph=" { " />
+            <marker date="1489822310823" expanded="false" signature="650:654" ph=" }" />
+            <marker date="1489822310823" expanded="false" signature="678:685" ph=" { " />
+            <marker date="1489822310823" expanded="false" signature="697:701" ph=" }" />
+            <marker date="1489822310823" expanded="false" signature="734:741" ph=" { " />
+            <marker date="1489822310823" expanded="false" signature="758:762" ph=" }" />
+            <marker date="1489822310823" expanded="false" signature="787:794" ph=" { " />
+            <marker date="1489822310823" expanded="false" signature="807:811" ph=" }" />
+            <marker date="1489822310823" expanded="false" signature="846:853" ph=" { " />
+            <marker date="1489822310823" expanded="false" signature="872:876" ph=" }" />
+            <marker date="1489822310823" expanded="false" signature="903:910" ph=" { " />
+            <marker date="1489822310823" expanded="false" signature="925:929" ph=" }" />
+            <marker date="1489822310823" expanded="false" signature="968:975" ph=" { " />
+            <marker date="1489822310823" expanded="false" signature="998:1002" ph=" }" />
+            <marker date="1489822310823" expanded="false" signature="1042:1049" ph=" { " />
+            <marker date="1489822310823" expanded="false" signature="1066:1070" ph=" }" />
+            <marker date="1489822310823" expanded="false" signature="1124:1131" ph=" { " />
+            <marker date="1489822310823" expanded="false" signature="1158:1162" ph=" }" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/cc/bitky/streamadapter/util/bean/message/HeartBeat.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="92">
+          <caret line="4" column="13" lean-forward="false" selection-start-line="4" selection-start-column="13" selection-end-line="4" selection-end-column="13" />
+          <folding>
+            <marker date="1489816377599" expanded="true" signature="181:240" ph="{...}" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/cc/bitky/streamadapter/util/bean/message/ChargeStatus.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="138">
+          <caret line="6" column="0" lean-forward="false" selection-start-line="6" selection-start-column="0" selection-end-line="6" selection-end-column="0" />
+          <folding>
+            <marker date="1489825091954" expanded="true" signature="58:161" ph="..." />
+            <marker date="1489825091954" expanded="true" signature="339:478" ph="{...}" />
+            <marker date="1489825091954" expanded="true" signature="517:524" ph=" { " />
+            <marker date="1489825091954" expanded="true" signature="538:542" ph=" }" />
+            <marker date="1489825091954" expanded="true" signature="567:574" ph=" { " />
+            <marker date="1489825091954" expanded="true" signature="586:590" ph=" }" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/cc/bitky/streamadapter/util/bean/database/MineLampShelfBuilder.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="390">
+          <caret line="20" column="33" lean-forward="true" selection-start-line="20" selection-start-column="33" selection-end-line="20" selection-end-column="33" />
+          <folding>
+            <marker date="1489825842603" expanded="true" signature="59:102" ph="..." />
+            <marker date="1489825842603" expanded="true" signature="227:381" ph="{...}" />
+            <marker date="1489825842603" expanded="true" signature="427:480" ph="{...}" />
+            <marker date="1489825842603" expanded="true" signature="513:848" ph="{...}" />
+            <marker date="1489825842603" expanded="false" signature="909:916" ph=" { " />
+            <marker date="1489825842603" expanded="false" signature="951:955" ph=" }" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/cc/bitky/streamadapter/util/enumky/ChargeStatusEnum.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="138">
+          <caret line="6" column="0" lean-forward="false" selection-start-line="6" selection-start-column="0" selection-end-line="6" selection-end-column="0" />
+          <folding>
+            <marker date="1489735639370" expanded="true" signature="45:86" ph="/**...*/" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/cc/bitky/streamadapter/client/test/ClientTest.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="548">
+          <caret line="60" column="0" lean-forward="false" selection-start-line="60" selection-start-column="0" selection-end-line="60" selection-end-column="0" />
+          <folding>
+            <marker date="1489827226964" expanded="true" signature="52:408" ph="..." />
+            <marker date="1489827226964" expanded="true" signature="525:626" ph="{...}" />
+            <marker date="1489827226964" expanded="true" signature="670:677" ph=" { " />
+            <marker date="1489827226964" expanded="true" signature="692:696" ph=" }" />
+            <marker date="1489827226964" expanded="true" signature="736:1873" ph="{...}" />
+            <marker date="1489827226964" expanded="true" signature="1902:2168" ph="{...}" />
+          </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/cc/bitky/streamadapter/server/netty/KyServer.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="581">
-          <caret line="46" column="3" lean-forward="false" selection-start-line="46" selection-start-column="3" selection-end-line="46" selection-end-column="3" />
+        <state relative-caret-position="23">
+          <caret line="20" column="9" lean-forward="false" selection-start-line="20" selection-start-column="9" selection-end-line="20" selection-end-column="9" />
+          <folding>
+            <marker date="1489589606044" expanded="false" signature="53:726" ph="..." />
+            <marker date="1489589606044" expanded="true" signature="933:939" ph="{...}" />
+            <marker date="1489589606044" expanded="true" signature="1006:1012" ph="{...}" />
+            <marker date="1489589606044" expanded="true" signature="1046:1728" ph="{...}" />
+            <marker date="1489589606044" expanded="true" signature="1824:1875" ph="{...}" />
+            <marker date="1489589606044" expanded="true" signature="1967:2014" ph="{...}" />
+            <marker date="1489589606044" expanded="true" signature="2051:2538" ph="{...}" />
+          </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/text/helloworld/src/main/java/com/mycompany/helloworld/App.java" />
-    <entry file="file://$PROJECT_DIR$/text/helloworld/src/test/java/com/mycompany/helloworld/AppTest.java" />
-    <entry file="file://$PROJECT_DIR$/src/main/java/cc/bitky/streamadapter/DemoMain.java">
+    <entry file="file://$PROJECT_DIR$/src/main/java/cc/bitky/streamadapter/server/view/ServerShow.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="436">
-          <caret line="34" column="30" lean-forward="false" selection-start-line="34" selection-start-column="30" selection-end-line="34" selection-end-column="30" />
+        <state relative-caret-position="426">
+          <caret line="59" column="0" lean-forward="true" selection-start-line="59" selection-start-column="0" selection-end-line="59" selection-end-column="0" />
+          <folding>
+            <marker date="1489826122870" expanded="false" signature="52:230" ph="..." />
+            <marker date="1489826122870" expanded="false" signature="431:438" ph=" { " />
+            <marker date="1489826122870" expanded="false" signature="453:457" ph=" }" />
+            <marker date="1489826122870" expanded="true" signature="500:584" ph="{...}" />
+            <marker date="1489826122870" expanded="true" signature="629:1179" ph="{...}" />
+            <marker date="1489826122870" expanded="true" signature="1219:1602" ph="{...}" />
+            <marker date="1489826122870" expanded="true" signature="1632:2094" ph="{...}" />
+            <marker date="1489826122870" expanded="true" signature="2129:2205" ph="{...}" />
+            <marker date="1489826122870" expanded="true" signature="2239:2305" ph="{...}" />
+            <marker date="1489826122870" expanded="true" signature="2334:2536" ph="{...}" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/cc/bitky/streamadapter/server/dynamickeeper/Maintainer.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="413">
+          <caret line="48" column="0" lean-forward="false" selection-start-line="48" selection-start-column="0" selection-end-line="48" selection-end-column="0" />
+          <folding>
+            <marker date="1489825409123" expanded="true" signature="61:585" ph="..." />
+            <marker date="1489825409123" expanded="true" signature="803:1102" ph="{...}" />
+            <marker date="1489825409123" expanded="true" signature="1106:1176" ph="/**...*/" />
+            <marker date="1489825409123" expanded="true" signature="1241:1523" ph="{...}" />
+            <marker date="1489825409123" expanded="true" signature="1584:1748" ph="{...}" />
+            <marker date="1489825409123" expanded="true" signature="1818:2187" ph="{...}" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/cc/bitky/streamadapter/Main.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="322">
+          <caret line="18" column="36" lean-forward="false" selection-start-line="18" selection-start-column="36" selection-end-line="18" selection-end-column="36" />
           <folding />
         </state>
       </provider>
