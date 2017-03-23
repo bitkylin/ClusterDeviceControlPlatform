@@ -72,15 +72,15 @@ public class ServerShow {
   private void stopServer() {
     serverView.setFinishSuccessfulListener(isSuccess -> {
       if (isSuccess) {
+        System.out.println("服务器优雅关闭成功");
         running = false;
-        System.out.println("服务器已停止运行！");
         serverView.setFinishSuccessfulListener(null);
         serverView.setLaunchSuccessfulListener(null);
         serverView = null;
         newThreadToMain();
       } else {
+        System.out.println("服务器优雅关闭失败");
         running = true;
-        System.out.println("服务器停止失败！");
         newThreadKeyIn();
       }
     });
