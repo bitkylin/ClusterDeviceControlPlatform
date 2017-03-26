@@ -3,7 +3,6 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/KyStreamAdapter.iml" filepath="$PROJECT_DIR$/KyStreamAdapter.iml" />
-      <module fileurl="file://$PROJECT_DIR$/MvnAdapter.iml" filepath="$PROJECT_DIR$/MvnAdapter.iml" />
     </modules>
   </component>
 </project>

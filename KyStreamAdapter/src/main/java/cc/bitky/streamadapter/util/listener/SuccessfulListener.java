@@ -1,6 +1,6 @@
 package cc.bitky.streamadapter.util.listener;
 
 @FunctionalInterface
-public interface FinishSuccessfulListener {
+public interface SuccessfulListener {
   void onSuccess(boolean isSuccess);
 }

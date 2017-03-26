@@ -1,5 +1,6 @@
 package cc.bitky.streamadapter;
 
+import cc.bitky.streamadapter.client.test.ClientTest;
 import cc.bitky.streamadapter.server.view.ServerShow;
 import java.util.Scanner;
 
@@ -15,12 +16,14 @@ public class Main {
 
     while (isContinuing) {
       welcomeTo();
-      String inputMsg = scanner.nextLine();
+      String inputMsg = scanner.next();
       switch (inputMsg) {
         case "server":
           ServerShow.newInstance().startServer(scanner);
           return;
-
+        case "client":
+          ClientTest.newInstance().startClient(scanner);
+          return;
         case "exit":
           if (ServerShow.isRunning()) {
             System.out.println("警告: 请先关闭服务器！");
@@ -36,6 +39,7 @@ public class Main {
     System.out.println("\n* * * * *");
     System.out.println("主菜单: 请选择想要进行的操作");
     System.out.println("  server: 开启服务器");
+    System.out.println("  client: 开启测试客户端");
     System.out.println("  exit: 关闭程序");
     System.out.print("请输入: ");
   }
