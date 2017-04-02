@@ -2,7 +2,7 @@ package cc.bitky.clustermanage.tcp.server.netty;
 
 import cc.bitky.clustermanage.tcp.server.netty.NettyServerContract.IServerPresenter;
 import cc.bitky.clustermanage.tcp.server.netty.NettyServerContract.IServerView;
-import cc.bitky.clustermanage.tcp.server.netty.channelhandler.ServerChannelInitializerTest;
+import cc.bitky.clustermanage.tcp.server.netty.channelhandler.ServerChannelInitializer;
 import cc.bitky.clustermanage.tcp.util.listener.SuccessfulListener;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelFuture;
@@ -30,7 +30,7 @@ public class NettyServer implements IServerView {
       ServerBootstrap bootstrap = new ServerBootstrap();
       bootstrap.group(group)
           .channel(NioServerSocketChannel.class)
-          .childHandler(new ServerChannelInitializerTest());
+          .childHandler(new ServerChannelInitializer());
       ChannelFuture channelFuture = bootstrap.bind(new InetSocketAddress(30232));
       channelFuture.addListener(future -> startListenerHandle(future, launchListener));
     }).start();

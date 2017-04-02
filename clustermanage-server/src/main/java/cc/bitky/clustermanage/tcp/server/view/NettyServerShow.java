@@ -4,26 +4,29 @@ import cc.bitky.clustermanage.tcp.server.NettyMain;
 import cc.bitky.clustermanage.tcp.server.netty.NettyServer;
 import cc.bitky.clustermanage.tcp.server.netty.NettyServerContract.IServerView;
 import java.util.Scanner;
+import org.springframework.stereotype.Component;
 
+@Component
 public class NettyServerShow {
-  private static NettyServerShow view;
-  private static boolean running = false;
+  private boolean running = false;
   private IServerView serverView;
   private Scanner scanner;
+  private NettyMain nettyMain;
 
-  public static boolean isRunning() {
+  public boolean isRunning() {
     return running;
   }
 
-  public static NettyServerShow newInstance() {
-    if (view == null) {
+  //public static NettyServerShow newInstance() {
+  //  if (view == null) {
+  //
+  //    view = new NettyServerShow();
+  //  }
+  //  return view;
+  //}
 
-      view = new NettyServerShow();
-    }
-    return view;
-  }
-
-  public void startServer(Scanner scanner) {
+  public void startServer(NettyMain nettyMain, Scanner scanner) {
+    this.nettyMain = nettyMain;
     this.scanner = scanner;
     if (!running) {
       System.out.println("服务器正在启动...");
@@ -89,7 +92,7 @@ public class NettyServerShow {
 
   private void newThreadToMain() {
     new Thread(() -> {
-      NettyMain.main(new String[0]);
+      nettyMain.run();
     }).start();
   }
 

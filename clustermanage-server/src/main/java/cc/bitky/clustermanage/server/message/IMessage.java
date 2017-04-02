@@ -1,4 +1,4 @@
-package cc.bitky.clustermanage.tcp.util.bean.message;
+package cc.bitky.clustermanage.server.message;
 
 public interface IMessage {
   int getMsgId();

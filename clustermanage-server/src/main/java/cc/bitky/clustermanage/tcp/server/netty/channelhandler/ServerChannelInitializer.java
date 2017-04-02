@@ -11,6 +11,10 @@ public class ServerChannelInitializer extends ChannelInitializer<NioSocketChanne
     byte head = 0x11;
     ch.pipeline().addLast(new FrameIdentifierChannelInboundHandler(head));
     ch.pipeline().addLast(new ShowByteBufAsFrameInBoundHandler());
+
+    // 新建 MessageHandler 方法，生成 Message 对象传出并进行处理
+
+
     //ch.pipeline().addLast(new MessageIdentifierChannelInboundHandler(CharsetUtil.US_ASCII));
     //ch.pipeline().addLast(new MessageIdentifierChannelInboundHandler());
     //ch.pipeline().addLast(new SimpleChannelInboundHandler<String>() {
