@@ -7,27 +7,8 @@ import io.netty.handler.logging.LoggingHandler;
 public class ServerChannelInitializer extends ChannelInitializer<NioSocketChannel> {
 
   @Override protected void initChannel(NioSocketChannel ch) throws Exception {
-    ch.pipeline().addLast(new LoggingHandler("NO1"));
-    byte head = 0x11;
-    ch.pipeline().addLast(new FrameIdentifierChannelInboundHandler(head));
-    ch.pipeline().addLast(new ShowByteBufAsFrameInBoundHandler());
-
-    // 新建 MessageHandler 方法，生成 Message 对象传出并进行处理
-
-
-    //ch.pipeline().addLast(new MessageIdentifierChannelInboundHandler(CharsetUtil.US_ASCII));
-    //ch.pipeline().addLast(new MessageIdentifierChannelInboundHandler());
-    //ch.pipeline().addLast(new SimpleChannelInboundHandler<String>() {
-    //  @Override protected void channelRead0(ChannelHandlerContext ctx, String msg)
-    //      throws Exception {
-    //    System.out.println("**************\n");
-    //    System.out.println("**************\n");
-    //    System.out.println("完整帧: ");
-    //   //  KyLog.LogFrame(msg);
-    //    System.out.println("收到帧: " + msg);
-    //    System.out.println("\n\n\n**************");
-    //    System.out.println("**************");
-    //  }
-    //});
+    ch.pipeline().addLast(new LoggingHandler("kyOutlineLogger"));
+    ch.pipeline().addLast(new CanFrameChannelInboundHandler());
+    ch.pipeline().addLast(new ParsedMessageInBoundHandler());
   }
 }

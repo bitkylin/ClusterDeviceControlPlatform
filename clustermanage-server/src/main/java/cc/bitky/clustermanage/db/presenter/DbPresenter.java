@@ -5,8 +5,8 @@ import cc.bitky.clustermanage.db.bean.Device;
 import cc.bitky.clustermanage.db.bean.DeviceGroup;
 import cc.bitky.clustermanage.db.repository.DeviceGroupRepository;
 import cc.bitky.clustermanage.server.bean.MessageHandler;
-import cc.bitky.clustermanage.server.message.ChargeStatus;
-import cc.bitky.clustermanage.server.message.HeartBeat;
+import cc.bitky.clustermanage.server.message.MsgChargeStatus;
+import cc.bitky.clustermanage.server.message.MsgHeartBeat;
 import cc.bitky.clustermanage.server.message.IMessage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -38,21 +38,21 @@ public class DbPresenter {
     }
   }
 
-  public void heartBeatHandle(HeartBeat heartBeat) {
-    DeviceGroup deviceGroup = deviceGroupRepository.findByName(heartBeat.getGroupId());
+  public void heartBeatHandle(MsgHeartBeat msgHeartBeat) {
+    DeviceGroup deviceGroup = deviceGroupRepository.findByName(msgHeartBeat.getGroupId());
     deviceGroup.setHeartBeat(System.currentTimeMillis());
     deviceGroupRepository.save(deviceGroup);
-    logger.info("充电架(" + heartBeat.getGroupId() + ") 心跳包处理完毕");
+    logger.info("充电架(" + msgHeartBeat.getGroupId() + ") 心跳包处理完毕");
   }
 
-  public void chargeStatusHandle(ChargeStatus chargeStatus) {
-    DeviceGroup deviceGroup = deviceGroupRepository.findByName(chargeStatus.getGroupId());
-    Device device = deviceGroup.getDevices().get(chargeStatus.getBoxId() - 1);
-    device.setStatus(chargeStatus.getStatus());
-    device.setTime(chargeStatus.getTime());
+  public void chargeStatusHandle(MsgChargeStatus msgChargeStatus) {
+    DeviceGroup deviceGroup = deviceGroupRepository.findByName(msgChargeStatus.getGroupId());
+    Device device = deviceGroup.getDevices().get(msgChargeStatus.getBoxId() - 1);
+    device.setStatus(msgChargeStatus.getStatus());
+    device.setTime(msgChargeStatus.getTime());
     deviceGroupRepository.save(deviceGroup);
 
-    logger.info("充电架(" + chargeStatus.getGroupId() + ") " + chargeStatus.getBoxId() + "号柜, 状态更新");
+    logger.info("充电架(" + msgChargeStatus.getGroupId() + ") " + msgChargeStatus.getBoxId() + "号柜, 状态更新");
   }
 
   private boolean isLegal(IMessage message) {

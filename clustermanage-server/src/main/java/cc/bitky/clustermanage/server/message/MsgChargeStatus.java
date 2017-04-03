@@ -2,11 +2,11 @@ package cc.bitky.clustermanage.server.message;
 
 import cc.bitky.clustermanage.tcp.util.enumky.MsgType;
 
-public class ChargeStatus extends BaseMessage {
+public class MsgChargeStatus extends BaseMessage {
   private int status;
   private long time;
 
-  public ChargeStatus(int groupId, int boxId, int status) {
+  public MsgChargeStatus(int groupId, int boxId, int status) {
     super(groupId, boxId);
     this.status = status;
     this.time = System.currentTimeMillis();

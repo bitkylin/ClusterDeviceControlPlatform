@@ -1,8 +1,8 @@
 package cc.bitky.clustermanage.tcp.clienttest;
 
 import cc.bitky.clustermanage.server.bean.MessageHandler;
-import cc.bitky.clustermanage.server.message.ChargeStatus;
-import cc.bitky.clustermanage.server.message.HeartBeat;
+import cc.bitky.clustermanage.server.message.MsgChargeStatus;
+import cc.bitky.clustermanage.server.message.MsgHeartBeat;
 import cc.bitky.clustermanage.server.message.IMessage;
 import cc.bitky.clustermanage.tcp.server.NettyMain;
 import cc.bitky.clustermanage.tcp.util.enumky.ChargeStatusEnum;
@@ -33,7 +33,7 @@ public class ClientTest {
 
         case "hb":
           int groupId = scanner.nextInt();
-          IMessage hb = new HeartBeat(groupId);
+          IMessage hb = new MsgHeartBeat(groupId);
           messageHandler.handle(hb);
           break;
 
@@ -51,7 +51,7 @@ public class ClientTest {
               status = ChargeStatusEnum.CRASH;
               break;
           }
-          IMessage css = new ChargeStatus(groupId2, boxId2, status);
+          IMessage css = new MsgChargeStatus(groupId2, boxId2, status);
           messageHandler.handle(css);
           break;
 

@@ -5,20 +5,20 @@ public class BaseMessage implements IMessage {
   private int groupId = -1;
   private int boxId = -1;
 
+  BaseMessage(int groupId) {
+    this.groupId = groupId;
+  }
+
   BaseMessage(int groupId, int boxId) {
     this(groupId);
     this.boxId = boxId;
-  }
-
-  BaseMessage(int groupId) {
-    this.groupId = groupId;
   }
 
   @Override public int getMsgId() {
     return msgId;
   }
 
-  @Override public void setMsgId(int msgId) {
+  void setMsgId(int msgId) {
     this.msgId = msgId;
   }
 

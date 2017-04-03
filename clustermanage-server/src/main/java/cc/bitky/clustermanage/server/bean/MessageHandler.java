@@ -1,8 +1,8 @@
 package cc.bitky.clustermanage.server.bean;
 
 import cc.bitky.clustermanage.db.presenter.DbPresenter;
-import cc.bitky.clustermanage.server.message.ChargeStatus;
-import cc.bitky.clustermanage.server.message.HeartBeat;
+import cc.bitky.clustermanage.server.message.MsgChargeStatus;
+import cc.bitky.clustermanage.server.message.MsgHeartBeat;
 import cc.bitky.clustermanage.server.message.IMessage;
 import cc.bitky.clustermanage.tcp.util.enumky.MsgType;
 import org.slf4j.Logger;
@@ -27,10 +27,10 @@ public class MessageHandler {
     int msgId = message.getMsgId();
     switch (msgId) {
       case MsgType.HEART_BEAT:
-        dbPresenter.heartBeatHandle((HeartBeat) message);
+        dbPresenter.heartBeatHandle((MsgHeartBeat) message);
         break;
       case MsgType.CHANGE_STATUS:
-        dbPresenter.chargeStatusHandle((ChargeStatus) message);
+        dbPresenter.chargeStatusHandle((MsgChargeStatus) message);
         break;
     }
   }
