@@ -9,7 +9,7 @@ public class NettyMainTest {
   @Test
   public void testMain() {
     byte a = (byte) 0x80;
-    byte b = (byte) (a+9);
+    byte b = (byte) (a + 9);
 
     byte[] as = new byte[] {a, b};
     ByteBuf byteBuf = Unpooled.copiedBuffer(as);

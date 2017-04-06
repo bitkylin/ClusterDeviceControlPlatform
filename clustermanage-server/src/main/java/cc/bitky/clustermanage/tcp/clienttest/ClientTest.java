@@ -1,9 +1,9 @@
 package cc.bitky.clustermanage.tcp.clienttest;
 
-import cc.bitky.clustermanage.server.bean.MessageHandler;
+import cc.bitky.clustermanage.server.bean.KyMessageHandler;
+import cc.bitky.clustermanage.server.message.IMessage;
 import cc.bitky.clustermanage.server.message.MsgChargeStatus;
 import cc.bitky.clustermanage.server.message.MsgHeartBeat;
-import cc.bitky.clustermanage.server.message.IMessage;
 import cc.bitky.clustermanage.tcp.server.NettyMain;
 import cc.bitky.clustermanage.tcp.util.enumky.ChargeStatusEnum;
 import java.util.Scanner;
@@ -12,12 +12,12 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class ClientTest {
-  private final MessageHandler messageHandler;
+  private final KyMessageHandler kyMessageHandler;
   private NettyMain nettyMain;
 
   @Autowired
-  public ClientTest(MessageHandler messageHandler) {
-    this.messageHandler = messageHandler;
+  public ClientTest(KyMessageHandler kyMessageHandler) {
+    this.kyMessageHandler = kyMessageHandler;
   }
 
   public void startClient(NettyMain nettyMain, Scanner scanner) {
@@ -34,7 +34,7 @@ public class ClientTest {
         case "hb":
           int groupId = scanner.nextInt();
           IMessage hb = new MsgHeartBeat(groupId);
-          messageHandler.handle(hb);
+          kyMessageHandler.handle(hb);
           break;
 
         case "css":
@@ -52,12 +52,13 @@ public class ClientTest {
               break;
           }
           IMessage css = new MsgChargeStatus(groupId2, boxId2, status);
-          messageHandler.handle(css);
+          kyMessageHandler.handle(css);
           break;
 
         case "return":
           System.out.println("返回主菜单中...");
-          nettyMain.run();
+          new Thread(() -> nettyMain.run());
+
           return;
 
         case "no":

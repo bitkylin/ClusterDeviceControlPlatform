@@ -8,11 +8,14 @@ import cc.bitky.clustermanage.tcp.util.enumky.MsgType;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
+import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Component;
 
+@Component
 public class CanFrameChannelInboundHandler extends SimpleChannelInboundHandler<ByteBuf> {
   private static final int frameHead = 0x80;
-  private org.slf4j.Logger logger = LoggerFactory.getLogger(this.getClass());
+  private Logger logger = LoggerFactory.getLogger(this.getClass());
 
   @Override
   protected void channelRead0(ChannelHandlerContext ctx, ByteBuf msg) {

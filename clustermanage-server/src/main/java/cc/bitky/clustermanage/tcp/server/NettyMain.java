@@ -5,9 +5,9 @@ import cc.bitky.clustermanage.tcp.server.view.NettyServerShow;
 import java.util.Scanner;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
-@Component
+@Service
 public class NettyMain implements CommandLineRunner {
   private static boolean isContinuing = true;
   private static Scanner scanner = new Scanner(System.in);
@@ -19,10 +19,6 @@ public class NettyMain implements CommandLineRunner {
     this.clientTest = clientTest;
     this.nettyServerShow = nettyServerShow;
   }
-
-  //public static void main(String[] args) {
-  //  new NettyMain().keyIn();
-  //}
 
   private static void welcomeTo() {
     System.out.println("\n* * * * *");
@@ -40,9 +36,10 @@ public class NettyMain implements CommandLineRunner {
       String inputMsg = scanner.next();
       switch (inputMsg) {
         case "server":
-          nettyServerShow.startServer(this, scanner);
+          new Thread(() -> nettyServerShow.startServer(this, scanner));
           return;
         case "client":
+        //  new Thread(() -> clientTest.startClient(this, scanner));
           clientTest.startClient(this, scanner);
           return;
         case "exit":
@@ -58,6 +55,7 @@ public class NettyMain implements CommandLineRunner {
 
   @Override
   public void run(String... args) {
+   // new Thread(this::keyIn);
     keyIn();
   }
 }

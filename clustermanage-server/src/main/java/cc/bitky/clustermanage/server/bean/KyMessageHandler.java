@@ -11,13 +11,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
-public class MessageHandler {
+public class KyMessageHandler {
   private final DbPresenter dbPresenter;
-  private Logger logger = LoggerFactory.getLogger(MessageHandler.class);
+  private Logger logger = LoggerFactory.getLogger(KyMessageHandler.class);
   private int groupSize = -1;
 
   @Autowired
-  public MessageHandler(DbPresenter dbPresenter) {
+  public KyMessageHandler(DbPresenter dbPresenter) {
     this.dbPresenter = dbPresenter;
   }
 

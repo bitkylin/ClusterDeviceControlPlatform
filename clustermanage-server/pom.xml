@@ -23,7 +23,9 @@
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
     <netty.version>4.1.8.Final</netty.version>
+    <fastjson.version>1.2.31</fastjson.version>
     <java.version>1.8</java.version>
+    <retrofit.version>2.2.0</retrofit.version>
   </properties>
 
   <dependencies>
@@ -31,10 +33,12 @@
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-amqp</artifactId>
     </dependency>
+
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-data-mongodb</artifactId>
     </dependency>
+
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-web</artifactId>
@@ -50,6 +54,18 @@
       <groupId>io.netty</groupId>
       <artifactId>netty-all</artifactId>
       <version>${netty.version}</version>
+    </dependency>
+
+    <dependency>
+      <groupId>com.alibaba</groupId>
+      <artifactId>fastjson</artifactId>
+      <version>${fastjson.version}</version>
+    </dependency>
+
+    <dependency>
+      <groupId>com.squareup.retrofit2</groupId>
+      <artifactId>retrofit</artifactId>
+      <version>${retrofit.version}</version>
     </dependency>
   </dependencies>
 

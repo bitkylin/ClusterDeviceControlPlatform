@@ -4,34 +4,30 @@ import cc.bitky.clustermanage.tcp.server.NettyMain;
 import cc.bitky.clustermanage.tcp.server.netty.NettyServer;
 import cc.bitky.clustermanage.tcp.server.netty.NettyServerContract.IServerView;
 import java.util.Scanner;
-import org.springframework.stereotype.Component;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
-@Component
+@Service
 public class NettyServerShow {
+  private final IServerView nettyServer;
   private boolean running = false;
-  private IServerView serverView;
   private Scanner scanner;
   private NettyMain nettyMain;
+
+  @Autowired public NettyServerShow(NettyServer nettyServer) {
+    this.nettyServer = nettyServer;
+  }
 
   public boolean isRunning() {
     return running;
   }
-
-  //public static NettyServerShow newInstance() {
-  //  if (view == null) {
-  //
-  //    view = new NettyServerShow();
-  //  }
-  //  return view;
-  //}
 
   public void startServer(NettyMain nettyMain, Scanner scanner) {
     this.nettyMain = nettyMain;
     this.scanner = scanner;
     if (!running) {
       System.out.println("服务器正在启动...");
-      serverView = new NettyServer();
-      serverView.setLaunchSuccessfulListener(isSuccess -> {
+      nettyServer.setLaunchSuccessfulListener(isSuccess -> {
         if (isSuccess) {
           System.out.println("端口绑定成功");
           // newThreadKeyIn();
@@ -43,7 +39,7 @@ public class NettyServerShow {
         }
       });
 
-      serverView.start();
+      nettyServer.start();
       running = true;
     } else {
       newThreadKeyIn();
@@ -73,13 +69,12 @@ public class NettyServerShow {
   }
 
   private void stopServer() {
-    serverView.setFinishSuccessfulListener(isSuccess -> {
+    nettyServer.setFinishSuccessfulListener(isSuccess -> {
       if (isSuccess) {
         System.out.println("服务器优雅关闭成功");
         running = false;
-        serverView.setFinishSuccessfulListener(null);
-        serverView.setLaunchSuccessfulListener(null);
-        serverView = null;
+        nettyServer.setFinishSuccessfulListener(null);
+        nettyServer.setLaunchSuccessfulListener(null);
         newThreadToMain();
       } else {
         System.out.println("服务器优雅关闭失败");
@@ -87,7 +82,7 @@ public class NettyServerShow {
         newThreadKeyIn();
       }
     });
-    serverView.shutdown();
+    nettyServer.shutdown();
   }
 
   private void newThreadToMain() {

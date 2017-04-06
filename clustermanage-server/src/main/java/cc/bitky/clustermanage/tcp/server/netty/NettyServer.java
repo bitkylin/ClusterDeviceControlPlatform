@@ -10,27 +10,34 @@ import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
 import io.netty.util.concurrent.Future;
 import java.net.InetSocketAddress;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
+@Service
 public class NettyServer implements IServerView {
+  private final ServerChannelInitializer serverChannelInitializer;
   private SuccessfulListener launchListener;
   private SuccessfulListener finishListener;
   private NioEventLoopGroup group;
 
-  public NettyServer() {
+  @Autowired
+  public NettyServer(ServerChannelInitializer serverChannelInitializer) {
+    this.serverChannelInitializer = serverChannelInitializer;
+  }
+
+  @Override
+  public void setPresenter(IServerPresenter presenter) {
 
   }
 
-  @Override public void setPresenter(IServerPresenter presenter) {
-
-  }
-
-  @Override public void start() {
+  @Override
+  public void start() {
     new Thread(() -> {
       group = new NioEventLoopGroup();
       ServerBootstrap bootstrap = new ServerBootstrap();
       bootstrap.group(group)
           .channel(NioServerSocketChannel.class)
-          .childHandler(new ServerChannelInitializer());
+          .childHandler(serverChannelInitializer);
       ChannelFuture channelFuture = bootstrap.bind(new InetSocketAddress(30232));
       channelFuture.addListener(future -> startListenerHandle(future, launchListener));
     }).start();

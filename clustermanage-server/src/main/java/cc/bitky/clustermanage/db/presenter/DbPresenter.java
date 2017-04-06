@@ -4,7 +4,7 @@ import cc.bitky.clustermanage.db.DeviceGroupBuilder;
 import cc.bitky.clustermanage.db.bean.Device;
 import cc.bitky.clustermanage.db.bean.DeviceGroup;
 import cc.bitky.clustermanage.db.repository.DeviceGroupRepository;
-import cc.bitky.clustermanage.server.bean.MessageHandler;
+import cc.bitky.clustermanage.server.bean.KyMessageHandler;
 import cc.bitky.clustermanage.server.message.MsgChargeStatus;
 import cc.bitky.clustermanage.server.message.MsgHeartBeat;
 import cc.bitky.clustermanage.server.message.IMessage;
@@ -16,7 +16,7 @@ import org.springframework.stereotype.Repository;
 @Repository
 public class DbPresenter {
   private final DeviceGroupRepository deviceGroupRepository;
-  private Logger logger = LoggerFactory.getLogger(MessageHandler.class);
+  private Logger logger = LoggerFactory.getLogger(KyMessageHandler.class);
   private int groupSize = -1;
 
   @Autowired
