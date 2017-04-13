@@ -1,23 +1,25 @@
 package cc.bitky.clustermanage.tcp.clienttest;
 
-import cc.bitky.clustermanage.server.bean.KyMessageHandler;
+import cc.bitky.clustermanage.server.bean.KyTcpMessageHandler;
 import cc.bitky.clustermanage.server.message.IMessage;
-import cc.bitky.clustermanage.server.message.MsgChargeStatus;
-import cc.bitky.clustermanage.server.message.MsgHeartBeat;
+import cc.bitky.clustermanage.server.message.tcp.TcpMsgChargeStatus;
+import cc.bitky.clustermanage.server.message.tcp.TcpMsgHeartBeat;
 import cc.bitky.clustermanage.tcp.server.NettyMain;
 import cc.bitky.clustermanage.tcp.util.enumky.ChargeStatusEnum;
+import io.netty.channel.ChannelPipeline;
 import java.util.Scanner;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
 public class ClientTest {
-  private final KyMessageHandler kyMessageHandler;
+  private final KyTcpMessageHandler kyTcpMessageHandler;
   private NettyMain nettyMain;
+  private ChannelPipeline pipeline;
 
   @Autowired
-  public ClientTest(KyMessageHandler kyMessageHandler) {
-    this.kyMessageHandler = kyMessageHandler;
+  public ClientTest(KyTcpMessageHandler kyTcpMessageHandler) {
+    this.kyTcpMessageHandler = kyTcpMessageHandler;
   }
 
   public void startClient(NettyMain nettyMain, Scanner scanner) {
@@ -33,8 +35,8 @@ public class ClientTest {
 
         case "hb":
           int groupId = scanner.nextInt();
-          IMessage hb = new MsgHeartBeat(groupId);
-          kyMessageHandler.handle(hb);
+          IMessage hb = new TcpMsgHeartBeat(groupId);
+          kyTcpMessageHandler.handleTcpMsg(hb);
           break;
 
         case "css":
@@ -51,8 +53,12 @@ public class ClientTest {
               status = ChargeStatusEnum.CRASH;
               break;
           }
-          IMessage css = new MsgChargeStatus(groupId2, boxId2, status);
-          kyMessageHandler.handle(css);
+          IMessage css = new TcpMsgChargeStatus(groupId2, boxId2, status);
+          kyTcpMessageHandler.handleTcpMsg(css);
+          break;
+
+        case "send":
+          pipeline.write("lmlwqq");
           break;
 
         case "return":
@@ -74,5 +80,10 @@ public class ClientTest {
     System.out.println("  css「group」「box」「status」: 改变状态");
     System.out.println("  return: 返回主菜单");
     System.out.print("请输入: ");
+  }
+
+  public void setPipeline(ChannelPipeline pipeline) {
+
+    this.pipeline = pipeline;
   }
 }

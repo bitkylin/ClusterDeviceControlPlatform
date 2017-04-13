@@ -36,7 +36,7 @@ public class NettyMain implements CommandLineRunner {
       String inputMsg = scanner.next();
       switch (inputMsg) {
         case "server":
-          new Thread(() -> nettyServerShow.startServer(this, scanner));
+      //   nettyServerShow.startServer(this, scanner);
           return;
         case "client":
         //  new Thread(() -> clientTest.startClient(this, scanner));
@@ -56,6 +56,6 @@ public class NettyMain implements CommandLineRunner {
   @Override
   public void run(String... args) {
    // new Thread(this::keyIn);
-    keyIn();
+  //  keyIn();
   }
 }

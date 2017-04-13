@@ -2,12 +2,15 @@ package cc.bitky.clustermanage.tcp.server.netty.channelhandler.handlerbackup;
 
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.socket.nio.NioSocketChannel;
+import io.netty.handler.logging.LogLevel;
 import io.netty.handler.logging.LoggingHandler;
+import org.springframework.stereotype.Service;
 
+@Service
 public class ServerChannelInitializerTest extends ChannelInitializer<NioSocketChannel> {
 
   @Override protected void initChannel(NioSocketChannel ch) throws Exception {
-    ch.pipeline().addLast(new LoggingHandler("NO1"));
+    ch.pipeline().addLast(new LoggingHandler("NO1", LogLevel.INFO));
     byte head = 0x11;
    // ch.pipeline().addLast(new FrameIdentifierChannelInboundHandler(head));
     ch.pipeline().addLast(new ShowByteBufAsFrameInBoundHandler());

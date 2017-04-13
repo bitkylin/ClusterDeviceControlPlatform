@@ -4,3 +4,5 @@ spring:
       host: 202.193.56.226
       database: bitky
 debug: false
+logging:
+  level: debug
