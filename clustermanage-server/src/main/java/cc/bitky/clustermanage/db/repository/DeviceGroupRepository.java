@@ -1,8 +1,9 @@
 package cc.bitky.clustermanage.db.repository;
 
-import cc.bitky.clustermanage.db.bean.DeviceGroup;
 import org.springframework.data.mongodb.repository.MongoRepository;
 
+import cc.bitky.clustermanage.db.bean.DeviceGroup;
+
 public interface DeviceGroupRepository extends MongoRepository<DeviceGroup, String> {
-  DeviceGroup findByName(int name);
+    DeviceGroup findByGroupId(int groupId);
 }

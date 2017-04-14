@@ -3,7 +3,7 @@ package cc.bitky.clustermanage.tcp.server.netty.channelhandler;
 import cc.bitky.clustermanage.server.MsgType;
 import cc.bitky.clustermanage.server.message.IMessage;
 import cc.bitky.clustermanage.server.message.tcp.MsgErrorMessage;
-import cc.bitky.clustermanage.server.message.tcp.TcpMsgChargeStatus;
+import cc.bitky.clustermanage.server.message.tcp.TcpMsgDeviceStatus;
 import cc.bitky.clustermanage.server.message.tcp.TcpMsgHeartBeat;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandler;
@@ -41,7 +41,7 @@ public class CanFrameChannelInboundHandler extends SimpleChannelInboundHandler<B
 
       case MsgType.DEVICE_RESPONSE_STATUS:
         int status = msg.readByte();
-        IMessage msgChargeStatus = new TcpMsgChargeStatus(groupId, boxId, status);
+        IMessage msgChargeStatus = new TcpMsgDeviceStatus(groupId, boxId, status);
         msg.skipBytes(7);
         return msgChargeStatus;
 

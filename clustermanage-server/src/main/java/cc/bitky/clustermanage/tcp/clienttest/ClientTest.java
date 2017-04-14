@@ -2,7 +2,7 @@ package cc.bitky.clustermanage.tcp.clienttest;
 
 import cc.bitky.clustermanage.server.bean.KyTcpMessageHandler;
 import cc.bitky.clustermanage.server.message.IMessage;
-import cc.bitky.clustermanage.server.message.tcp.TcpMsgChargeStatus;
+import cc.bitky.clustermanage.server.message.tcp.TcpMsgDeviceStatus;
 import cc.bitky.clustermanage.server.message.tcp.TcpMsgHeartBeat;
 import cc.bitky.clustermanage.tcp.server.NettyMain;
 import cc.bitky.clustermanage.tcp.util.enumky.ChargeStatusEnum;
@@ -53,7 +53,7 @@ public class ClientTest {
               status = ChargeStatusEnum.CRASH;
               break;
           }
-          IMessage css = new TcpMsgChargeStatus(groupId2, boxId2, status);
+          IMessage css = new TcpMsgDeviceStatus(groupId2, boxId2, status);
           kyTcpMessageHandler.handleTcpMsg(css);
           break;
 

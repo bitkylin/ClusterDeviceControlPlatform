@@ -1,14 +1,9 @@
-package cc.bitky.clustermanage.db.bean;
+package cc.bitky.clustermanage.web.bean;
 
-import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 @Document
-public class Employee {
-
-    @Id
-    String id;
-
+public class WebEmployee {
     //个人信息
     String name;
     String department;
@@ -17,23 +12,6 @@ public class Employee {
     //设备位置
     int groupId;
     int deviceId;
-
-    String routineTablesObjectId;
-
-
-    public Employee(String name, String department) {
-        this.name = name;
-        this.department = department;
-    }
-
-
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
 
     public String getName() {
         return name;
@@ -73,13 +51,5 @@ public class Employee {
 
     public void setDeviceId(int deviceId) {
         this.deviceId = deviceId;
-    }
-
-    public String getRoutineTablesObjectId() {
-        return routineTablesObjectId;
-    }
-
-    public void setRoutineTablesObjectId(String routineTablesObjectId) {
-        this.routineTablesObjectId = routineTablesObjectId;
     }
 }
