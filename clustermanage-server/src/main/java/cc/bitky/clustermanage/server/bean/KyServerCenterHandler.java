@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import cc.bitky.clustermanage.db.presenter.KyDbPresenter;
+import cc.bitky.clustermanage.server.bean.ServerWebMessageHandler.Card;
 import cc.bitky.clustermanage.server.message.IMessage;
 import cc.bitky.clustermanage.server.message.web.WebMsgDeployFreeCardNumber;
 import cc.bitky.clustermanage.server.message.web.WebMsgGrouped;
@@ -42,7 +43,7 @@ public class KyServerCenterHandler {
      * @return 万能卡号获取并写入 TCP 成功
      */
     boolean deployFreeCard(int groupId, int deviceId) {
-        long[] freeCards = kyDbPresenter.obtainFreeCardArray();
+        long[] freeCards = kyDbPresenter.getCardArray(Card.FREE);
         IMessage CardMsg = new WebMsgDeployFreeCardNumber(groupId, deviceId, freeCards);
         return deployGroupedMessage(CardMsg);
     }
@@ -83,5 +84,25 @@ public class KyServerCenterHandler {
      */
     boolean deployDeviceMsg(IMessage message) {
         return deployGroupedMessage(message);
+    }
+
+    /**
+     * 从数据库中获取卡号的集合
+     *
+     * @return 卡号的集合
+     */
+    long[] getCardArray(Card card) {
+        return kyDbPresenter.getCardArray(card);
+    }
+
+    /**
+     * 将卡号保存到数据库
+     *
+     * @param freecards 卡号的数组
+     * @param card      卡号类型
+     * @return 是否保存成功
+     */
+    boolean saveCardNumber(long[] freecards, Card card) {
+        return kyDbPresenter.saveCardNumber(freecards, card);
     }
 }

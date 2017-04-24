@@ -23,7 +23,7 @@ public class ServerWebMessageHandler {
     }
 
     /**
-     * 从数据库中获取万能卡号并写入 Netty 的 Handler
+     * 从数据库中获取万能卡号，并写入 Netty 的 Handler
      *
      * @param groupId  设备组 Id
      * @param deviceId 设备 Id
@@ -70,5 +70,40 @@ public class ServerWebMessageHandler {
 
     void setKyServerCenterHandler(KyServerCenterHandler kyServerCenterHandler) {
         this.kyServerCenterHandler = kyServerCenterHandler;
+    }
+
+
+    /**
+     * 从数据库中获取万能卡号的集合
+     *
+     * @return 万能卡号的集合
+     */
+    public long[] obtainFreeCards() {
+        return kyServerCenterHandler.getCardArray(Card.FREE);
+    }
+
+    /**
+     * 从数据库中获取确认卡号的集合
+     *
+     * @return 确认卡号的集合
+     */
+    public long[] obtainConfirmCards() {
+        return kyServerCenterHandler.getCardArray(Card.CONFIRM);
+    }
+
+    /**
+     * 将卡号保存到数据库
+     *
+     * @param freecards 卡号的数组
+     * @param card      卡号类型
+     * @return 是否保存成功
+     */
+    public boolean saveCardNumber(long[] freecards, Card card) {
+        return  kyServerCenterHandler.saveCardNumber(freecards, card);
+    }
+
+    public enum Card {
+        FREE,
+        CONFIRM
     }
 }

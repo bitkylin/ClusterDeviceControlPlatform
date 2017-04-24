@@ -11,30 +11,30 @@ import java.util.List;
 import cc.bitky.clustermanage.db.bean.Device;
 import cc.bitky.clustermanage.db.bean.DeviceGroup;
 import cc.bitky.clustermanage.db.bean.Employee;
-import cc.bitky.clustermanage.db.bean.KySetting;
 import cc.bitky.clustermanage.db.repository.DeviceGroupRepository;
-import cc.bitky.clustermanage.db.repository.SettingRepository;
+import cc.bitky.clustermanage.server.bean.ServerWebMessageHandler.Card;
 import cc.bitky.clustermanage.server.message.IMessage;
 import cc.bitky.clustermanage.server.message.tcp.TcpMsgResponseDeviceStatus;
 
 @Repository
 public class KyDbPresenter {
     private final DeviceGroupRepository deviceGroupRepository;
-
     private final DbEmployeePresenter dbEmployeePresenter;
-    private final SettingRepository settingRepository;
+    private final DbSettingPresenter dbSettingPresenter;
     private final DbDevicePresenter dbDevicePresenter;
     private final DbRoutinePresenter dbRoutinePresenter;
 
-    int groupSize;
+    private int groupSize;
 
     private Logger logger = LoggerFactory.getLogger(KyDbPresenter.class);
 
     @Autowired
-    public KyDbPresenter(DbRoutinePresenter dbRoutinePresenter, DbEmployeePresenter dbEmployeePresenter, DeviceGroupRepository deviceGroupRepository, DbDevicePresenter dbDevicePresenter, SettingRepository settingRepository) {
+    public KyDbPresenter(DbRoutinePresenter dbRoutinePresenter, DbEmployeePresenter dbEmployeePresenter
+            , DeviceGroupRepository deviceGroupRepository, DbDevicePresenter dbDevicePresenter
+            , DbSettingPresenter dbSettingPresenter) {
         this.dbRoutinePresenter = dbRoutinePresenter;
         this.deviceGroupRepository = deviceGroupRepository;
-        this.settingRepository = settingRepository;
+        this.dbSettingPresenter = dbSettingPresenter;
         this.dbDevicePresenter = dbDevicePresenter;
         this.dbEmployeePresenter = dbEmployeePresenter;
     }
@@ -132,19 +132,6 @@ public class KyDbPresenter {
     }
 
     /**
-     * 从数据库中获取万能卡号的数组
-     *
-     * @return 万能卡号的数组
-     */
-    public long[] obtainFreeCardArray() {
-        List<KySetting> kyKySettings = settingRepository.findAll();
-        if (kyKySettings.size() == 0) return new long[0];
-        long[] longs = kyKySettings.get(kyKySettings.size() - 1).getFreeCardList();
-
-        return longs == null ? new long[0] : longs;
-    }
-
-    /**
      * 设备初始化: 根据员工卡号获取员工信息
      *
      * @param cardNumber 员工卡号
@@ -153,5 +140,26 @@ public class KyDbPresenter {
     public Employee obtainDeviceByEmployeeCard(long cardNumber) {
         String employeeObjectId = dbDevicePresenter.obtainEmployeeObjectIdByCardNum(cardNumber);
         return dbEmployeePresenter.ObtainEmployeeByObjectId(employeeObjectId);
+    }
+
+    /**
+     * 获取卡号的集合
+     *
+     * @return 卡号的集合
+     */
+    public long[] getCardArray(Card card) {
+
+        return dbSettingPresenter.getCardArray(card);
+    }
+
+    /**
+     * 将卡号保存到数据库
+     *
+     * @param freecards 卡号的数组
+     * @param card      卡号类型
+     * @return 是否保存成功
+     */
+    public boolean saveCardNumber(long[] freecards, Card card) {
+        return dbSettingPresenter.saveCardArray(freecards, card);
     }
 }

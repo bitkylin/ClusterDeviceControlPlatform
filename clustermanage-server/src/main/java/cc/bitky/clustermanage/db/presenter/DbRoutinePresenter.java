@@ -5,16 +5,16 @@ import org.springframework.stereotype.Repository;
 
 import cc.bitky.clustermanage.db.bean.routineinfo.HistoryInfo;
 import cc.bitky.clustermanage.db.bean.routineinfo.RoutineTables;
-import cc.bitky.clustermanage.db.repository.RoutimeTableRepository;
+import cc.bitky.clustermanage.db.repository.RoutineTableRepository;
 import cc.bitky.clustermanage.server.message.tcp.TcpMsgResponseDeviceStatus;
 
 @Repository
 public class DbRoutinePresenter {
-    private final RoutimeTableRepository routimeTableRepository;
+    private final RoutineTableRepository routineTableRepository;
 
     @Autowired
-    public DbRoutinePresenter(RoutimeTableRepository routimeTableRepository) {
-        this.routimeTableRepository = routimeTableRepository;
+    public DbRoutinePresenter(RoutineTableRepository routineTableRepository) {
+        this.routineTableRepository = routineTableRepository;
     }
 
     /**
@@ -23,13 +23,13 @@ public class DbRoutinePresenter {
      * @param employeeObjectId           员工的 ObjectId
      * @param tcpMsgResponseDeviceStatus 设备状态包
      */
-    public void updateRoutineById(String employeeObjectId, TcpMsgResponseDeviceStatus tcpMsgResponseDeviceStatus) {
-        RoutineTables routineTables = routimeTableRepository.findOne(employeeObjectId);
+    void updateRoutineById(String employeeObjectId, TcpMsgResponseDeviceStatus tcpMsgResponseDeviceStatus) {
+        RoutineTables routineTables = routineTableRepository.findOne(employeeObjectId);
         if (routineTables == null) {
             routineTables = new RoutineTables();
             routineTables.setId(employeeObjectId);
         }
         routineTables.getHistoryInfos().add(HistoryInfo.newInstance(tcpMsgResponseDeviceStatus.getTime(), tcpMsgResponseDeviceStatus.getStatus()));
-        routimeTableRepository.save(routineTables);
+        routineTableRepository.save(routineTables);
     }
 }
