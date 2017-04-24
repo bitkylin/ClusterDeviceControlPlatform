@@ -1,6 +1,53 @@
 package cc.bitky.clustermanage.tcp.util;
 
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.junit4.SpringRunner;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import cc.bitky.clustermanage.server.bean.ServerTcpMessageHandler;
+import cc.bitky.clustermanage.server.message.IMessage;
+import cc.bitky.clustermanage.server.message.web.WebMsgDeployFreeCardNumber;
+
+@RunWith(SpringRunner.class)
+@SpringBootTest
 public class TcpMsgBuilderTest {
+    @Autowired
+    ServerTcpMessageHandler serverTcpMessageHandler;
+
+    @Test
+    public void buildDeviceId() throws Exception {
+    }
+
+    @Test
+    public void buildEmployeeName() throws Exception {
+    }
+
+    @Test
+    public void buildEmployeeDepartment() throws Exception {
+    }
+
+    @Test
+    public void buildEmployeeCardNumber() throws Exception {
+    }
+
+    @Test
+    public void buildRemainChargeTimes() throws Exception {
+    }
+
+    @Test
+    public void buildRemainChargeTimes1() throws Exception {
+    }
+
+    @Test
+    public void buildWebUnlock() throws Exception {
+    }
+
+
 
 //  private TcpMsgBuilder tcpMsgBuilder = new TcpMsgBuilder();
 //

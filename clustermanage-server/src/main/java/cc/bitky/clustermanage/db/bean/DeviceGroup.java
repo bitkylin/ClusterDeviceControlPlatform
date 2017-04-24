@@ -3,19 +3,21 @@ package cc.bitky.clustermanage.db.bean;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import java.util.Date;
+
 @Document
 public class DeviceGroup {
 
     @Id
     private String id;
 
-    private long heartBeatTime;
+    private Date heartBeatTime;
     private int groupId;
 
 
     public DeviceGroup(int groupId) {
         this.groupId = groupId;
-        heartBeatTime = System.currentTimeMillis();
+        heartBeatTime = new Date(0);
     }
 
     public String getId() {
@@ -26,11 +28,11 @@ public class DeviceGroup {
         this.id = id;
     }
 
-    public long getHeartBeatTime() {
+    public Date getHeartBeatTime() {
         return heartBeatTime;
     }
 
-    public void setHeartBeatTime(long heartBeatTime) {
+    public void setHeartBeatTime(Date heartBeatTime) {
         this.heartBeatTime = heartBeatTime;
     }
 

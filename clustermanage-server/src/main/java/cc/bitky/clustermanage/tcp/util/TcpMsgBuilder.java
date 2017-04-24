@@ -5,20 +5,37 @@ import org.springframework.stereotype.Component;
 import java.nio.charset.Charset;
 
 import cc.bitky.clustermanage.server.message.BaseMessage;
-import cc.bitky.clustermanage.server.message.web.WebMsgOperateBoxUnlock;
 import cc.bitky.clustermanage.server.message.web.WebMsgDeployEmployeeCardNumber;
 import cc.bitky.clustermanage.server.message.web.WebMsgDeployEmployeeDepartment;
+import cc.bitky.clustermanage.server.message.web.WebMsgDeployEmployeeDeviceId;
 import cc.bitky.clustermanage.server.message.web.WebMsgDeployEmployeeName;
+import cc.bitky.clustermanage.server.message.web.WebMsgDeployFreeCardNumber;
+import cc.bitky.clustermanage.server.message.web.WebMsgDeployRemainChargeTimes;
+import cc.bitky.clustermanage.server.message.web.WebMsgObtainDeviceStatus;
+import cc.bitky.clustermanage.server.message.web.WebMsgOperateBoxUnlock;
 
 @Component
 public class TcpMsgBuilder {
     Charset charset_GB2312 = Charset.forName("EUC-CN");
 
     /**
-     * 构建员工姓名的CAN帧
+     * 构建设备 ID 的CAN帧
      *
-     * @param webMsgDeployEmployeeName 员工姓名bean
-     * @return 员工姓名的CAN帧
+     * @param webMsgDeployEmployeeDeviceId 设备ID bean
+     * @return 设备ID的 CAN 帧
+     */
+    public byte[] buildDeviceId(WebMsgDeployEmployeeDeviceId webMsgDeployEmployeeDeviceId) {
+        byte[] bytes = buildMsgOutline(webMsgDeployEmployeeDeviceId);
+        bytes[0] += 1;
+        bytes[5] = (byte) webMsgDeployEmployeeDeviceId.getUpdatedDeviceId();
+        return bytes;
+    }
+
+    /**
+     * 构建员工姓名的 CAN 帧
+     *
+     * @param webMsgDeployEmployeeName 员工姓名 bean
+     * @return 员工姓名的 CAN 帧
      */
     public byte[] buildEmployeeName(WebMsgDeployEmployeeName webMsgDeployEmployeeName) {
         byte[] bytes = buildMsgOutline(webMsgDeployEmployeeName);
@@ -29,24 +46,10 @@ public class TcpMsgBuilder {
     }
 
     /**
-     * 构建员工卡号的CAN帧
+     * 构建员工单位的 CAN 帧
      *
-     * @param webMsgDeployEmployeeCardNumber 员工卡号bean
-     * @return 员工卡号的CAN帧
-     */
-    public byte[] buildEmployeeCardNumber(WebMsgDeployEmployeeCardNumber webMsgDeployEmployeeCardNumber) {
-        byte[] bytes = buildMsgOutline(webMsgDeployEmployeeCardNumber);
-        bytes[0] += 8;
-        byte[] byteCardNum = longToByteArray(webMsgDeployEmployeeCardNumber.getCardNumber());
-        addMessageBody(bytes, byteCardNum, 0);
-        return bytes;
-    }
-
-    /**
-     * 构建员工单位的CAN帧
-     *
-     * @param webMsgDeployEmployeeDepartment 员工单位bean
-     * @return 员工单位的CAN帧
+     * @param webMsgDeployEmployeeDepartment 员工单位 bean
+     * @return 员工单位的 CAN 帧
      */
     public byte[] buildEmployeeDepartment(WebMsgDeployEmployeeDepartment webMsgDeployEmployeeDepartment) {
         byte[] bytes = buildMsgOutline(webMsgDeployEmployeeDepartment);
@@ -71,20 +74,77 @@ public class TcpMsgBuilder {
     }
 
     /**
-     * 构建开锁用的CAN帧
+     * 构建员工卡号的 CAN 帧
      *
-     * @param webMsgOperateBoxUnlock 开锁bean
-     * @return 员工单位的CAN帧
+     * @param webMsgDeployEmployeeCardNumber 员工卡号 bean
+     * @return 员工卡号的 CAN 帧
+     */
+    public byte[] buildEmployeeCardNumber(WebMsgDeployEmployeeCardNumber webMsgDeployEmployeeCardNumber) {
+        byte[] bytes = buildMsgOutline(webMsgDeployEmployeeCardNumber);
+        bytes[0] += 8;
+        byte[] byteCardNum = longToByteArray(webMsgDeployEmployeeCardNumber.getCardNumber());
+        addMessageBody(bytes, byteCardNum, 0);
+        return bytes;
+    }
+
+
+    /**
+     * 构建剩余充电次数的 CAN 帧
+     *
+     * @param webMsgDeployRemainChargeTimes 剩余充电次数 bean
+     * @return 剩余充电次数的 CAN 帧
+     */
+    public byte[] buildRemainChargeTimes(WebMsgDeployRemainChargeTimes webMsgDeployRemainChargeTimes) {
+        byte[] bytes = buildMsgOutline(webMsgDeployRemainChargeTimes);
+        bytes[0] += 1;
+        bytes[5] = (byte) webMsgDeployRemainChargeTimes.getTimes();
+        return bytes;
+    }
+
+    /**
+     * 构建获取设备状态的 CAN 帧
+     *
+     * @param webMsgObtainDeviceStatus 获取设备状态 bean
+     * @return 获取设备状态的 CAN 帧
+     */
+    public byte[] buildRemainChargeTimes(WebMsgObtainDeviceStatus webMsgObtainDeviceStatus) {
+        return buildMsgOutline(webMsgObtainDeviceStatus);
+    }
+
+    /**
+     * 构建开锁用的 CAN 帧
+     *
+     * @param webMsgOperateBoxUnlock 开锁 bean
+     * @return 开锁用的 CAN 帧
      */
     public byte[] buildWebUnlock(WebMsgOperateBoxUnlock webMsgOperateBoxUnlock) {
         return buildMsgOutline(webMsgOperateBoxUnlock);
     }
 
     /**
-     * 构建CAN帧的轮廓，只需再填入数据位即可
+     * 构建万能卡号 CAN 帧
      *
-     * @param message 欲构建为CAN帧的bean
-     * @return 轮廓CAN帧
+     * @param webMsgDeployFreeCardNumber 万能卡号 bean
+     * @return 万能卡号的 CAN 帧
+     */
+    public byte[] buildFreeCardNumber(WebMsgDeployFreeCardNumber webMsgDeployFreeCardNumber) {
+        byte[] bytesSend = new byte[13 * 16];
+        long[] cards = webMsgDeployFreeCardNumber.getCardNumbers();
+        for (int i = 0; i < 16; i++) {
+            byte[] bytes = buildMsgOutline(webMsgDeployFreeCardNumber);
+            bytes[2] += i;
+            addMessageBody(bytes, longToByteArray(cards[i]), 0);
+            System.arraycopy(bytes, 0, bytesSend, 13 * i, 13);
+        }
+
+        return bytesSend;
+    }
+
+    /**
+     * 构建 CAN 帧的轮廓，只需再填入数据位即可
+     *
+     * @param message 欲构建为 CAN 帧的 bean
+     * @return 轮廓 CAN 帧
      */
     private byte[] buildMsgOutline(BaseMessage message) {
         byte[] bytes = new byte[13];
@@ -111,7 +171,7 @@ public class TcpMsgBuilder {
         return bytes;
     }
 
-    public long byteArrayToLong(byte[] bytes) {
+    private long byteArrayToLong(byte[] bytes) {
         long num = 0;
         for (int i = 0; i <= 7; i++) {
             num += (bytes[i] & 0xffL) << ((7 - i) * 8);
@@ -119,7 +179,7 @@ public class TcpMsgBuilder {
         return num;
     }
 
-    public byte[] longToByteArray(long num) {
+    private byte[] longToByteArray(long num) {
         byte[] bytes = new byte[8];
         for (int i = 0; i <= 7; i++) {
             bytes[i] = (byte) ((num >> ((7 - i) * 8)) & 0xff);

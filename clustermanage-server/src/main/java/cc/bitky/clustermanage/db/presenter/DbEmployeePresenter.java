@@ -7,23 +7,49 @@ import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Repository;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 import cc.bitky.clustermanage.db.bean.Employee;
 import cc.bitky.clustermanage.db.repository.EmployeeRepository;
 
 @Repository
 public class DbEmployeePresenter {
-  private final EmployeeRepository employeeRepository;
-  private Logger logger = LoggerFactory.getLogger(DbEmployeePresenter.class);
+    private final EmployeeRepository employeeRepository;
+    private final SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+    private Logger logger = LoggerFactory.getLogger(DbEmployeePresenter.class);
 
-  @Autowired
-  public DbEmployeePresenter(EmployeeRepository employeeRepository) {
-    this.employeeRepository = employeeRepository;
-  }
+    @Autowired
+    public DbEmployeePresenter(EmployeeRepository employeeRepository) {
+        this.employeeRepository = employeeRepository;
+    }
 
-  public boolean saveEmployee(Employee employee) {
+    public boolean saveEmployee(Employee employee) {
 
-    employeeRepository.save(employee);
-    Query query = new Query(Criteria.where("firstName").is("Harry"));
-    return true;
-  }
+        employeeRepository.save(employee);
+        Query query = new Query(Criteria.where("firstName").is("Harry"));
+        return true;
+    }
+
+    Employee ObtainEmployeeByObjectId(String employeeObjectId) {
+        Employee employee;
+        if (employeeObjectId != null) {
+            employee = employeeRepository.findOne(employeeObjectId);
+            if (employee != null) {
+                return employee;
+            }
+        }
+        employee = new Employee("备用「" + simpleDateFormat.format(new Date()) + "」", "");
+        employee = employeeRepository.save(employee);
+        return employee;
+    }
+
+    Employee createEmployee(int groupId, int boxId) {
+        Employee employee = new Employee("备用「" + simpleDateFormat.format(new Date()) + "」", "");
+        employee.setGroupId(groupId);
+        employee.setDeviceId(boxId);
+        employee = employeeRepository.save(employee);
+        return employee;
+    }
+
 }

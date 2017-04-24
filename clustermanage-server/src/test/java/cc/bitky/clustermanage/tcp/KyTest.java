@@ -1,7 +1,18 @@
 package cc.bitky.clustermanage.tcp;
 
-public class KyTest {
+import org.junit.Test;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
+public class KyTest {
+    @Test
+    public void test() {
+        Date date = new Date();
+        date.toString();
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        System.out.println(simpleDateFormat.format(date));
+    }
 //    @Test
 //    public void testMain() {
 //        byte a = (byte) 0x80;

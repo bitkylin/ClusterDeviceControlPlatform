@@ -1,17 +1,16 @@
 package cc.bitky.clustermanage.web.bean;
 
-import org.springframework.data.mongodb.core.mapping.Document;
-
-@Document
 public class WebEmployee {
+
     //个人信息
     String name;
     String department;
     long cardNumber;
-
+    int newId;
     //设备位置
     int groupId;
     int deviceId;
+
 
     public String getName() {
         return name;
@@ -35,6 +34,14 @@ public class WebEmployee {
 
     public void setCardNumber(long cardNumber) {
         this.cardNumber = cardNumber;
+    }
+
+    public int getNewId() {
+        return newId;
+    }
+
+    public void setNewId(int newId) {
+        this.newId = newId;
     }
 
     public int getGroupId() {

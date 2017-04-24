@@ -16,7 +16,7 @@ public class WebMsgDeployRemainChargeTimes extends BaseMessage {
         this.times = times;
     }
 
-    public long getTimes() {
+    public int getTimes() {
         return times;
     }
 }

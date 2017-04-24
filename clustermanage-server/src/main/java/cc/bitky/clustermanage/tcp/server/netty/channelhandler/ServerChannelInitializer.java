@@ -1,42 +1,52 @@
 package cc.bitky.clustermanage.tcp.server.netty.channelhandler;
 
-import cc.bitky.clustermanage.tcp.clienttest.ClientTest;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelPipeline;
 import io.netty.channel.socket.nio.NioSocketChannel;
 import io.netty.handler.logging.LogLevel;
 import io.netty.handler.logging.LoggingHandler;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 
 @Service
 public class ServerChannelInitializer extends ChannelInitializer<NioSocketChannel> {
-  private final CanFrameChannelInboundHandler canFrameChannelInboundHandler;
-  private final ParsedMessageInBoundHandler parsedMessageInBoundHandler;
-  private final WebMsgOutBoundHandler webMsgOutBoundHandler;
-  private ChannelPipeline pipeline;
+    private final CanFrameChannelInboundHandler canFrameChannelInboundHandler;
+    private final ParsedMessageInBoundHandler parsedMessageInBoundHandler;
+    private final WebMsgOutBoundHandler webMsgOutBoundHandler;
 
-  @Autowired
-  public ServerChannelInitializer(CanFrameChannelInboundHandler canFrameChannelInboundHandler,
-      ParsedMessageInBoundHandler parsedMessageInBoundHandler,
-      WebMsgOutBoundHandler webMsgOutBoundHandler, ClientTest clientTest) {
-    this.canFrameChannelInboundHandler = canFrameChannelInboundHandler;
-    this.parsedMessageInBoundHandler = parsedMessageInBoundHandler;
-    this.webMsgOutBoundHandler = webMsgOutBoundHandler;
-    //   this.clientTest = clientTest;
-  }
-  // private ClientTest clientTest;
+    private ChannelPipeline pipeline;
+    private Logger logger = LoggerFactory.getLogger(this.getClass());
 
-  public ChannelPipeline getPipeline() {
-    return pipeline;
-  }
+    @Autowired
+    public ServerChannelInitializer(CanFrameChannelInboundHandler canFrameChannelInboundHandler,
+                                    ParsedMessageInBoundHandler parsedMessageInBoundHandler,
+                                    WebMsgOutBoundHandler webMsgOutBoundHandler) {
+        super();
+        this.canFrameChannelInboundHandler = canFrameChannelInboundHandler;
+        this.parsedMessageInBoundHandler = parsedMessageInBoundHandler;
+        this.webMsgOutBoundHandler = webMsgOutBoundHandler;
 
-  @Override
-  protected void initChannel(NioSocketChannel ch) throws Exception {
-    pipeline = ch.pipeline();
-    ch.pipeline().addLast(new LoggingHandler("kyOutlineLogger", LogLevel.INFO));
-    ch.pipeline().addLast(canFrameChannelInboundHandler);
-    ch.pipeline().addLast(parsedMessageInBoundHandler);
-    ch.pipeline().addLast(webMsgOutBoundHandler);
-  }
+
+    }
+
+    @Override
+    protected void initChannel(NioSocketChannel ch) throws Exception {
+        pipeline = ch.pipeline();
+        ch.pipeline().addLast(new LoggingHandler("kyOutlineLogger", LogLevel.DEBUG));
+        ch.pipeline().addLast(canFrameChannelInboundHandler);
+        ch.pipeline().addLast(parsedMessageInBoundHandler);
+        ch.pipeline().addLast(webMsgOutBoundHandler);
+
+        parsedMessageInBoundHandler.getServerTcpMessageHandler()
+                .setSendWebMessagesListener((iMessages) -> {
+                    if (pipeline == null) {
+                        logger.warn("Netty 模块未初始化，无通道可使用");
+                        return false;
+                    }
+                    return pipeline.write(iMessages).isSuccess();
+                });
+    }
 }

@@ -6,7 +6,7 @@ import cc.bitky.clustermanage.server.message.BaseMessage;
 /**
  * 服务器获取设备的当前状态
  */
-class WebMsgObtainDeviceStatus extends BaseMessage {
+public class WebMsgObtainDeviceStatus extends BaseMessage {
 
 
     public WebMsgObtainDeviceStatus(int groupId, int boxId) {

@@ -9,6 +9,9 @@ public class DutyInfo {
         this.onTime = onTime;
     }
 
+    public DutyInfo() {
+    }
+
     public long getOnTime() {
         return onTime;
     }

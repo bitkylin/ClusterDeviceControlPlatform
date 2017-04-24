@@ -29,7 +29,17 @@ public class BaseMessage implements IMessage {
     }
 
     @Override
+    public void setGroupId(int groupId) {
+        this.groupId = groupId;
+    }
+
+    @Override
     public int getBoxId() {
         return boxId;
+    }
+
+    @Override
+    public void setBoxId(int boxId) {
+        this.boxId = boxId;
     }
 }

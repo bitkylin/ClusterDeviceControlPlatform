@@ -1,8 +1,8 @@
 package cc.bitky.clustermanage.tcp.clienttest;
 
-import cc.bitky.clustermanage.server.bean.KyTcpMessageHandler;
+import cc.bitky.clustermanage.server.bean.ServerTcpMessageHandler;
 import cc.bitky.clustermanage.server.message.IMessage;
-import cc.bitky.clustermanage.server.message.tcp.TcpMsgDeviceStatus;
+import cc.bitky.clustermanage.server.message.tcp.TcpMsgResponseDeviceStatus;
 import cc.bitky.clustermanage.server.message.tcp.TcpMsgHeartBeat;
 import cc.bitky.clustermanage.tcp.server.NettyMain;
 import cc.bitky.clustermanage.tcp.util.enumky.ChargeStatusEnum;
@@ -13,13 +13,13 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class ClientTest {
-  private final KyTcpMessageHandler kyTcpMessageHandler;
+  private final ServerTcpMessageHandler serverTcpMessageHandler;
   private NettyMain nettyMain;
   private ChannelPipeline pipeline;
 
   @Autowired
-  public ClientTest(KyTcpMessageHandler kyTcpMessageHandler) {
-    this.kyTcpMessageHandler = kyTcpMessageHandler;
+  public ClientTest(ServerTcpMessageHandler serverTcpMessageHandler) {
+    this.serverTcpMessageHandler = serverTcpMessageHandler;
   }
 
   public void startClient(NettyMain nettyMain, Scanner scanner) {
@@ -36,7 +36,7 @@ public class ClientTest {
         case "hb":
           int groupId = scanner.nextInt();
           IMessage hb = new TcpMsgHeartBeat(groupId);
-          kyTcpMessageHandler.handleTcpMsg(hb);
+          serverTcpMessageHandler.handleTcpMsg(hb);
           break;
 
         case "css":
@@ -53,8 +53,8 @@ public class ClientTest {
               status = ChargeStatusEnum.CRASH;
               break;
           }
-          IMessage css = new TcpMsgDeviceStatus(groupId2, boxId2, status);
-          kyTcpMessageHandler.handleTcpMsg(css);
+          IMessage css = new TcpMsgResponseDeviceStatus(groupId2, boxId2, status);
+          serverTcpMessageHandler.handleTcpMsg(css);
           break;
 
         case "send":

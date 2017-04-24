@@ -3,8 +3,14 @@ package cc.bitky.clustermanage.db.bean;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import java.util.Date;
+
 @Document
 public class Device {
+    /**
+     * 员工卡号
+     */
+    long cardNumber;
     @Id
     private String id;
     /**
@@ -14,7 +20,7 @@ public class Device {
     /**
      * 状态改变时的时间
      */
-    private long time = -1;
+    private Date time;
     /**
      * 当前状态
      */
@@ -50,11 +56,11 @@ public class Device {
         this.employeeObjectId = employeeObjectId;
     }
 
-    public long getTime() {
+    public Date getTime() {
         return time;
     }
 
-    public void setTime(long time) {
+    public void setTime(Date time) {
         this.time = time;
     }
 
@@ -80,5 +86,13 @@ public class Device {
 
     public void setBoxId(int boxId) {
         this.boxId = boxId;
+    }
+
+    public long getCardNumber() {
+        return cardNumber;
+    }
+
+    public void setCardNumber(long cardNumber) {
+        this.cardNumber = cardNumber;
     }
 }

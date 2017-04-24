@@ -6,14 +6,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import cc.bitky.clustermanage.db.bean.Device;
 import cc.bitky.clustermanage.db.repository.DeviceRepository;
-import cc.bitky.clustermanage.server.message.tcp.TcpMsgDeviceStatus;
+import cc.bitky.clustermanage.server.message.tcp.TcpMsgResponseDeviceStatus;
 
 @Service
-public class DbDevicePresenter {
+class DbDevicePresenter {
     private final DeviceRepository deviceRepository;
     private Logger logger = LoggerFactory.getLogger(DbDevicePresenter.class);
 
@@ -37,20 +38,23 @@ public class DbDevicePresenter {
     }
 
     /**
-     * 处理设备状态包
+     * 处理设备状态包，更新设备的状态信息
      *
-     * @param tcpMsgDeviceStatus 设备状态包
+     * @param tcpMsgResponseDeviceStatus 设备状态包
      */
-    void handleMsgDeviceStatus(TcpMsgDeviceStatus tcpMsgDeviceStatus) {
-        Device device = deviceRepository.findFirstByGroupIdAndBoxId(tcpMsgDeviceStatus.getGroupId(), tcpMsgDeviceStatus.getBoxId());
+    Device handleMsgDeviceStatus(TcpMsgResponseDeviceStatus tcpMsgResponseDeviceStatus) {
+        Device device = deviceRepository.findFirstByGroupIdAndBoxId(tcpMsgResponseDeviceStatus.getGroupId(), tcpMsgResponseDeviceStatus.getBoxId());
+        if (device == null) return null;
         int rawStatus = device.getStatus();
-        if (tcpMsgDeviceStatus.getStatus() == rawStatus) {
-            logger.info("设备「" + tcpMsgDeviceStatus.getGroupId() + ", " + tcpMsgDeviceStatus.getBoxId() + "」『" + rawStatus + "』: 状态无更新");
-            return;
+        if (tcpMsgResponseDeviceStatus.getStatus() == rawStatus) {
+            logger.info("设备「" + tcpMsgResponseDeviceStatus.getGroupId() + ", " + tcpMsgResponseDeviceStatus.getBoxId() + "」『" + rawStatus + "』: 状态无更新");
+        } else {
+            device.setStatus(tcpMsgResponseDeviceStatus.getStatus());
+            device.setTime(new Date(tcpMsgResponseDeviceStatus.getTime()));
+            deviceRepository.save(device);
+            logger.info("设备「" + tcpMsgResponseDeviceStatus.getGroupId() + ", " + tcpMsgResponseDeviceStatus.getBoxId() + "」『" + rawStatus + "』: 状态成功更新！");
         }
-        device.setStatus(tcpMsgDeviceStatus.getStatus());
-        device.setTime(tcpMsgDeviceStatus.getTime());
-        deviceRepository.save(device);
+        return device;
     }
 
     /**
@@ -67,5 +71,25 @@ public class DbDevicePresenter {
             devices.add(deviceRepository.findFirstByGroupIdAndBoxId(groupId, boxId));
         }
         return devices;
+    }
+
+    /**
+     * 通过卡号查询相应员工的 objectId
+     *
+     * @param cardNum 员工卡号
+     * @return 相应员工的 objectId
+     */
+    String obtainEmployeeObjectIdByCardNum(long cardNum) {
+        Device device = deviceRepository.findFirstByCardNumber(cardNum);
+        return device.getEmployeeObjectId();
+    }
+
+    /**
+     * 更新设备
+     *
+     * @param device 设备 bean
+     */
+    public void updateDevice(Device device) {
+        deviceRepository.save(device);
     }
 }

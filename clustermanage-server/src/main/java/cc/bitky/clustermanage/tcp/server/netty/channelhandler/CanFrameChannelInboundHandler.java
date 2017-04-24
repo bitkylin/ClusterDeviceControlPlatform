@@ -1,17 +1,18 @@
 package cc.bitky.clustermanage.tcp.server.netty.channelhandler;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Component;
+
 import cc.bitky.clustermanage.server.MsgType;
 import cc.bitky.clustermanage.server.message.IMessage;
 import cc.bitky.clustermanage.server.message.tcp.MsgErrorMessage;
-import cc.bitky.clustermanage.server.message.tcp.TcpMsgDeviceStatus;
 import cc.bitky.clustermanage.server.message.tcp.TcpMsgHeartBeat;
+import cc.bitky.clustermanage.server.message.tcp.TcpMsgResponseDeviceStatus;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Component;
 
 @Component
 @ChannelHandler.Sharable
@@ -28,20 +29,20 @@ public class CanFrameChannelInboundHandler extends SimpleChannelInboundHandler<B
 
     while (msg.readableBytes() >= 13) {
       msg.skipBytes(2);
-      int func = msg.readByte();
+      int msgId = msg.readByte();
       int boxId = msg.readByte();
       int groupId = msg.readByte();
-      IMessage message = handleMessage(func, boxId, groupId, msg);
+      IMessage message = handleMessage(msgId, boxId, groupId, msg);
       ctx.fireChannelRead(message);
     }
   }
 
-  private IMessage handleMessage(int func, int boxId, int groupId, ByteBuf msg) {
-    switch (func) {
+  private IMessage handleMessage(int msgId, int boxId, int groupId, ByteBuf msg) {
+    switch (msgId) {
 
       case MsgType.DEVICE_RESPONSE_STATUS:
         int status = msg.readByte();
-        IMessage msgChargeStatus = new TcpMsgDeviceStatus(groupId, boxId, status);
+        IMessage msgChargeStatus = new TcpMsgResponseDeviceStatus(groupId, boxId, status);
         msg.skipBytes(7);
         return msgChargeStatus;
 

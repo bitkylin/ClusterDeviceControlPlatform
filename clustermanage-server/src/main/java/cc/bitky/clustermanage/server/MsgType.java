@@ -5,6 +5,11 @@ public class MsgType {
 
     public static final int ERROR = 0x05;
 
+    /**
+     * 成组地发送消息
+     */
+    public static final byte SERVER_SEND_GROUPED = 0x0F;
+
     //-------------------服务器下发-----------------------
 
     /**

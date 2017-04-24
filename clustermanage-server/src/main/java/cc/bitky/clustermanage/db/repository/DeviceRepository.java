@@ -11,4 +11,6 @@ public interface DeviceRepository extends MongoRepository<Device, String> {
     Device findFirstByGroupIdAndBoxId(int groupId, int boxId);
 
     List<Device> findByGroupId(int groupId);
+
+    Device findFirstByCardNumber(long cardNumber);
 }

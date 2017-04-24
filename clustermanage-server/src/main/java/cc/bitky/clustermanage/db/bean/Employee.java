@@ -12,20 +12,15 @@ public class Employee {
     //个人信息
     String name;
     String department;
-    long cardNumber;
 
     //设备位置
     int groupId;
     int deviceId;
 
-    String routineTablesObjectId;
-
-
     public Employee(String name, String department) {
         this.name = name;
         this.department = department;
     }
-
 
     public String getId() {
         return id;
@@ -51,14 +46,6 @@ public class Employee {
         this.department = department;
     }
 
-    public long getCardNumber() {
-        return cardNumber;
-    }
-
-    public void setCardNumber(long cardNumber) {
-        this.cardNumber = cardNumber;
-    }
-
     public int getGroupId() {
         return groupId;
     }
@@ -75,11 +62,14 @@ public class Employee {
         this.deviceId = deviceId;
     }
 
-    public String getRoutineTablesObjectId() {
-        return routineTablesObjectId;
-    }
-
-    public void setRoutineTablesObjectId(String routineTablesObjectId) {
-        this.routineTablesObjectId = routineTablesObjectId;
+    @Override
+    public String toString() {
+        return "Employee{" +
+                "id='" + id + '\'' +
+                ", name='" + name + '\'' +
+                ", department='" + department + '\'' +
+                ", groupId=" + groupId +
+                ", deviceId=" + deviceId +
+                '}';
     }
 }

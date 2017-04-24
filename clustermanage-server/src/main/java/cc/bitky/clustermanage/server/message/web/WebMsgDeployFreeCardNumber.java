@@ -24,10 +24,8 @@ public class WebMsgDeployFreeCardNumber extends BaseMessage {
             this.cardNumbers = numbers;
             return;
         }
-        int length = numbers.length > 16 ? 16 : numbers.length;
-        for (int i = 0; i < length; i++) {
-            cardNumbers[i] = numbers[i];
-        }
+        int length = numbers.length >= 16 ? 16 : numbers.length;
+        System.arraycopy(numbers, 0, cardNumbers, 0, length);
     }
 
     public long[] getCardNumbers() {

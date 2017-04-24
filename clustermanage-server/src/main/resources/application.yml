@@ -5,4 +5,5 @@ spring:
       database: bitky
 debug: false
 logging:
-  level: debug
+  level:
+    root: info

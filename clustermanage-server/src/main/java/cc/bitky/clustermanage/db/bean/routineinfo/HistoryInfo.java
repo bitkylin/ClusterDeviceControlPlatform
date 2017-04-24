@@ -1,22 +1,22 @@
 package cc.bitky.clustermanage.db.bean.routineinfo;
 
+import java.util.Date;
+
 public class HistoryInfo {
 
-    private long time = -1;
+    private Date time;
     private int status = -1;
 
-    public HistoryInfo(long time, int status) {
-        this.time = time;
+
+    private HistoryInfo(long time, int status) {
+        this.time = new Date(time);
         this.status = status;
     }
 
-    public long getTime() {
-        return time;
+    public static HistoryInfo newInstance(long time, int status) {
+        return new HistoryInfo(time, status);
     }
 
-    public void setTime(long time) {
-        this.time = time;
-    }
 
     public int getStatus() {
         return status;
@@ -24,5 +24,13 @@ public class HistoryInfo {
 
     public void setStatus(int status) {
         this.status = status;
+    }
+
+    public Date getTime() {
+        return time;
+    }
+
+    public void setTime(Date time) {
+        this.time = time;
     }
 }

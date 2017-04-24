@@ -8,18 +8,19 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import cc.bitky.clustermanage.server.bean.ServerWebMessageHandler;
 import cc.bitky.clustermanage.server.message.web.WebMsgOperateBoxUnlock;
 
 @RestController
-@RequestMapping(value = "/operate/devices")
-public class DeviceOperateController {
+@RequestMapping(value = "/operate")
+public class OperateRestController {
 
-    private final WebMessageHandler webMessageHandler;
-    private Logger logger = LoggerFactory.getLogger(DeviceOperateController.class);
+    private final ServerWebMessageHandler serverWebMessageHandler;
+    private Logger logger = LoggerFactory.getLogger(OperateRestController.class);
 
     @Autowired
-    public DeviceOperateController(WebMessageHandler webMessageHandler) {
-        this.webMessageHandler = webMessageHandler;
+    public OperateRestController(ServerWebMessageHandler serverWebMessageHandler) {
+        this.serverWebMessageHandler = serverWebMessageHandler;
     }
 
     /**
@@ -31,7 +32,7 @@ public class DeviceOperateController {
      */
     @RequestMapping(value = "/unlock/{groupId}/{deviceId}", method = RequestMethod.GET)
     public String operateDeviceUnlock(@PathVariable int groupId, @PathVariable int deviceId) {
-        if (webMessageHandler.handleOperateUnlock(new WebMsgOperateBoxUnlock(groupId, deviceId))) {
+        if (serverWebMessageHandler.deployDeviceMsg(new WebMsgOperateBoxUnlock(groupId, deviceId))) {
             return "success";
         } else return "error";
     }
