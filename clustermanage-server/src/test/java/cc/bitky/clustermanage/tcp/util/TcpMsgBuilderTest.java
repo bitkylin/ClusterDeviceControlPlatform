@@ -6,12 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import cc.bitky.clustermanage.server.bean.ServerTcpMessageHandler;
-import cc.bitky.clustermanage.server.message.IMessage;
-import cc.bitky.clustermanage.server.message.web.WebMsgDeployFreeCardNumber;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest

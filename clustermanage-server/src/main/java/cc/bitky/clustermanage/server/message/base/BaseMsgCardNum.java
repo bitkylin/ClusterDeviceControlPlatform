@@ -1,4 +1,4 @@
-package cc.bitky.clustermanage.server.message;
+package cc.bitky.clustermanage.server.message.base;
 
 public class BaseMsgCardNum extends BaseMessage {
 

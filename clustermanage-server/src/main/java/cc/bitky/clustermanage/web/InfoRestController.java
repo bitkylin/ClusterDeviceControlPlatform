@@ -13,7 +13,7 @@ import java.util.List;
 
 import cc.bitky.clustermanage.db.bean.Device;
 import cc.bitky.clustermanage.server.bean.ServerWebMessageHandler;
-import cc.bitky.clustermanage.server.bean.ServerWebMessageHandler.Card;
+import cc.bitky.clustermanage.server.message.CardType;
 
 /**
  * 设备信息获取及处理控制器
@@ -47,7 +47,7 @@ public class InfoRestController {
      *
      * @return 万能卡号的集合
      */
-    @RequestMapping(value = "/freecard/", method = RequestMethod.GET)
+    @RequestMapping(value = "/freecard", method = RequestMethod.GET)
     public long[] obtainFreeCards() {
         return serverWebMessageHandler.obtainFreeCards();
     }
@@ -57,7 +57,7 @@ public class InfoRestController {
      *
      * @return 确认卡号的集合
      */
-    @RequestMapping(value = "/confirmcard/", method = RequestMethod.GET)
+    @RequestMapping(value = "/confirmcard", method = RequestMethod.GET)
     public long[] obtainConfirmCard() {
         return serverWebMessageHandler.obtainConfirmCards();
     }
@@ -65,13 +65,12 @@ public class InfoRestController {
     /**
      * 保存确认卡号到数据库
      *
-     * @param groupId  设备组 ID
-     * @param deviceId 设备 ID
-     * @return "保存确认卡号成功"消息
+     * @param freecards 确认卡号数组
+     * @return @return "保存确认卡号成功"消息
      */
-    @RequestMapping(value = "/confirmcard/{groupId}/{deviceId}", method = RequestMethod.POST, consumes = "application/json")
-    public String saveConfirmCard(@RequestBody long[] freecards, @PathVariable int groupId, @PathVariable int deviceId) {
-        if (serverWebMessageHandler.saveCardNumber(freecards, Card.CONFIRM)) return "success";
+    @RequestMapping(value = "/confirmcard", method = RequestMethod.POST, consumes = "application/json")
+    public String saveConfirmCard(@RequestBody long[] freecards) {
+        if (serverWebMessageHandler.saveCardNumber(freecards, CardType.CONFIRM)) return "success";
         return "error";
     }
 
@@ -79,13 +78,12 @@ public class InfoRestController {
     /**
      * 保存万能卡号到数据库
      *
-     * @param groupId  设备组 ID
-     * @param deviceId 设备 ID
+     * @param freecards 万能卡号数组
      * @return "保存万能卡号成功"消息
      */
-    @RequestMapping(value = "/freecard/{groupId}/{deviceId}", method = RequestMethod.POST, consumes = "application/json")
-    public String saveFreeCard(@RequestBody long[] freecards, @PathVariable int groupId, @PathVariable int deviceId) {
-        if (serverWebMessageHandler.saveCardNumber(freecards, Card.FREE)) return "success";
+    @RequestMapping(value = "/freecard", method = RequestMethod.POST, consumes = "application/json")
+    public String saveFreeCard(@RequestBody long[] freecards) {
+        if (serverWebMessageHandler.saveCardNumber(freecards, CardType.FREE)) return "success";
         return "error";
     }
 }

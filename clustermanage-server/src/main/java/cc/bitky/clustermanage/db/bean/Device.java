@@ -34,9 +34,14 @@ public class Device {
      */
     private int boxId = -1;
 
+    private int remainChargeTime = 500;
+
     public Device(int groupId, int boxId) {
         this.groupId = groupId;
         this.boxId = boxId;
+    }
+
+    public Device() {
     }
 
 
@@ -94,5 +99,13 @@ public class Device {
 
     public void setCardNumber(long cardNumber) {
         this.cardNumber = cardNumber;
+    }
+
+    public int getRemainChargeTime() {
+        return remainChargeTime;
+    }
+
+    public void setRemainChargeTime(int remainChargeTime) {
+        this.remainChargeTime = remainChargeTime;
     }
 }

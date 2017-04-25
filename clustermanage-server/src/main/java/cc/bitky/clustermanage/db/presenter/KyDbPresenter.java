@@ -12,8 +12,8 @@ import cc.bitky.clustermanage.db.bean.Device;
 import cc.bitky.clustermanage.db.bean.DeviceGroup;
 import cc.bitky.clustermanage.db.bean.Employee;
 import cc.bitky.clustermanage.db.repository.DeviceGroupRepository;
-import cc.bitky.clustermanage.server.bean.ServerWebMessageHandler.Card;
-import cc.bitky.clustermanage.server.message.IMessage;
+import cc.bitky.clustermanage.server.message.CardType;
+import cc.bitky.clustermanage.server.message.base.IMessage;
 import cc.bitky.clustermanage.server.message.tcp.TcpMsgResponseDeviceStatus;
 
 @Repository
@@ -89,8 +89,9 @@ public class KyDbPresenter {
      *
      * @param tcpMsgResponseDeviceStatus 设备状态包
      * @param isDebug                    是否处于 Debug 模式
+     * @return 处理后的 Device
      */
-    public void handleMsgDeviceStatus(TcpMsgResponseDeviceStatus tcpMsgResponseDeviceStatus, boolean isDebug) {
+    public Device handleMsgDeviceStatus(TcpMsgResponseDeviceStatus tcpMsgResponseDeviceStatus, boolean isDebug) {
         long l1 = System.currentTimeMillis();
 
         //处理心跳，更新设备组信息，「Debug 模式下生成所需的设备和设备组」
@@ -101,7 +102,12 @@ public class KyDbPresenter {
         Device device = dbDevicePresenter.handleMsgDeviceStatus(tcpMsgResponseDeviceStatus);
         if (device == null) {
             logger.warn("设备(" + tcpMsgResponseDeviceStatus.getGroupId() + ", " + tcpMsgResponseDeviceStatus.getBoxId() + ") 不存在，无法处理");
-            return;
+            return null;
+        }
+        if (device.getStatus() == -1) {
+            logger.info("考勤表无更新");
+            logger.info("时间耗费：" + (l2 - l1) + "ms; " + (System.currentTimeMillis() - l2) + "ms");
+            return null;
         }
         long l3 = System.currentTimeMillis();
 
@@ -117,6 +123,7 @@ public class KyDbPresenter {
         dbRoutinePresenter.updateRoutineById(device.getEmployeeObjectId(), tcpMsgResponseDeviceStatus);
         long l5 = System.currentTimeMillis();
         logger.info("时间耗费：" + (l2 - l1) + "ms; " + (l3 - l2) + "ms; " + (l4 - l3) + "ms; " + (l5 - l4) + "ms");
+        return device;
     }
 
 
@@ -135,11 +142,18 @@ public class KyDbPresenter {
      * 设备初始化: 根据员工卡号获取员工信息
      *
      * @param cardNumber 员工卡号
-     * @return 员工卡号所对应的员工信息
+     * @return 通过员工卡号查询整合而成的信息 bean
      */
     public Employee obtainDeviceByEmployeeCard(long cardNumber) {
-        String employeeObjectId = dbDevicePresenter.obtainEmployeeObjectIdByCardNum(cardNumber);
-        return dbEmployeePresenter.ObtainEmployeeByObjectId(employeeObjectId);
+        Device device = dbDevicePresenter.obtainEmployeeObjectIdByCardNum(cardNumber);
+        if (device == null) return null;
+
+        Employee employee = dbEmployeePresenter.ObtainEmployeeByObjectId(device.getEmployeeObjectId());
+        if (employee == null) return null;
+
+        employee.setGroupId(device.getGroupId());
+        employee.setDeviceId(device.getBoxId());
+        return employee;
     }
 
     /**
@@ -147,8 +161,7 @@ public class KyDbPresenter {
      *
      * @return 卡号的集合
      */
-    public long[] getCardArray(Card card) {
-
+    public long[] getCardArray(CardType card) {
         return dbSettingPresenter.getCardArray(card);
     }
 
@@ -159,7 +172,17 @@ public class KyDbPresenter {
      * @param card      卡号类型
      * @return 是否保存成功
      */
-    public boolean saveCardNumber(long[] freecards, Card card) {
+    public boolean saveCardNumber(long[] freecards, CardType card) {
         return dbSettingPresenter.saveCardArray(freecards, card);
+    }
+
+    /**
+     * 检索数据库，给定的卡号是否匹配确认卡号
+     *
+     * @param cardNumber 待检索的卡号
+     * @return 是否匹配确认卡号
+     */
+    public boolean marchConfirmCard(long cardNumber) {
+        return dbSettingPresenter.marchConfirmCard(cardNumber);
     }
 }

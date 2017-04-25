@@ -2,7 +2,7 @@ package cc.bitky.clustermanage.tcp.server.netty;
 
 import java.util.List;
 
-import cc.bitky.clustermanage.server.message.IMessage;
+import cc.bitky.clustermanage.server.message.base.IMessage;
 
 /**
  * Server 模块发送消息 bean 监听器

@@ -40,19 +40,23 @@ class DbDevicePresenter {
     /**
      * 处理设备状态包，更新设备的状态信息
      *
-     * @param tcpMsgResponseDeviceStatus 设备状态包
+     * @param resDeviceStatus 设备状态包
      */
-    Device handleMsgDeviceStatus(TcpMsgResponseDeviceStatus tcpMsgResponseDeviceStatus) {
-        Device device = deviceRepository.findFirstByGroupIdAndBoxId(tcpMsgResponseDeviceStatus.getGroupId(), tcpMsgResponseDeviceStatus.getBoxId());
+    Device handleMsgDeviceStatus(TcpMsgResponseDeviceStatus resDeviceStatus) {
+        Device device = deviceRepository.findFirstByGroupIdAndBoxId(resDeviceStatus.getGroupId(), resDeviceStatus.getBoxId());
         if (device == null) return null;
         int rawStatus = device.getStatus();
-        if (tcpMsgResponseDeviceStatus.getStatus() == rawStatus) {
-            logger.info("设备「" + tcpMsgResponseDeviceStatus.getGroupId() + ", " + tcpMsgResponseDeviceStatus.getBoxId() + "」『" + rawStatus + "』: 状态无更新");
+        if (resDeviceStatus.getStatus() == rawStatus) {
+            logger.info("设备「" + resDeviceStatus.getGroupId() + ", " + resDeviceStatus.getBoxId() + "」『" + rawStatus + "->" + resDeviceStatus.getStatus() + "』: 状态无更新");
+            device.setStatus(-1);
         } else {
-            device.setStatus(tcpMsgResponseDeviceStatus.getStatus());
-            device.setTime(new Date(tcpMsgResponseDeviceStatus.getTime()));
+            if (rawStatus == 2 && resDeviceStatus.getStatus() == 3) {
+                device.setRemainChargeTime(device.getRemainChargeTime() - 1);
+            }
+            device.setStatus(resDeviceStatus.getStatus());
+            device.setTime(new Date(resDeviceStatus.getTime()));
             deviceRepository.save(device);
-            logger.info("设备「" + tcpMsgResponseDeviceStatus.getGroupId() + ", " + tcpMsgResponseDeviceStatus.getBoxId() + "」『" + rawStatus + "』: 状态成功更新！");
+            logger.info("设备「" + resDeviceStatus.getGroupId() + ", " + resDeviceStatus.getBoxId() + "」『" + rawStatus + "->" + resDeviceStatus.getStatus() + "』: 状态成功更新！");
         }
         return device;
     }
@@ -74,14 +78,13 @@ class DbDevicePresenter {
     }
 
     /**
-     * 通过卡号查询相应员工的 objectId
+     * 通过卡号查询相应的设备
      *
      * @param cardNum 员工卡号
-     * @return 相应员工的 objectId
+     * @return 相应的设备
      */
-    String obtainEmployeeObjectIdByCardNum(long cardNum) {
-        Device device = deviceRepository.findFirstByCardNumber(cardNum);
-        return device.getEmployeeObjectId();
+    Device obtainEmployeeObjectIdByCardNum(long cardNum) {
+        return deviceRepository.findFirstByCardNumber(cardNum);
     }
 
     /**

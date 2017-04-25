@@ -1,7 +1,7 @@
 package cc.bitky.clustermanage.tcp.clienttest;
 
 import cc.bitky.clustermanage.server.bean.ServerTcpMessageHandler;
-import cc.bitky.clustermanage.server.message.IMessage;
+import cc.bitky.clustermanage.server.message.base.IMessage;
 import cc.bitky.clustermanage.server.message.tcp.TcpMsgResponseDeviceStatus;
 import cc.bitky.clustermanage.server.message.tcp.TcpMsgHeartBeat;
 import cc.bitky.clustermanage.tcp.server.NettyMain;

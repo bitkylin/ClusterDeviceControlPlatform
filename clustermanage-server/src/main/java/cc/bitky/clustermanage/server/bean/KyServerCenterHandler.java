@@ -7,8 +7,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import cc.bitky.clustermanage.db.presenter.KyDbPresenter;
-import cc.bitky.clustermanage.server.bean.ServerWebMessageHandler.Card;
-import cc.bitky.clustermanage.server.message.IMessage;
+import cc.bitky.clustermanage.server.message.CardType;
+import cc.bitky.clustermanage.server.message.base.IMessage;
 import cc.bitky.clustermanage.server.message.web.WebMsgDeployFreeCardNumber;
 import cc.bitky.clustermanage.server.message.web.WebMsgGrouped;
 
@@ -43,7 +43,7 @@ public class KyServerCenterHandler {
      * @return 万能卡号获取并写入 TCP 成功
      */
     boolean deployFreeCard(int groupId, int deviceId) {
-        long[] freeCards = kyDbPresenter.getCardArray(Card.FREE);
+        long[] freeCards = kyDbPresenter.getCardArray(CardType.FREE);
         IMessage CardMsg = new WebMsgDeployFreeCardNumber(groupId, deviceId, freeCards);
         return deployGroupedMessage(CardMsg);
     }
@@ -91,7 +91,7 @@ public class KyServerCenterHandler {
      *
      * @return 卡号的集合
      */
-    long[] getCardArray(Card card) {
+    long[] getCardArray(CardType card) {
         return kyDbPresenter.getCardArray(card);
     }
 
@@ -102,7 +102,18 @@ public class KyServerCenterHandler {
      * @param card      卡号类型
      * @return 是否保存成功
      */
-    boolean saveCardNumber(long[] freecards, Card card) {
+    boolean saveCardNumber(long[] freecards, CardType card) {
         return kyDbPresenter.saveCardNumber(freecards, card);
+    }
+
+
+    /**
+     * 检索数据库，给定的卡号是否匹配确认卡号
+     *
+     * @param cardNumber 待检索的卡号
+     * @return 是否匹配确认卡号
+     */
+    boolean marchConfirmCard(long cardNumber) {
+        return kyDbPresenter.marchConfirmCard(cardNumber);
     }
 }

@@ -6,7 +6,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @Document
 public class KySetting {
     @Id
-    private long id;
+    private String id;
 
     private long[] freeCardList;
     private long[] confirmCardList;
@@ -19,11 +19,11 @@ public class KySetting {
         this.confirmCardList = confirmCardList;
     }
 
-    public long getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(String id) {
         this.id = id;
     }
 

@@ -46,7 +46,8 @@ public class ServerChannelInitializer extends ChannelInitializer<NioSocketChanne
                         logger.warn("Netty 模块未初始化，无通道可使用");
                         return false;
                     }
-                    return pipeline.write(iMessages).isSuccess();
+                    pipeline.write(iMessages);
+                    return true;
                 });
     }
 }

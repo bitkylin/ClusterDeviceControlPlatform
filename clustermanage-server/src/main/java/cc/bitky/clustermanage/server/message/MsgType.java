@@ -1,4 +1,4 @@
-package cc.bitky.clustermanage.server;
+package cc.bitky.clustermanage.server.message;
 
 public class MsgType {
     public static final int HEART_BEAT = 0x01;
@@ -88,19 +88,24 @@ public class MsgType {
     //-------------------初始化流程信息-----------------------
 
     /**
-     * 设备主动发送员工卡号
+     * 设备主动发送卡号,包括员工卡号和确认卡号
      */
-    public static final byte INITIALIZE_DEVICE_RESPONSE_EMPLOYEE_CARD = (byte) 0xaa;
+    public static final byte INITIALIZE_DEVICE_RESPONSE_CARD = (byte) 0xAA;
     /**
      * 服务器下发初始化信息完成
      */
-    public static final byte INITIALIZE_SERVER_DEPLOY_MESSAGE_COMPLETE = (byte) 0xab;
-    /**
-     * 设备主动发送确认卡号
-     */
-    public static final byte INITIALIZE_DEVICE_RESPONSE_CONFIRM_CARD = (byte) 0xac;
+    public static final byte INITIALIZE_SERVER_DEPLOY_MESSAGE_COMPLETE = (byte) 0xAB;
+//    /**
+//     * 设备主动发送确认卡号
+//     *
+// public static final byte INITIALIZE_DEVICE_RESPONSE_CONFIRM_CARD = (byte) 0xAC;
     /**
      * 服务器匹配确认卡号成功
      */
-    public static final byte INITIALIZE_SERVER_MARCH_CONFIRM_CARD_SUCCESSFUL = (byte) 0xad;
+    public static final byte INITIALIZE_SERVER_MARCH_CONFIRM_CARD_SUCCESSFUL = (byte) 0xAD;
+
+    /**
+     * 服务器匹配卡号失败，卡号未匹配员工卡或确认卡
+     */
+    public static final byte INITIALIZE_SERVER_MARCH_CARD_EXCEPTION = (byte) 0xAE;
 }

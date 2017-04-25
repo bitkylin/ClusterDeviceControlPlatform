@@ -1,30 +1,32 @@
 package cc.bitky.clustermanage.db.bean.routineinfo;
 
+import java.util.Date;
+
 public class DutyInfo {
 
-    private long onTime = -1;
-    private long offTime = -1;
+    private Date onTime;
+    private Date offTime;
 
     public DutyInfo(long onTime) {
-        this.onTime = onTime;
+        this.onTime = new Date(onTime);
     }
 
     public DutyInfo() {
     }
 
-    public long getOnTime() {
+    public Date getOnTime() {
         return onTime;
     }
 
-    public void setOnTime(long onTime) {
+    public void setOnTime(Date onTime) {
         this.onTime = onTime;
     }
 
-    public long getOffTime() {
+    public Date getOffTime() {
         return offTime;
     }
 
-    public void setOffTime(long offTime) {
+    public void setOffTime(Date offTime) {
         this.offTime = offTime;
     }
 }

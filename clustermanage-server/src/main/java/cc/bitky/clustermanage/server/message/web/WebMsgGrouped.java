@@ -1,8 +1,8 @@
 package cc.bitky.clustermanage.server.message.web;
 
-import cc.bitky.clustermanage.server.MsgType;
-import cc.bitky.clustermanage.server.message.BaseMessage;
-import cc.bitky.clustermanage.server.message.IMessage;
+import cc.bitky.clustermanage.server.message.MsgType;
+import cc.bitky.clustermanage.server.message.base.BaseMessage;
+import cc.bitky.clustermanage.server.message.base.IMessage;
 
 /**
  * 成组地发送消息

@@ -9,7 +9,8 @@ import java.util.List;
 
 import cc.bitky.clustermanage.db.bean.Device;
 import cc.bitky.clustermanage.db.presenter.KyDbPresenter;
-import cc.bitky.clustermanage.server.message.IMessage;
+import cc.bitky.clustermanage.server.message.CardType;
+import cc.bitky.clustermanage.server.message.base.IMessage;
 
 @Service
 public class ServerWebMessageHandler {
@@ -79,7 +80,7 @@ public class ServerWebMessageHandler {
      * @return 万能卡号的集合
      */
     public long[] obtainFreeCards() {
-        return kyServerCenterHandler.getCardArray(Card.FREE);
+        return kyServerCenterHandler.getCardArray(CardType.FREE);
     }
 
     /**
@@ -88,7 +89,7 @@ public class ServerWebMessageHandler {
      * @return 确认卡号的集合
      */
     public long[] obtainConfirmCards() {
-        return kyServerCenterHandler.getCardArray(Card.CONFIRM);
+        return kyServerCenterHandler.getCardArray(CardType.CONFIRM);
     }
 
     /**
@@ -98,12 +99,7 @@ public class ServerWebMessageHandler {
      * @param card      卡号类型
      * @return 是否保存成功
      */
-    public boolean saveCardNumber(long[] freecards, Card card) {
+    public boolean saveCardNumber(long[] freecards, CardType card) {
         return  kyServerCenterHandler.saveCardNumber(freecards, card);
-    }
-
-    public enum Card {
-        FREE,
-        CONFIRM
     }
 }

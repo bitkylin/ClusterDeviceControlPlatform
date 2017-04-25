@@ -13,7 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import cc.bitky.clustermanage.server.bean.ServerWebMessageHandler;
-import cc.bitky.clustermanage.server.message.IMessage;
+import cc.bitky.clustermanage.server.message.base.IMessage;
 import cc.bitky.clustermanage.server.message.web.WebMsgDeployEmployeeCardNumber;
 import cc.bitky.clustermanage.server.message.web.WebMsgDeployEmployeeDepartment;
 import cc.bitky.clustermanage.server.message.web.WebMsgDeployEmployeeDeviceId;
@@ -47,7 +47,7 @@ public class OperateRestController {
 
         List<IMessage> messages = handleEmployeeUpdate(webEmployee);
         if (serverWebMessageHandler.deployDeviceMsg(messages)) {
-            return "success: " + webEmployee;
+            return "success\n" + webEmployee;
         }
         return "error";
     }

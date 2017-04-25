@@ -4,19 +4,45 @@ import org.springframework.stereotype.Component;
 
 import java.nio.charset.Charset;
 
-import cc.bitky.clustermanage.server.message.BaseMessage;
+import cc.bitky.clustermanage.server.message.base.BaseMessage;
 import cc.bitky.clustermanage.server.message.web.WebMsgDeployEmployeeCardNumber;
 import cc.bitky.clustermanage.server.message.web.WebMsgDeployEmployeeDepartment;
 import cc.bitky.clustermanage.server.message.web.WebMsgDeployEmployeeDeviceId;
 import cc.bitky.clustermanage.server.message.web.WebMsgDeployEmployeeName;
 import cc.bitky.clustermanage.server.message.web.WebMsgDeployFreeCardNumber;
 import cc.bitky.clustermanage.server.message.web.WebMsgDeployRemainChargeTimes;
+import cc.bitky.clustermanage.server.message.web.WebMsgInitCardException;
+import cc.bitky.clustermanage.server.message.web.WebMsgInitDeployMessageComplete;
+import cc.bitky.clustermanage.server.message.web.WebMsgInitMarchComfirmCardSuccessful;
 import cc.bitky.clustermanage.server.message.web.WebMsgObtainDeviceStatus;
 import cc.bitky.clustermanage.server.message.web.WebMsgOperateBoxUnlock;
 
 @Component
 public class TcpMsgBuilder {
     Charset charset_GB2312 = Charset.forName("EUC-CN");
+
+    /**
+     * 构建获取设备状态的 CAN 帧
+     *
+     * @param webMsgObtainDeviceStatus 获取设备状态 bean
+     * @return 获取设备状态的 CAN 帧
+     */
+    public byte[] buildRequestDeviceStatus(WebMsgObtainDeviceStatus webMsgObtainDeviceStatus) {
+        return buildMsgOutline(webMsgObtainDeviceStatus);
+    }
+
+    /**
+     * 构建剩余充电次数的 CAN 帧
+     *
+     * @param webMsgDeployRemainChargeTimes 剩余充电次数 bean
+     * @return 剩余充电次数的 CAN 帧
+     */
+    public byte[] buildRemainChargeTimes(WebMsgDeployRemainChargeTimes webMsgDeployRemainChargeTimes) {
+        byte[] bytes = buildMsgOutline(webMsgDeployRemainChargeTimes);
+        bytes[0] += 1;
+        bytes[5] = (byte) webMsgDeployRemainChargeTimes.getTimes();
+        return bytes;
+    }
 
     /**
      * 构建设备 ID 的CAN帧
@@ -39,8 +65,9 @@ public class TcpMsgBuilder {
      */
     public byte[] buildEmployeeName(WebMsgDeployEmployeeName webMsgDeployEmployeeName) {
         byte[] bytes = buildMsgOutline(webMsgDeployEmployeeName);
-        bytes[0] += 2 * webMsgDeployEmployeeName.getValue().length();
+
         byte[] bytesBody = webMsgDeployEmployeeName.getValue().getBytes(charset_GB2312);
+        bytes[0] += bytesBody.length > 8 ? 8 : bytesBody.length;
         addMessageBody(bytes, bytesBody, 0);
         return bytes;
     }
@@ -89,29 +116,6 @@ public class TcpMsgBuilder {
 
 
     /**
-     * 构建剩余充电次数的 CAN 帧
-     *
-     * @param webMsgDeployRemainChargeTimes 剩余充电次数 bean
-     * @return 剩余充电次数的 CAN 帧
-     */
-    public byte[] buildRemainChargeTimes(WebMsgDeployRemainChargeTimes webMsgDeployRemainChargeTimes) {
-        byte[] bytes = buildMsgOutline(webMsgDeployRemainChargeTimes);
-        bytes[0] += 1;
-        bytes[5] = (byte) webMsgDeployRemainChargeTimes.getTimes();
-        return bytes;
-    }
-
-    /**
-     * 构建获取设备状态的 CAN 帧
-     *
-     * @param webMsgObtainDeviceStatus 获取设备状态 bean
-     * @return 获取设备状态的 CAN 帧
-     */
-    public byte[] buildRemainChargeTimes(WebMsgObtainDeviceStatus webMsgObtainDeviceStatus) {
-        return buildMsgOutline(webMsgObtainDeviceStatus);
-    }
-
-    /**
      * 构建开锁用的 CAN 帧
      *
      * @param webMsgOperateBoxUnlock 开锁 bean
@@ -136,8 +140,50 @@ public class TcpMsgBuilder {
             addMessageBody(bytes, longToByteArray(cards[i]), 0);
             System.arraycopy(bytes, 0, bytesSend, 13 * i, 13);
         }
-
         return bytesSend;
+    }
+
+    /**
+     * 「初始化」服务器下发初始化信息完毕
+     *
+     * @param initDeployMessageComplete 初始化信息部署完毕 bean
+     * @return 「初始化信息部署完毕」的 CAN 帧
+     */
+    public byte[] buildInitDeployMsgComplete(WebMsgInitDeployMessageComplete initDeployMessageComplete) {
+        return buildMsgOutline(initDeployMessageComplete);
+    }
+
+    /**
+     * 「初始化」服务器匹配确认卡号成功
+     *
+     * @param marchComfirmCardSuccessful 匹配确认卡号成功 bean
+     * @return 「匹配确认卡号成功」的 CAN 帧
+     */
+    public byte[] buildInitMarchConfirmCardSuccessful(WebMsgInitMarchComfirmCardSuccessful marchComfirmCardSuccessful) {
+        return buildMsgOutline(marchComfirmCardSuccessful);
+    }
+
+    /**
+     * 「初始化」服务器匹配卡号失败，卡号未匹配员工卡或确认卡
+     *
+     * @param msgCardException 服务器匹配卡号失败 bean
+     * @return 「服务器匹配卡号失败」的 CAN 帧
+     */
+    public byte[] buildInitMarchCardException(WebMsgInitCardException msgCardException) {
+        byte[] bytes = buildMsgOutline(msgCardException);
+        bytes[0] += 1;
+        switch (msgCardException.getCardType()) {
+            case FREE:
+                bytes[5] = 3;
+                break;
+            case CONFIRM:
+                bytes[5] = 2;
+                break;
+            case EMPLOYEE:
+                bytes[5] = 1;
+                break;
+        }
+        return bytes;
     }
 
     /**

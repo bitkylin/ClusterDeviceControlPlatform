@@ -8,15 +8,14 @@ public class HistoryInfo {
     private int status = -1;
 
 
-    private HistoryInfo(long time, int status) {
+    public HistoryInfo(long time, int status) {
         this.time = new Date(time);
         this.status = status;
     }
 
-    public static HistoryInfo newInstance(long time, int status) {
-        return new HistoryInfo(time, status);
+    public HistoryInfo() {
+        time = new Date(0);
     }
-
 
     public int getStatus() {
         return status;

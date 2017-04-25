@@ -6,10 +6,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public class SettingOps {
-    private final MongoOperations operations;
 
-    @Autowired
-    public SettingOps(MongoOperations operations) {
-        this.operations = operations;
-    }
 }

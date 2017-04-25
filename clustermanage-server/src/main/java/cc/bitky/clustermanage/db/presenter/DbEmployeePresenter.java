@@ -32,16 +32,8 @@ public class DbEmployeePresenter {
     }
 
     Employee ObtainEmployeeByObjectId(String employeeObjectId) {
-        Employee employee;
-        if (employeeObjectId != null) {
-            employee = employeeRepository.findOne(employeeObjectId);
-            if (employee != null) {
-                return employee;
-            }
-        }
-        employee = new Employee("备用「" + simpleDateFormat.format(new Date()) + "」", "");
-        employee = employeeRepository.save(employee);
-        return employee;
+        if (employeeObjectId == null) return null;
+        return employeeRepository.findOne(employeeObjectId);
     }
 
     Employee createEmployee(int groupId, int boxId) {

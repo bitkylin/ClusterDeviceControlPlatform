@@ -2,17 +2,17 @@ package cc.bitky.clustermanage.tcp;
 
 import org.junit.Test;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
+import cc.bitky.clustermanage.server.message.CardType;
 
 public class KyTest {
+
     @Test
     public void test() {
-        Date date = new Date();
-        date.toString();
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        System.out.println(simpleDateFormat.format(date));
+
+        CardType cardType = CardType.CONFIRM;
+        System.out.println(cardType.toString());
     }
+
 //    @Test
 //    public void testMain() {
 //        byte a = (byte) 0x80;

@@ -1,6 +1,4 @@
-package cc.bitky.clustermanage.server.message.web.base;
-
-import cc.bitky.clustermanage.server.message.BaseMessage;
+package cc.bitky.clustermanage.server.message.base;
 
 public class WebMsgBaseEmployee extends BaseMessage {
 

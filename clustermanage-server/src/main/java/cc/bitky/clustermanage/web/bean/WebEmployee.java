@@ -59,4 +59,16 @@ public class WebEmployee {
     public void setDeviceId(int deviceId) {
         this.deviceId = deviceId;
     }
+
+    @Override
+    public String toString() {
+        return "WebEmployee{" +
+                "name='" + name + '\'' +
+                ", department='" + department + '\'' +
+                ", cardNumber=" + cardNumber +
+                ", newId=" + newId +
+                ", groupId=" + groupId +
+                ", deviceId=" + deviceId +
+                '}';
+    }
 }
