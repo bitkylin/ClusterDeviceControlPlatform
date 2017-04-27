@@ -1,4 +1,4 @@
-package cc.bitky.clustermanage.tcp.server.netty.channelhandler;
+package cc.bitky.clustermanage.tcp.server.channelhandler;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

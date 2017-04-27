@@ -1,4 +1,4 @@
-package cc.bitky.clustermanage.tcp.server.netty.channelhandler;
+package cc.bitky.clustermanage.tcp.server.channelhandler;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -46,9 +46,9 @@ public class WebMsgOutBoundHandler extends ChannelOutboundHandlerAdapter {
         logger.info("------------即将发送CAN帧集合------------");
         messages.forEach(message -> {
             logger.info("发送CAN帧「" + message.getGroupId() + ", " + message.getBoxId() + ", " + message.getMsgId() + "」");
-            if (message.getMsgId() != MsgType.SERVER_SEND_GROUPED)
+            if (message.getMsgId() != MsgType.SERVER_SEND_GROUPED) {
                 ctx.write(Unpooled.wrappedBuffer(buildByMessage(message)));
-            else {
+            } else {
                 WebMsgGrouped groupMsg = (WebMsgGrouped) message;
                 IMessage baseMsg = groupMsg.getMessage();
 

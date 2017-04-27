@@ -5,5 +5,4 @@ public enum FrameReceivedEnum {
   READY,
   READING_LENGTH,
   READING_BODY,
-
 }

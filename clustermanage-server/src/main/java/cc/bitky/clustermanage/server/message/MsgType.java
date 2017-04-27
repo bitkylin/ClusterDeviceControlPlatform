@@ -1,9 +1,9 @@
 package cc.bitky.clustermanage.server.message;
 
 public class MsgType {
-    public static final int HEART_BEAT = 0x01;
+    public static final byte HEART_BEAT = 0x01;
 
-    public static final int ERROR = 0x05;
+    public static final byte ERROR = 0x05;
 
     /**
      * 成组地发送消息
@@ -54,7 +54,7 @@ public class MsgType {
     /**
      * 设备回复自己的状态
      */
-    public static final int DEVICE_RESPONSE_STATUS = 0x40;
+    public static final byte DEVICE_RESPONSE_STATUS = 0x40;
     /**
      * 设置剩余充电次数的回复
      */

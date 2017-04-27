@@ -1,4 +1,4 @@
-package cc.bitky.clustermanage.tcp.server.view;
+package cc.bitky.clustermanage.tcp.server;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -90,18 +90,6 @@ public class NettyServerShow implements CommandLineRunner {
         });
         nettyServer.shutdown();
     }
-
-    //private void newThreadToMain() {
-    //  new Thread(() -> {
-    //    nettyMain.run();
-    //  }).start();
-    //}
-
-    //private void newThreadKeyIn() {
-    //  new Thread(() -> {
-    //    keyIn(scanner);
-    //  }).start();
-    //}
 
     private void welcomeTo() {
         System.out.println("\n* * * * *");

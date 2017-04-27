@@ -45,6 +45,8 @@ public class ServerTcpMessageHandler {
      * @param message 功能消息 bean
      */
     public void handleTcpMsg(IMessage message) {
+        logger.info("");
+        logger.info("");
         logger.info("***********进入功能消息处理方法「" + message.getGroupId() + ", " + message.getBoxId() + "」***********");
         int msgId = message.getMsgId();
         switch (msgId) {
@@ -56,7 +58,7 @@ public class ServerTcpMessageHandler {
                     deployRemainChargeTimes(device);
                 }
                 long l2 = System.currentTimeMillis();
-                logger.info("处理设备状态包花费的总时间：" + (l2 - l1) + "ms" + "\n\n");
+                logger.info("处理设备状态包花费的总时间：" + (l2 - l1) + "ms");
                 break;
         }
     }
@@ -84,6 +86,8 @@ public class ServerTcpMessageHandler {
      */
     public void handleTcpResponseMsg(IMessage message) {
         BaseTcpResponseMsg baseTcpResponseMsg = (BaseTcpResponseMsg) message;
+        logger.info("");
+        logger.info("");
         logger.info("***********进入常规回复消息处理方法「" + message.getGroupId() + ", " + message.getBoxId() + ", " + message.getMsgId() + "『" + baseTcpResponseMsg.getStatus() + "』」***********");
         int msgId = baseTcpResponseMsg.getMsgId();
         switch (msgId) {
@@ -117,6 +121,8 @@ public class ServerTcpMessageHandler {
      * @param message 初始化消息 bean
      */
     public void handleTcpInitMsg(IMessage message) {
+        logger.info("");
+        logger.info("");
         logger.info("***********进入初始化消息处理方法「" + message.getGroupId() + ", " + message.getBoxId() + ", " + message.getMsgId() + "」***********");
 
         //从数据库中匹配员工卡号或确认卡号，获取相应信息并发送至 Netty 的 Handler

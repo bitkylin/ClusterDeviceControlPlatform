@@ -1,4 +1,4 @@
-package cc.bitky.clustermanage.tcp.server.netty.channelhandler;
+package cc.bitky.clustermanage.tcp.server.channelhandler;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -35,7 +35,7 @@ public class ServerChannelInitializer extends ChannelInitializer<NioSocketChanne
     @Override
     protected void initChannel(NioSocketChannel ch) throws Exception {
         pipeline = ch.pipeline();
-        ch.pipeline().addLast(new LoggingHandler("kyOutlineLogger", LogLevel.DEBUG));
+        ch.pipeline().addLast(new LoggingHandler("kyOutlineLogger", LogLevel.INFO));
         ch.pipeline().addLast(canFrameChannelInboundHandler);
         ch.pipeline().addLast(parsedMessageInBoundHandler);
         ch.pipeline().addLast(webMsgOutBoundHandler);

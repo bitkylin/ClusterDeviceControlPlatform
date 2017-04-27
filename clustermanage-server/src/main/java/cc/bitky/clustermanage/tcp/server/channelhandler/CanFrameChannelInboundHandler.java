@@ -1,4 +1,4 @@
-package cc.bitky.clustermanage.tcp.server.netty.channelhandler;
+package cc.bitky.clustermanage.tcp.server.channelhandler;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -10,6 +10,7 @@ import cc.bitky.clustermanage.server.message.tcp.MsgErrorMessage;
 import cc.bitky.clustermanage.server.message.tcp.TcpMsgInitResponseCardNumber;
 import cc.bitky.clustermanage.server.message.tcp.TcpMsgResponseBoxId;
 import cc.bitky.clustermanage.server.message.tcp.TcpMsgResponseDeviceStatus;
+import cc.bitky.clustermanage.server.message.tcp.TcpMsgResponseEmployeeCardnumber;
 import cc.bitky.clustermanage.server.message.tcp.TcpMsgResponseEmployeeDepartment;
 import cc.bitky.clustermanage.server.message.tcp.TcpMsgResponseEmployeeName;
 import cc.bitky.clustermanage.server.message.tcp.TcpMsgResponseFreeCardNumber;
@@ -46,7 +47,6 @@ public class CanFrameChannelInboundHandler extends SimpleChannelInboundHandler<B
         if (msgId >= 0x40 && msgId <= 0x4F) {
             int status = msg.readByte();
             msg.skipBytes(7);
-
             switch (msgId) {
                 //设备状态帧回复
                 case MsgType.DEVICE_RESPONSE_STATUS:
@@ -65,7 +65,7 @@ public class CanFrameChannelInboundHandler extends SimpleChannelInboundHandler<B
                     return new TcpMsgResponseEmployeeDepartment(groupId, boxId, status);
 
                 case MsgType.DEVICE_RESPONSE_EMPLOYEE_CARD_NUMBER:
-                    return new TcpMsgInitResponseCardNumber(groupId, boxId, status);
+                    return new TcpMsgResponseEmployeeCardnumber(groupId, boxId, status);
 
                 case MsgType.DEVICE_RESPONSE_REMOTE_UNLOCK:
                     return new TcpMsgResponseOperateBoxUnlock(groupId, boxId, status);
