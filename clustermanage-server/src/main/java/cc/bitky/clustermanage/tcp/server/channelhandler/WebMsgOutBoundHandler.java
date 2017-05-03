@@ -47,7 +47,30 @@ public class WebMsgOutBoundHandler extends ChannelOutboundHandlerAdapter {
         messages.forEach(message -> {
             logger.info("发送CAN帧「" + message.getGroupId() + ", " + message.getBoxId() + ", " + message.getMsgId() + "」");
             if (message.getMsgId() != MsgType.SERVER_SEND_GROUPED) {
-                ctx.write(Unpooled.wrappedBuffer(buildByMessage(message)));
+                switch (message.getMsgId()) {
+                    case MsgType.SERVER_SET_EMPLOYEE_DEPARTMENT_1:
+                        byte[] bytesDepartment = buildByMessage(message);
+                        byte[] bytesD1 = new byte[13];
+                        byte[] bytesD2 = new byte[13];
+                        System.arraycopy(bytesDepartment, 0, bytesD1, 0, 13);
+                        System.arraycopy(bytesDepartment, 13, bytesD2, 0, 13);
+                        deployWriteTcp(ctx, bytesD1);
+                        deployWriteTcp(ctx, bytesD2);
+                        return;
+
+                    case MsgType.SERVER_SET_FREE_CARD_NUMBER:
+                        byte[] bytesFree = buildByMessage(message);
+                        for (int i = 0; i < 16; i++) {
+                            byte[] bytesF = new byte[13];
+                            System.arraycopy(bytesFree, 13 * i, bytesF, 0, 13);
+                            deployWriteTcp(ctx, bytesF);
+                        }
+
+                        return;
+                }
+                deployWriteTcp(ctx, buildByMessage(message));
+
+
             } else {
                 WebMsgGrouped groupMsg = (WebMsgGrouped) message;
                 IMessage baseMsg = groupMsg.getMessage();
@@ -61,7 +84,7 @@ public class WebMsgOutBoundHandler extends ChannelOutboundHandlerAdapter {
                         }
                         break;
                     case ALL:
-                        logger.info("$$$$$$$$$$$$轮询整个集群$$$$$$$$$$$$$$$");
+                        logger.info("$$$$$$$$$$$$$轮询整个集群$$$$$$$$$$$$$$$$");
                         for (int j = 1; j <= groupMsg.getMaxBoxId(); j++) {
                             for (int i = 1; i <= groupMsg.getMaxGroupId(); i++) {
                                 baseMsg.setBoxId(j);
@@ -73,6 +96,16 @@ public class WebMsgOutBoundHandler extends ChannelOutboundHandlerAdapter {
                 }
             }
         });
+        ctx.flush();
+    }
+
+    private void deployWriteTcp(ChannelHandlerContext ctx, byte[] bytes) {
+        ctx.write(Unpooled.wrappedBuffer(bytes));
+        try {
+            Thread.sleep(50);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
         ctx.flush();
     }
 
