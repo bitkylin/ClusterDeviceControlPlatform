@@ -13,12 +13,14 @@ import cc.bitky.clustermanage.netty.message.web.WebMsgDeployEmployeeDeviceId;
 import cc.bitky.clustermanage.netty.message.web.WebMsgDeployEmployeeName;
 import cc.bitky.clustermanage.netty.message.web.WebMsgDeployRemainChargeTimes;
 import cc.bitky.clustermanage.netty.message.web.WebMsgInitCardException;
+import cc.bitky.clustermanage.utils.TcpReceiveListener;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 
 public class ParsedMessageInBoundHandler extends SimpleChannelInboundHandler<IMessage> {
 
     private Logger logger = LoggerFactory.getLogger(this.getClass());
+    private TcpReceiveListener reveiveListener;
 
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, IMessage msg) {
@@ -69,6 +71,11 @@ public class ParsedMessageInBoundHandler extends SimpleChannelInboundHandler<IMe
                 logger.debug("「初始化」 匹配卡号失败: " + initCardException.getCardType().toString());
                 break;
         }
+        if (reveiveListener != null) reveiveListener.receive();
+    }
+
+    void setReceiveListener(TcpReceiveListener reveiveListener) {
+        this.reveiveListener = reveiveListener;
     }
 }
 

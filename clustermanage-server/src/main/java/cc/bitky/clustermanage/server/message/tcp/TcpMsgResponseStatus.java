@@ -6,11 +6,11 @@ import cc.bitky.clustermanage.server.message.MsgType;
 /**
  * 设备回复: 充电状态
  */
-public class TcpMsgResponseDeviceStatus extends BaseMessage {
+public class TcpMsgResponseStatus extends BaseMessage {
   private int status;
   private long time;
 
-  public TcpMsgResponseDeviceStatus(int groupId, int boxId, int status) {
+  public TcpMsgResponseStatus(int groupId, int boxId, int status) {
     super(groupId, boxId);
     this.status = status;
     this.time = System.currentTimeMillis();

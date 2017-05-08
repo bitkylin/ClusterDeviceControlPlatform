@@ -8,7 +8,7 @@ import cc.bitky.clustermanage.server.message.base.BaseMessage;
  */
 public class WebMsgDeployFreeCardNumber extends BaseMessage {
 
-    private long[] cardNumbers = new long[16];
+    private long[] cardNumbers;
 
     /**
      * 服务器部署万能卡号
@@ -20,11 +20,11 @@ public class WebMsgDeployFreeCardNumber extends BaseMessage {
     public WebMsgDeployFreeCardNumber(int groupId, int boxId, long[] numbers) {
         super(groupId, boxId);
         setMsgId(MsgType.SERVER_SET_FREE_CARD_NUMBER);
-        if (numbers.length == 16) {
+        if (numbers.length <= 16) {
             this.cardNumbers = numbers;
             return;
         }
-        int length = numbers.length >= 16 ? 16 : numbers.length;
+        int length = numbers.length > 16 ? 16 : numbers.length;
         System.arraycopy(numbers, 0, cardNumbers, 0, length);
     }
 

@@ -16,7 +16,7 @@ import cc.bitky.clustermanage.server.message.MsgType;
 import cc.bitky.clustermanage.server.message.base.BaseTcpResponseMsg;
 import cc.bitky.clustermanage.server.message.base.IMessage;
 import cc.bitky.clustermanage.server.message.tcp.TcpMsgInitResponseCardNumber;
-import cc.bitky.clustermanage.server.message.tcp.TcpMsgResponseDeviceStatus;
+import cc.bitky.clustermanage.server.message.tcp.TcpMsgResponseStatus;
 import cc.bitky.clustermanage.server.message.web.WebMsgDeployEmployeeDepartment;
 import cc.bitky.clustermanage.server.message.web.WebMsgDeployEmployeeDeviceId;
 import cc.bitky.clustermanage.server.message.web.WebMsgDeployEmployeeName;
@@ -24,19 +24,45 @@ import cc.bitky.clustermanage.server.message.web.WebMsgDeployRemainChargeTimes;
 import cc.bitky.clustermanage.server.message.web.WebMsgInitCardException;
 import cc.bitky.clustermanage.server.message.web.WebMsgInitDeployMessageComplete;
 import cc.bitky.clustermanage.server.message.web.WebMsgInitMarchComfirmCardSuccessful;
+import cc.bitky.clustermanage.server.schedule.MsgKey;
+import cc.bitky.clustermanage.server.schedule.SendingMsgRepo;
 import cc.bitky.clustermanage.tcp.server.netty.SendWebMessagesListener;
 
 @Service
 public class ServerTcpMessageHandler {
     private final KyDbPresenter kyDbPresenter;
+    private final SendingMsgRepo sendingMsgRepo;
     private Logger logger = LoggerFactory.getLogger(getClass());
     private SendWebMessagesListener sendWebMessagesListener;
     private KyServerCenterHandler kyServerCenterHandler;
 
     @Autowired
-    public ServerTcpMessageHandler(KyDbPresenter kyDbPresenter) {
+    public ServerTcpMessageHandler(KyDbPresenter kyDbPresenter, SendingMsgRepo sendingMsgRepo) {
         this.kyDbPresenter = kyDbPresenter;
+        this.sendingMsgRepo = sendingMsgRepo;
+    }
 
+    public SendingMsgRepo getSendingMsgRepo() {
+        return sendingMsgRepo;
+    }
+
+    /**
+     * 充电状态回复处理方法
+     *
+     * @param message 充电状态回复 bean
+     */
+    public void handleResDeviceStatus(TcpMsgResponseStatus message) {
+        logger.info("");
+        logger.info("");
+        logger.info("***********进入功能消息处理方法「" + message.getGroupId() + ", " + message.getBoxId() + "」***********");
+        logger.info("收到：设备状态请求的回复");
+        long l1 = System.currentTimeMillis();
+        Device device = kyDbPresenter.handleMsgDeviceStatus(message, true);
+        if (device != null) {
+            deployRemainChargeTimes(device);
+        }
+        long l2 = System.currentTimeMillis();
+        logger.info("处理设备状态包花费的总时间：" + (l2 - l1) + "ms");
     }
 
     /**
@@ -45,22 +71,7 @@ public class ServerTcpMessageHandler {
      * @param message 功能消息 bean
      */
     public void handleTcpMsg(IMessage message) {
-        logger.info("");
-        logger.info("");
-        logger.info("***********进入功能消息处理方法「" + message.getGroupId() + ", " + message.getBoxId() + "」***********");
-        int msgId = message.getMsgId();
-        switch (msgId) {
-            case MsgType.DEVICE_RESPONSE_STATUS:
-                logger.info("收到：设备状态请求的回复");
-                long l1 = System.currentTimeMillis();
-                Device device = kyDbPresenter.handleMsgDeviceStatus((TcpMsgResponseDeviceStatus) message, true);
-                if (device != null) {
-                    deployRemainChargeTimes(device);
-                }
-                long l2 = System.currentTimeMillis();
-                logger.info("处理设备状态包花费的总时间：" + (l2 - l1) + "ms");
-                break;
-        }
+
     }
 
     /**
@@ -84,13 +95,12 @@ public class ServerTcpMessageHandler {
      *
      * @param message 常规回复消息 bean
      */
-    public void handleTcpResponseMsg(IMessage message) {
-        BaseTcpResponseMsg baseTcpResponseMsg = (BaseTcpResponseMsg) message;
+    public void handleTcpResponseMsg(BaseTcpResponseMsg message) {
         logger.info("");
         logger.info("");
-        logger.info("***********进入常规回复消息处理方法「" + message.getGroupId() + ", " + message.getBoxId() + ", " + message.getMsgId() + "『" + baseTcpResponseMsg.getStatus() + "』」***********");
-        int msgId = baseTcpResponseMsg.getMsgId();
-        switch (msgId) {
+        logger.info("***********进入常规回复消息处理方法「" + message.getGroupId() + ", " + message.getBoxId()
+                + ", " + message.getMsgId() + "『" + message.getStatus() + "』」***********");
+        switch (message.getMsgId()) {
             case MsgType.DEVICE_RESPONSE_REMAIN_CHARGE_TIMES:
                 logger.info("收到：充电次数回复");
                 break;
@@ -109,9 +119,20 @@ public class ServerTcpMessageHandler {
             case MsgType.DEVICE_RESPONSE_REMOTE_UNLOCK:
                 logger.info("收到：远程开锁回复");
                 break;
-            case MsgType.DEVICE_RESPONSE_FREE_CARD_NUMBER:
-                logger.info("收到：万能卡号更新回复");
-                break;
+        }
+        if (message.getMsgId() >= 0x70 && message.getMsgId() <= 0x7F) {
+            logger.info("收到：万能卡号更新回复");
+        }
+
+        byte groupId = (byte) message.getGroupId();
+        byte boxId = (byte) message.getBoxId();
+        byte msgId = (byte) (message.getMsgId() - 48);
+
+        MsgKey msgKey = new MsgKey(groupId, boxId, msgId);
+        if (sendingMsgRepo.getMsgHashMap().remove(msgKey) != null) {
+            logger.info("已从哈希表移除");
+        } else {
+            logger.info("哈希表无该 Key");
         }
     }
 
@@ -123,7 +144,8 @@ public class ServerTcpMessageHandler {
     public void handleTcpInitMsg(IMessage message) {
         logger.info("");
         logger.info("");
-        logger.info("***********进入初始化消息处理方法「" + message.getGroupId() + ", " + message.getBoxId() + ", " + message.getMsgId() + "」***********");
+        logger.info("***********进入初始化消息处理方法「" + message.getGroupId() + ", " + message.getBoxId()
+                + ", " + message.getMsgId() + "」***********");
 
         //从数据库中匹配员工卡号或确认卡号，获取相应信息并发送至 Netty 的 Handler
         if (message.getMsgId() == MsgType.INITIALIZE_DEVICE_RESPONSE_CARD) {

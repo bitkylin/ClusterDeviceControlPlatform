@@ -97,6 +97,9 @@ public class App {
                 case "resf":
                     message = buildResMsg(MsgType.DEVICE_RESPONSE_FREE_CARD_NUMBER);
                     break;
+                case "err":
+                    message = buildResMsg(0);
+                    break;
                 case "exit":
                     nettyServer.shutdown();
                     return;

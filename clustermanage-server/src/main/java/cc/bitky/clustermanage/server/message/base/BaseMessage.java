@@ -4,6 +4,7 @@ package cc.bitky.clustermanage.server.message.base;
  * 基础信息 Message
  */
 public class BaseMessage implements IMessage {
+
     private int msgId = -1;
     private int groupId = -1;
     private int boxId = -1;

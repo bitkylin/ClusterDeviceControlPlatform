@@ -12,4 +12,9 @@ public class TcpMsgResponseFreeCardNumber extends BaseTcpResponseMsg {
         super(groupId, boxId, status);
         setMsgId(MsgType.DEVICE_RESPONSE_FREE_CARD_NUMBER);
     }
+
+    public TcpMsgResponseFreeCardNumber(int groupId, int boxId, int msgId, int status) {
+        super(groupId, boxId, status);
+        setMsgId(msgId);
+    }
 }

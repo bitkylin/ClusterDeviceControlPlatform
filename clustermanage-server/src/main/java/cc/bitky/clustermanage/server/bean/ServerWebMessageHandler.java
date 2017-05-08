@@ -95,11 +95,11 @@ public class ServerWebMessageHandler {
     /**
      * 将卡号保存到数据库
      *
-     * @param freecards 卡号的数组
+     * @param freeCards 卡号的数组
      * @param card      卡号类型
      * @return 是否保存成功
      */
-    public boolean saveCardNumber(long[] freecards, CardType card) {
-        return  kyServerCenterHandler.saveCardNumber(freecards, card);
+    public boolean saveCardNumber(long[] freeCards, CardType card) {
+        return  kyServerCenterHandler.saveCardNumber(freeCards, card);
     }
 }

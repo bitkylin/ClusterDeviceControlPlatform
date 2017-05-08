@@ -94,7 +94,7 @@ public class TcpMsgBuilder {
             bytes[0] += bytesBody.length;
         }
 
-        byte[] bytes3 = new byte[26];
+        byte[] bytes3 = new byte[13 * 2];
         System.arraycopy(bytes, 0, bytes3, 0, 13);
         System.arraycopy(bytes2, 0, bytes3, 13, 13);
         return bytes3;
@@ -132,9 +132,11 @@ public class TcpMsgBuilder {
      * @return 万能卡号的 CAN 帧
      */
     public byte[] buildFreeCardNumber(WebMsgDeployFreeCardNumber webMsgDeployFreeCardNumber) {
-        byte[] bytesSend = new byte[13 * 16];
         long[] cards = webMsgDeployFreeCardNumber.getCardNumbers();
-        for (int i = 0; i < 16; i++) {
+        int count = cards.length < 16 ? cards.length : 16;
+        byte[] bytesSend = new byte[13 * count];
+
+        for (int i = 0; i < count; i++) {
             byte[] bytes = buildMsgOutline(webMsgDeployFreeCardNumber);
             bytes[2] += i;
             addMessageBody(bytes, longToByteArray(cards[i]), 0);

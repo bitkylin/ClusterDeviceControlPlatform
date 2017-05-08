@@ -10,4 +10,5 @@ public interface IMessage {
     int getGroupId();
 
     void setGroupId(int groupId);
+
 }

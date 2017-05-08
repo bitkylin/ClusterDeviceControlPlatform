@@ -9,6 +9,7 @@ import java.util.List;
 
 import cc.bitky.clustermanage.server.message.MsgType;
 import cc.bitky.clustermanage.server.message.base.IMessage;
+import cc.bitky.clustermanage.server.message.send.SendableMsg;
 import cc.bitky.clustermanage.server.message.web.WebMsgDeployEmployeeCardNumber;
 import cc.bitky.clustermanage.server.message.web.WebMsgDeployEmployeeDepartment;
 import cc.bitky.clustermanage.server.message.web.WebMsgDeployEmployeeDeviceId;
@@ -22,7 +23,6 @@ import cc.bitky.clustermanage.server.message.web.WebMsgInitMarchComfirmCardSucce
 import cc.bitky.clustermanage.server.message.web.WebMsgObtainDeviceStatus;
 import cc.bitky.clustermanage.server.message.web.WebMsgOperateBoxUnlock;
 import cc.bitky.clustermanage.tcp.util.TcpMsgBuilder;
-import io.netty.buffer.Unpooled;
 import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelOutboundHandlerAdapter;
@@ -32,8 +32,14 @@ import io.netty.channel.ChannelPromise;
 @ChannelHandler.Sharable
 public class WebMsgOutBoundHandler extends ChannelOutboundHandlerAdapter {
 
+    /**
+     * 是否延迟写入 TCP 通道
+     */
+    private static final boolean writeDelayed = true;
+    private static final boolean cannotDeplay = false;
+
     private final TcpMsgBuilder tcpMsgBuilder;
-    private Logger logger = LoggerFactory.getLogger(WebMsgOutBoundHandler.class);
+    private Logger logger = LoggerFactory.getLogger(getClass());
 
     @Autowired
     public WebMsgOutBoundHandler(TcpMsgBuilder tcpMsgBuilder) {
@@ -47,40 +53,24 @@ public class WebMsgOutBoundHandler extends ChannelOutboundHandlerAdapter {
         messages.forEach(message -> {
             logger.info("发送CAN帧「" + message.getGroupId() + ", " + message.getBoxId() + ", " + message.getMsgId() + "」");
             if (message.getMsgId() != MsgType.SERVER_SEND_GROUPED) {
-                switch (message.getMsgId()) {
-                    case MsgType.SERVER_SET_EMPLOYEE_DEPARTMENT_1:
-                        byte[] bytesDepartment = buildByMessage(message);
-                        byte[] bytesD1 = new byte[13];
-                        byte[] bytesD2 = new byte[13];
-                        System.arraycopy(bytesDepartment, 0, bytesD1, 0, 13);
-                        System.arraycopy(bytesDepartment, 13, bytesD2, 0, 13);
-                        deployWriteTcp(ctx, bytesD1);
-                        deployWriteTcp(ctx, bytesD2);
-                        return;
-
-                    case MsgType.SERVER_SET_FREE_CARD_NUMBER:
-                        byte[] bytesFree = buildByMessage(message);
-                        for (int i = 0; i < 16; i++) {
-                            byte[] bytesF = new byte[13];
-                            System.arraycopy(bytesFree, 13 * i, bytesF, 0, 13);
-                            deployWriteTcp(ctx, bytesF);
-                        }
-
-                        return;
-                }
-                deployWriteTcp(ctx, buildByMessage(message));
-
-
+                SingleBuildBytes(ctx, message);
             } else {
                 WebMsgGrouped groupMsg = (WebMsgGrouped) message;
                 IMessage baseMsg = groupMsg.getMessage();
 
                 switch (groupMsg.getGroupedEnum()) {
+                    case GROUP:
+                        logger.info("$$$$$$$$$$$$轮询集群切面方式$$$$$$$$$$$$$$$");
+                        for (int i = 1; i <= groupMsg.getMaxGroupId(); i++) {
+                            baseMsg.setGroupId(i);
+                            SingleBuildBytes(ctx, baseMsg);
+                        }
+                        break;
                     case BOX:
                         logger.info("$$$$$$$$$$$$轮询单个设备组$$$$$$$$$$$$$$$");
                         for (int j = 1; j <= groupMsg.getMaxBoxId(); j++) {
                             baseMsg.setBoxId(j);
-                            ctx.write(Unpooled.wrappedBuffer(buildByMessage(baseMsg)));
+                            SingleBuildBytes(ctx, baseMsg);
                         }
                         break;
                     case ALL:
@@ -89,24 +79,55 @@ public class WebMsgOutBoundHandler extends ChannelOutboundHandlerAdapter {
                             for (int i = 1; i <= groupMsg.getMaxGroupId(); i++) {
                                 baseMsg.setBoxId(j);
                                 baseMsg.setGroupId(i);
-                                ctx.write(Unpooled.wrappedBuffer(buildByMessage(baseMsg)));
+                                SingleBuildBytes(ctx, baseMsg);
                             }
                         }
                         break;
                 }
             }
         });
-        ctx.flush();
     }
 
-    private void deployWriteTcp(ChannelHandlerContext ctx, byte[] bytes) {
-        ctx.write(Unpooled.wrappedBuffer(bytes));
-        try {
-            Thread.sleep(50);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
+    /**
+     * 将非成组的 Message 转化为 byte[]
+     *
+     * @param ctx     上下文
+     * @param message 信息 bean
+     */
+    private void SingleBuildBytes(ChannelHandlerContext ctx, IMessage message) {
+        switch (message.getMsgId()) {
+            case MsgType.SERVER_SET_EMPLOYEE_DEPARTMENT_1:
+                byte[] bytesDepartment = buildByMessage(message);
+                byte[] bytesD1 = new byte[13];
+                byte[] bytesD2 = new byte[13];
+                System.arraycopy(bytesDepartment, 0, bytesD1, 0, 13);
+                System.arraycopy(bytesDepartment, 13, bytesD2, 0, 13);
+                deployWriteTcp(ctx, bytesD1);
+                deployWriteTcp(ctx, bytesD2);
+                return;
+
+            case MsgType.SERVER_SET_FREE_CARD_NUMBER:
+                byte[] bytesFree = buildByMessage(message);
+                int count = bytesFree.length / 13;
+
+                for (int i = 0; i < count; i++) {
+                    byte[] bytesF = new byte[13];
+                    System.arraycopy(bytesFree, 13 * i, bytesF, 0, 13);
+                    deployWriteTcp(ctx, bytesF);
+                }
+                return;
         }
-        ctx.flush();
+        deployWriteTcp(ctx, buildByMessage(message));
+    }
+
+    /**
+     * 将 byte[] 转化为 SendableMsg 并传入下一级写出通道
+     *
+     * @param ctx   上下文
+     * @param bytes 欲写入的 byte[]
+     */
+    private void deployWriteTcp(ChannelHandlerContext ctx, byte[] bytes) {
+        ctx.write(new SendableMsg(bytes));
     }
 
     private byte[] buildByMessage(IMessage message) {

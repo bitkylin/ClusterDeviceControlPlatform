@@ -14,7 +14,7 @@ import cc.bitky.clustermanage.db.bean.Employee;
 import cc.bitky.clustermanage.db.repository.DeviceGroupRepository;
 import cc.bitky.clustermanage.server.message.CardType;
 import cc.bitky.clustermanage.server.message.base.IMessage;
-import cc.bitky.clustermanage.server.message.tcp.TcpMsgResponseDeviceStatus;
+import cc.bitky.clustermanage.server.message.tcp.TcpMsgResponseStatus;
 
 @Repository
 public class KyDbPresenter {
@@ -24,7 +24,7 @@ public class KyDbPresenter {
     private final DbDevicePresenter dbDevicePresenter;
     private final DbRoutinePresenter dbRoutinePresenter;
 
-    private int groupSize;
+    private int groupSize = 0;
 
     private Logger logger = LoggerFactory.getLogger(KyDbPresenter.class);
 
@@ -61,7 +61,9 @@ public class KyDbPresenter {
      * @return 设备组的数量
      */
     public int obtainDeviceGroupCount() {
-        return (int) deviceGroupRepository.count();
+        if (groupSize == 0)
+            groupSize = (int) deviceGroupRepository.count();
+        return groupSize;
     }
 
     /**
@@ -87,21 +89,21 @@ public class KyDbPresenter {
     /**
      * 处理设备状态包
      *
-     * @param tcpMsgResponseDeviceStatus 设备状态包
-     * @param isDebug                    是否处于 Debug 模式
+     * @param tcpMsgResponseStatus 设备状态包
+     * @param isDebug              是否处于 Debug 模式
      * @return 处理后的 Device
      */
-    public Device handleMsgDeviceStatus(TcpMsgResponseDeviceStatus tcpMsgResponseDeviceStatus, boolean isDebug) {
+    public Device handleMsgDeviceStatus(TcpMsgResponseStatus tcpMsgResponseStatus, boolean isDebug) {
         long l1 = System.currentTimeMillis();
 
         //处理心跳，更新设备组信息，「Debug 模式下生成所需的设备和设备组」
-        handleMsgHeartBeat(tcpMsgResponseDeviceStatus, isDebug);
+        handleMsgHeartBeat(tcpMsgResponseStatus, isDebug);
         long l2 = System.currentTimeMillis();
 
         //更新设备的状态信息
-        Device device = dbDevicePresenter.handleMsgDeviceStatus(tcpMsgResponseDeviceStatus);
+        Device device = dbDevicePresenter.handleMsgDeviceStatus(tcpMsgResponseStatus);
         if (device == null) {
-            logger.warn("设备(" + tcpMsgResponseDeviceStatus.getGroupId() + ", " + tcpMsgResponseDeviceStatus.getBoxId() + ") 不存在，无法处理");
+            logger.warn("设备(" + tcpMsgResponseStatus.getGroupId() + ", " + tcpMsgResponseStatus.getBoxId() + ") 不存在，无法处理");
             return null;
         }
         if (device.getStatus() == -1) {
@@ -120,7 +122,7 @@ public class KyDbPresenter {
         long l4 = System.currentTimeMillis();
 
         //更新员工的考勤表
-        dbRoutinePresenter.updateRoutineById(device.getEmployeeObjectId(), tcpMsgResponseDeviceStatus);
+        dbRoutinePresenter.updateRoutineById(device.getEmployeeObjectId(), tcpMsgResponseStatus);
         long l5 = System.currentTimeMillis();
         logger.info("时间耗费：" + (l2 - l1) + "ms; " + (l3 - l2) + "ms; " + (l4 - l3) + "ms; " + (l5 - l4) + "ms");
         return device;

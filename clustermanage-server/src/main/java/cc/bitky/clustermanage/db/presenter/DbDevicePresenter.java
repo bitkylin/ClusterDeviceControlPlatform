@@ -11,7 +11,7 @@ import java.util.List;
 
 import cc.bitky.clustermanage.db.bean.Device;
 import cc.bitky.clustermanage.db.repository.DeviceRepository;
-import cc.bitky.clustermanage.server.message.tcp.TcpMsgResponseDeviceStatus;
+import cc.bitky.clustermanage.server.message.tcp.TcpMsgResponseStatus;
 
 @Service
 class DbDevicePresenter {
@@ -40,23 +40,25 @@ class DbDevicePresenter {
     /**
      * 处理设备状态包，更新设备的状态信息
      *
-     * @param resDeviceStatus 设备状态包
+     * @param msgStatus 设备状态包
      */
-    Device handleMsgDeviceStatus(TcpMsgResponseDeviceStatus resDeviceStatus) {
-        Device device = deviceRepository.findFirstByGroupIdAndBoxId(resDeviceStatus.getGroupId(), resDeviceStatus.getBoxId());
+    Device handleMsgDeviceStatus(TcpMsgResponseStatus msgStatus) {
+        Device device = deviceRepository.findFirstByGroupIdAndBoxId(msgStatus.getGroupId(), msgStatus.getBoxId());
         if (device == null) return null;
         int rawStatus = device.getStatus();
-        if (resDeviceStatus.getStatus() == rawStatus) {
-            logger.info("设备「" + resDeviceStatus.getGroupId() + ", " + resDeviceStatus.getBoxId() + "」『" + rawStatus + "->" + resDeviceStatus.getStatus() + "』: 状态无更新");
+        if (msgStatus.getStatus() == rawStatus) {
+            logger.info("设备「" + msgStatus.getGroupId() + ", " + msgStatus.getBoxId() + "」『"
+                    + rawStatus + "->" + msgStatus.getStatus() + "』: 状态无更新");
             device.setStatus(-1);
         } else {
-            if (rawStatus == 2 && resDeviceStatus.getStatus() == 3) {
+            if (rawStatus == 2 && msgStatus.getStatus() == 3) {
                 device.setRemainChargeTime(device.getRemainChargeTime() - 1);
             }
-            device.setStatus(resDeviceStatus.getStatus());
-            device.setTime(new Date(resDeviceStatus.getTime()));
+            device.setStatus(msgStatus.getStatus());
+            device.setTime(new Date(msgStatus.getTime()));
             deviceRepository.save(device);
-            logger.info("设备「" + resDeviceStatus.getGroupId() + ", " + resDeviceStatus.getBoxId() + "」『" + rawStatus + "->" + resDeviceStatus.getStatus() + "』: 状态成功更新！");
+            logger.info("设备「" + msgStatus.getGroupId() + ", " + msgStatus.getBoxId() + "」『"
+                    + rawStatus + "->" + msgStatus.getStatus() + "』: 状态成功更新！");
         }
         return device;
     }
