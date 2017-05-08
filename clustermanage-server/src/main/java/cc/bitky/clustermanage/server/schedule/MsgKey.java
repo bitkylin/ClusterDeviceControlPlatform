@@ -45,4 +45,13 @@ public class MsgKey {
     public byte getBoxId() {
         return boxId;
     }
+
+    @Override
+    public String toString() {
+        return "MsgKey{" +
+                "msgId=" + msgId +
+                ", groupId=" + groupId +
+                ", boxId=" + boxId +
+                '}';
+    }
 }

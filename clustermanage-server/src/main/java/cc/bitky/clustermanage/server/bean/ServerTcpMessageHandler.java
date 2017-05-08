@@ -47,15 +47,18 @@ public class ServerTcpMessageHandler {
     }
 
     /**
-     * 充电状态回复处理方法
+     * 设备状态回复处理方法
      *
-     * @param message 充电状态回复 bean
+     * @param message 设备状态回复 bean
      */
     public void handleResDeviceStatus(TcpMsgResponseStatus message) {
         logger.info("");
         logger.info("");
         logger.info("***********进入功能消息处理方法「" + message.getGroupId() + ", " + message.getBoxId() + "」***********");
-        logger.info("收到：设备状态请求的回复");
+        if (message.getResSource() == TcpMsgResponseStatus.ResSource.SERVER)
+            logger.info("收到：服务器监测到的设备状态");
+        else
+            logger.info("收到：设备状态请求的回复");
         long l1 = System.currentTimeMillis();
         Device device = kyDbPresenter.handleMsgDeviceStatus(message, true);
         if (device != null) {

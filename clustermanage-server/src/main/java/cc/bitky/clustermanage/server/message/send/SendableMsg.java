@@ -5,8 +5,8 @@ import cc.bitky.clustermanage.server.message.base.ISendableMsg;
 import cc.bitky.clustermanage.server.schedule.MsgKey;
 
 public class SendableMsg implements ISendableMsg {
-    private MsgKey msgKey;
-    private byte[] bytes;
+    private final MsgKey msgKey;
+    private final byte[] bytes;
     private PriorityType priorityType = PriorityType.LOW;
     private byte sendTimes = 0;
 

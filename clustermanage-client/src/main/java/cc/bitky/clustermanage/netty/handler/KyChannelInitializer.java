@@ -21,9 +21,7 @@ public class KyChannelInitializer extends ChannelInitializer<SocketChannel> {
         kyOutBoundHandler = new KyOutBoundHandler();
         parsedMessageInBoundHandler = new ParsedMessageInBoundHandler();
 
-        kyOutBoundHandler.setSendListener(() -> {
-            startStamp = System.currentTimeMillis();
-        });
+        kyOutBoundHandler.setSendListener(() -> startStamp = System.currentTimeMillis());
 
         parsedMessageInBoundHandler.setReceiveListener(() -> {
             logger.info("持续时间 " + (System.currentTimeMillis() - startStamp) + " ms");

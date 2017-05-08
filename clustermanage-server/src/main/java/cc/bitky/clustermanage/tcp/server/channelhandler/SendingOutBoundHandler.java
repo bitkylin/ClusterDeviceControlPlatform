@@ -6,9 +6,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
-import java.util.Timer;
-import java.util.TimerTask;
+import java.util.concurrent.Executors;
 import java.util.concurrent.LinkedBlockingDeque;
+import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 import cc.bitky.clustermanage.server.bean.ServerTcpMessageHandler;
@@ -16,6 +16,7 @@ import cc.bitky.clustermanage.server.message.PriorityType;
 import cc.bitky.clustermanage.server.message.send.SendableMsg;
 import cc.bitky.clustermanage.server.message.tcp.TcpMsgResponseStatus;
 import cc.bitky.clustermanage.server.schedule.MsgKey;
+import io.netty.buffer.Unpooled;
 import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelOutboundHandlerAdapter;
@@ -26,8 +27,9 @@ import io.netty.util.HashedWheelTimer;
 @ChannelHandler.Sharable
 public class SendingOutBoundHandler extends ChannelOutboundHandlerAdapter {
     private final ServerTcpMessageHandler serverTcpMessageHandler;
-    LinkedBlockingDeque<SendableMsg> linkedBlockingDeque = new LinkedBlockingDeque<>(655360);
-    private Timer timer;
+    private LinkedBlockingDeque<SendableMsg> linkedBlockingDeque = new LinkedBlockingDeque<>(655360);
+    private ScheduledExecutorService scheduledExecutorService;
+
     private Logger logger = LoggerFactory.getLogger(getClass());
 
     @Autowired
@@ -37,7 +39,7 @@ public class SendingOutBoundHandler extends ChannelOutboundHandlerAdapter {
 
     @Override
     public void write(ChannelHandlerContext ctx, Object msg, ChannelPromise promise) throws Exception {
-        logger.info("-----------写入队列-------------");
+        //   logger.info("-----------写入队列-------------");
         SendableMsg messages = (SendableMsg) msg;
         if (messages.getPriorityType() == PriorityType.HIGH) {
             linkedBlockingDeque.offerFirst(messages);
@@ -59,32 +61,36 @@ public class SendingOutBoundHandler extends ChannelOutboundHandlerAdapter {
     }
 
     private void initTimer(ChannelHandlerContext ctx) {
-        if (timer == null) {
-            timer = new Timer();
-            timer.schedule(new TimerTask() {
-                @Override
-                public void run() {
-                    if (!linkedBlockingDeque.isEmpty()) {
-                        SendableMsg Message = linkedBlockingDeque.poll();
-                        getMsgHashMap().put(Message.getMsgKey(), Message.getBytes());
-                        ctx.writeAndFlush(Message.getBytes());
-                        setWheelTesk(Message);
-                    }
+        if (scheduledExecutorService == null) {
+            scheduledExecutorService = Executors.newSingleThreadScheduledExecutor();
+            scheduledExecutorService.scheduleWithFixedDelay(() -> {
+                if (!linkedBlockingDeque.isEmpty()) {
+                    SendableMsg message = linkedBlockingDeque.poll();
+                    getMsgHashMap().put(message.getMsgKey(), message.getBytes());
+                    ctx.writeAndFlush(Unpooled.wrappedBuffer(message.getBytes()));
+                    setWheelTask(ctx, message);
                 }
-            }, 0, 50);
+            }, 0, 50, TimeUnit.MILLISECONDS);
         }
     }
 
-    private void setWheelTesk(SendableMsg message) {
+    private void setWheelTask(ChannelHandlerContext ctx, SendableMsg message) {
+        logger.info("@%@%设置时间轮：「" + message.getMsgKey() + "」『" + message.getSendTimes() + "』");
         getHashedWheelTimer().newTimeout(timeout -> {
+            logger.info("@%@%执行时间轮：「" + message.getMsgKey() + "」『" + message.getSendTimes() + "』");
             MsgKey msgKey = message.getMsgKey();
             if (getMsgHashMap().get(msgKey) != null) {
+                logger.info("时间轮：出错");
                 message.increaseSendTimes();
                 if (message.getSendTimes() >= 3) {
+                    getMsgHashMap().remove(msgKey);
+                    logger.info("时间轮：记录");
                     serverTcpMessageHandler.handleResDeviceStatus(
-                            new TcpMsgResponseStatus(msgKey.getGroupId(), msgKey.getBoxId(), 4));
+                            new TcpMsgResponseStatus(msgKey.getGroupId(), msgKey.getBoxId(), 4, TcpMsgResponseStatus.ResSource.SERVER));
                 } else {
-                    setWheelTesk(message);
+                    logger.info("时间轮：重新设置");
+                    ctx.writeAndFlush(Unpooled.wrappedBuffer(message.getBytes()));
+                    setWheelTask(ctx, message);
                 }
             }
         }, 5, TimeUnit.SECONDS);

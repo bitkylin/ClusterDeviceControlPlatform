@@ -16,6 +16,7 @@ public class ServerChannelInitializer extends ChannelInitializer<NioSocketChanne
     private final CanFrameChannelInboundHandler canFrameChannelInboundHandler;
     private final ParsedMessageInBoundHandler parsedMessageInBoundHandler;
     private final WebMsgOutBoundHandler webMsgOutBoundHandler;
+    private final SendingOutBoundHandler sendingOutBoundHandler;
 
     private ChannelPipeline pipeline;
     private Logger logger = LoggerFactory.getLogger(this.getClass());
@@ -23,13 +24,13 @@ public class ServerChannelInitializer extends ChannelInitializer<NioSocketChanne
     @Autowired
     public ServerChannelInitializer(CanFrameChannelInboundHandler canFrameChannelInboundHandler,
                                     ParsedMessageInBoundHandler parsedMessageInBoundHandler,
-                                    WebMsgOutBoundHandler webMsgOutBoundHandler) {
+                                    WebMsgOutBoundHandler webMsgOutBoundHandler,
+                                    SendingOutBoundHandler sendingOutBoundHandler) {
         super();
         this.canFrameChannelInboundHandler = canFrameChannelInboundHandler;
         this.parsedMessageInBoundHandler = parsedMessageInBoundHandler;
         this.webMsgOutBoundHandler = webMsgOutBoundHandler;
-
-
+        this.sendingOutBoundHandler = sendingOutBoundHandler;
     }
 
     @Override
@@ -38,6 +39,7 @@ public class ServerChannelInitializer extends ChannelInitializer<NioSocketChanne
         ch.pipeline().addLast(new LoggingHandler("kyOutlineLogger", LogLevel.INFO));
         ch.pipeline().addLast(canFrameChannelInboundHandler);
         ch.pipeline().addLast(parsedMessageInBoundHandler);
+        ch.pipeline().addLast(sendingOutBoundHandler);
         ch.pipeline().addLast(webMsgOutBoundHandler);
 
         parsedMessageInBoundHandler.getServerTcpMessageHandler()

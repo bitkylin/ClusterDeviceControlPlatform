@@ -2,7 +2,7 @@ spring:
   data:
     mongodb:
       host: lml-desktop
-      database: bitky
+      database: bitky1
 debug: false
 logging:
   level:
