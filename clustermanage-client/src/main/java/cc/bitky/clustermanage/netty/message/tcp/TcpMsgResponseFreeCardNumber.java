@@ -9,8 +9,8 @@ import cc.bitky.clustermanage.netty.message.base.BaseTcpResponseMsg;
  */
 public class TcpMsgResponseFreeCardNumber extends BaseTcpResponseMsg {
 
-    public TcpMsgResponseFreeCardNumber(int groupId, int boxId, int status) {
+    public TcpMsgResponseFreeCardNumber(int groupId, int boxId, int status, int item) {
         super(groupId, boxId, status);
-        setMsgId(MsgType.DEVICE_RESPONSE_FREE_CARD_NUMBER);
+        setMsgId(MsgType.DEVICE_RESPONSE_FREE_CARD_NUMBER + item);
     }
 }

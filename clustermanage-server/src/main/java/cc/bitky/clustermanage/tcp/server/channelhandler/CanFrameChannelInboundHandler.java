@@ -6,10 +6,12 @@ import org.springframework.stereotype.Component;
 
 import cc.bitky.clustermanage.server.message.MsgType;
 import cc.bitky.clustermanage.server.message.base.IMessage;
+import cc.bitky.clustermanage.server.message.tcp.MsgErrorMessage;
 import cc.bitky.clustermanage.server.message.tcp.TcpMsgInitResponseCardNumber;
 import cc.bitky.clustermanage.server.message.tcp.TcpMsgResponseBoxId;
 import cc.bitky.clustermanage.server.message.tcp.TcpMsgResponseEmployeeCardnumber;
-import cc.bitky.clustermanage.server.message.tcp.TcpMsgResponseEmployeeDepartment;
+import cc.bitky.clustermanage.server.message.tcp.TcpMsgResponseEmployeeDepartment1;
+import cc.bitky.clustermanage.server.message.tcp.TcpMsgResponseEmployeeDepartment2;
 import cc.bitky.clustermanage.server.message.tcp.TcpMsgResponseEmployeeName;
 import cc.bitky.clustermanage.server.message.tcp.TcpMsgResponseFreeCardNumber;
 import cc.bitky.clustermanage.server.message.tcp.TcpMsgResponseOperateBoxUnlock;
@@ -61,7 +63,10 @@ public class CanFrameChannelInboundHandler extends SimpleChannelInboundHandler<B
                     return new TcpMsgResponseEmployeeName(groupId, boxId, status);
 
                 case MsgType.DEVICE_RESPONSE_EMPLOYEE_DEPARTMENT_1:
-                    return new TcpMsgResponseEmployeeDepartment(groupId, boxId, status);
+                    return new TcpMsgResponseEmployeeDepartment1(groupId, boxId, status);
+
+                case MsgType.DEVICE_RESPONSE_EMPLOYEE_DEPARTMENT_2:
+                    return new TcpMsgResponseEmployeeDepartment2(groupId, boxId, status);
 
                 case MsgType.DEVICE_RESPONSE_EMPLOYEE_CARD_NUMBER:
                     return new TcpMsgResponseEmployeeCardnumber(groupId, boxId, status);
@@ -71,7 +76,8 @@ public class CanFrameChannelInboundHandler extends SimpleChannelInboundHandler<B
             }
         }
 
-        if (msgId >= 0x70 && msgId <= 0x7F) {
+
+        if (msgId >= ((byte) 0x80) && msgId <= ((byte) 0x8F)) {
             int status = msg.readByte();
             msg.skipBytes(7);
             return new TcpMsgResponseFreeCardNumber(groupId, boxId, msgId, status);
@@ -89,8 +95,7 @@ public class CanFrameChannelInboundHandler extends SimpleChannelInboundHandler<B
             default:
                 String exMsg = "接收到正确的 CAN 帧，但无法解析「msgId = " + msgId + "」『发送卡号 0 的帧』";
                 logger.warn(exMsg);
-                return new TcpMsgInitResponseCardNumber(groupId, boxId, 0);
-            //   return new MsgErrorMessage(exMsg);
+                return new MsgErrorMessage(exMsg);
         }
     }
 

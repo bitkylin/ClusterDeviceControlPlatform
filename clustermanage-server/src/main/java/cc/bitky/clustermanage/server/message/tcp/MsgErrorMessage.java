@@ -7,7 +7,7 @@ public class MsgErrorMessage extends BaseMessage {
 
   private String msg;
 
-  public MsgErrorMessage(int groupId) {
+  private MsgErrorMessage(int groupId) {
     super(groupId);
     setMsgId(MsgType.ERROR);
   }

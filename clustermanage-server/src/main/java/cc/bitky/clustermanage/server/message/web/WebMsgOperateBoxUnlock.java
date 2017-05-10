@@ -12,4 +12,9 @@ public class WebMsgOperateBoxUnlock extends BaseMessage {
         super(groupId, boxId);
         setMsgId(MsgType.SERVER_REMOTE_UNLOCK);
     }
+
+
+    public WebMsgOperateBoxUnlock kyClone(int groupId) {
+        return new WebMsgOperateBoxUnlock(groupId, getBoxId());
+    }
 }

@@ -12,7 +12,6 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 import cc.bitky.clustermanage.server.bean.ServerTcpMessageHandler;
-import cc.bitky.clustermanage.server.message.PriorityType;
 import cc.bitky.clustermanage.server.message.send.SendableMsg;
 import cc.bitky.clustermanage.server.message.tcp.TcpMsgResponseStatus;
 import cc.bitky.clustermanage.server.schedule.MsgKey;
@@ -27,7 +26,6 @@ import io.netty.util.HashedWheelTimer;
 @ChannelHandler.Sharable
 public class SendingOutBoundHandler extends ChannelOutboundHandlerAdapter {
     private final ServerTcpMessageHandler serverTcpMessageHandler;
-    private LinkedBlockingDeque<SendableMsg> linkedBlockingDeque = new LinkedBlockingDeque<>(655360);
     private ScheduledExecutorService scheduledExecutorService;
 
     private Logger logger = LoggerFactory.getLogger(getClass());
@@ -39,61 +37,54 @@ public class SendingOutBoundHandler extends ChannelOutboundHandlerAdapter {
 
     @Override
     public void write(ChannelHandlerContext ctx, Object msg, ChannelPromise promise) throws Exception {
-        //   logger.info("-----------写入队列-------------");
-        SendableMsg messages = (SendableMsg) msg;
-        if (messages.getPriorityType() == PriorityType.HIGH) {
-            linkedBlockingDeque.offerFirst(messages);
+        SendableMsg message = (SendableMsg) msg;
+        if (message.isUrgent()) {
+            getLinkedBlockingDeque().offerFirst(message);
         } else {
-            linkedBlockingDeque.offerLast(messages);
+            getLinkedBlockingDeque().offerLast(message);
         }
         initTimer(ctx);
-        // HashedWheelTimer
-
-
-//        if (writeDelayed) {
-//            try {
-//                Thread.sleep(10);
-//            } catch (InterruptedException e) {
-//                e.printStackTrace();
-//            }
-//        }
-//        ctx.writeAndFlush(Unpooled.wrappedBuffer(bytes));
     }
 
     private void initTimer(ChannelHandlerContext ctx) {
         if (scheduledExecutorService == null) {
             scheduledExecutorService = Executors.newSingleThreadScheduledExecutor();
             scheduledExecutorService.scheduleWithFixedDelay(() -> {
-                if (!linkedBlockingDeque.isEmpty()) {
-                    SendableMsg message = linkedBlockingDeque.poll();
+                if (!getLinkedBlockingDeque().isEmpty()) {
+                    SendableMsg message = getLinkedBlockingDeque().poll();
                     getMsgHashMap().put(message.getMsgKey(), message.getBytes());
                     ctx.writeAndFlush(Unpooled.wrappedBuffer(message.getBytes()));
-                    setWheelTask(ctx, message);
+                    if (message.isResponsive())
+                        setWheelTask(ctx, message);
                 }
-            }, 0, 50, TimeUnit.MILLISECONDS);
+            }, 0, 20, TimeUnit.MILLISECONDS);
         }
     }
 
     private void setWheelTask(ChannelHandlerContext ctx, SendableMsg message) {
-        logger.info("@%@%设置时间轮：「" + message.getMsgKey() + "」『" + message.getSendTimes() + "』");
+        logger.info("@%@%「1」设置时间轮：「" + message.getMsgKey() + "」『" + message.getSendTimes() + "』");
         getHashedWheelTimer().newTimeout(timeout -> {
-            logger.info("@%@%执行时间轮：「" + message.getMsgKey() + "」『" + message.getSendTimes() + "』");
+            logger.info("@%@%「2」执行时间轮：「" + message.getMsgKey() + "」『" + message.getSendTimes() + "』");
             MsgKey msgKey = message.getMsgKey();
             if (getMsgHashMap().get(msgKey) != null) {
-                logger.info("时间轮：出错");
+                logger.info("时间轮「3」：出错");
                 message.increaseSendTimes();
                 if (message.getSendTimes() >= 3) {
                     getMsgHashMap().remove(msgKey);
-                    logger.info("时间轮：记录");
+                    logger.info("时间轮「4」：记录");
                     serverTcpMessageHandler.handleResDeviceStatus(
                             new TcpMsgResponseStatus(msgKey.getGroupId(), msgKey.getBoxId(), 4, TcpMsgResponseStatus.ResSource.SERVER));
                 } else {
-                    logger.info("时间轮：重新设置");
-                    ctx.writeAndFlush(Unpooled.wrappedBuffer(message.getBytes()));
+                    logger.info("时间轮「4」：重新设置");
+                    if (message.isUrgent()) {
+                        getLinkedBlockingDeque().offerFirst(message);
+                    } else {
+                        getLinkedBlockingDeque().offerLast(message);
+                    }
                     setWheelTask(ctx, message);
                 }
-            }
-        }, 5, TimeUnit.SECONDS);
+            } else logger.info("时间轮「3」：成功");
+        }, 1000, TimeUnit.SECONDS);
     }
 
     private HashedWheelTimer getHashedWheelTimer() {
@@ -102,5 +93,9 @@ public class SendingOutBoundHandler extends ChannelOutboundHandlerAdapter {
 
     private HashMap<MsgKey, byte[]> getMsgHashMap() {
         return serverTcpMessageHandler.getSendingMsgRepo().getMsgHashMap();
+    }
+
+    private LinkedBlockingDeque<SendableMsg> getLinkedBlockingDeque() {
+        return serverTcpMessageHandler.getSendingMsgRepo().getLinkedBlockingDeque();
     }
 }

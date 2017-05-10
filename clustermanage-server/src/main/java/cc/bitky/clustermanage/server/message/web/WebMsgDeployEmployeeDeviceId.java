@@ -7,7 +7,8 @@ import cc.bitky.clustermanage.server.message.base.BaseMessage;
  * 服务器部署设备 Id
  */
 public class WebMsgDeployEmployeeDeviceId extends BaseMessage {
-    int updatedDeviceId;
+
+    private int updatedDeviceId;
 
     public WebMsgDeployEmployeeDeviceId(int groupId, int boxId, int updatedDeviceId) {
         super(groupId, boxId);

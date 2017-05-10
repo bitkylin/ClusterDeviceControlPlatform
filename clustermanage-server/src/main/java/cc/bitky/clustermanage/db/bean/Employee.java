@@ -1,27 +1,25 @@
 package cc.bitky.clustermanage.db.bean;
 
 import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.Document;
-import org.springframework.data.mongodb.core.mapping.Field;
 
-@Document(collection = "Emp")
+//@Document(collection = "Emp")
 public class Employee {
 
     @Id
     String id;
 
     //个人信息
-    @Field("na")
+  //  @Field("na")
     String name;
 
-    @Field("dep")
+  //  @Field("dep")
     String department;
 
     //设备位置
-    @Field("gId")
+ //   @Field("gId")
     int groupId;
 
-    @Field("dId")
+ //   @Field("dId")
     int deviceId;
 
     public Employee(String name, String department) {

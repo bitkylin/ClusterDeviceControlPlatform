@@ -8,7 +8,12 @@ public class MsgType {
     /**
      * 成组地发送消息
      */
-    public static final byte SERVER_SEND_GROUPED = 0x0F;
+    public static final byte SERVER_SEND_GROUPED = 0x0A;
+    /**
+     * 紧急发送该消息
+     */
+    public static final byte SERVER_SEND_SPECIAL = 0x0B;
+
 
     //-------------------服务器下发-----------------------
 
@@ -43,9 +48,9 @@ public class MsgType {
     /**
      * 服务器远程开锁
      */
-    public static final byte SERVER_REMOTE_UNLOCK = 0x1a;
+    public static final byte SERVER_REMOTE_UNLOCK = 0x1A;
     /**
-     * 设置万能卡号
+     * 万能卡号设置
      */
     public static final byte SERVER_SET_FREE_CARD_NUMBER = 0x70;
 
@@ -71,6 +76,10 @@ public class MsgType {
      * 设置员工单位的回复
      */
     public static final byte DEVICE_RESPONSE_EMPLOYEE_DEPARTMENT_1 = 0x47;
+    /**
+     * 设置员工单位的回复「2」
+     */
+    public static final byte DEVICE_RESPONSE_EMPLOYEE_DEPARTMENT_2 = 0x48;
 
     /**
      * 设置员工卡号的回复
@@ -79,11 +88,11 @@ public class MsgType {
     /**
      * 服务器远程开锁的回复
      */
-    public static final byte DEVICE_RESPONSE_REMOTE_UNLOCK = 0x4a;
+    public static final byte DEVICE_RESPONSE_REMOTE_UNLOCK = 0x4A;
     /**
-     * 设置万能卡号
+     * 万能卡号设置的回复
      */
-    public static final byte DEVICE_RESPONSE_FREE_CARD_NUMBER = 0x4b;
+    public static final byte DEVICE_RESPONSE_FREE_CARD_NUMBER = (byte) 0x80;
 
     //-------------------初始化流程信息-----------------------
 
@@ -92,20 +101,12 @@ public class MsgType {
      */
     public static final byte INITIALIZE_DEVICE_RESPONSE_CARD = (byte) 0xAA;
     /**
-     * 服务器下发初始化信息完成
+     * 服务器匹配确认卡号回复
      */
-    public static final byte INITIALIZE_SERVER_DEPLOY_MESSAGE_COMPLETE = (byte) 0xAB;
-//    /**
-//     * 设备主动发送确认卡号
-//     *
-// public static final byte INITIALIZE_DEVICE_RESPONSE_CONFIRM_CARD = (byte) 0xAC;
-    /**
-     * 服务器匹配确认卡号成功
-     */
-    public static final byte INITIALIZE_SERVER_MARCH_CONFIRM_CARD_SUCCESSFUL = (byte) 0xAD;
+    public static final byte INITIALIZE_SERVER_MARCH_CONFIRM_CARD_SUCCESSFUL = (byte) 0xAB;
 
     /**
-     * 服务器匹配卡号失败，卡号未匹配员工卡或确认卡
+     * 服务器清除设备的初始化状态
      */
-    public static final byte INITIALIZE_SERVER_MARCH_CARD_EXCEPTION = (byte) 0xAE;
+    public static final byte INITIALIZE_SERVER_CLEAR_INITIALIZE_MESSAGE = (byte) 0xAC;
 }

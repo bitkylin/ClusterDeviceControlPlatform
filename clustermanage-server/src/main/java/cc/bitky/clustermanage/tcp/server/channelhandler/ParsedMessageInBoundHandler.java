@@ -40,7 +40,7 @@ public class ParsedMessageInBoundHandler extends SimpleChannelInboundHandler<IMe
             return;
         }
 
-        if (msg.getMsgId() > 0x70 && msg.getMsgId() <= 0x7F) {
+        if (msg.getMsgId() >= ((byte) 0x80) && msg.getMsgId() <= ((byte) 0x8F)) {
             serverTcpMessageHandler.handleTcpResponseMsg((BaseTcpResponseMsg) msg);
             return;
         }

@@ -1,17 +1,15 @@
 package cc.bitky.clustermanage.db.bean;
 
 import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.Document;
-import org.springframework.data.mongodb.core.mapping.Field;
 
 import java.util.Date;
 
-@Document(collection = "Dev")
+//@Document(collection = "Dev")
 public class Device {
     /**
      * 员工卡号
      */
-    @Field("cn")
+//    @Field("cn")
     long cardNumber;
 
     @Id
@@ -19,30 +17,30 @@ public class Device {
     /**
      * 员工的 ObjectId
      */
-    @Field("eoid")
+//    @Field("eoid")
     private String employeeObjectId;
     /**
      * 状态改变时的时间
      */
-    @Field("tie")
+//    @Field("tie")
     private Date time;
     /**
      * 当前状态
      */
-    @Field("sta")
+//    @Field("sta")
     private int status = 0;
     /**
      * 组号
      */
-    @Field("gId")
+ //   @Field("gId")
     private int groupId = -1;
     /**
      * 设备号
      */
-    @Field("bId")
+ //   @Field("bId")
     private int boxId = -1;
 
-    @Field("reTime")
+ //   @Field("reTime")
     private int remainChargeTime = 500;
 
     public Device(int groupId, int boxId) {

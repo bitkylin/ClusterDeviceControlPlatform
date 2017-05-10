@@ -1,7 +1,5 @@
 package cc.bitky.clustermanage.tcp.server.netty;
 
-import java.util.List;
-
 import cc.bitky.clustermanage.server.message.base.IMessage;
 
 /**
@@ -13,8 +11,8 @@ public interface SendWebMessagesListener {
     /**
      * 向 Tcp 通道发送消息 bean 的集合
      *
-     * @param iMessages 消息 bean 的集合
+     * @param message 消息 bean 的集合
      * @return 是否发送成功
      */
-    boolean sendMessagesToTcp(List<IMessage> iMessages);
+    boolean sendMessagesToTcp(IMessage message);
 }

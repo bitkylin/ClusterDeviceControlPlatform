@@ -1,21 +1,19 @@
 package cc.bitky.clustermanage.db.bean;
 
 import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.Document;
-import org.springframework.data.mongodb.core.mapping.Field;
 
 import java.util.Date;
 
-@Document(collection = "DevGroup")
+//@Document(collection = "DevGroup")
 public class DeviceGroup {
 
     @Id
     private String id;
 
-    @Field("hbt")
+ //   @Field("hbt")
     private Date heartBeatTime;
 
-    @Field("gId")
+ //   @Field("gId")
     private int groupId;
 
 

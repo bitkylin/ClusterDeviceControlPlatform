@@ -81,9 +81,9 @@ public class MsgType {
      */
     public static final byte DEVICE_RESPONSE_REMOTE_UNLOCK = 0x4a;
     /**
-     * 设置万能卡号
+     * 万能卡号更新回复
      */
-    public static final byte DEVICE_RESPONSE_FREE_CARD_NUMBER = 0x4b;
+    public static final byte DEVICE_RESPONSE_FREE_CARD_NUMBER = (byte) 0x80;
 
     //-------------------初始化流程信息-----------------------
 

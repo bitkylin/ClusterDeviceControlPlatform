@@ -39,19 +39,22 @@ public class KyDbPresenter {
         this.dbEmployeePresenter = dbEmployeePresenter;
     }
 
+
     /**
-     * 调整(或增加)设备的数量，使之满足获取到的数据帧的要求
+     * 调整(或增加)设备组的数量，使之满足获取到的数据帧的要求
      *
-     * @param groupId 获取到的数据帧的组 Id
+     * @param groupId    获取到的数据帧的组 Id
+     * @param autoCreate 是否自动初始化任意组设备
      */
-    private void initDbDeviceGroup(int groupId) {
+    private void initDbDeviceGroup(int groupId, boolean autoCreate) {
         if (groupSize < groupId)
             groupSize = (int) deviceGroupRepository.count();
 
         while (groupSize < groupId) {
             groupSize++;
             deviceGroupRepository.save(new DeviceGroup(groupSize));
-            dbDevicePresenter.InitDbDevices(groupSize);
+            if (autoCreate)
+                dbDevicePresenter.InitDbDevices(groupSize);
         }
     }
 
@@ -73,8 +76,8 @@ public class KyDbPresenter {
      * @param autoCreate      自动在数据库中创建设备及设备组
      */
     private void handleMsgHeartBeat(IMessage tcpMsgHeartBeat, boolean autoCreate) {
-        if (autoCreate)
-            initDbDeviceGroup(tcpMsgHeartBeat.getGroupId());
+
+        initDbDeviceGroup(tcpMsgHeartBeat.getGroupId(), autoCreate);
 
         DeviceGroup deviceGroup = deviceGroupRepository.findByGroupId(tcpMsgHeartBeat.getGroupId());
         if (deviceGroup == null) {
@@ -146,7 +149,7 @@ public class KyDbPresenter {
      * @param cardNumber 员工卡号
      * @return 通过员工卡号查询整合而成的信息 bean
      */
-    public Employee obtainDeviceByEmployeeCard(long cardNumber) {
+    public Employee obtainEmployeeByEmployeeCard(long cardNumber) {
         Device device = dbDevicePresenter.obtainEmployeeObjectIdByCardNum(cardNumber);
         if (device == null) return null;
 
@@ -156,6 +159,16 @@ public class KyDbPresenter {
         employee.setGroupId(device.getGroupId());
         employee.setDeviceId(device.getBoxId());
         return employee;
+    }
+
+    /**
+     * 设备初始化: 根据员工 objectId 获取员工信息
+     *
+     * @param objectId 员工 objectId
+     * @return 通过员工 objectId 查询整合而成的信息 bean
+     */
+    public Employee obtainEmployeeByEmployeeObjectId(String objectId) {
+        return dbEmployeePresenter.ObtainEmployeeByObjectId(objectId);
     }
 
     /**

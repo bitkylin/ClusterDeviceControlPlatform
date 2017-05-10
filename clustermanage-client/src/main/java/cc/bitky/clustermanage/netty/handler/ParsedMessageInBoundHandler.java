@@ -7,24 +7,30 @@ import cc.bitky.clustermanage.netty.WebMsgDeployEmployeeDepartment2;
 import cc.bitky.clustermanage.netty.message.MsgType;
 import cc.bitky.clustermanage.netty.message.WebMsgDeployFreeCardSpecial;
 import cc.bitky.clustermanage.netty.message.base.IMessage;
+import cc.bitky.clustermanage.netty.message.tcp.TcpMsgResponseFreeCardNumber;
 import cc.bitky.clustermanage.netty.message.web.WebMsgDeployEmployeeCardNumber;
 import cc.bitky.clustermanage.netty.message.web.WebMsgDeployEmployeeDepartment;
 import cc.bitky.clustermanage.netty.message.web.WebMsgDeployEmployeeDeviceId;
 import cc.bitky.clustermanage.netty.message.web.WebMsgDeployEmployeeName;
 import cc.bitky.clustermanage.netty.message.web.WebMsgDeployRemainChargeTimes;
 import cc.bitky.clustermanage.netty.message.web.WebMsgInitCardException;
+import cc.bitky.clustermanage.utils.TcpMsgBuilder;
 import cc.bitky.clustermanage.utils.TcpReceiveListener;
+import io.netty.buffer.Unpooled;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 
 public class ParsedMessageInBoundHandler extends SimpleChannelInboundHandler<IMessage> {
 
+    TcpMsgBuilder tcpMsgBuilder = new TcpMsgBuilder();
+    int sum = 0;
     private Logger logger = LoggerFactory.getLogger(this.getClass());
     private TcpReceiveListener reveiveListener;
 
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, IMessage msg) {
         logger.debug("------收到CAN帧「msgId=" + msg.getMsgId() + ", groupId=" + msg.getGroupId() + ", boxId=" + msg.getBoxId() + "」------");
+        logger.warn("#%#%收到帧的数量：" + ++sum);
         switch (msg.getMsgId()) {
             case MsgType.SERVER_REQUSET_STATUS:
                 logger.debug("收到操作：状态请求");
@@ -52,6 +58,8 @@ public class ParsedMessageInBoundHandler extends SimpleChannelInboundHandler<IMe
             case MsgType.SERVER_SET_EMPLOYEE_CARD_NUMBER:
                 WebMsgDeployEmployeeCardNumber deployEmployeeCardNumber = (WebMsgDeployEmployeeCardNumber) msg;
                 logger.debug("收到部署员工卡号更新: " + deployEmployeeCardNumber.getCardNumber());
+              //  ctx.writeAndFlush(Unpooled.wrappedBuffer( tcpMsgBuilder.buildResponseMsg(new ));
+
                 break;
             case MsgType.SERVER_REMOTE_UNLOCK:
                 logger.debug("收到操作：远程开锁");
@@ -59,6 +67,8 @@ public class ParsedMessageInBoundHandler extends SimpleChannelInboundHandler<IMe
             case MsgType.SERVER_SET_FREE_CARD_NUMBER:
                 WebMsgDeployFreeCardSpecial deployFreeCardSpecial = (WebMsgDeployFreeCardSpecial) msg;
                 logger.debug("收到部署万能卡号「『" + deployFreeCardSpecial.getItemId() + "』" + deployFreeCardSpecial.getCardNumber() + "」");
+                byte[] bytesFreeCard = tcpMsgBuilder.buildResponseMsg(new TcpMsgResponseFreeCardNumber(msg.getGroupId(), msg.getBoxId(), 1, deployFreeCardSpecial.getItemId()));
+                ctx.writeAndFlush(Unpooled.wrappedBuffer(bytesFreeCard));
                 break;
             case MsgType.INITIALIZE_SERVER_DEPLOY_MESSAGE_COMPLETE:
                 logger.debug("「初始化」 信息发送完毕");
@@ -70,12 +80,13 @@ public class ParsedMessageInBoundHandler extends SimpleChannelInboundHandler<IMe
                 WebMsgInitCardException initCardException = (WebMsgInitCardException) msg;
                 logger.debug("「初始化」 匹配卡号失败: " + initCardException.getCardType().toString());
                 break;
+
         }
         if (reveiveListener != null) reveiveListener.receive();
     }
 
-    void setReceiveListener(TcpReceiveListener reveiveListener) {
-        this.reveiveListener = reveiveListener;
+    void setReceiveListener(TcpReceiveListener receiveListener) {
+        this.reveiveListener = receiveListener;
     }
 }
 

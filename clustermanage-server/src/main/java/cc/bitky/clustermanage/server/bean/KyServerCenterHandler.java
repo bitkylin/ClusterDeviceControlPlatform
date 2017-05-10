@@ -3,14 +3,13 @@ package cc.bitky.clustermanage.server.bean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import cc.bitky.clustermanage.db.presenter.KyDbPresenter;
 import cc.bitky.clustermanage.server.message.CardType;
+import cc.bitky.clustermanage.server.message.MsgType;
 import cc.bitky.clustermanage.server.message.base.IMessage;
+import cc.bitky.clustermanage.server.message.send.WebMsgGrouped;
 import cc.bitky.clustermanage.server.message.web.WebMsgDeployFreeCardNumber;
-import cc.bitky.clustermanage.server.message.web.WebMsgGrouped;
+import cc.bitky.clustermanage.server.message.web.WebMsgOperateBoxUnlock;
 
 @Component
 public class KyServerCenterHandler {
@@ -31,8 +30,8 @@ public class KyServerCenterHandler {
      * @param messages Web信息 bean 的集合
      * @return 是否成功写入 Netty 处理通道
      */
-    private boolean sendMsgToTcp(List<IMessage> messages) {
-        return serverTcpMessageHandler.sendMsgToTcp(messages);
+    boolean sendMsgToTcp(IMessage messages) {
+        return serverTcpMessageHandler.sendMsgTrafficControl(messages);
     }
 
     /**
@@ -42,10 +41,10 @@ public class KyServerCenterHandler {
      * @param deviceId 设备 Id
      * @return 万能卡号获取并写入 TCP 成功
      */
-    boolean deployFreeCard(int groupId, int deviceId) {
+    boolean deployFreeCard(int groupId, int deviceId, int maxGroupId) {
         long[] freeCards = kyDbPresenter.getCardArray(CardType.FREE);
         IMessage CardMsg = new WebMsgDeployFreeCardNumber(groupId, deviceId, freeCards);
-        return deployGroupedMessage(CardMsg);
+        return deployGroupedMessage(CardMsg, maxGroupId);
     }
 
     /**
@@ -54,26 +53,42 @@ public class KyServerCenterHandler {
      * @param message 原始信息
      * @return Message 信息是否已成功发送至 TCP 端
      */
-    private boolean deployGroupedMessage(IMessage message) {
+    private boolean deployGroupedMessage(IMessage message, int maxGroupId) {
         boolean groupedGroup = message.getGroupId() == 255 || message.getGroupId() == 0;
         boolean groupedBox = message.getBoxId() == 255 || message.getBoxId() == 0;
-        List<IMessage> messages = new ArrayList<>(1);
+
+
+        if (!groupedGroup && !groupedBox) {
+            return sendMsgToTcp(message);
+        }
 
         if (groupedGroup && groupedBox) {
-            int groupCount = kyDbPresenter.obtainDeviceGroupCount();
-            WebMsgGrouped Groupedmsg = WebMsgGrouped.forAll(groupCount, message);
-            messages.add(Groupedmsg);
+            if (maxGroupId == 0)
+                maxGroupId = kyDbPresenter.obtainDeviceGroupCount();
+            if (maxGroupId == 0) return false;
+
+            for (int i = 1; i <= maxGroupId; i++) {
+                switch (message.getMsgId()) {
+                    case MsgType.SERVER_REMOTE_UNLOCK:
+                        WebMsgOperateBoxUnlock msg = (WebMsgOperateBoxUnlock) message;
+                        if (!sendMsgToTcp(WebMsgGrouped.forBox(msg.kyClone(i)))) return false;
+                        break;
+                    case MsgType.SERVER_SET_FREE_CARD_NUMBER:
+                        WebMsgDeployFreeCardNumber msg2 = (WebMsgDeployFreeCardNumber) message;
+                        if (!sendMsgToTcp(WebMsgGrouped.forBox(msg2.kyClone(i)))) return false;
+                        break;
+                    default:
+                        return false;
+                }
+            }
+            return true;
         }
 
         if (!groupedGroup && groupedBox) {
-            WebMsgGrouped Groupedmsg = WebMsgGrouped.forBox(message);
-            messages.add(Groupedmsg);
+            return sendMsgToTcp(WebMsgGrouped.forBox(message));
         }
 
-        if (!(groupedGroup || groupedBox)) {
-            messages.add(message);
-        }
-        return messages.size() > 0 && sendMsgToTcp(messages);
+        return false;
     }
 
     /**
@@ -82,8 +97,8 @@ public class KyServerCenterHandler {
      * @param message Web信息 bean
      * @return 是否成功处理
      */
-    boolean deployDeviceMsg(IMessage message) {
-        return deployGroupedMessage(message);
+    boolean deployDeviceMsg(IMessage message, int maxgroupId) {
+        return deployGroupedMessage(message, maxgroupId);
     }
 
     /**

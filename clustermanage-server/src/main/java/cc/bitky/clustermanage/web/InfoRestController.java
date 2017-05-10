@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import cc.bitky.clustermanage.db.bean.Device;
@@ -39,6 +40,7 @@ public class InfoRestController {
      */
     @RequestMapping(value = "/devices/{groupId}/{deviceId}", method = RequestMethod.GET)
     public List<Device> getDevices(@PathVariable int groupId, @PathVariable int deviceId) {
+        if (groupId > 120) return new ArrayList<>();
         return serverWebMessageHandler.getDeviceInfo(groupId, deviceId);
     }
 
@@ -65,25 +67,13 @@ public class InfoRestController {
     /**
      * 保存确认卡号到数据库
      *
-     * @param freecards 确认卡号数组
+     * @param confirmCards 确认卡号数组
      * @return @return "保存确认卡号成功"消息
      */
     @RequestMapping(value = "/confirmcard", method = RequestMethod.POST, consumes = "application/json")
-    public String saveConfirmCard(@RequestBody long[] freecards) {
-        if (serverWebMessageHandler.saveCardNumber(freecards, CardType.CONFIRM)) return "success";
-        return "error";
-    }
-
-
-    /**
-     * 保存万能卡号到数据库
-     *
-     * @param freecards 万能卡号数组
-     * @return "保存万能卡号成功"消息
-     */
-    @RequestMapping(value = "/freecard", method = RequestMethod.POST, consumes = "application/json")
-    public String saveFreeCard(@RequestBody long[] freecards) {
-        if (serverWebMessageHandler.saveCardNumber(freecards, CardType.FREE)) return "success";
+    public String saveConfirmCard(@RequestBody long[] confirmCards) {
+        if (serverWebMessageHandler.saveCardNumber(confirmCards, CardType.CONFIRM))
+            return "success";
         return "error";
     }
 }

@@ -31,4 +31,8 @@ public class WebMsgDeployFreeCardNumber extends BaseMessage {
     public long[] getCardNumbers() {
         return cardNumbers;
     }
+
+    public WebMsgDeployFreeCardNumber kyClone(int groupId) {
+        return new WebMsgDeployFreeCardNumber(groupId, getBoxId(), cardNumbers);
+    }
 }
