@@ -41,25 +41,37 @@ class DbDevicePresenter {
      * 处理设备状态包，更新设备的状态信息
      *
      * @param msgStatus 设备状态包
+     * @return null: 无法找到指定的设备；device.status 为 -1: 指定设备未进行任何状态更新
      */
     Device handleMsgDeviceStatus(TcpMsgResponseStatus msgStatus) {
         Device device = deviceRepository.findFirstByGroupIdAndBoxId(msgStatus.getGroupId(), msgStatus.getBoxId());
         if (device == null) return null;
         int rawStatus = device.getStatus();
-        if (msgStatus.getStatus() == rawStatus) {
+        int newStatus = msgStatus.getStatus();
+        if (newStatus > 5 || newStatus < 0) newStatus = 6;
+
+        if (rawStatus >= 5) {
             logger.info("设备「" + msgStatus.getGroupId() + ", " + msgStatus.getBoxId() + "」『"
-                    + rawStatus + "->" + msgStatus.getStatus() + "』: 状态无更新");
+                    + rawStatus + "->" + newStatus + "』: 状态无法更改");
             device.setStatus(-1);
-        } else {
-            if (rawStatus == 2 && msgStatus.getStatus() == 3) {
-                device.setRemainChargeTime(device.getRemainChargeTime() - 1);
-            }
-            device.setStatus(msgStatus.getStatus());
-            device.setTime(new Date(msgStatus.getTime()));
-            deviceRepository.save(device);
-            logger.info("设备「" + msgStatus.getGroupId() + ", " + msgStatus.getBoxId() + "」『"
-                    + rawStatus + "->" + msgStatus.getStatus() + "』: 状态成功更新！");
+            return device;
         }
+
+        if (newStatus == rawStatus) {
+            logger.info("设备「" + msgStatus.getGroupId() + ", " + msgStatus.getBoxId() + "」『"
+                    + rawStatus + "->" + newStatus + "』: 状态无更新");
+            device.setStatus(-1);
+            return device;
+        }
+
+        if (rawStatus == 2 && newStatus == 3) {
+            device.setRemainChargeTime(device.getRemainChargeTime() - 1);
+        }
+        device.setStatus(newStatus);
+        device.setTime(new Date(msgStatus.getTime()));
+        deviceRepository.save(device);
+        logger.info("设备「" + msgStatus.getGroupId() + ", " + msgStatus.getBoxId() + "」『"
+                + rawStatus + "->" + newStatus + "』: 状态成功更新！");
         return device;
     }
 
@@ -71,7 +83,11 @@ class DbDevicePresenter {
      * @return 设备的集合
      */
     List<Device> getDevices(int groupId, int boxId) {
-        if (boxId == 255) return deviceRepository.findByGroupId(groupId);
+        if (boxId == 255) {
+            List<Device> devices = deviceRepository.findByGroupId(groupId);
+            if (devices == null) devices = new ArrayList<>(1);
+            return devices;
+        }
         List<Device> devices = new ArrayList<>(1);
         if (boxId >= 1 && boxId <= 100) {
             devices.add(deviceRepository.findFirstByGroupIdAndBoxId(groupId, boxId));

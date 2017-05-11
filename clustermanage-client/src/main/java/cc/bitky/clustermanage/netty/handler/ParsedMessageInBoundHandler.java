@@ -12,7 +12,6 @@ import cc.bitky.clustermanage.netty.message.web.WebMsgDeployEmployeeDepartment;
 import cc.bitky.clustermanage.netty.message.web.WebMsgDeployEmployeeDeviceId;
 import cc.bitky.clustermanage.netty.message.web.WebMsgDeployEmployeeName;
 import cc.bitky.clustermanage.netty.message.web.WebMsgDeployRemainChargeTimes;
-import cc.bitky.clustermanage.netty.message.web.WebMsgInitClearDeviceStatus;
 import cc.bitky.clustermanage.netty.message.web.WebMsgInitMarchConfirmCardResponse;
 import cc.bitky.clustermanage.utils.TcpReceiveListener;
 import io.netty.channel.ChannelHandlerContext;
@@ -75,7 +74,6 @@ public class ParsedMessageInBoundHandler extends SimpleChannelInboundHandler<IMe
                 logger.debug("「初始化」 匹配确认卡号状态: " + marchConfirmCardResponse.isSuccessful());
                 break;
             case MsgType.INITIALIZE_SERVER_CLEAR_INITIALIZE_MESSAGE:
-                WebMsgInitClearDeviceStatus clearDeviceStatus = (WebMsgInitClearDeviceStatus) msg;
                 logger.debug("「初始化」 清除设备的初始化状态");
                 break;
             default:

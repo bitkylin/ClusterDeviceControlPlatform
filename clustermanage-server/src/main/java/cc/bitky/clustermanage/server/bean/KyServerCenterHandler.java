@@ -66,26 +66,6 @@ public class KyServerCenterHandler {
             if (maxGroupId == 0) return false;
 
             return sendMsgToTcp(WebMsgSpecial.forAll(message, maxGroupId));
-
-//            for (int i = 1; i <= maxGroupId; i++) {
-//                switch (message.getMsgId()) {
-//                    case MsgType.SERVER_REMOTE_UNLOCK:
-//                        WebMsgOperateBoxUnlock unlock = (WebMsgOperateBoxUnlock) message;
-//                        if (!sendMsgToTcp(WebMsgGrouped.forBox(unlock.kyClone(i)))) return false;
-//                        break;
-//                    case MsgType.SERVER_SET_FREE_CARD_NUMBER:
-//                        WebMsgDeployFreeCardNumber freeCardNumber = (WebMsgDeployFreeCardNumber) message;
-//                        if (!sendMsgToTcp(WebMsgGrouped.forBox(freeCardNumber.kyClone(i)))) return false;
-//                        break;
-//                    case MsgType.INITIALIZE_SERVER_CLEAR_INITIALIZE_MESSAGE:
-//                        WebMsgInitClearDeviceStatus clearDeviceStatus = (WebMsgInitClearDeviceStatus) message;
-//                        if (!sendMsgToTcp(WebMsgGrouped.forBox(clearDeviceStatus.kyClone(i)))) return false;
-//                        break;
-//                    default:
-//                        return false;
-//                }
-//            }
-//            return true;
         }
 
         if (!groupedGroup && groupedBox) {
@@ -101,8 +81,8 @@ public class KyServerCenterHandler {
      * @param message Web信息 bean
      * @return 是否成功处理
      */
-    boolean deployDeviceMsg(IMessage message, int maxgroupId) {
-        return deployGroupedMessage(message, maxgroupId);
+    boolean deployDeviceMsg(IMessage message, int maxGroupId) {
+        return deployGroupedMessage(message, maxGroupId);
     }
 
     /**
@@ -117,12 +97,12 @@ public class KyServerCenterHandler {
     /**
      * 将卡号保存到数据库
      *
-     * @param freecards 卡号的数组
+     * @param freeCards 卡号的数组
      * @param card      卡号类型
      * @return 是否保存成功
      */
-    boolean saveCardNumber(long[] freecards, CardType card) {
-        return kyDbPresenter.saveCardNumber(freecards, card);
+    boolean saveCardNumber(long[] freeCards, CardType card) {
+        return kyDbPresenter.saveCardNumber(freeCards, card);
     }
 
 

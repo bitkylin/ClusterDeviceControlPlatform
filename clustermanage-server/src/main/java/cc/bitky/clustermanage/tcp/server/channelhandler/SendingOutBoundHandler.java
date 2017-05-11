@@ -11,6 +11,7 @@ import java.util.concurrent.LinkedBlockingDeque;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
+import cc.bitky.clustermanage.ServerSetting;
 import cc.bitky.clustermanage.server.bean.ServerTcpMessageHandler;
 import cc.bitky.clustermanage.server.message.send.SendableMsg;
 import cc.bitky.clustermanage.server.message.tcp.TcpMsgResponseStatus;
@@ -57,7 +58,7 @@ public class SendingOutBoundHandler extends ChannelOutboundHandlerAdapter {
                     if (message.isResponsive())
                         setWheelTask(ctx, message);
                 }
-            }, 0, 20, TimeUnit.MILLISECONDS);
+            }, 0, ServerSetting.FRAME_SEND_INTERVAL, TimeUnit.MILLISECONDS);
         }
     }
 
@@ -73,7 +74,7 @@ public class SendingOutBoundHandler extends ChannelOutboundHandlerAdapter {
                     getMsgHashMap().remove(msgKey);
                     logger.info("时间轮「4」：记录");
                     serverTcpMessageHandler.handleResDeviceStatus(
-                            new TcpMsgResponseStatus(msgKey.getGroupId(), msgKey.getBoxId(), 4, TcpMsgResponseStatus.ResSource.SERVER));
+                            new TcpMsgResponseStatus(msgKey.getGroupId(), msgKey.getBoxId(), 5, TcpMsgResponseStatus.ResSource.SERVER));
                 } else {
                     logger.info("时间轮「4」：重新设置");
                     if (message.isUrgent()) {
@@ -84,7 +85,7 @@ public class SendingOutBoundHandler extends ChannelOutboundHandlerAdapter {
                     setWheelTask(ctx, message);
                 }
             } else logger.info("时间轮「3」：成功");
-        }, 1000, TimeUnit.SECONDS);
+        }, ServerSetting.FRAME_SENT_TO_DETECT_INTERVAL, TimeUnit.SECONDS);
     }
 
     private HashedWheelTimer getHashedWheelTimer() {

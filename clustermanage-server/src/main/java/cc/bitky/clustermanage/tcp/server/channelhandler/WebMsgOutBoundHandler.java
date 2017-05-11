@@ -62,7 +62,7 @@ public class WebMsgOutBoundHandler extends ChannelOutboundHandlerAdapter {
                     }
                 }
             } else {
-                unpackComplexMsgToTcp(ctx, msgSpecial, msgSpecial.isUrgent(), msgSpecial.isResponsive());
+                unpackComplexMsgToTcp(ctx, baseMsgSpecial, msgSpecial.isUrgent(), msgSpecial.isResponsive());
             }
         } else {
             unpackComplexMsgToTcp(ctx, message, false, true);
@@ -160,12 +160,13 @@ public class WebMsgOutBoundHandler extends ChannelOutboundHandlerAdapter {
                 WebMsgInitMarchConfirmCardResponse marchConfirmCard = (WebMsgInitMarchConfirmCardResponse) message;
                 logger.info("生成初始化帧：匹配确认卡号状态：" + marchConfirmCard.isSuccessful());
                 return tcpMsgBuilder.buildInitMarchConfirmCardSuccessful(marchConfirmCard);
+
             case MsgType.INITIALIZE_SERVER_CLEAR_INITIALIZE_MESSAGE:
                 WebMsgInitClearDeviceStatus clearDeviceStatus = (WebMsgInitClearDeviceStatus) message;
                 logger.info("生成帧：清除设备的初始化状态");
                 return tcpMsgBuilder.buildClearDeviceStatus(clearDeviceStatus);
             default:
-                logger.info("未匹配功能位，无法生成 CAN 帧");
+                logger.info("未匹配功能位「" + message.getMsgId() + "」，无法生成 CAN 帧");
                 break;
         }
         return new byte[0];

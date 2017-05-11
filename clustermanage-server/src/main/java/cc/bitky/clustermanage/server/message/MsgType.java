@@ -104,5 +104,5 @@ public class MsgType {
     /**
      * 服务器清除设备的初始化状态
      */
-    public static final byte INITIALIZE_SERVER_CLEAR_INITIALIZE_MESSAGE = (byte) 0xAC;
+    public static final byte INITIALIZE_SERVER_CLEAR_INITIALIZE_MESSAGE = (byte) 0xAD;
 }

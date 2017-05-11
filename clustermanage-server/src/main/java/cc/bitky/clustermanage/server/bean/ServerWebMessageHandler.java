@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+import cc.bitky.clustermanage.ServerSetting;
 import cc.bitky.clustermanage.db.bean.Device;
 import cc.bitky.clustermanage.db.bean.Employee;
 import cc.bitky.clustermanage.db.presenter.KyDbPresenter;
@@ -141,19 +142,29 @@ public class ServerWebMessageHandler {
      * @param device     员工对应的设备
      */
     private void deployEmployeeMsg(boolean name, boolean department, boolean cardNumber, Device device) {
+
+        boolean autoInit = ServerSetting.DEPLOY_DEVICES_INIT;
+
         if (device == null) return;
-        if (cardNumber)
+
+        if (cardNumber && device.getCardNumber() != 0)
             kyServerCenterHandler.sendMsgToTcp(new WebMsgDeployEmployeeCardNumber(device.getGroupId(), device.getBoxId(), device.getCardNumber()));
+        else if (cardNumber && autoInit)
+            kyServerCenterHandler.sendMsgToTcp(new WebMsgDeployEmployeeCardNumber(device.getGroupId(), device.getBoxId(), 0));
 
         if (!(name || department)) return;
         Employee employee = kyDbPresenter.obtainEmployeeByEmployeeObjectId(device.getEmployeeObjectId());
+
         if (employee != null) {
             if (name)
                 kyServerCenterHandler.sendMsgToTcp(new WebMsgDeployEmployeeName(device.getGroupId(), device.getBoxId(), employee.getName()));
-
             if (department)
                 kyServerCenterHandler.sendMsgToTcp(new WebMsgDeployEmployeeDepartment(device.getGroupId(), device.getBoxId(), employee.getDepartment()));
+        } else if (autoInit) {
+            if (name)
+                kyServerCenterHandler.sendMsgToTcp(new WebMsgDeployEmployeeName(device.getGroupId(), device.getBoxId(), "备用"));
+            if (department)
+                kyServerCenterHandler.sendMsgToTcp(new WebMsgDeployEmployeeDepartment(device.getGroupId(), device.getBoxId(), "默认单位"));
         }
-
     }
 }

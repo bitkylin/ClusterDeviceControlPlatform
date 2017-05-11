@@ -10,19 +10,10 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import cc.bitky.clustermanage.server.bean.ServerWebMessageHandler;
 import cc.bitky.clustermanage.server.message.CardType;
-import cc.bitky.clustermanage.server.message.base.IMessage;
-import cc.bitky.clustermanage.server.message.web.WebMsgDeployEmployeeCardNumber;
-import cc.bitky.clustermanage.server.message.web.WebMsgDeployEmployeeDepartment;
-import cc.bitky.clustermanage.server.message.web.WebMsgDeployEmployeeDeviceId;
-import cc.bitky.clustermanage.server.message.web.WebMsgDeployEmployeeName;
 import cc.bitky.clustermanage.server.message.web.WebMsgInitClearDeviceStatus;
 import cc.bitky.clustermanage.server.message.web.WebMsgOperateBoxUnlock;
-import cc.bitky.clustermanage.web.bean.WebEmployee;
 
 @RestController
 @RequestMapping(value = "/operate")
@@ -112,29 +103,5 @@ public class OperateRestController {
                 serverWebMessageHandler.deployFreeCard(groupId, deviceId, maxgroupId))
             return "success";
         return "error";
-    }
-
-    /**
-     * 用于 Spring MVC 的 RESTful API 处理服务，接收并处理 Web 消息
-     *
-     * @param webEmployee 员工「设备」信息 bean
-     * @return 是否更新成功
-     */
-    private List<IMessage> handleEmployeeUpdate(WebEmployee webEmployee) {
-        List<IMessage> messages = new ArrayList<>();
-
-        if (webEmployee.getName() != null) {
-            messages.add(new WebMsgDeployEmployeeName(webEmployee.getGroupId(), webEmployee.getDeviceId(), webEmployee.getName()));
-        }
-        if (webEmployee.getDepartment() != null) {
-            messages.add(new WebMsgDeployEmployeeDepartment(webEmployee.getGroupId(), webEmployee.getDeviceId(), webEmployee.getDepartment()));
-        }
-        if (webEmployee.getCardNumber() != 0) {
-            messages.add(new WebMsgDeployEmployeeCardNumber(webEmployee.getGroupId(), webEmployee.getDeviceId(), webEmployee.getCardNumber()));
-        }
-        if (webEmployee.getNewId() != 0) {
-            messages.add(new WebMsgDeployEmployeeDeviceId(webEmployee.getGroupId(), webEmployee.getDeviceId(), webEmployee.getNewId()));
-        }
-        return messages;
     }
 }

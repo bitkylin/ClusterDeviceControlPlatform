@@ -70,10 +70,10 @@ public class KyDbPresenter {
     }
 
     /**
-     * 处理心跳包，用户更新设备组和设备的时间
+     * 处理心跳包，用户更新设备组和设备的时间，必要时自动创建设备组
      *
      * @param tcpMsgHeartBeat 心跳包
-     * @param autoCreate      自动在数据库中创建设备及设备组
+     * @param autoCreate      自动在数据库中创建设备
      */
     private void handleMsgHeartBeat(IMessage tcpMsgHeartBeat, boolean autoCreate) {
 
@@ -93,14 +93,14 @@ public class KyDbPresenter {
      * 处理设备状态包
      *
      * @param tcpMsgResponseStatus 设备状态包
-     * @param isDebug              是否处于 Debug 模式
-     * @return 处理后的 Device
+     * @param autoCreate           是否处于「自动创建」模式
+     * @return 处理后的 Device。 null: 未找到指定的 Device 或 Device 无更新
      */
-    public Device handleMsgDeviceStatus(TcpMsgResponseStatus tcpMsgResponseStatus, boolean isDebug) {
+    public Device handleMsgDeviceStatus(TcpMsgResponseStatus tcpMsgResponseStatus, boolean autoCreate) {
         long l1 = System.currentTimeMillis();
 
         //处理心跳，更新设备组信息，「Debug 模式下生成所需的设备和设备组」
-        handleMsgHeartBeat(tcpMsgResponseStatus, isDebug);
+        handleMsgHeartBeat(tcpMsgResponseStatus, autoCreate);
         long l2 = System.currentTimeMillis();
 
         //更新设备的状态信息
@@ -116,16 +116,24 @@ public class KyDbPresenter {
         }
         long l3 = System.currentTimeMillis();
 
-        //根据设备中记录的考勤表索引，获取考勤表
-        if (device.getEmployeeObjectId() == null) {
+        //若设备对应的员工不存在，则自动创建员工
+        if (device.getEmployeeObjectId() == null && autoCreate) {
             Employee employee = dbEmployeePresenter.createEmployee(device.getGroupId(), device.getBoxId());
+            if (employee == null) {
+                logger.warn("未能创建员工");
+                return null;
+            }
             device.setEmployeeObjectId(employee.getId());
             dbDevicePresenter.updateDevice(device);
         }
         long l4 = System.currentTimeMillis();
 
-        //更新员工的考勤表
-        dbRoutinePresenter.updateRoutineById(device.getEmployeeObjectId(), tcpMsgResponseStatus);
+        //根据设备中记录的考勤表索引，获取并更新员工的考勤表
+        if (device.getEmployeeObjectId() != null) {
+            dbRoutinePresenter.updateRoutineById(device.getEmployeeObjectId(), tcpMsgResponseStatus);
+        } else {
+            logger.info("无指定设备对应的员工和考勤表，且无法自动创建");
+        }
         long l5 = System.currentTimeMillis();
         logger.info("时间耗费：" + (l2 - l1) + "ms; " + (l3 - l2) + "ms; " + (l4 - l3) + "ms; " + (l5 - l4) + "ms");
         return device;
