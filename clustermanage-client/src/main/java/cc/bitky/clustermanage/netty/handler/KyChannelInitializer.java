@@ -15,16 +15,12 @@ public class KyChannelInitializer extends ChannelInitializer<SocketChannel> {
     private final ParsedMessageInBoundHandler parsedMessageInBoundHandler;
     private ChannelPipeline pipeline;
     private Logger logger = LoggerFactory.getLogger(getClass());
-    private long startStamp;
 
     private KyChannelInitializer() {
         kyOutBoundHandler = new KyOutBoundHandler();
         parsedMessageInBoundHandler = new ParsedMessageInBoundHandler();
 
-        kyOutBoundHandler.setSendListener(() -> startStamp = System.currentTimeMillis());
-
         parsedMessageInBoundHandler.setReceiveListener(() -> {
-            logger.info("持续时间 " + (System.currentTimeMillis() - startStamp) + " ms");
         });
     }
 

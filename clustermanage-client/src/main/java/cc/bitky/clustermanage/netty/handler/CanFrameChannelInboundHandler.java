@@ -6,7 +6,6 @@ import org.slf4j.LoggerFactory;
 import java.nio.charset.Charset;
 
 import cc.bitky.clustermanage.netty.WebMsgDeployEmployeeDepartment2;
-import cc.bitky.clustermanage.netty.message.CardType;
 import cc.bitky.clustermanage.netty.message.MsgType;
 import cc.bitky.clustermanage.netty.message.WebMsgDeployFreeCardSpecial;
 import cc.bitky.clustermanage.netty.message.base.IMessage;
@@ -16,9 +15,8 @@ import cc.bitky.clustermanage.netty.message.web.WebMsgDeployEmployeeDepartment;
 import cc.bitky.clustermanage.netty.message.web.WebMsgDeployEmployeeDeviceId;
 import cc.bitky.clustermanage.netty.message.web.WebMsgDeployEmployeeName;
 import cc.bitky.clustermanage.netty.message.web.WebMsgDeployRemainChargeTimes;
-import cc.bitky.clustermanage.netty.message.web.WebMsgInitCardException;
-import cc.bitky.clustermanage.netty.message.web.WebMsgInitDeployMessageComplete;
-import cc.bitky.clustermanage.netty.message.web.WebMsgInitMarchComfirmCardSuccessful;
+import cc.bitky.clustermanage.netty.message.web.WebMsgInitClearDeviceStatus;
+import cc.bitky.clustermanage.netty.message.web.WebMsgInitMarchConfirmCardResponse;
 import cc.bitky.clustermanage.netty.message.web.WebMsgObtainDeviceStatus;
 import cc.bitky.clustermanage.netty.message.web.WebMsgOperateBoxUnlock;
 import io.netty.buffer.ByteBuf;
@@ -29,10 +27,13 @@ public class CanFrameChannelInboundHandler extends SimpleChannelInboundHandler<B
     private static final int frameHead = 0x80;
     private Charset charset_GB2312 = Charset.forName("EUC-CN");
     private Logger logger = LoggerFactory.getLogger(this.getClass());
+    private int errorCount = 0;
 
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, ByteBuf msg) {
+        if (errorCount != 0) logger.warn("接收到错误的 CAN 帧数量：" + errorCount);
         if (msg.readableBytes() % 13 != 0) {
+            errorCount++;
             logger.warn("读取到非整数个 CAN 帧");
             return;
         }
@@ -105,20 +106,22 @@ public class CanFrameChannelInboundHandler extends SimpleChannelInboundHandler<B
             case MsgType.SERVER_REMOTE_UNLOCK:
                 msg.skipBytes(8);
                 return new WebMsgOperateBoxUnlock(groupId, boxId);
-            //服务器初始化: 信息发送完毕
-            case MsgType.INITIALIZE_SERVER_DEPLOY_MESSAGE_COMPLETE:
+            //服务器初始化: 匹配确认卡号状态
+            case MsgType.INITIALIZE_SERVER_MARCH_CONFIRM_CARD_RESPONSE:
+                int MarchConfirmCardstatus = msg.readByte();
+                msg.skipBytes(7);
+                if (MarchConfirmCardstatus == 1) {
+                    return new WebMsgInitMarchConfirmCardResponse(groupId, boxId, true);
+                } else {
+                    return new WebMsgInitMarchConfirmCardResponse(groupId, boxId, false);
+                }
+                //服务器初始化: 清除设备的初始化状态
+            case MsgType.INITIALIZE_SERVER_CLEAR_INITIALIZE_MESSAGE:
                 msg.skipBytes(8);
-                return new WebMsgInitDeployMessageComplete(groupId, boxId);
-            //服务器初始化: 匹配确认卡号成功
-            case MsgType.INITIALIZE_SERVER_MARCH_CONFIRM_CARD_SUCCESSFUL:
-                msg.skipBytes(8);
-                return new WebMsgInitMarchComfirmCardSuccessful(groupId, boxId);
-            //服务器初始化: 匹配卡号失败
-            case MsgType.INITIALIZE_SERVER_MARCH_CARD_EXCEPTION:
-                msg.skipBytes(8);
-                return new WebMsgInitCardException(groupId, boxId, CardType.EMPLOYEE);
+                return new WebMsgInitClearDeviceStatus(groupId, boxId);
             default:
                 logger.warn("接收到正确的 CAN 帧，但无法解析");
+                errorCount++;
                 return new MsgErrorMessage("接收到正确的 CAN 帧，但无法解析");
         }
     }

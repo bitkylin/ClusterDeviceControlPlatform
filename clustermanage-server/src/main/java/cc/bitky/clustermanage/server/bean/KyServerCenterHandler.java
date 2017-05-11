@@ -5,11 +5,9 @@ import org.springframework.stereotype.Component;
 
 import cc.bitky.clustermanage.db.presenter.KyDbPresenter;
 import cc.bitky.clustermanage.server.message.CardType;
-import cc.bitky.clustermanage.server.message.MsgType;
 import cc.bitky.clustermanage.server.message.base.IMessage;
-import cc.bitky.clustermanage.server.message.send.WebMsgGrouped;
+import cc.bitky.clustermanage.server.message.send.WebMsgSpecial;
 import cc.bitky.clustermanage.server.message.web.WebMsgDeployFreeCardNumber;
-import cc.bitky.clustermanage.server.message.web.WebMsgOperateBoxUnlock;
 
 @Component
 public class KyServerCenterHandler {
@@ -67,25 +65,31 @@ public class KyServerCenterHandler {
                 maxGroupId = kyDbPresenter.obtainDeviceGroupCount();
             if (maxGroupId == 0) return false;
 
-            for (int i = 1; i <= maxGroupId; i++) {
-                switch (message.getMsgId()) {
-                    case MsgType.SERVER_REMOTE_UNLOCK:
-                        WebMsgOperateBoxUnlock msg = (WebMsgOperateBoxUnlock) message;
-                        if (!sendMsgToTcp(WebMsgGrouped.forBox(msg.kyClone(i)))) return false;
-                        break;
-                    case MsgType.SERVER_SET_FREE_CARD_NUMBER:
-                        WebMsgDeployFreeCardNumber msg2 = (WebMsgDeployFreeCardNumber) message;
-                        if (!sendMsgToTcp(WebMsgGrouped.forBox(msg2.kyClone(i)))) return false;
-                        break;
-                    default:
-                        return false;
-                }
-            }
-            return true;
+            return sendMsgToTcp(WebMsgSpecial.forAll(message, maxGroupId));
+
+//            for (int i = 1; i <= maxGroupId; i++) {
+//                switch (message.getMsgId()) {
+//                    case MsgType.SERVER_REMOTE_UNLOCK:
+//                        WebMsgOperateBoxUnlock unlock = (WebMsgOperateBoxUnlock) message;
+//                        if (!sendMsgToTcp(WebMsgGrouped.forBox(unlock.kyClone(i)))) return false;
+//                        break;
+//                    case MsgType.SERVER_SET_FREE_CARD_NUMBER:
+//                        WebMsgDeployFreeCardNumber freeCardNumber = (WebMsgDeployFreeCardNumber) message;
+//                        if (!sendMsgToTcp(WebMsgGrouped.forBox(freeCardNumber.kyClone(i)))) return false;
+//                        break;
+//                    case MsgType.INITIALIZE_SERVER_CLEAR_INITIALIZE_MESSAGE:
+//                        WebMsgInitClearDeviceStatus clearDeviceStatus = (WebMsgInitClearDeviceStatus) message;
+//                        if (!sendMsgToTcp(WebMsgGrouped.forBox(clearDeviceStatus.kyClone(i)))) return false;
+//                        break;
+//                    default:
+//                        return false;
+//                }
+//            }
+//            return true;
         }
 
         if (!groupedGroup && groupedBox) {
-            return sendMsgToTcp(WebMsgGrouped.forBox(message));
+            return sendMsgToTcp(WebMsgSpecial.forBox(message));
         }
 
         return false;

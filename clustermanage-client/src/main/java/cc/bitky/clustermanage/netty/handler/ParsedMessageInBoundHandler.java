@@ -7,30 +7,32 @@ import cc.bitky.clustermanage.netty.WebMsgDeployEmployeeDepartment2;
 import cc.bitky.clustermanage.netty.message.MsgType;
 import cc.bitky.clustermanage.netty.message.WebMsgDeployFreeCardSpecial;
 import cc.bitky.clustermanage.netty.message.base.IMessage;
-import cc.bitky.clustermanage.netty.message.tcp.TcpMsgResponseFreeCardNumber;
 import cc.bitky.clustermanage.netty.message.web.WebMsgDeployEmployeeCardNumber;
 import cc.bitky.clustermanage.netty.message.web.WebMsgDeployEmployeeDepartment;
 import cc.bitky.clustermanage.netty.message.web.WebMsgDeployEmployeeDeviceId;
 import cc.bitky.clustermanage.netty.message.web.WebMsgDeployEmployeeName;
 import cc.bitky.clustermanage.netty.message.web.WebMsgDeployRemainChargeTimes;
-import cc.bitky.clustermanage.netty.message.web.WebMsgInitCardException;
-import cc.bitky.clustermanage.utils.TcpMsgBuilder;
+import cc.bitky.clustermanage.netty.message.web.WebMsgInitClearDeviceStatus;
+import cc.bitky.clustermanage.netty.message.web.WebMsgInitMarchConfirmCardResponse;
 import cc.bitky.clustermanage.utils.TcpReceiveListener;
-import io.netty.buffer.Unpooled;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 
 public class ParsedMessageInBoundHandler extends SimpleChannelInboundHandler<IMessage> {
 
-    TcpMsgBuilder tcpMsgBuilder = new TcpMsgBuilder();
-    int sum = 0;
+    private int sum = 0;
+    private int errorSum = 0;
+
     private Logger logger = LoggerFactory.getLogger(this.getClass());
-    private TcpReceiveListener reveiveListener;
+    private TcpReceiveListener receiveListener;
 
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, IMessage msg) {
         logger.debug("------收到CAN帧「msgId=" + msg.getMsgId() + ", groupId=" + msg.getGroupId() + ", boxId=" + msg.getBoxId() + "」------");
         logger.warn("#%#%收到帧的数量：" + ++sum);
+        if (errorSum != 0)
+            logger.warn("#%#%最终未能解析帧的数量：" + errorSum);
+
         switch (msg.getMsgId()) {
             case MsgType.SERVER_REQUSET_STATUS:
                 logger.debug("收到操作：状态请求");
@@ -58,8 +60,6 @@ public class ParsedMessageInBoundHandler extends SimpleChannelInboundHandler<IMe
             case MsgType.SERVER_SET_EMPLOYEE_CARD_NUMBER:
                 WebMsgDeployEmployeeCardNumber deployEmployeeCardNumber = (WebMsgDeployEmployeeCardNumber) msg;
                 logger.debug("收到部署员工卡号更新: " + deployEmployeeCardNumber.getCardNumber());
-              //  ctx.writeAndFlush(Unpooled.wrappedBuffer( tcpMsgBuilder.buildResponseMsg(new ));
-
                 break;
             case MsgType.SERVER_REMOTE_UNLOCK:
                 logger.debug("收到操作：远程开锁");
@@ -67,26 +67,27 @@ public class ParsedMessageInBoundHandler extends SimpleChannelInboundHandler<IMe
             case MsgType.SERVER_SET_FREE_CARD_NUMBER:
                 WebMsgDeployFreeCardSpecial deployFreeCardSpecial = (WebMsgDeployFreeCardSpecial) msg;
                 logger.debug("收到部署万能卡号「『" + deployFreeCardSpecial.getItemId() + "』" + deployFreeCardSpecial.getCardNumber() + "」");
-                byte[] bytesFreeCard = tcpMsgBuilder.buildResponseMsg(new TcpMsgResponseFreeCardNumber(msg.getGroupId(), msg.getBoxId(), 1, deployFreeCardSpecial.getItemId()));
-                ctx.writeAndFlush(Unpooled.wrappedBuffer(bytesFreeCard));
+//                byte[] bytesFreeCard = tcpMsgBuilder.buildResponseMsg(new TcpMsgResponseFreeCardNumber(msg.getGroupId(), msg.getBoxId(), 1, deployFreeCardSpecial.getItemId()));
+//                ctx.writeAndFlush(Unpooled.wrappedBuffer(bytesFreeCard));
                 break;
-            case MsgType.INITIALIZE_SERVER_DEPLOY_MESSAGE_COMPLETE:
-                logger.debug("「初始化」 信息发送完毕");
+            case MsgType.INITIALIZE_SERVER_MARCH_CONFIRM_CARD_RESPONSE:
+                WebMsgInitMarchConfirmCardResponse marchConfirmCardResponse = (WebMsgInitMarchConfirmCardResponse) msg;
+                logger.debug("「初始化」 匹配确认卡号状态: " + marchConfirmCardResponse.isSuccessful());
                 break;
-            case MsgType.INITIALIZE_SERVER_MARCH_CONFIRM_CARD_SUCCESSFUL:
-                logger.debug("「初始化」 匹配确认卡号成功");
+            case MsgType.INITIALIZE_SERVER_CLEAR_INITIALIZE_MESSAGE:
+                WebMsgInitClearDeviceStatus clearDeviceStatus = (WebMsgInitClearDeviceStatus) msg;
+                logger.debug("「初始化」 清除设备的初始化状态");
                 break;
-            case MsgType.INITIALIZE_SERVER_MARCH_CARD_EXCEPTION:
-                WebMsgInitCardException initCardException = (WebMsgInitCardException) msg;
-                logger.debug("「初始化」 匹配卡号失败: " + initCardException.getCardType().toString());
+            default:
+                logger.warn("无法解析正确的 Message");
+                errorSum++;
                 break;
-
         }
-        if (reveiveListener != null) reveiveListener.receive();
+        if (receiveListener != null) receiveListener.receive();
     }
 
     void setReceiveListener(TcpReceiveListener receiveListener) {
-        this.reveiveListener = receiveListener;
+        this.receiveListener = receiveListener;
     }
 }
 

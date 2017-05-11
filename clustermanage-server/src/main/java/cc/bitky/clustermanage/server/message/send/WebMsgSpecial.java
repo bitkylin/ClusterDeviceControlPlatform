@@ -5,12 +5,16 @@ import cc.bitky.clustermanage.server.message.base.BaseMessage;
 import cc.bitky.clustermanage.server.message.base.IMessage;
 
 /**
- * 紧急地发送信息
+ * 包裹需要使用特殊规则发送的信息
  */
 public class WebMsgSpecial extends BaseMessage {
+
     private final IMessage message;
+    private int maxGroupId;
+    private int maxBoxId;
     private boolean responsive = true;
     private boolean urgent = false;
+    private boolean grouped = false;
 
     public WebMsgSpecial(IMessage message) {
         super(0, 0);
@@ -18,6 +22,20 @@ public class WebMsgSpecial extends BaseMessage {
         setMsgId(MsgType.SERVER_SEND_SPECIAL);
     }
 
+    private WebMsgSpecial(int maxGroupId, IMessage message) {
+        this(message);
+        grouped = true;
+        this.maxGroupId = maxGroupId;
+        maxBoxId = 100;
+    }
+
+    public static WebMsgSpecial forAll( IMessage message,int maxGroupId) {
+        return new WebMsgSpecial(maxGroupId, message);
+    }
+
+    public static WebMsgSpecial forBox(IMessage message) {
+        return new WebMsgSpecial(0, message);
+    }
     public IMessage getMessage() {
         return message;
     }
@@ -36,5 +54,17 @@ public class WebMsgSpecial extends BaseMessage {
 
     public void setUrgent(boolean urgent) {
         this.urgent = urgent;
+    }
+
+    public int getMaxGroupId() {
+        return maxGroupId;
+    }
+
+    public int getMaxBoxId() {
+        return maxBoxId;
+    }
+
+    public boolean isGrouped() {
+        return grouped;
     }
 }

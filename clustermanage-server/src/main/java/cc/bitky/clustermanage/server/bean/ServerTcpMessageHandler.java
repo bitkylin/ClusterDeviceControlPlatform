@@ -16,7 +16,7 @@ import cc.bitky.clustermanage.server.message.send.WebMsgSpecial;
 import cc.bitky.clustermanage.server.message.tcp.TcpMsgInitResponseCardNumber;
 import cc.bitky.clustermanage.server.message.tcp.TcpMsgResponseStatus;
 import cc.bitky.clustermanage.server.message.web.WebMsgDeployRemainChargeTimes;
-import cc.bitky.clustermanage.server.message.web.WebMsgInitMarchConfirmCardSuccessful;
+import cc.bitky.clustermanage.server.message.web.WebMsgInitMarchConfirmCardResponse;
 import cc.bitky.clustermanage.server.schedule.MsgKey;
 import cc.bitky.clustermanage.server.schedule.SendingMsgRepo;
 import cc.bitky.clustermanage.tcp.server.netty.SendWebMessagesListener;
@@ -187,15 +187,15 @@ public class ServerTcpMessageHandler {
 
         //卡号初始化为 0，故排除掉 0 以避免错误
         if (msgInitCard.getCardNumber() == 0) {
-            sendMsgToTcpSpecial(new WebMsgInitMarchConfirmCardSuccessful(msgInitCard.getGroupId(), msgInitCard.getBoxId(), false), true, false);
+            sendMsgToTcpSpecial(new WebMsgInitMarchConfirmCardResponse(msgInitCard.getGroupId(), msgInitCard.getBoxId(), false), true, false);
             return;
         }
 
 
         if (kyServerCenterHandler.marchConfirmCard(msgInitCard.getCardNumber())) {
-            sendMsgToTcpSpecial(new WebMsgInitMarchConfirmCardSuccessful(msgInitCard.getGroupId(), msgInitCard.getBoxId(), true), true, false);
+            sendMsgToTcpSpecial(new WebMsgInitMarchConfirmCardResponse(msgInitCard.getGroupId(), msgInitCard.getBoxId(), true), true, false);
         } else {
-            sendMsgToTcpSpecial(new WebMsgInitMarchConfirmCardSuccessful(msgInitCard.getGroupId(), msgInitCard.getBoxId(), false), true, false);
+            sendMsgToTcpSpecial(new WebMsgInitMarchConfirmCardResponse(msgInitCard.getGroupId(), msgInitCard.getBoxId(), false), true, false);
         }
     }
 

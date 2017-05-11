@@ -1,7 +1,7 @@
-package cc.bitky.clustermanage.server.message.web;
+package cc.bitky.clustermanage.netty.message.web;
 
-import cc.bitky.clustermanage.server.message.MsgType;
-import cc.bitky.clustermanage.server.message.base.BaseMessage;
+import cc.bitky.clustermanage.netty.message.MsgType;
+import cc.bitky.clustermanage.netty.message.base.BaseMessage;
 
 /**
  * 设备初始化「3」: 服务器清除设备的初始化状态

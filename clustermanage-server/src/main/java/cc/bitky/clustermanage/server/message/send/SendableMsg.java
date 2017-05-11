@@ -3,6 +3,7 @@ package cc.bitky.clustermanage.server.message.send;
 import cc.bitky.clustermanage.server.message.base.ISendableMsg;
 import cc.bitky.clustermanage.server.schedule.MsgKey;
 
+//保持发送状态、发送规则、和消息的 bean
 public class SendableMsg implements ISendableMsg {
     private final MsgKey msgKey;
     private final byte[] bytes;
@@ -14,9 +15,6 @@ public class SendableMsg implements ISendableMsg {
     public SendableMsg(byte[] bytes) {
         msgKey = new MsgKey(bytes[4], bytes[3], bytes[2]);
         this.bytes = bytes;
-    }
-    public SendableMsg(byte[] bytes, boolean isUrgent) {
-        this(bytes);
     }
 
     public boolean isUrgent() {

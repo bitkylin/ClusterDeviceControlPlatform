@@ -20,6 +20,7 @@ import cc.bitky.clustermanage.server.message.web.WebMsgDeployEmployeeCardNumber;
 import cc.bitky.clustermanage.server.message.web.WebMsgDeployEmployeeDepartment;
 import cc.bitky.clustermanage.server.message.web.WebMsgDeployEmployeeDeviceId;
 import cc.bitky.clustermanage.server.message.web.WebMsgDeployEmployeeName;
+import cc.bitky.clustermanage.server.message.web.WebMsgInitClearDeviceStatus;
 import cc.bitky.clustermanage.server.message.web.WebMsgOperateBoxUnlock;
 import cc.bitky.clustermanage.web.bean.WebEmployee;
 
@@ -35,26 +36,6 @@ public class OperateRestController {
         this.serverWebMessageHandler = serverWebMessageHandler;
     }
 
-//    /**
-//     * 更新特定设备的指定信息
-//     *
-//     * @param webEmployee 欲更新的设备
-//     * @param groupId     设备组 ID
-//     * @param deviceId    设备 ID
-//     * @return 更新的状态
-//     */
-//    @RequestMapping(value = "/devices/special/{groupId}/{deviceId}", method = RequestMethod.POST)
-//    public String updateDevicesSpecial(@ModelAttribute WebEmployee webEmployee,
-//                                       @PathVariable int groupId,
-//                                       @PathVariable int deviceId) throws InterruptedException {
-//
-//        List<IMessage> messages = handleEmployeeUpdate(webEmployee);
-//        if (serverWebMessageHandler.deployDeviceMsg(messages)) {
-//            return "success\n" + webEmployee;
-//        }
-//        return "error";
-//    }
-
     /**
      * 从数据库中获取并更新设备的信息
      *
@@ -66,7 +47,7 @@ public class OperateRestController {
      * @param maxgroupId 若更新多个设备组，可指定更新设备组的 ID 范围为: 1 - maxgroupId
      * @return 更新是否成功
      */
-    @RequestMapping(value = "/devices/{groupId}/{deviceId}", method = RequestMethod.GET)
+    @RequestMapping(value = "/devices/update/{groupId}/{deviceId}", method = RequestMethod.GET)
     public String updateDevices(@PathVariable int groupId,
                                 @PathVariable int deviceId,
                                 @RequestParam(required = false) boolean name,
@@ -78,18 +59,37 @@ public class OperateRestController {
         else return "error";
     }
 
+
     /**
-     * 控制设备开锁
+     * 「操作」远程开锁
      *
-     * @param groupId  设备组 ID
-     * @param deviceId 设备 ID
+     * @param groupId    设备组 ID
+     * @param deviceId   设备 ID
+     * @param maxgroupId 最大设备组号
      * @return "开锁成功"消息
      */
-    @RequestMapping(value = "/unlock/{groupId}/{deviceId}", method = RequestMethod.GET)
+    @RequestMapping(value = "/devices/unlock/{groupId}/{deviceId}", method = RequestMethod.GET)
     public String operateDeviceUnlock(@PathVariable int groupId,
                                       @PathVariable int deviceId,
                                       @RequestParam(defaultValue = "0") int maxgroupId) {
         if (serverWebMessageHandler.deployDeviceMsg(new WebMsgOperateBoxUnlock(groupId, deviceId), maxgroupId)) {
+            return "success";
+        } else return "error";
+    }
+
+    /**
+     * 「操作」将设备重置为出厂状态
+     *
+     * @param groupId    设备组 ID
+     * @param deviceId   设备 ID
+     * @param maxgroupId 最大设备组号
+     * @return "初始化操作成功"消息
+     */
+    @RequestMapping(value = "/devices/reset/{groupId}/{deviceId}", method = RequestMethod.GET)
+    public String operateDeviceReset(@PathVariable int groupId,
+                                      @PathVariable int deviceId,
+                                      @RequestParam(defaultValue = "0") int maxgroupId) {
+        if (serverWebMessageHandler.deployDeviceMsg(new WebMsgInitClearDeviceStatus(groupId, deviceId), maxgroupId)) {
             return "success";
         } else return "error";
     }
@@ -113,20 +113,6 @@ public class OperateRestController {
             return "success";
         return "error";
     }
-
-//    /**
-//     * 部署万能卡号到设备
-//     *
-//     * @param groupId  设备组 ID
-//     * @param deviceId 设备 ID
-//     * @return "部署万能卡号成功"消息
-//     */
-//    @RequestMapping(value = "/freecard/{groupId}/{deviceId}", method = RequestMethod.GET)
-//    public String deployFreeCard(@PathVariable int groupId, @PathVariable int deviceId) {
-//        if (serverWebMessageHandler.deployFreeCard(groupId, deviceId)) {
-//            return "success";
-//        } else return "error";
-//    }
 
     /**
      * 用于 Spring MVC 的 RESTful API 处理服务，接收并处理 Web 消息

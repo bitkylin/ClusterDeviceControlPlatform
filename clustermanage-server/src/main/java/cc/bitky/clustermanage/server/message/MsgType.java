@@ -38,10 +38,6 @@ public class MsgType {
      */
     public static final byte SERVER_SET_EMPLOYEE_DEPARTMENT_1 = 0x17;
     /**
-     * 设置员工单位第二帧
-     */
-    public static final byte SERVER_SET_EMPLOYEE_DEPARTMENT_2 = 0x18;
-    /**
      * 设置员工卡号
      */
     public static final byte SERVER_SET_EMPLOYEE_CARD_NUMBER = 0x19;
@@ -73,7 +69,7 @@ public class MsgType {
      */
     public static final byte DEVICE_RESPONSE_EMPLOYEE_NAME = 0x46;
     /**
-     * 设置员工单位的回复
+     * 设置员工单位的回复「1」
      */
     public static final byte DEVICE_RESPONSE_EMPLOYEE_DEPARTMENT_1 = 0x47;
     /**
@@ -103,7 +99,7 @@ public class MsgType {
     /**
      * 服务器匹配确认卡号回复
      */
-    public static final byte INITIALIZE_SERVER_MARCH_CONFIRM_CARD_SUCCESSFUL = (byte) 0xAB;
+    public static final byte INITIALIZE_SERVER_MARCH_CONFIRM_CARD_RESPONSE = (byte) 0xAB;
 
     /**
      * 服务器清除设备的初始化状态

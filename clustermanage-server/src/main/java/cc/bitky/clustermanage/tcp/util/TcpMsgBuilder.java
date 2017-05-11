@@ -11,7 +11,8 @@ import cc.bitky.clustermanage.server.message.web.WebMsgDeployEmployeeDeviceId;
 import cc.bitky.clustermanage.server.message.web.WebMsgDeployEmployeeName;
 import cc.bitky.clustermanage.server.message.web.WebMsgDeployFreeCardNumber;
 import cc.bitky.clustermanage.server.message.web.WebMsgDeployRemainChargeTimes;
-import cc.bitky.clustermanage.server.message.web.WebMsgInitMarchConfirmCardSuccessful;
+import cc.bitky.clustermanage.server.message.web.WebMsgInitClearDeviceStatus;
+import cc.bitky.clustermanage.server.message.web.WebMsgInitMarchConfirmCardResponse;
 import cc.bitky.clustermanage.server.message.web.WebMsgObtainDeviceStatus;
 import cc.bitky.clustermanage.server.message.web.WebMsgOperateBoxUnlock;
 
@@ -149,11 +150,22 @@ public class TcpMsgBuilder {
      * @param marchConfirmCardSuccessful 匹配确认卡号成功 bean
      * @return 「匹配确认卡号成功」的 CAN 帧
      */
-    public byte[] buildInitMarchConfirmCardSuccessful(WebMsgInitMarchConfirmCardSuccessful marchConfirmCardSuccessful) {
+    public byte[] buildInitMarchConfirmCardSuccessful(WebMsgInitMarchConfirmCardResponse marchConfirmCardSuccessful) {
         byte[] bytes = buildMsgOutline(marchConfirmCardSuccessful);
         bytes[0] += 1;
         bytes[5] = (byte) (marchConfirmCardSuccessful.isSuccessful() ? 1 : 0);
         return bytes;
+    }
+
+
+    /**
+     * 构建清除设备初始化状态的 CAN 帧
+     *
+     * @param clearDeviceStatus 清除设备初始化状态 bean
+     * @return 清除设备初始化状态的 CAN 帧
+     */
+    public byte[] buildClearDeviceStatus(WebMsgInitClearDeviceStatus clearDeviceStatus) {
+        return buildMsgOutline(clearDeviceStatus);
     }
 
     /**
