@@ -1,13 +1,13 @@
 package cc.bitky.clustermanage.server.message.tcp;
 
-import cc.bitky.clustermanage.server.message.BaseMessage;
-import cc.bitky.clustermanage.server.MsgType;
+import cc.bitky.clustermanage.server.message.base.BaseMessage;
+import cc.bitky.clustermanage.server.message.MsgType;
 
 public class MsgErrorMessage extends BaseMessage {
 
   private String msg;
 
-  public MsgErrorMessage(int groupId) {
+  private MsgErrorMessage(int groupId) {
     super(groupId);
     setMsgId(MsgType.ERROR);
   }
@@ -16,7 +16,7 @@ public class MsgErrorMessage extends BaseMessage {
     this(-1);
   }
 
-  public MsgErrorMessage(int groupId, String msg) {
+  private MsgErrorMessage(int groupId, String msg) {
     this(groupId);
     this.msg = msg;
   }

@@ -2,7 +2,7 @@ package cc.bitky.clustermanage.tcp.server.netty;
 
 import cc.bitky.clustermanage.tcp.server.netty.NettyServerContract.IServerPresenter;
 import cc.bitky.clustermanage.tcp.server.netty.NettyServerContract.IServerView;
-import cc.bitky.clustermanage.tcp.server.netty.channelhandler.ServerChannelInitializer;
+import cc.bitky.clustermanage.tcp.server.channelhandler.ServerChannelInitializer;
 import cc.bitky.clustermanage.tcp.util.listener.SuccessfulListener;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelFuture;

@@ -4,19 +4,44 @@ import org.springframework.stereotype.Component;
 
 import java.nio.charset.Charset;
 
-import cc.bitky.clustermanage.server.message.BaseMessage;
+import cc.bitky.clustermanage.server.message.base.BaseMessage;
 import cc.bitky.clustermanage.server.message.web.WebMsgDeployEmployeeCardNumber;
 import cc.bitky.clustermanage.server.message.web.WebMsgDeployEmployeeDepartment;
 import cc.bitky.clustermanage.server.message.web.WebMsgDeployEmployeeDeviceId;
 import cc.bitky.clustermanage.server.message.web.WebMsgDeployEmployeeName;
 import cc.bitky.clustermanage.server.message.web.WebMsgDeployFreeCardNumber;
 import cc.bitky.clustermanage.server.message.web.WebMsgDeployRemainChargeTimes;
+import cc.bitky.clustermanage.server.message.web.WebMsgInitClearDeviceStatus;
+import cc.bitky.clustermanage.server.message.web.WebMsgInitMarchConfirmCardResponse;
 import cc.bitky.clustermanage.server.message.web.WebMsgObtainDeviceStatus;
 import cc.bitky.clustermanage.server.message.web.WebMsgOperateBoxUnlock;
 
 @Component
 public class TcpMsgBuilder {
     Charset charset_GB2312 = Charset.forName("EUC-CN");
+
+    /**
+     * 构建获取设备状态的 CAN 帧
+     *
+     * @param webMsgObtainDeviceStatus 获取设备状态 bean
+     * @return 获取设备状态的 CAN 帧
+     */
+    public byte[] buildRequestDeviceStatus(WebMsgObtainDeviceStatus webMsgObtainDeviceStatus) {
+        return buildMsgOutline(webMsgObtainDeviceStatus);
+    }
+
+    /**
+     * 构建剩余充电次数的 CAN 帧
+     *
+     * @param webMsgDeployRemainChargeTimes 剩余充电次数 bean
+     * @return 剩余充电次数的 CAN 帧
+     */
+    public byte[] buildRemainChargeTimes(WebMsgDeployRemainChargeTimes webMsgDeployRemainChargeTimes) {
+        byte[] bytes = buildMsgOutline(webMsgDeployRemainChargeTimes);
+        bytes[0] += 1;
+        bytes[5] = (byte) webMsgDeployRemainChargeTimes.getTimes();
+        return bytes;
+    }
 
     /**
      * 构建设备 ID 的CAN帧
@@ -39,8 +64,9 @@ public class TcpMsgBuilder {
      */
     public byte[] buildEmployeeName(WebMsgDeployEmployeeName webMsgDeployEmployeeName) {
         byte[] bytes = buildMsgOutline(webMsgDeployEmployeeName);
-        bytes[0] += 2 * webMsgDeployEmployeeName.getValue().length();
+
         byte[] bytesBody = webMsgDeployEmployeeName.getValue().getBytes(charset_GB2312);
+        bytes[0] += bytesBody.length > 8 ? 8 : bytesBody.length;
         addMessageBody(bytes, bytesBody, 0);
         return bytes;
     }
@@ -67,7 +93,7 @@ public class TcpMsgBuilder {
             bytes[0] += bytesBody.length;
         }
 
-        byte[] bytes3 = new byte[26];
+        byte[] bytes3 = new byte[13 * 2];
         System.arraycopy(bytes, 0, bytes3, 0, 13);
         System.arraycopy(bytes2, 0, bytes3, 13, 13);
         return bytes3;
@@ -89,29 +115,6 @@ public class TcpMsgBuilder {
 
 
     /**
-     * 构建剩余充电次数的 CAN 帧
-     *
-     * @param webMsgDeployRemainChargeTimes 剩余充电次数 bean
-     * @return 剩余充电次数的 CAN 帧
-     */
-    public byte[] buildRemainChargeTimes(WebMsgDeployRemainChargeTimes webMsgDeployRemainChargeTimes) {
-        byte[] bytes = buildMsgOutline(webMsgDeployRemainChargeTimes);
-        bytes[0] += 1;
-        bytes[5] = (byte) webMsgDeployRemainChargeTimes.getTimes();
-        return bytes;
-    }
-
-    /**
-     * 构建获取设备状态的 CAN 帧
-     *
-     * @param webMsgObtainDeviceStatus 获取设备状态 bean
-     * @return 获取设备状态的 CAN 帧
-     */
-    public byte[] buildRemainChargeTimes(WebMsgObtainDeviceStatus webMsgObtainDeviceStatus) {
-        return buildMsgOutline(webMsgObtainDeviceStatus);
-    }
-
-    /**
      * 构建开锁用的 CAN 帧
      *
      * @param webMsgOperateBoxUnlock 开锁 bean
@@ -128,16 +131,41 @@ public class TcpMsgBuilder {
      * @return 万能卡号的 CAN 帧
      */
     public byte[] buildFreeCardNumber(WebMsgDeployFreeCardNumber webMsgDeployFreeCardNumber) {
-        byte[] bytesSend = new byte[13 * 16];
         long[] cards = webMsgDeployFreeCardNumber.getCardNumbers();
-        for (int i = 0; i < 16; i++) {
+        int count = cards.length < 16 ? cards.length : 16;
+        byte[] bytesSend = new byte[13 * count];
+
+        for (int i = 0; i < count; i++) {
             byte[] bytes = buildMsgOutline(webMsgDeployFreeCardNumber);
             bytes[2] += i;
             addMessageBody(bytes, longToByteArray(cards[i]), 0);
             System.arraycopy(bytes, 0, bytesSend, 13 * i, 13);
         }
-
         return bytesSend;
+    }
+
+    /**
+     * 「初始化」服务器匹配确认卡号成功
+     *
+     * @param marchConfirmCardSuccessful 匹配确认卡号成功 bean
+     * @return 「匹配确认卡号成功」的 CAN 帧
+     */
+    public byte[] buildInitMarchConfirmCardSuccessful(WebMsgInitMarchConfirmCardResponse marchConfirmCardSuccessful) {
+        byte[] bytes = buildMsgOutline(marchConfirmCardSuccessful);
+        bytes[0] += 1;
+        bytes[5] = (byte) (marchConfirmCardSuccessful.isSuccessful() ? 1 : 0);
+        return bytes;
+    }
+
+
+    /**
+     * 构建清除设备初始化状态的 CAN 帧
+     *
+     * @param clearDeviceStatus 清除设备初始化状态 bean
+     * @return 清除设备初始化状态的 CAN 帧
+     */
+    public byte[] buildClearDeviceStatus(WebMsgInitClearDeviceStatus clearDeviceStatus) {
+        return buildMsgOutline(clearDeviceStatus);
     }
 
     /**

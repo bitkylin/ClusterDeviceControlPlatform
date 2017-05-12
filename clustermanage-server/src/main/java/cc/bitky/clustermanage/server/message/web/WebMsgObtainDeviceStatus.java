@@ -1,7 +1,7 @@
 package cc.bitky.clustermanage.server.message.web;
 
-import cc.bitky.clustermanage.server.MsgType;
-import cc.bitky.clustermanage.server.message.BaseMessage;
+import cc.bitky.clustermanage.server.message.MsgType;
+import cc.bitky.clustermanage.server.message.base.BaseMessage;
 
 /**
  * 服务器获取设备的当前状态

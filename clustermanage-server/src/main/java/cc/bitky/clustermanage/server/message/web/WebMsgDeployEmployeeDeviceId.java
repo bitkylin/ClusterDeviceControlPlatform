@@ -1,13 +1,14 @@
 package cc.bitky.clustermanage.server.message.web;
 
-import cc.bitky.clustermanage.server.MsgType;
-import cc.bitky.clustermanage.server.message.BaseMessage;
+import cc.bitky.clustermanage.server.message.MsgType;
+import cc.bitky.clustermanage.server.message.base.BaseMessage;
 
 /**
  * 服务器部署设备 Id
  */
 public class WebMsgDeployEmployeeDeviceId extends BaseMessage {
-    int updatedDeviceId;
+
+    private int updatedDeviceId;
 
     public WebMsgDeployEmployeeDeviceId(int groupId, int boxId, int updatedDeviceId) {
         super(groupId, boxId);

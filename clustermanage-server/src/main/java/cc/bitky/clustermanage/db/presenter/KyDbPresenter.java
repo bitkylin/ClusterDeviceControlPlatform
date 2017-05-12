@@ -12,9 +12,9 @@ import cc.bitky.clustermanage.db.bean.Device;
 import cc.bitky.clustermanage.db.bean.DeviceGroup;
 import cc.bitky.clustermanage.db.bean.Employee;
 import cc.bitky.clustermanage.db.repository.DeviceGroupRepository;
-import cc.bitky.clustermanage.server.bean.ServerWebMessageHandler.Card;
-import cc.bitky.clustermanage.server.message.IMessage;
-import cc.bitky.clustermanage.server.message.tcp.TcpMsgResponseDeviceStatus;
+import cc.bitky.clustermanage.server.message.CardType;
+import cc.bitky.clustermanage.server.message.base.IMessage;
+import cc.bitky.clustermanage.server.message.tcp.TcpMsgResponseStatus;
 
 @Repository
 public class KyDbPresenter {
@@ -24,7 +24,7 @@ public class KyDbPresenter {
     private final DbDevicePresenter dbDevicePresenter;
     private final DbRoutinePresenter dbRoutinePresenter;
 
-    private int groupSize;
+    private int groupSize = 0;
 
     private Logger logger = LoggerFactory.getLogger(KyDbPresenter.class);
 
@@ -39,19 +39,22 @@ public class KyDbPresenter {
         this.dbEmployeePresenter = dbEmployeePresenter;
     }
 
+
     /**
-     * 调整(或增加)设备的数量，使之满足获取到的数据帧的要求
+     * 调整(或增加)设备组的数量，使之满足获取到的数据帧的要求
      *
-     * @param groupId 获取到的数据帧的组 Id
+     * @param groupId    获取到的数据帧的组 Id
+     * @param autoCreate 是否自动初始化任意组设备
      */
-    private void initDbDeviceGroup(int groupId) {
+    private void initDbDeviceGroup(int groupId, boolean autoCreate) {
         if (groupSize < groupId)
             groupSize = (int) deviceGroupRepository.count();
 
         while (groupSize < groupId) {
             groupSize++;
             deviceGroupRepository.save(new DeviceGroup(groupSize));
-            dbDevicePresenter.InitDbDevices(groupSize);
+            if (autoCreate)
+                dbDevicePresenter.InitDbDevices(groupSize);
         }
     }
 
@@ -61,18 +64,20 @@ public class KyDbPresenter {
      * @return 设备组的数量
      */
     public int obtainDeviceGroupCount() {
-        return (int) deviceGroupRepository.count();
+        if (groupSize == 0)
+            groupSize = (int) deviceGroupRepository.count();
+        return groupSize;
     }
 
     /**
-     * 处理心跳包，用户更新设备组和设备的时间
+     * 处理心跳包，用户更新设备组和设备的时间，必要时自动创建设备组
      *
      * @param tcpMsgHeartBeat 心跳包
-     * @param autoCreate      自动在数据库中创建设备及设备组
+     * @param autoCreate      自动在数据库中创建设备
      */
     private void handleMsgHeartBeat(IMessage tcpMsgHeartBeat, boolean autoCreate) {
-        if (autoCreate)
-            initDbDeviceGroup(tcpMsgHeartBeat.getGroupId());
+
+        initDbDeviceGroup(tcpMsgHeartBeat.getGroupId(), autoCreate);
 
         DeviceGroup deviceGroup = deviceGroupRepository.findByGroupId(tcpMsgHeartBeat.getGroupId());
         if (deviceGroup == null) {
@@ -87,36 +92,51 @@ public class KyDbPresenter {
     /**
      * 处理设备状态包
      *
-     * @param tcpMsgResponseDeviceStatus 设备状态包
-     * @param isDebug                    是否处于 Debug 模式
+     * @param tcpMsgResponseStatus 设备状态包
+     * @param autoCreate           是否处于「自动创建」模式
+     * @return 处理后的 Device。 null: 未找到指定的 Device 或 Device 无更新
      */
-    public void handleMsgDeviceStatus(TcpMsgResponseDeviceStatus tcpMsgResponseDeviceStatus, boolean isDebug) {
+    public Device handleMsgDeviceStatus(TcpMsgResponseStatus tcpMsgResponseStatus, boolean autoCreate) {
         long l1 = System.currentTimeMillis();
 
         //处理心跳，更新设备组信息，「Debug 模式下生成所需的设备和设备组」
-        handleMsgHeartBeat(tcpMsgResponseDeviceStatus, isDebug);
+        handleMsgHeartBeat(tcpMsgResponseStatus, autoCreate);
         long l2 = System.currentTimeMillis();
 
         //更新设备的状态信息
-        Device device = dbDevicePresenter.handleMsgDeviceStatus(tcpMsgResponseDeviceStatus);
+        Device device = dbDevicePresenter.handleMsgDeviceStatus(tcpMsgResponseStatus);
         if (device == null) {
-            logger.warn("设备(" + tcpMsgResponseDeviceStatus.getGroupId() + ", " + tcpMsgResponseDeviceStatus.getBoxId() + ") 不存在，无法处理");
-            return;
+            logger.warn("设备(" + tcpMsgResponseStatus.getGroupId() + ", " + tcpMsgResponseStatus.getBoxId() + ") 不存在，无法处理");
+            return null;
+        }
+        if (device.getStatus() == -1) {
+            logger.info("考勤表无更新");
+            logger.info("时间耗费：" + (l2 - l1) + "ms; " + (System.currentTimeMillis() - l2) + "ms");
+            return null;
         }
         long l3 = System.currentTimeMillis();
 
-        //根据设备中记录的考勤表索引，获取考勤表
-        if (device.getEmployeeObjectId() == null) {
+        //若设备对应的员工不存在，则自动创建员工
+        if (device.getEmployeeObjectId() == null && autoCreate) {
             Employee employee = dbEmployeePresenter.createEmployee(device.getGroupId(), device.getBoxId());
+            if (employee == null) {
+                logger.warn("未能创建员工");
+                return null;
+            }
             device.setEmployeeObjectId(employee.getId());
             dbDevicePresenter.updateDevice(device);
         }
         long l4 = System.currentTimeMillis();
 
-        //更新员工的考勤表
-        dbRoutinePresenter.updateRoutineById(device.getEmployeeObjectId(), tcpMsgResponseDeviceStatus);
+        //根据设备中记录的考勤表索引，获取并更新员工的考勤表
+        if (device.getEmployeeObjectId() != null) {
+            dbRoutinePresenter.updateRoutineById(device.getEmployeeObjectId(), tcpMsgResponseStatus);
+        } else {
+            logger.info("无指定设备对应的员工和考勤表，且无法自动创建");
+        }
         long l5 = System.currentTimeMillis();
         logger.info("时间耗费：" + (l2 - l1) + "ms; " + (l3 - l2) + "ms; " + (l4 - l3) + "ms; " + (l5 - l4) + "ms");
+        return device;
     }
 
 
@@ -135,11 +155,28 @@ public class KyDbPresenter {
      * 设备初始化: 根据员工卡号获取员工信息
      *
      * @param cardNumber 员工卡号
-     * @return 员工卡号所对应的员工信息
+     * @return 通过员工卡号查询整合而成的信息 bean
      */
-    public Employee obtainDeviceByEmployeeCard(long cardNumber) {
-        String employeeObjectId = dbDevicePresenter.obtainEmployeeObjectIdByCardNum(cardNumber);
-        return dbEmployeePresenter.ObtainEmployeeByObjectId(employeeObjectId);
+    public Employee obtainEmployeeByEmployeeCard(long cardNumber) {
+        Device device = dbDevicePresenter.obtainEmployeeObjectIdByCardNum(cardNumber);
+        if (device == null) return null;
+
+        Employee employee = dbEmployeePresenter.ObtainEmployeeByObjectId(device.getEmployeeObjectId());
+        if (employee == null) return null;
+
+        employee.setGroupId(device.getGroupId());
+        employee.setDeviceId(device.getBoxId());
+        return employee;
+    }
+
+    /**
+     * 设备初始化: 根据员工 objectId 获取员工信息
+     *
+     * @param objectId 员工 objectId
+     * @return 通过员工 objectId 查询整合而成的信息 bean
+     */
+    public Employee obtainEmployeeByEmployeeObjectId(String objectId) {
+        return dbEmployeePresenter.ObtainEmployeeByObjectId(objectId);
     }
 
     /**
@@ -147,8 +184,7 @@ public class KyDbPresenter {
      *
      * @return 卡号的集合
      */
-    public long[] getCardArray(Card card) {
-
+    public long[] getCardArray(CardType card) {
         return dbSettingPresenter.getCardArray(card);
     }
 
@@ -159,7 +195,17 @@ public class KyDbPresenter {
      * @param card      卡号类型
      * @return 是否保存成功
      */
-    public boolean saveCardNumber(long[] freecards, Card card) {
+    public boolean saveCardNumber(long[] freecards, CardType card) {
         return dbSettingPresenter.saveCardArray(freecards, card);
+    }
+
+    /**
+     * 检索数据库，给定的卡号是否匹配确认卡号
+     *
+     * @param cardNumber 待检索的卡号
+     * @return 是否匹配确认卡号
+     */
+    public boolean marchConfirmCard(long cardNumber) {
+        return dbSettingPresenter.marchConfirmCard(cardNumber);
     }
 }
