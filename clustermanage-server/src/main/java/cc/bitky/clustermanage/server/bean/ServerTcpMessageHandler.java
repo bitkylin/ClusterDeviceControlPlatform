@@ -210,13 +210,12 @@ public class ServerTcpMessageHandler {
      * @param message    普通消息 Message
      * @param urgent     紧急的
      * @param responsive 需要检错重发回复的
-     * @return 是否发送成功
      */
-    private boolean sendMsgToTcpSpecial(IMessage message, boolean urgent, boolean responsive) {
+    private void sendMsgToTcpSpecial(IMessage message, boolean urgent, boolean responsive) {
         WebMsgSpecial msgSpecial = new WebMsgSpecial(message);
         msgSpecial.setUrgent(urgent);
         msgSpecial.setResponsive(responsive);
-        return sendWebMessagesListener.sendMessagesToTcp(msgSpecial);
+        sendWebMessagesListener.sendMessagesToTcp(msgSpecial);
     }
 
     /**
