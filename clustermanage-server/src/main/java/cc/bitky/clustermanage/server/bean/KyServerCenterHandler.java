@@ -28,8 +28,18 @@ public class KyServerCenterHandler {
      * @param messages Web信息 bean 的集合
      * @return 是否成功写入 Netty 处理通道
      */
-    boolean sendMsgToTcp(IMessage messages) {
+    boolean sendMsgTrafficControl(IMessage messages) {
         return serverTcpMessageHandler.sendMsgTrafficControl(messages);
+    }
+
+    /**
+     * Server 模块将「 Web 信息 bean 」写入 Netty 的 Handler
+     *
+     * @param messages Web信息 bean 的集合
+     * @return 是否成功写入 Netty 处理通道
+     */
+    private boolean sendMsgToTcpSpecial(IMessage messages, boolean urgent, boolean responsive) {
+        return serverTcpMessageHandler.sendMsgToTcpSpecial(messages, urgent, responsive);
     }
 
     /**
@@ -42,7 +52,7 @@ public class KyServerCenterHandler {
     boolean deployFreeCard(int groupId, int deviceId, int maxGroupId) {
         long[] freeCards = kyDbPresenter.getCardArray(CardType.FREE);
         IMessage CardMsg = new WebMsgDeployFreeCardNumber(groupId, deviceId, freeCards);
-        return deployGroupedMessage(CardMsg, maxGroupId);
+        return deployGroupedMessage(CardMsg, maxGroupId,  false,  true);
     }
 
     /**
@@ -51,13 +61,13 @@ public class KyServerCenterHandler {
      * @param message 原始信息
      * @return Message 信息是否已成功发送至 TCP 端
      */
-    private boolean deployGroupedMessage(IMessage message, int maxGroupId) {
+    private boolean deployGroupedMessage(IMessage message, int maxGroupId, boolean urgent, boolean responsive) {
         boolean groupedGroup = message.getGroupId() == 255 || message.getGroupId() == 0;
         boolean groupedBox = message.getBoxId() == 255 || message.getBoxId() == 0;
 
 
         if (!groupedGroup && !groupedBox) {
-            return sendMsgToTcp(message);
+            return sendMsgToTcpSpecial(message, urgent, responsive);
         }
 
         if (groupedGroup && groupedBox) {
@@ -65,11 +75,11 @@ public class KyServerCenterHandler {
                 maxGroupId = kyDbPresenter.obtainDeviceGroupCount();
             if (maxGroupId == 0) return false;
 
-            return sendMsgToTcp(WebMsgSpecial.forAll(message, maxGroupId));
+            return sendMsgTrafficControl(WebMsgSpecial.forAll(message, maxGroupId, urgent, responsive));
         }
 
         if (!groupedGroup && groupedBox) {
-            return sendMsgToTcp(WebMsgSpecial.forBox(message));
+            return sendMsgTrafficControl(WebMsgSpecial.forBox(message, urgent, responsive));
         }
 
         return false;
@@ -81,8 +91,8 @@ public class KyServerCenterHandler {
      * @param message Web信息 bean
      * @return 是否成功处理
      */
-    boolean deployDeviceMsg(IMessage message, int maxGroupId) {
-        return deployGroupedMessage(message, maxGroupId);
+    boolean deployDeviceMsg(IMessage message, int maxGroupId, boolean urgent, boolean responsive) {
+        return deployGroupedMessage(message, maxGroupId,urgent,responsive);
     }
 
     /**

@@ -22,20 +22,23 @@ public class WebMsgSpecial extends BaseMessage {
         setMsgId(MsgType.SERVER_SEND_SPECIAL);
     }
 
-    private WebMsgSpecial(int maxGroupId, IMessage message) {
+    private WebMsgSpecial(int maxGroupId, IMessage message, boolean urgent, boolean responsive) {
         this(message);
         grouped = true;
         this.maxGroupId = maxGroupId;
         maxBoxId = 100;
+        this.urgent = urgent;
+        this.responsive = responsive;
     }
 
-    public static WebMsgSpecial forAll( IMessage message,int maxGroupId) {
-        return new WebMsgSpecial(maxGroupId, message);
+    public static WebMsgSpecial forAll(IMessage message, int maxGroupId, boolean urgent, boolean responsive) {
+        return new WebMsgSpecial(maxGroupId, message, urgent, responsive);
     }
 
-    public static WebMsgSpecial forBox(IMessage message) {
-        return new WebMsgSpecial(0, message);
+    public static WebMsgSpecial forBox(IMessage message, boolean urgent, boolean responsive) {
+        return new WebMsgSpecial(0, message, urgent, responsive);
     }
+
     public IMessage getMessage() {
         return message;
     }

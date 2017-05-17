@@ -63,7 +63,7 @@ public class OperateRestController {
     public String operateDeviceUnlock(@PathVariable int groupId,
                                       @PathVariable int deviceId,
                                       @RequestParam(defaultValue = "0") int maxgroupId) {
-        if (serverWebMessageHandler.deployDeviceMsg(new WebMsgOperateBoxUnlock(groupId, deviceId), maxgroupId)) {
+        if (serverWebMessageHandler.deployDeviceMsg(new WebMsgOperateBoxUnlock(groupId, deviceId), maxgroupId, false, true)) {
             return "success";
         } else return "error";
     }
@@ -78,9 +78,9 @@ public class OperateRestController {
      */
     @RequestMapping(value = "/devices/reset/{groupId}/{deviceId}", method = RequestMethod.GET)
     public String operateDeviceReset(@PathVariable int groupId,
-                                      @PathVariable int deviceId,
-                                      @RequestParam(defaultValue = "0") int maxgroupId) {
-        if (serverWebMessageHandler.deployDeviceMsg(new WebMsgInitClearDeviceStatus(groupId, deviceId), maxgroupId)) {
+                                     @PathVariable int deviceId,
+                                     @RequestParam(defaultValue = "0") int maxgroupId) {
+        if (serverWebMessageHandler.deployDeviceMsg(new WebMsgInitClearDeviceStatus(groupId, deviceId), maxgroupId, true, false)) {
             return "success";
         } else return "error";
     }
