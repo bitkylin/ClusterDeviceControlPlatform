@@ -24,7 +24,7 @@ public class NettyServer {
             Bootstrap bootstrap = new Bootstrap();
             bootstrap.group(group)
                     .channel(NioSocketChannel.class)
-                    .remoteAddress(new InetSocketAddress(30232))
+                    .remoteAddress(new InetSocketAddress(30232)) //"woodswang",
                     .handler(KyChannelInitializer.newInstance());
             ChannelFuture channelFuture = null;
 
