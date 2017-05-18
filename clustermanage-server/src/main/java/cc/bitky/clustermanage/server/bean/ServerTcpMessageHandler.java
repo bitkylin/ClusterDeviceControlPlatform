@@ -210,27 +210,13 @@ public class ServerTcpMessageHandler {
      * @param message    普通消息 Message
      * @param urgent     紧急的
      * @param responsive 需要检错重发回复的
-     * @return 是否发送成功
      */
-    private boolean sendMsgToTcpSpecial(IMessage message, boolean urgent, boolean responsive) {
+    boolean sendMsgToTcpSpecial(IMessage message, boolean urgent, boolean responsive) {
+        if (!urgent && responsive) return sendMsgTrafficControl(message);
         WebMsgSpecial msgSpecial = new WebMsgSpecial(message);
         msgSpecial.setUrgent(urgent);
         msgSpecial.setResponsive(responsive);
-        return sendWebMessagesListener.sendMessagesToTcp(msgSpecial);
-    }
-
-    /**
-     * 直接将 Message 发送至 Netty 的处理通道
-     *
-     * @param message 普通消息 Message
-     * @return 是否发送成功
-     */
-    private boolean sendMsgToTcp(IMessage message) {
-        if (sendWebMessagesListener == null) {
-            logger.warn("Server 模块未能与 Netty 模块建立连接，故不能发送消息集合");
-            return false;
-        }
-        return sendWebMessagesListener.sendMessagesToTcp(message);
+        return sendMsgTrafficControl(msgSpecial);
     }
 
     /**
@@ -246,6 +232,20 @@ public class ServerTcpMessageHandler {
         }
         return sendMsgToTcp(message);
     }
+    /**
+     * 直接将 Message 发送至 Netty 的处理通道
+     *
+     * @param message 普通消息 Message
+     * @return 是否发送成功
+     */
+    private boolean sendMsgToTcp(IMessage message) {
+        if (sendWebMessagesListener == null) {
+            logger.warn("Server 模块未能与 Netty 模块建立连接，故不能发送消息集合");
+            return false;
+        }
+        return sendWebMessagesListener.sendMessagesToTcp(message);
+    }
+
 
     void setKyServerCenterHandler(KyServerCenterHandler kyServerCenterHandler) {
         this.kyServerCenterHandler = kyServerCenterHandler;

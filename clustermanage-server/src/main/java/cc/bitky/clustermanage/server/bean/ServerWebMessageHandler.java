@@ -50,19 +50,19 @@ public class ServerWebMessageHandler {
         return kyDbPresenter.getDevices(groupId, deviceId);
     }
 
-    /**
-     * 服务器处理「 Web 信息 bean 」，更新设备的信息
-     *
-     * @param messages Web信息 bean 的集合
-     * @return 是否成功处理
-     */
-    public boolean deployDeviceMsg(List<IMessage> messages) {
-        boolean isSuccess = true;
-        for (IMessage message : messages) {
-            if (!kyServerCenterHandler.deployDeviceMsg(message, 0)) isSuccess = false;
-        }
-        return isSuccess;
-    }
+//    /**
+//     * 服务器处理「 Web 信息 bean 」，更新设备的信息
+//     *
+//     * @param messages Web信息 bean 的集合
+//     * @return 是否成功处理
+//     */
+//    public boolean deployDeviceMsg(List<IMessage> messages) {
+//        boolean isSuccess = true;
+//        for (IMessage message : messages) {
+//            if (!kyServerCenterHandler.deployDeviceMsg(message, 0)) isSuccess = false;
+//        }
+//        return isSuccess;
+//    }
 
     /**
      * 服务器处理「 Web 信息 bean 」，更新设备的信息
@@ -70,8 +70,8 @@ public class ServerWebMessageHandler {
      * @param message Web信息 bean
      * @return 是否成功处理
      */
-    public boolean deployDeviceMsg(IMessage message, int maxgroupId) {
-        return kyServerCenterHandler.deployDeviceMsg(message, maxgroupId);
+    public boolean deployDeviceMsg(IMessage message, int maxgroupId, boolean urgent, boolean responsive) {
+        return kyServerCenterHandler.deployDeviceMsg(message, maxgroupId,  urgent,  responsive);
     }
 
     void setKyServerCenterHandler(KyServerCenterHandler kyServerCenterHandler) {
@@ -148,23 +148,23 @@ public class ServerWebMessageHandler {
         if (device == null) return;
 
         if (cardNumber && device.getCardNumber() != 0)
-            kyServerCenterHandler.sendMsgToTcp(new WebMsgDeployEmployeeCardNumber(device.getGroupId(), device.getBoxId(), device.getCardNumber()));
+            kyServerCenterHandler.sendMsgTrafficControl(new WebMsgDeployEmployeeCardNumber(device.getGroupId(), device.getBoxId(), device.getCardNumber()));
         else if (cardNumber && autoInit)
-            kyServerCenterHandler.sendMsgToTcp(new WebMsgDeployEmployeeCardNumber(device.getGroupId(), device.getBoxId(), 0));
+            kyServerCenterHandler.sendMsgTrafficControl(new WebMsgDeployEmployeeCardNumber(device.getGroupId(), device.getBoxId(), 0));
 
         if (!(name || department)) return;
         Employee employee = kyDbPresenter.obtainEmployeeByEmployeeObjectId(device.getEmployeeObjectId());
 
         if (employee != null) {
             if (name)
-                kyServerCenterHandler.sendMsgToTcp(new WebMsgDeployEmployeeName(device.getGroupId(), device.getBoxId(), employee.getName()));
+                kyServerCenterHandler.sendMsgTrafficControl(new WebMsgDeployEmployeeName(device.getGroupId(), device.getBoxId(), employee.getName()));
             if (department)
-                kyServerCenterHandler.sendMsgToTcp(new WebMsgDeployEmployeeDepartment(device.getGroupId(), device.getBoxId(), employee.getDepartment()));
+                kyServerCenterHandler.sendMsgTrafficControl(new WebMsgDeployEmployeeDepartment(device.getGroupId(), device.getBoxId(), employee.getDepartment()));
         } else if (autoInit) {
             if (name)
-                kyServerCenterHandler.sendMsgToTcp(new WebMsgDeployEmployeeName(device.getGroupId(), device.getBoxId(), "备用"));
+                kyServerCenterHandler.sendMsgTrafficControl(new WebMsgDeployEmployeeName(device.getGroupId(), device.getBoxId(), "备用"));
             if (department)
-                kyServerCenterHandler.sendMsgToTcp(new WebMsgDeployEmployeeDepartment(device.getGroupId(), device.getBoxId(), "默认单位"));
+                kyServerCenterHandler.sendMsgTrafficControl(new WebMsgDeployEmployeeDepartment(device.getGroupId(), device.getBoxId(), "默认单位"));
         }
     }
 }

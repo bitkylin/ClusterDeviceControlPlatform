@@ -56,13 +56,13 @@ public class SendingOutBoundHandler extends ChannelOutboundHandlerAdapter {
                     getMsgHashMap().put(message.getMsgKey(), message.getBytes());
                     ctx.writeAndFlush(Unpooled.wrappedBuffer(message.getBytes()));
                     if (message.isResponsive())
-                        setWheelTask(ctx, message);
+                        setWheelTask(message);
                 }
             }, 0, ServerSetting.FRAME_SEND_INTERVAL, TimeUnit.MILLISECONDS);
         }
     }
 
-    private void setWheelTask(ChannelHandlerContext ctx, SendableMsg message) {
+    private void setWheelTask(SendableMsg message) {
         logger.info("@%@%「1」设置时间轮：「" + message.getMsgKey() + "」『" + message.getSendTimes() + "』");
         getHashedWheelTimer().newTimeout(timeout -> {
             logger.info("@%@%「2」执行时间轮：「" + message.getMsgKey() + "」『" + message.getSendTimes() + "』");
@@ -82,7 +82,7 @@ public class SendingOutBoundHandler extends ChannelOutboundHandlerAdapter {
                     } else {
                         getLinkedBlockingDeque().offerLast(message);
                     }
-                    setWheelTask(ctx, message);
+                    setWheelTask(message);
                 }
             } else logger.info("时间轮「3」：成功");
         }, ServerSetting.FRAME_SENT_TO_DETECT_INTERVAL, TimeUnit.SECONDS);
