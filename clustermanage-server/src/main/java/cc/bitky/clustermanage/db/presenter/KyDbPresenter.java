@@ -184,7 +184,7 @@ public class KyDbPresenter {
      *
      * @return 卡号的集合
      */
-    public long[] getCardArray(CardType card) {
+    public String[] getCardArray(CardType card) {
         return dbSettingPresenter.getCardArray(card);
     }
 
@@ -195,7 +195,7 @@ public class KyDbPresenter {
      * @param card      卡号类型
      * @return 是否保存成功
      */
-    public boolean saveCardNumber(long[] freecards, CardType card) {
+    public boolean saveCardNumber(String[] freecards, CardType card) {
         return dbSettingPresenter.saveCardArray(freecards, card);
     }
 
@@ -205,7 +205,7 @@ public class KyDbPresenter {
      * @param cardNumber 待检索的卡号
      * @return 是否匹配确认卡号
      */
-    public boolean marchConfirmCard(long cardNumber) {
+    public boolean marchConfirmCard(String cardNumber) {
         return dbSettingPresenter.marchConfirmCard(cardNumber);
     }
 }

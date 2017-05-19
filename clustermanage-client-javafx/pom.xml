@@ -5,10 +5,10 @@
 
     <groupId>cc.bitky.clustermanage</groupId>
     <artifactId>clustermanage-client</artifactId>
-    <version>0.7.0-SNAPSHOT</version>
+    <version>0.8.6-SNAPSHOT</version>
     <packaging>jar</packaging>
 
-    <name>clustermanage-client</name>
+    <name>clustermanage-client-javafx</name>
     <url>http://maven.apache.org</url>
 
     <properties>
@@ -52,7 +52,7 @@
                     <!--构建可执行的 Jar-->
                     <archive>
                         <manifest>
-                            <mainClass>cc.bitky.clustermanage.App</mainClass>
+                            <mainClass>cc.bitky.clustermanage.MainLauncher</mainClass>
                         </manifest>
                     </archive>
                     <!--使用「Jar集成依赖」的描述符-->
@@ -73,5 +73,14 @@
                 </executions>
             </plugin>
         </plugins>
+        <resources>
+            <resource>
+                <filtering>false</filtering>
+                <directory>src/main/java</directory>
+                <includes>
+                    <include>**/*.fxml</include>
+                </includes>
+            </resource>
+        </resources>
     </build>
 </project>

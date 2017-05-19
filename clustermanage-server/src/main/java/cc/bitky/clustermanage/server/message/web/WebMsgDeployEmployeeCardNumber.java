@@ -8,7 +8,7 @@ import cc.bitky.clustermanage.server.message.base.BaseMsgCardNum;
  */
 public class WebMsgDeployEmployeeCardNumber extends BaseMsgCardNum {
 
-    public WebMsgDeployEmployeeCardNumber(int groupId, int boxId, long cardNumber) {
+    public WebMsgDeployEmployeeCardNumber(int groupId, int boxId, String cardNumber) {
         super(groupId, boxId, cardNumber, MsgType.SERVER_SET_EMPLOYEE_CARD_NUMBER);
     }
 }

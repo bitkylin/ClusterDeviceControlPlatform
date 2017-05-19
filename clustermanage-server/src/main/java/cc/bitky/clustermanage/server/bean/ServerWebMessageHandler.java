@@ -71,7 +71,7 @@ public class ServerWebMessageHandler {
      * @return 是否成功处理
      */
     public boolean deployDeviceMsg(IMessage message, int maxgroupId, boolean urgent, boolean responsive) {
-        return kyServerCenterHandler.deployDeviceMsg(message, maxgroupId,  urgent,  responsive);
+        return kyServerCenterHandler.deployDeviceMsg(message, maxgroupId, urgent, responsive);
     }
 
     void setKyServerCenterHandler(KyServerCenterHandler kyServerCenterHandler) {
@@ -84,7 +84,7 @@ public class ServerWebMessageHandler {
      *
      * @return 万能卡号的集合
      */
-    public long[] obtainFreeCards() {
+    public String[] obtainFreeCards() {
         return kyServerCenterHandler.getCardArray(CardType.FREE);
     }
 
@@ -93,7 +93,7 @@ public class ServerWebMessageHandler {
      *
      * @return 确认卡号的集合
      */
-    public long[] obtainConfirmCards() {
+    public String[] obtainConfirmCards() {
         return kyServerCenterHandler.getCardArray(CardType.CONFIRM);
     }
 
@@ -104,7 +104,7 @@ public class ServerWebMessageHandler {
      * @param card      卡号类型
      * @return 是否保存成功
      */
-    public boolean saveCardNumber(long[] freeCards, CardType card) {
+    public boolean saveCardNumber(String[] freeCards, CardType card) {
         return kyServerCenterHandler.saveCardNumber(freeCards, card);
     }
 
@@ -147,10 +147,10 @@ public class ServerWebMessageHandler {
 
         if (device == null) return;
 
-        if (cardNumber && device.getCardNumber() != 0)
+        if (cardNumber && device.getCardNumber() != null)
             kyServerCenterHandler.sendMsgTrafficControl(new WebMsgDeployEmployeeCardNumber(device.getGroupId(), device.getBoxId(), device.getCardNumber()));
         else if (cardNumber && autoInit)
-            kyServerCenterHandler.sendMsgTrafficControl(new WebMsgDeployEmployeeCardNumber(device.getGroupId(), device.getBoxId(), 0));
+            kyServerCenterHandler.sendMsgTrafficControl(new WebMsgDeployEmployeeCardNumber(device.getGroupId(), device.getBoxId(), "0"));
 
         if (!(name || department)) return;
         Employee employee = kyDbPresenter.obtainEmployeeByEmployeeObjectId(device.getEmployeeObjectId());

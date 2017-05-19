@@ -28,7 +28,7 @@ public class DbSettingPresenter {
      * @param card      卡号类型枚举
      * @return 是否保存成功
      */
-    boolean saveCardArray(long[] cardArray, CardType card) {
+    boolean saveCardArray(String[] cardArray, CardType card) {
         KySetting kySetting = settingRepository.findOne("1");
         if (kySetting == null) {
             kySetting = new KySetting();
@@ -51,19 +51,19 @@ public class DbSettingPresenter {
      *
      * @return 卡号的集合
      */
-    long[] getCardArray(CardType card) {
+    String[] getCardArray(CardType card) {
         KySetting kyKySettings = settingRepository.findOne("1");
-        if (kyKySettings == null) return new long[0];
-        long[] longs;
+        if (kyKySettings == null) return new String[0];
+        String[] cards;
         switch (card) {
             case FREE:
-                longs = kyKySettings.getFreeCardList();
-                return longs == null ? new long[0] : longs;
+                cards = kyKySettings.getFreeCardList();
+                return cards == null ? new String[0] : cards;
             case CONFIRM:
-                longs = kyKySettings.getConfirmCardList();
-                return longs == null ? new long[0] : longs;
+                cards = kyKySettings.getConfirmCardList();
+                return cards == null ? new String[0] : cards;
         }
-        return new long[0];
+        return new String[0];
     }
 
     /**
@@ -72,7 +72,7 @@ public class DbSettingPresenter {
      * @param cardNumber 待检索的卡号
      * @return 是否匹配确认卡号
      */
-    boolean marchConfirmCard(long cardNumber) {
+    boolean marchConfirmCard(String cardNumber) {
         Query query = new Query(Criteria.where("id").is("1").and("confirmCardList").is(cardNumber));
         return operations.exists(query, KySetting.class);
     }

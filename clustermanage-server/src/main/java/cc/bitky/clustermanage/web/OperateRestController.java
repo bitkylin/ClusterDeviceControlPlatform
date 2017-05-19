@@ -97,7 +97,7 @@ public class OperateRestController {
     @RequestMapping(value = "/freecard/{groupId}/{deviceId}", method = RequestMethod.POST, consumes = "application/json")
     public String saveFreeCard(@PathVariable int groupId,
                                @PathVariable int deviceId,
-                               @RequestBody long[] freeCards,
+                               @RequestBody String[] freeCards,
                                @RequestParam(defaultValue = "0") int maxgroupId) {
         if (serverWebMessageHandler.saveCardNumber(freeCards, CardType.FREE) &&
                 serverWebMessageHandler.deployFreeCard(groupId, deviceId, maxgroupId))

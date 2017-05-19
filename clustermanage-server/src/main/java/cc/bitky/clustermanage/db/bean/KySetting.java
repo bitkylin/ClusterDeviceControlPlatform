@@ -8,16 +8,26 @@ public class KySetting {
     @Id
     private String id;
 
-    private long[] freeCardList;
-    private long[] confirmCardList;
+    public String[] getFreeCardList() {
+        return freeCardList;
+    }
 
-    public long[] getConfirmCardList() {
+    public void setFreeCardList(String[] freeCardList) {
+        this.freeCardList = freeCardList;
+    }
+
+    public String[] getConfirmCardList() {
         return confirmCardList;
     }
 
-    public void setConfirmCardList(long[] confirmCardList) {
+    public void setConfirmCardList(String[] confirmCardList) {
         this.confirmCardList = confirmCardList;
     }
+
+    private String[] freeCardList;
+    private String[] confirmCardList;
+
+
 
     public String getId() {
         return id;
@@ -27,11 +37,4 @@ public class KySetting {
         this.id = id;
     }
 
-    public long[] getFreeCardList() {
-        return freeCardList;
-    }
-
-    public void setFreeCardList(long[] freeCardList) {
-        this.freeCardList = freeCardList;
-    }
-}
+ }

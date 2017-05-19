@@ -187,7 +187,7 @@ public class ServerTcpMessageHandler {
 
 
         //卡号初始化为 0，故排除掉 0 以避免错误
-        if (msgInitCard.getCardNumber() == 0) {
+        if (msgInitCard.getCardNumber().equals("0000000000000000")) {
             sendMsgToTcpSpecial(new WebMsgInitMarchConfirmCardResponse(msgInitCard.getGroupId(), msgInitCard.getBoxId(), false), true, false);
             return;
         }

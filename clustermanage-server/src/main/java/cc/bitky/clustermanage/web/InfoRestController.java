@@ -50,7 +50,7 @@ public class InfoRestController {
      * @return 万能卡号的集合
      */
     @RequestMapping(value = "/freecard", method = RequestMethod.GET)
-    public long[] obtainFreeCards() {
+    public String[] obtainFreeCards() {
         return serverWebMessageHandler.obtainFreeCards();
     }
 
@@ -60,7 +60,7 @@ public class InfoRestController {
      * @return 确认卡号的集合
      */
     @RequestMapping(value = "/confirmcard", method = RequestMethod.GET)
-    public long[] obtainConfirmCard() {
+    public String[] obtainConfirmCard() {
         return serverWebMessageHandler.obtainConfirmCards();
     }
 
@@ -71,7 +71,7 @@ public class InfoRestController {
      * @return @return "保存确认卡号成功"消息
      */
     @RequestMapping(value = "/confirmcard", method = RequestMethod.POST, consumes = "application/json")
-    public String saveConfirmCard(@RequestBody long[] confirmCards) {
+    public String saveConfirmCard(@RequestBody String[] confirmCards) {
         if (serverWebMessageHandler.saveCardNumber(confirmCards, CardType.CONFIRM))
             return "success";
         return "error";

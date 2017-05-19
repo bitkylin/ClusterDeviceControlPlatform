@@ -17,6 +17,7 @@ import cc.bitky.clustermanage.server.message.tcp.TcpMsgResponseFreeCardNumber;
 import cc.bitky.clustermanage.server.message.tcp.TcpMsgResponseOperateBoxUnlock;
 import cc.bitky.clustermanage.server.message.tcp.TcpMsgResponseRemainChargeTimes;
 import cc.bitky.clustermanage.server.message.tcp.TcpMsgResponseStatus;
+import cc.bitky.clustermanage.tcp.util.TcpMsgBuilder;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
@@ -89,7 +90,7 @@ public class CanFrameChannelInboundHandler extends SimpleChannelInboundHandler<B
             case MsgType.INITIALIZE_DEVICE_RESPONSE_CARD:
                 byte[] cardArray = new byte[8];
                 msg.readBytes(cardArray);
-                long cardNum = byteArrayToLong(cardArray);
+                String cardNum = TcpMsgBuilder.byteArrayToString(cardArray);
                 return new TcpMsgInitResponseCardNumber(groupId, boxId, cardNum);
 
             default:
@@ -100,11 +101,11 @@ public class CanFrameChannelInboundHandler extends SimpleChannelInboundHandler<B
     }
 
 
-    private long byteArrayToLong(byte[] bytes) {
-        long num = 0;
-        for (int i = 0; i <= 7; i++) {
-            num += (bytes[i] & 0xffL) << ((7 - i) * 8);
-        }
-        return num;
-    }
+//    private long byteArrayToLong(byte[] bytes) {
+//        long num = 0;
+//        for (int i = 0; i <= 7; i++) {
+//            num += (bytes[i] & 0xffL) << ((7 - i) * 8);
+//        }
+//        return num;
+//    }
 }

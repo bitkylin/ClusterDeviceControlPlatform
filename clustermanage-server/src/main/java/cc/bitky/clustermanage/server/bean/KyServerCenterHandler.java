@@ -50,7 +50,7 @@ public class KyServerCenterHandler {
      * @return 万能卡号获取并写入 TCP 成功
      */
     boolean deployFreeCard(int groupId, int deviceId, int maxGroupId) {
-        long[] freeCards = kyDbPresenter.getCardArray(CardType.FREE);
+        String[] freeCards = kyDbPresenter.getCardArray(CardType.FREE);
         IMessage CardMsg = new WebMsgDeployFreeCardNumber(groupId, deviceId, freeCards);
         return deployGroupedMessage(CardMsg, maxGroupId,  false,  true);
     }
@@ -100,7 +100,7 @@ public class KyServerCenterHandler {
      *
      * @return 卡号的集合
      */
-    long[] getCardArray(CardType card) {
+    String[] getCardArray(CardType card) {
         return kyDbPresenter.getCardArray(card);
     }
 
@@ -111,7 +111,7 @@ public class KyServerCenterHandler {
      * @param card      卡号类型
      * @return 是否保存成功
      */
-    boolean saveCardNumber(long[] freeCards, CardType card) {
+    boolean saveCardNumber(String[] freeCards, CardType card) {
         return kyDbPresenter.saveCardNumber(freeCards, card);
     }
 
@@ -122,7 +122,7 @@ public class KyServerCenterHandler {
      * @param cardNumber 待检索的卡号
      * @return 是否匹配确认卡号
      */
-    boolean marchConfirmCard(long cardNumber) {
+    boolean marchConfirmCard(String cardNumber) {
         return kyDbPresenter.marchConfirmCard(cardNumber);
     }
 }
