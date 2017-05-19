@@ -4,9 +4,9 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 
-import cc.bitky.clustermanage.view.KyDeviceViewListener;
+import cc.bitky.clustermanage.netty.message.tcp.TcpMsgResponseDeviceStatus;
+import cc.bitky.clustermanage.view.DeviceStatusChangeListener;
 import cc.bitky.clustermanage.view.bean.Device;
-import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -19,7 +19,7 @@ import javafx.scene.control.TabPane;
 
 public class DeviceView extends TabPane implements Initializable {
     private static Device deviceDefault = new Device();
-    KyDeviceViewListener listener;
+    DeviceStatusChangeListener listener;
     @FXML
     private Tab tabStatus;
     @FXML
@@ -42,28 +42,25 @@ public class DeviceView extends TabPane implements Initializable {
     public DeviceView(int id) {
         this.id = id;
         loadFxml();
+        initView(null);
 
     }
 
-    public void setListener(KyDeviceViewListener listener) {
+    public void setListener(DeviceStatusChangeListener listener) {
         this.listener = listener;
     }
 
-    public void initView(Device device) {
-        if (device == null) device = deviceDefault;
-        this.device = device;
-        Device finalDevice = device;
-        Platform.runLater(() -> {
-            tabStatus.setText(finalDevice.getDeviceId() + "号");
-            name.setText(finalDevice.getName());
-            department.setText(finalDevice.getDepartment());
-            cardNumber.setText(finalDevice.getCardNumber() + "");
-
-            deployBtnText(finalDevice.getStatus());
-
-            historyList.getItems().clear();
-            historyList.getItems().addAll(finalDevice.getHistoryList());
-        });
+    public void initView(Device inDevice) {
+        if (inDevice == null) inDevice = deviceDefault;
+        this.device = inDevice;
+        int setid = device.getDeviceId() == -1 ? this.id : device.getDeviceId();
+        tabStatus.setText(setid + "号");
+        name.setText(device.getName());
+        department.setText(device.getDepartment());
+        cardNumber.setText(device.getCardNumber() + "");
+        deployBtnText(device.getStatus());
+        historyList.getItems().clear();
+        historyList.getItems().addAll(device.getHistoryList());
     }
 
     private void deployBtnText(int status) {
@@ -145,7 +142,7 @@ public class DeviceView extends TabPane implements Initializable {
         device.setStatus(status);
         deployBtnText(status);
         if (listener != null && status < 5)
-            listener.btnChargeChanged(device.getGroupId(), device.getDeviceId(), device.getStatus());
+            listener.btnChargeChanged(new TcpMsgResponseDeviceStatus(device.getGroupId(), device.getDeviceId(), device.getStatus()));
 
     }
 
@@ -162,7 +159,7 @@ public class DeviceView extends TabPane implements Initializable {
         deployBtnText(status);
 
         if (listener != null && status < 5)
-            listener.btnChargeChanged(device.getGroupId(), device.getDeviceId(), device.getStatus());
+            listener.btnChargeChanged(new TcpMsgResponseDeviceStatus(device.getGroupId(), device.getDeviceId(), device.getStatus()));
     }
 
     void setBtnWrongText(String value) {

@@ -18,7 +18,7 @@ public class TcpMsgBuilder {
     public byte[] buildInitConfirmCardNumber(BaseMsgCardNum msgCardNum) {
         byte[] bytes = buildMsgOutline(msgCardNum);
         bytes[0] += 8;
-        byte[] byteCardNum = longToByteArray(msgCardNum.getCardNumber());
+        byte[] byteCardNum = stringToByteArray(msgCardNum.getCardNumber());
         addMessageBody(bytes, byteCardNum, 0);
         return bytes;
     }
@@ -57,31 +57,51 @@ public class TcpMsgBuilder {
      * @param bytes     轮廓CAN帧
      * @param bytesBody 数据位
      * @param offset    数据位的偏移量，offset位开始操作8个字节
-     * @return 已构建完成的CAN帧
      */
-    private byte[] addMessageBody(byte[] bytes, byte[] bytesBody, int offset) {
+    private void addMessageBody(byte[] bytes, byte[] bytesBody, int offset) {
         int max = (bytesBody.length - offset) > 8 ? 8 : (bytesBody.length - offset);
         for (int i = 0; i < max; i++) {
             bytes[i + 5] = bytesBody[i + offset];
         }
-        return bytes;
     }
 
-    private long byteArrayToLong(byte[] bytes) {
-        long num = 0;
-        for (int i = 0; i <= 7; i++) {
-            num += (bytes[i] & 0xffL) << ((7 - i) * 8);
+    public static String byteArrayToString(byte[] cards) {
+        StringBuilder builder = new StringBuilder();
+        for (byte b : cards) {
+            String s = Integer.toHexString(b & 0xFF).toUpperCase();
+            if (s.length() == 1) {
+                builder.append('0').append(s);
+            } else builder.append(s);
         }
-        return num;
+        return builder.toString();
     }
 
-    private byte[] longToByteArray(long num) {
+    public static byte[] stringToByteArray(String cards) {
+        if (cards.length() > 16) cards = cards.substring(0, 16);
+        if (cards.length() < 16) {
+            int count = 16 - cards.length();
+            StringBuilder builder = new StringBuilder();
+            for (int i = 0; i < count; i++) {
+                builder.append("0");
+            }
+            builder.append(cards);
+            cards = builder.toString();
+        }
+
         byte[] bytes = new byte[8];
-        for (int i = 0; i <= 7; i++) {
-            bytes[i] = (byte) ((num >> ((7 - i) * 8)) & 0xff);
+        cards = cards.toUpperCase();
+        char[] hexChars = cards.toCharArray();
+        for (int i = 0; i < 8; i++) {
+            int pos = i * 2;
+            bytes[i] = (byte) (charToByte(hexChars[pos]) << 4 | charToByte(hexChars[pos + 1]));
         }
         return bytes;
     }
+
+    private static byte charToByte(char c) {
+        return (byte) "0123456789ABCDEF".indexOf(c);
+    }
+
 
 
 }

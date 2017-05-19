@@ -8,7 +8,7 @@ import cc.bitky.clustermanage.server.message.base.BaseMsgCardNum;
  */
 public class TcpMsgInitResponseCardNumber extends BaseMsgCardNum {
 
-    public TcpMsgInitResponseCardNumber(int groupId, int boxId, long cardNumber) {
+    public TcpMsgInitResponseCardNumber(int groupId, int boxId, String cardNumber) {
         super(groupId, boxId, cardNumber, MsgType.INITIALIZE_DEVICE_RESPONSE_CARD);
     }
 }

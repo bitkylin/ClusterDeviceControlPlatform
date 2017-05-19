@@ -6,7 +6,7 @@ import java.util.List;
 public class Device {
     String name;
     String department;
-    long cardNumber;
+    String cardNumber;
     private int groupId = -1;
     private int deviceId = -1;
     private int status = -1;
@@ -96,11 +96,11 @@ public class Device {
         this.department = department;
     }
 
-    public long getCardNumber() {
+    public String getCardNumber() {
         return cardNumber;
     }
 
-    public void setCardNumber(long cardNumber) {
+    public void setCardNumber(String cardNumber) {
         this.cardNumber = cardNumber;
     }
 }

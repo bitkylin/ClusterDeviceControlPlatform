@@ -9,13 +9,15 @@ public class MainLauncher extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
+           startApp(primaryStage);
+    }
 
-        Stage primaryStage1 = primaryStage;
-        primaryStage1.setTitle("bitkyApp");
+    private void startApp(Stage primaryStage) {
+        primaryStage.setTitle("设备模拟客户端");
         primaryStage.setScene(new Scene(MainView.getInstance()));
         primaryStage.setMaximized(true);
+        primaryStage.setOnCloseRequest(event -> NettyLauncher.getInstance().shutdown());
         primaryStage.show();
-        MainView.getInstance().updateGroupCount(1);
-     //   new App().start();
+        MainView.getInstance().updateGroupCount(10);
     }
 }

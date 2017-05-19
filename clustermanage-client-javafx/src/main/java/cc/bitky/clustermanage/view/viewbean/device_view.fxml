@@ -11,7 +11,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<fx:root maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="119.0" prefWidth="122.0" tabClosingPolicy="UNAVAILABLE" type="TabPane" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1">
+<fx:root maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="119.0" prefWidth="107.0" tabClosingPolicy="UNAVAILABLE" type="TabPane" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1">
   <tabs>
     <Tab fx:id="tabStatus" text="n号">
       <content>
@@ -45,7 +45,7 @@
                                  <children>
                                     <Button fx:id="btnCharge" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onAction="#btnChargeAction" prefHeight="88.0" prefWidth="34.0" text="充电中" textAlignment="CENTER" wrapText="true">
                                        <font>
-                                          <Font size="14.0" />
+                                          <Font size="12.0" />
                                        </font>
                                     </Button>
                                  </children>
@@ -57,7 +57,7 @@
                </children></AnchorPane>
       </content>
     </Tab>
-    <Tab fx:id="tabHistory" text="记录">
+    <Tab fx:id="tabHistory" text="记">
       <content>
         <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                <children>

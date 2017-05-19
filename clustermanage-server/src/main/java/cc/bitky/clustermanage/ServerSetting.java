@@ -36,4 +36,5 @@ public class ServerSetting {
      * 待发送缓冲队列 Message 大于限定容量后，待执行指令的延迟等待执行时间「单位/s」
      */
     public static final int COMMAND_DELAY_WAITING_TIME = 30;
+    public static final String VERSION = "0.8.6";
 }

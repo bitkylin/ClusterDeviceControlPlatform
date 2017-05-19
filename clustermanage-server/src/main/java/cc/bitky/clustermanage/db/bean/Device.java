@@ -10,7 +10,7 @@ public class Device {
      * 员工卡号
      */
 //    @Field("cn")
-    long cardNumber;
+    String cardNumber;
 
     @Id
     private String id;
@@ -100,11 +100,11 @@ public class Device {
         this.boxId = boxId;
     }
 
-    public long getCardNumber() {
+    public String getCardNumber() {
         return cardNumber;
     }
 
-    public void setCardNumber(long cardNumber) {
+    public void setCardNumber(String cardNumber) {
         this.cardNumber = cardNumber;
     }
 

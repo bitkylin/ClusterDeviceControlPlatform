@@ -12,6 +12,6 @@ public class ClustermanageServerApplication {
 
     public static void main(String[] args) {
         SpringApplication.run(ClustermanageServerApplication.class, args);
-        logger.info("『bitky.cc』「0.8.1」");
+        logger.info("『bitky.cc』「"+ServerSetting.VERSION+"」");
     }
 }

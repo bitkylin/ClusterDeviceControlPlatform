@@ -19,6 +19,7 @@ import cc.bitky.clustermanage.netty.message.web.WebMsgInitClearDeviceStatus;
 import cc.bitky.clustermanage.netty.message.web.WebMsgInitMarchConfirmCardResponse;
 import cc.bitky.clustermanage.netty.message.web.WebMsgObtainDeviceStatus;
 import cc.bitky.clustermanage.netty.message.web.WebMsgOperateBoxUnlock;
+import cc.bitky.clustermanage.utils.TcpMsgBuilder;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
@@ -65,7 +66,7 @@ public class CanFrameChannelInboundHandler extends SimpleChannelInboundHandler<B
         if (msgId >= 0x70 && msgId <= 0x7F) {
             byte[] bytes = new byte[8];
             msg.readBytes(bytes);
-            long freeCardNumber = byteArrayToLong(bytes);
+            String freeCardNumber = TcpMsgBuilder.byteArrayToString(bytes);
             return new WebMsgDeployFreeCardSpecial(groupId, boxId, freeCardNumber, msgId - 0x70);
         }
 
@@ -100,7 +101,7 @@ public class CanFrameChannelInboundHandler extends SimpleChannelInboundHandler<B
             case MsgType.SERVER_SET_EMPLOYEE_CARD_NUMBER:
                 byte[] bytes = new byte[8];
                 msg.readBytes(bytes);
-                long cardNumber = byteArrayToLong(bytes);
+                String cardNumber = TcpMsgBuilder.byteArrayToString(bytes);
                 return new WebMsgDeployEmployeeCardNumber(groupId, boxId, cardNumber);
             //服务器远程开锁
             case MsgType.SERVER_REMOTE_UNLOCK:
@@ -136,21 +137,5 @@ public class CanFrameChannelInboundHandler extends SimpleChannelInboundHandler<B
         byte[] bytes = new byte[8];
         msg.readBytes(bytes);
         return new String(bytes, charset_GB2312);
-    }
-
-    long byteArrayToLong(byte[] bytes) {
-        long num = 0;
-        for (int i = 0; i <= 7; i++) {
-            num += (bytes[i] & 0xffL) << ((7 - i) * 8);
-        }
-        return num;
-    }
-
-    private byte[] longToByteArray(long num) {
-        byte[] bytes = new byte[8];
-        for (int i = 0; i <= 7; i++) {
-            bytes[i] = (byte) ((num >> ((7 - i) * 8)) & 0xff);
-        }
-        return bytes;
     }
 }

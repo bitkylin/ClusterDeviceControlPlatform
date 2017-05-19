@@ -20,6 +20,43 @@ import cc.bitky.clustermanage.server.message.web.WebMsgOperateBoxUnlock;
 public class TcpMsgBuilder {
     Charset charset_GB2312 = Charset.forName("EUC-CN");
 
+    public static String byteArrayToString(byte[] cards) {
+        StringBuilder builder = new StringBuilder();
+        for (byte b : cards) {
+            String s = Integer.toHexString(b & 0xFF).toUpperCase();
+            if (s.length() == 1) {
+                builder.append('0').append(s);
+            } else builder.append(s);
+        }
+        return builder.toString();
+    }
+
+    public static byte[] stringToByteArray(String cards) {
+        if (cards.length() > 16) cards = cards.substring(0, 16);
+        if (cards.length() < 16) {
+            int count = 16 - cards.length();
+            StringBuilder builder = new StringBuilder();
+            for (int i = 0; i < count; i++) {
+                builder.append("0");
+            }
+            builder.append(cards);
+            cards = builder.toString();
+        }
+
+        byte[] bytes = new byte[8];
+        cards = cards.toUpperCase();
+        char[] hexChars = cards.toCharArray();
+        for (int i = 0; i < 8; i++) {
+            int pos = i * 2;
+            bytes[i] = (byte) (charToByte(hexChars[pos]) << 4 | charToByte(hexChars[pos + 1]));
+        }
+        return bytes;
+    }
+
+    private static byte charToByte(char c) {
+        return (byte) "0123456789ABCDEF".indexOf(c);
+    }
+
     /**
      * 构建获取设备状态的 CAN 帧
      *
@@ -108,11 +145,10 @@ public class TcpMsgBuilder {
     public byte[] buildEmployeeCardNumber(WebMsgDeployEmployeeCardNumber webMsgDeployEmployeeCardNumber) {
         byte[] bytes = buildMsgOutline(webMsgDeployEmployeeCardNumber);
         bytes[0] += 8;
-        byte[] byteCardNum = longToByteArray(webMsgDeployEmployeeCardNumber.getCardNumber());
+        byte[] byteCardNum = stringToByteArray(webMsgDeployEmployeeCardNumber.getCardNumber());
         addMessageBody(bytes, byteCardNum, 0);
         return bytes;
     }
-
 
     /**
      * 构建开锁用的 CAN 帧
@@ -131,14 +167,14 @@ public class TcpMsgBuilder {
      * @return 万能卡号的 CAN 帧
      */
     public byte[] buildFreeCardNumber(WebMsgDeployFreeCardNumber webMsgDeployFreeCardNumber) {
-        long[] cards = webMsgDeployFreeCardNumber.getCardNumbers();
+        String[] cards = webMsgDeployFreeCardNumber.getCardNumbers();
         int count = cards.length < 16 ? cards.length : 16;
         byte[] bytesSend = new byte[13 * count];
 
         for (int i = 0; i < count; i++) {
             byte[] bytes = buildMsgOutline(webMsgDeployFreeCardNumber);
             bytes[2] += i;
-            addMessageBody(bytes, longToByteArray(cards[i]), 0);
+            addMessageBody(bytes, stringToByteArray(cards[i]), 0);
             System.arraycopy(bytes, 0, bytesSend, 13 * i, 13);
         }
         return bytesSend;
@@ -189,14 +225,12 @@ public class TcpMsgBuilder {
      * @param bytes     轮廓CAN帧
      * @param bytesBody 数据位
      * @param offset    数据位的偏移量，offset位开始操作8个字节
-     * @return 已构建完成的CAN帧
      */
-    private byte[] addMessageBody(byte[] bytes, byte[] bytesBody, int offset) {
+    private void addMessageBody(byte[] bytes, byte[] bytesBody, int offset) {
         int max = (bytesBody.length - offset) > 8 ? 8 : (bytesBody.length - offset);
         for (int i = 0; i < max; i++) {
             bytes[i + 5] = bytesBody[i + offset];
         }
-        return bytes;
     }
 
     private long byteArrayToLong(byte[] bytes) {
