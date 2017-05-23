@@ -8,7 +8,7 @@ import java.util.List;
 
 import cc.bitky.clustermanage.db.bean.routineinfo.DutyInfo;
 import cc.bitky.clustermanage.db.bean.routineinfo.HistoryInfo;
-import cc.bitky.clustermanage.db.bean.routineinfo.RoutineTables;
+import cc.bitky.clustermanage.db.bean.routineinfo.LampStatusHistory;
 import cc.bitky.clustermanage.db.repository.RoutineTableRepository;
 import cc.bitky.clustermanage.server.message.tcp.TcpMsgResponseStatus;
 
@@ -28,16 +28,17 @@ public class DbRoutinePresenter {
      * @param tcpMsgResponseStatus 设备状态包
      */
     void updateRoutineById(String employeeObjectId, TcpMsgResponseStatus tcpMsgResponseStatus) {
-        RoutineTables routineTables = routineTableRepository.findOne(employeeObjectId);
-        if (routineTables == null) {
-            routineTables = new RoutineTables();
-            routineTables.setId(employeeObjectId);
+        LampStatusHistory lampStatusHistory = routineTableRepository.findOne(employeeObjectId);
+        if (lampStatusHistory == null) {
+            lampStatusHistory = new LampStatusHistory();
+            lampStatusHistory.setId(employeeObjectId);
         }
-        routineTables.getHistoryInfos().add(new HistoryInfo(tcpMsgResponseStatus.getTime(), tcpMsgResponseStatus.getStatus()));
+        lampStatusHistory.getStatusList().add(new HistoryInfo(tcpMsgResponseStatus.getTime(), tcpMsgResponseStatus.getStatus()));
 
-        updateDutyInfo(tcpMsgResponseStatus, routineTables.getDutyInfos());
+        //更新员工的考勤表，根据设计需求已删除
+        //   updateDutyInfo(tcpMsgResponseStatus, lampStatusHistory.getDutyInfos());
 
-        routineTableRepository.save(routineTables);
+        routineTableRepository.save(lampStatusHistory);
     }
 
     //用于更新考勤表，可删除

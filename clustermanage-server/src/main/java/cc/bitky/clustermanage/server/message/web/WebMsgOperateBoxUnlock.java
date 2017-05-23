@@ -15,6 +15,6 @@ public class WebMsgOperateBoxUnlock extends BaseMessage {
 
 
     public WebMsgOperateBoxUnlock kyClone(int groupId) {
-        return new WebMsgOperateBoxUnlock(groupId, getBoxId());
+        return new WebMsgOperateBoxUnlock(groupId, getDeviceId());
     }
 }

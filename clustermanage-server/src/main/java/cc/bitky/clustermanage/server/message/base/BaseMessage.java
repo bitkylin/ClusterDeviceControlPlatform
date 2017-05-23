@@ -7,15 +7,15 @@ public class BaseMessage implements IMessage {
 
     private int msgId = -1;
     private int groupId = -1;
-    private int boxId = -1;
+    private int deviceId = -1;
 
     protected BaseMessage(int groupId) {
         this.groupId = groupId;
     }
 
-    protected BaseMessage(int groupId, int boxId) {
+    protected BaseMessage(int groupId, int deviceId) {
         this(groupId);
-        this.boxId = boxId;
+        this.deviceId = deviceId;
     }
 
     @Override
@@ -38,12 +38,12 @@ public class BaseMessage implements IMessage {
     }
 
     @Override
-    public int getBoxId() {
-        return boxId;
+    public int getDeviceId() {
+        return deviceId;
     }
 
     @Override
-    public void setBoxId(int boxId) {
-        this.boxId = boxId;
+    public void setDeviceId(int deviceId) {
+        this.deviceId = deviceId;
     }
 }

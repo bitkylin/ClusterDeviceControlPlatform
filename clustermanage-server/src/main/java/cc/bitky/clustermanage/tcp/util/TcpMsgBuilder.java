@@ -214,7 +214,7 @@ public class TcpMsgBuilder {
         byte[] bytes = new byte[13];
         bytes[0] = (byte) 0x80;
         bytes[2] = (byte) message.getMsgId();
-        bytes[3] = (byte) message.getBoxId();
+        bytes[3] = (byte) message.getDeviceId();
         bytes[4] = (byte) message.getGroupId();
         return bytes;
     }

@@ -40,7 +40,7 @@ public class WebMsgOutBoundHandler extends ChannelOutboundHandlerAdapter {
     @Override
     public void write(ChannelHandlerContext ctx, Object msg, ChannelPromise promise) throws Exception {
         IMessage message = (IMessage) msg;
-        logger.info("Netty 通道获取 Message「" + message.getGroupId() + ", " + message.getBoxId() + ", " + message.getMsgId() + "」");
+        logger.info("Netty 通道获取 Message「" + message.getGroupId() + ", " + message.getDeviceId() + ", " + message.getMsgId() + "」");
 
         if (message.getMsgId() == MsgType.SERVER_SEND_SPECIAL) {
             WebMsgSpecial msgSpecial = (WebMsgSpecial) message;
@@ -50,14 +50,14 @@ public class WebMsgOutBoundHandler extends ChannelOutboundHandlerAdapter {
                 if (msgSpecial.getMaxGroupId() > 0) {
                     for (int j = 1; j <= msgSpecial.getMaxBoxId(); j++) {
                         for (int k = 1; k <= msgSpecial.getMaxGroupId(); k++) {
-                            baseMsgSpecial.setBoxId(j);
+                            baseMsgSpecial.setDeviceId(j);
                             baseMsgSpecial.setGroupId(k);
                             unpackComplexMsgToTcp(ctx, baseMsgSpecial, msgSpecial.isUrgent(), msgSpecial.isResponsive());
                         }
                     }
                 } else {
                     for (int j = 1; j <= msgSpecial.getMaxBoxId(); j++) {
-                        baseMsgSpecial.setBoxId(j);
+                        baseMsgSpecial.setDeviceId(j);
                         unpackComplexMsgToTcp(ctx, baseMsgSpecial, msgSpecial.isUrgent(), msgSpecial.isResponsive());
                     }
                 }
@@ -93,6 +93,7 @@ public class WebMsgOutBoundHandler extends ChannelOutboundHandlerAdapter {
                 for (int i = 0; i < count; i++) {
                     byte[] bytesF = new byte[13];
                     System.arraycopy(bytesFree, 13 * i, bytesF, 0, 13);
+                    bytesF[0] += 8;
                     deployWriteTcpSpecial(ctx, bytesF, urgent, responsive);
                 }
                 return;

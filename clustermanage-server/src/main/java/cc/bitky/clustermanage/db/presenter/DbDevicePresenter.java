@@ -44,21 +44,21 @@ class DbDevicePresenter {
      * @return null: 无法找到指定的设备；device.status 为 -1: 指定设备未进行任何状态更新
      */
     Device handleMsgDeviceStatus(TcpMsgResponseStatus msgStatus) {
-        Device device = deviceRepository.findFirstByGroupIdAndBoxId(msgStatus.getGroupId(), msgStatus.getBoxId());
+        Device device = deviceRepository.findFirstByGroupIdAndDeviceId(msgStatus.getGroupId(), msgStatus.getDeviceId());
         if (device == null) return null;
         int rawStatus = device.getStatus();
         int newStatus = msgStatus.getStatus();
         if (newStatus > 5 || newStatus < 0) newStatus = 6;
 
         if (rawStatus >= 5) {
-            logger.info("设备「" + msgStatus.getGroupId() + ", " + msgStatus.getBoxId() + "」『"
+            logger.info("设备「" + msgStatus.getGroupId() + ", " + msgStatus.getDeviceId() + "」『"
                     + rawStatus + "->" + newStatus + "』: 状态无法更改");
             device.setStatus(-1);
             return device;
         }
 
         if (newStatus == rawStatus) {
-            logger.info("设备「" + msgStatus.getGroupId() + ", " + msgStatus.getBoxId() + "」『"
+            logger.info("设备「" + msgStatus.getGroupId() + ", " + msgStatus.getDeviceId() + "」『"
                     + rawStatus + "->" + newStatus + "』: 状态无更新");
             device.setStatus(-1);
             return device;
@@ -68,9 +68,9 @@ class DbDevicePresenter {
             device.setRemainChargeTime(device.getRemainChargeTime() - 1);
         }
         device.setStatus(newStatus);
-        device.setTime(new Date(msgStatus.getTime()));
+        device.setStatusTime(new Date(msgStatus.getTime()));
         deviceRepository.save(device);
-        logger.info("设备「" + msgStatus.getGroupId() + ", " + msgStatus.getBoxId() + "」『"
+        logger.info("设备「" + msgStatus.getGroupId() + ", " + msgStatus.getDeviceId() + "」『"
                 + rawStatus + "->" + newStatus + "』: 状态成功更新！");
         return device;
     }
@@ -79,18 +79,18 @@ class DbDevicePresenter {
      * 获取设备的集合
      *
      * @param groupId 组 Id
-     * @param boxId   设备 Id
+     * @param deviceId   设备 Id
      * @return 设备的集合
      */
-    List<Device> getDevices(int groupId, int boxId) {
-        if (boxId == 255) {
+    List<Device> getDevices(int groupId, int deviceId) {
+        if (deviceId == 255) {
             List<Device> devices = deviceRepository.findByGroupId(groupId);
             if (devices == null) devices = new ArrayList<>(1);
             return devices;
         }
         List<Device> devices = new ArrayList<>(1);
-        if (boxId >= 1 && boxId <= 100) {
-            devices.add(deviceRepository.findFirstByGroupIdAndBoxId(groupId, boxId));
+        if (deviceId >= 1 && deviceId <= 100) {
+            devices.add(deviceRepository.findFirstByGroupIdAndDeviceId(groupId, deviceId));
         }
         return devices;
     }
@@ -101,7 +101,7 @@ class DbDevicePresenter {
      * @param cardNum 员工卡号
      * @return 相应的设备
      */
-    Device obtainEmployeeObjectIdByCardNum(long cardNum) {
+    Device obtainEmployeeObjectIdByCardNum(String cardNum) {
         return deviceRepository.findFirstByCardNumber(cardNum);
     }
 

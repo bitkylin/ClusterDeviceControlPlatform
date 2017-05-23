@@ -15,6 +15,7 @@ import java.util.List;
 import cc.bitky.clustermanage.db.bean.Device;
 import cc.bitky.clustermanage.server.bean.ServerWebMessageHandler;
 import cc.bitky.clustermanage.server.message.CardType;
+import cc.bitky.clustermanage.web.bean.QueueInfo;
 
 /**
  * 设备信息获取及处理控制器
@@ -75,5 +76,10 @@ public class InfoRestController {
         if (serverWebMessageHandler.saveCardNumber(confirmCards, CardType.CONFIRM))
             return "success";
         return "error";
+    }
+
+    @RequestMapping(value = "/queueframe", method = RequestMethod.GET)
+    public QueueInfo obtainQueueFrame() {
+        return serverWebMessageHandler.obtainQueueFrame();
     }
 }

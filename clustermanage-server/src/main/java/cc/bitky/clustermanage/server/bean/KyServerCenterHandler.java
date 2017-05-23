@@ -3,23 +3,32 @@ package cc.bitky.clustermanage.server.bean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import cc.bitky.clustermanage.ServerSetting;
 import cc.bitky.clustermanage.db.presenter.KyDbPresenter;
 import cc.bitky.clustermanage.server.message.CardType;
 import cc.bitky.clustermanage.server.message.base.IMessage;
 import cc.bitky.clustermanage.server.message.send.WebMsgSpecial;
 import cc.bitky.clustermanage.server.message.web.WebMsgDeployFreeCardNumber;
+import cc.bitky.clustermanage.server.schedule.SendingMsgRepo;
+import cc.bitky.clustermanage.web.bean.QueueInfo;
 
 @Component
 public class KyServerCenterHandler {
     private final ServerTcpMessageHandler serverTcpMessageHandler;
     private final KyDbPresenter kyDbPresenter;
+    private final SendingMsgRepo sendingMsgRepo;
 
     @Autowired
-    public KyServerCenterHandler(ServerTcpMessageHandler serverTcpMessageHandler, ServerWebMessageHandler serverWebMessageHandler, KyDbPresenter kyDbPresenter) {
+    public KyServerCenterHandler(SendingMsgRepo sendingMsgRepo, ServerTcpMessageHandler serverTcpMessageHandler, ServerWebMessageHandler serverWebMessageHandler, KyDbPresenter kyDbPresenter) {
+        this.sendingMsgRepo = sendingMsgRepo;
         this.serverTcpMessageHandler = serverTcpMessageHandler;
         serverTcpMessageHandler.setKyServerCenterHandler(this);
         serverWebMessageHandler.setKyServerCenterHandler(this);
         this.kyDbPresenter = kyDbPresenter;
+    }
+
+    public SendingMsgRepo getSendingMsgRepo() {
+        return sendingMsgRepo;
     }
 
     /**
@@ -52,7 +61,7 @@ public class KyServerCenterHandler {
     boolean deployFreeCard(int groupId, int deviceId, int maxGroupId) {
         String[] freeCards = kyDbPresenter.getCardArray(CardType.FREE);
         IMessage CardMsg = new WebMsgDeployFreeCardNumber(groupId, deviceId, freeCards);
-        return deployGroupedMessage(CardMsg, maxGroupId,  false,  true);
+        return deployGroupedMessage(CardMsg, maxGroupId, false, true);
     }
 
     /**
@@ -63,7 +72,7 @@ public class KyServerCenterHandler {
      */
     private boolean deployGroupedMessage(IMessage message, int maxGroupId, boolean urgent, boolean responsive) {
         boolean groupedGroup = message.getGroupId() == 255 || message.getGroupId() == 0;
-        boolean groupedBox = message.getBoxId() == 255 || message.getBoxId() == 0;
+        boolean groupedBox = message.getDeviceId() == 255 || message.getDeviceId() == 0;
 
 
         if (!groupedGroup && !groupedBox) {
@@ -92,7 +101,7 @@ public class KyServerCenterHandler {
      * @return 是否成功处理
      */
     boolean deployDeviceMsg(IMessage message, int maxGroupId, boolean urgent, boolean responsive) {
-        return deployGroupedMessage(message, maxGroupId,urgent,responsive);
+        return deployGroupedMessage(message, maxGroupId, urgent, responsive);
     }
 
     /**
@@ -125,4 +134,11 @@ public class KyServerCenterHandler {
     boolean marchConfirmCard(String cardNumber) {
         return kyDbPresenter.marchConfirmCard(cardNumber);
     }
+
+    QueueInfo obtainQueueFrame() {
+        int size = getSendingMsgRepo().getLinkedBlockingDeque().size();
+        int capacity = ServerSetting.LINKED_DEQUE_LIMIT_CAPACITY;
+        int interval = ServerSetting.FRAME_SEND_INTERVAL;
+        return new QueueInfo(size, capacity, interval);
+     }
 }

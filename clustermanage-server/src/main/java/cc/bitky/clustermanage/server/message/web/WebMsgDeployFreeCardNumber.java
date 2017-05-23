@@ -33,6 +33,6 @@ public class WebMsgDeployFreeCardNumber extends BaseMessage {
     }
 
     public WebMsgDeployFreeCardNumber kyClone(int groupId) {
-        return new WebMsgDeployFreeCardNumber(groupId, getBoxId(), cardNumbers);
+        return new WebMsgDeployFreeCardNumber(groupId, getDeviceId(), cardNumbers);
     }
 }

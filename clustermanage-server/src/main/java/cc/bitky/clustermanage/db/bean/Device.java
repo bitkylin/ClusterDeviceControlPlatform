@@ -1,15 +1,16 @@
 package cc.bitky.clustermanage.db.bean;
 
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.mapping.Field;
 
 import java.util.Date;
-
-//@Document(collection = "Dev")
+@Document(collection = "Device")
 public class Device {
     /**
      * 员工卡号
      */
-//    @Field("cn")
+    @Field("CardNumber")
     String cardNumber;
 
     @Id
@@ -17,40 +18,36 @@ public class Device {
     /**
      * 员工的 ObjectId
      */
-//    @Field("eoid")
+    @Field("EmployeeObjectId")
     private String employeeObjectId;
     /**
      * 状态改变时的时间
      */
-//    @Field("tie")
-    private Date time;
+    @Field("StatusTime")
+    private Date statusTime;
     /**
      * 当前状态
      */
-//    @Field("sta")
+    @Field("Status")
     private int status = 0;
     /**
      * 组号
      */
- //   @Field("gId")
+    @Field("GroupId")
     private int groupId = -1;
     /**
      * 设备号
      */
- //   @Field("bId")
-    private int boxId = -1;
+    @Field("DeviceId")
+    private int deviceId = -1;
 
- //   @Field("reTime")
+    @Field("RemainChargeTime")
     private int remainChargeTime = 500;
 
-    public Device(int groupId, int boxId) {
+    public Device(int groupId, int deviceId) {
         this.groupId = groupId;
-        this.boxId = boxId;
+        this.deviceId = deviceId;
     }
-
-    public Device() {
-    }
-
 
     public String getId() {
         return id;
@@ -68,12 +65,12 @@ public class Device {
         this.employeeObjectId = employeeObjectId;
     }
 
-    public Date getTime() {
-        return time;
+    public Date getStatusTime() {
+        return statusTime;
     }
 
-    public void setTime(Date time) {
-        this.time = time;
+    public void setStatusTime(Date statusTime) {
+        this.statusTime = statusTime;
     }
 
     public int getStatus() {
@@ -92,12 +89,12 @@ public class Device {
         this.groupId = groupId;
     }
 
-    public int getBoxId() {
-        return boxId;
+    public int getDeviceId() {
+        return deviceId;
     }
 
-    public void setBoxId(int boxId) {
-        this.boxId = boxId;
+    public void setDeviceId(int deviceId) {
+        this.deviceId = deviceId;
     }
 
     public String getCardNumber() {

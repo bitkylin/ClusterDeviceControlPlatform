@@ -6,7 +6,7 @@ import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Repository;
 
-import cc.bitky.clustermanage.db.bean.KySetting;
+import cc.bitky.clustermanage.db.bean.Cards;
 import cc.bitky.clustermanage.db.repository.SettingRepository;
 import cc.bitky.clustermanage.server.message.CardType;
 
@@ -29,20 +29,20 @@ public class DbSettingPresenter {
      * @return 是否保存成功
      */
     boolean saveCardArray(String[] cardArray, CardType card) {
-        KySetting kySetting = settingRepository.findOne("1");
-        if (kySetting == null) {
-            kySetting = new KySetting();
-            kySetting.setId("1");
+        Cards cards = settingRepository.findOne("1");
+        if (cards == null) {
+            cards = new Cards();
+            cards.setId("1");
         }
         switch (card) {
             case FREE:
-                kySetting.setFreeCardList(cardArray);
+                cards.setFreeCardList(cardArray);
                 break;
             case CONFIRM:
-                kySetting.setConfirmCardList(cardArray);
+                cards.setConfirmCardList(cardArray);
                 break;
         }
-        settingRepository.save(kySetting);
+        settingRepository.save(cards);
         return true;
     }
 
@@ -52,7 +52,7 @@ public class DbSettingPresenter {
      * @return 卡号的集合
      */
     String[] getCardArray(CardType card) {
-        KySetting kyKySettings = settingRepository.findOne("1");
+        Cards kyKySettings = settingRepository.findOne("1");
         if (kyKySettings == null) return new String[0];
         String[] cards;
         switch (card) {
@@ -74,6 +74,6 @@ public class DbSettingPresenter {
      */
     boolean marchConfirmCard(String cardNumber) {
         Query query = new Query(Criteria.where("id").is("1").and("confirmCardList").is(cardNumber));
-        return operations.exists(query, KySetting.class);
+        return operations.exists(query, Cards.class);
     }
 }

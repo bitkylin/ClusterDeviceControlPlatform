@@ -8,9 +8,9 @@ import cc.bitky.clustermanage.db.bean.Device;
 
 public interface DeviceRepository extends MongoRepository<Device, String> {
 
-    Device findFirstByGroupIdAndBoxId(int groupId, int boxId);
+    Device findFirstByGroupIdAndDeviceId(int GroupId, int DeviceId);
 
-    List<Device> findByGroupId(int groupId);
+    List<Device> findByGroupId(int GroupId);
 
-    Device findFirstByCardNumber(long cardNumber);
+    Device findFirstByCardNumber(String CardNumber);
 }

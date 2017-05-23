@@ -25,19 +25,17 @@ import cc.bitky.clustermanage.tcp.server.netty.SendWebMessagesListener;
 @Service
 public class ServerTcpMessageHandler {
     private final KyDbPresenter kyDbPresenter;
-    private final SendingMsgRepo sendingMsgRepo;
     private Logger logger = LoggerFactory.getLogger(getClass());
     private SendWebMessagesListener sendWebMessagesListener;
     private KyServerCenterHandler kyServerCenterHandler;
 
     @Autowired
-    public ServerTcpMessageHandler(KyDbPresenter kyDbPresenter, SendingMsgRepo sendingMsgRepo) {
+    public ServerTcpMessageHandler(KyDbPresenter kyDbPresenter) {
         this.kyDbPresenter = kyDbPresenter;
-        this.sendingMsgRepo = sendingMsgRepo;
     }
 
     public SendingMsgRepo getSendingMsgRepo() {
-        return sendingMsgRepo;
+        return kyServerCenterHandler.getSendingMsgRepo();
     }
 
     /**
@@ -48,7 +46,7 @@ public class ServerTcpMessageHandler {
     public void handleResDeviceStatus(TcpMsgResponseStatus message) {
         logger.info("");
         logger.info("");
-        logger.info("***********进入功能消息处理方法「" + message.getGroupId() + ", " + message.getBoxId() + "」***********");
+        logger.info("***********进入功能消息处理方法「" + message.getGroupId() + ", " + message.getDeviceId() + "」***********");
         if (message.getResSource() == TcpMsgResponseStatus.ResSource.SERVER)
             logger.info("收到：服务器监测到的设备状态");
         else
@@ -81,7 +79,7 @@ public class ServerTcpMessageHandler {
         if (device.getRemainChargeTime() <= ServerSetting.DEPLOY_REMAIN_CHARGE_TIMES) {
             int remainTimes = device.getRemainChargeTime();
             remainTimes = remainTimes > 0 ? remainTimes : 0;
-            sendMsgToTcpSpecial(new WebMsgDeployRemainChargeTimes(device.getGroupId(), device.getBoxId(), remainTimes), true, true);
+            sendMsgToTcpSpecial(new WebMsgDeployRemainChargeTimes(device.getGroupId(), device.getDeviceId(), remainTimes), true, true);
         }
     }
 
@@ -93,7 +91,7 @@ public class ServerTcpMessageHandler {
     public void handleTcpResponseMsg(BaseTcpResponseMsg message) {
         logger.info("");
         logger.info("");
-        logger.info("***********进入常规回复消息处理方法「" + message.getGroupId() + ", " + message.getBoxId()
+        logger.info("***********进入常规回复消息处理方法「" + message.getGroupId() + ", " + message.getDeviceId()
                 + ", " + message.getMsgId() + "『" + message.getStatus() + "』」***********");
         switch (message.getMsgId()) {
             case MsgType.DEVICE_RESPONSE_REMAIN_CHARGE_TIMES:
@@ -126,11 +124,11 @@ public class ServerTcpMessageHandler {
         if (message.getMsgId() > 0x40 && message.getMsgId() <= 0x4F) {
             if (message.getStatus() == 1) {
                 byte groupId = (byte) message.getGroupId();
-                byte boxId = (byte) message.getBoxId();
+                byte boxId = (byte) message.getDeviceId();
                 byte msgId = (byte) (message.getMsgId() - 48);
 
                 MsgKey msgKey = new MsgKey(groupId, boxId, msgId);
-                if (sendingMsgRepo.getMsgHashMap().remove(msgKey) != null) {
+                if (getSendingMsgRepo().getMsgHashMap().remove(msgKey) != null) {
                     logger.info("已从哈希表移除");
                 } else {
                     logger.info("哈希表无该 Key");
@@ -142,11 +140,11 @@ public class ServerTcpMessageHandler {
         if (message.getMsgId() >= ((byte) 0x80) && message.getMsgId() <= ((byte) 0x8F)) {
             if (message.getStatus() == 1) {
                 byte groupId = (byte) message.getGroupId();
-                byte boxId = (byte) message.getBoxId();
+                byte boxId = (byte) message.getDeviceId();
                 byte msgId = (byte) ((message.getMsgId() & 0x0F) + 0x70);
 
                 MsgKey msgKey = new MsgKey(groupId, boxId, msgId);
-                if (sendingMsgRepo.getMsgHashMap().remove(msgKey) != null) {
+                if (getSendingMsgRepo().getMsgHashMap().remove(msgKey) != null) {
                     logger.info("已从哈希表移除");
                 } else {
                     logger.info("哈希表无该 Key");
@@ -164,7 +162,7 @@ public class ServerTcpMessageHandler {
     public void handleTcpInitMsg(IMessage message) {
         logger.info("");
         logger.info("");
-        logger.info("***********进入初始化消息处理方法「" + message.getGroupId() + ", " + message.getBoxId()
+        logger.info("***********进入初始化消息处理方法「" + message.getGroupId() + ", " + message.getDeviceId()
                 + ", " + message.getMsgId() + "」***********");
 
         //从数据库中匹配员工卡号或确认卡号，获取相应信息并发送至 Netty 的 Handler
@@ -188,15 +186,15 @@ public class ServerTcpMessageHandler {
 
         //卡号初始化为 0，故排除掉 0 以避免错误
         if (msgInitCard.getCardNumber().equals("0000000000000000")) {
-            sendMsgToTcpSpecial(new WebMsgInitMarchConfirmCardResponse(msgInitCard.getGroupId(), msgInitCard.getBoxId(), false), true, false);
+            sendMsgToTcpSpecial(new WebMsgInitMarchConfirmCardResponse(msgInitCard.getGroupId(), msgInitCard.getDeviceId(), false), true, false);
             return;
         }
 
 
         if (kyServerCenterHandler.marchConfirmCard(msgInitCard.getCardNumber())) {
-            sendMsgToTcpSpecial(new WebMsgInitMarchConfirmCardResponse(msgInitCard.getGroupId(), msgInitCard.getBoxId(), true), true, false);
+            sendMsgToTcpSpecial(new WebMsgInitMarchConfirmCardResponse(msgInitCard.getGroupId(), msgInitCard.getDeviceId(), true), true, false);
         } else {
-            sendMsgToTcpSpecial(new WebMsgInitMarchConfirmCardResponse(msgInitCard.getGroupId(), msgInitCard.getBoxId(), false), true, false);
+            sendMsgToTcpSpecial(new WebMsgInitMarchConfirmCardResponse(msgInitCard.getGroupId(), msgInitCard.getDeviceId(), false), true, false);
         }
     }
 
@@ -225,8 +223,8 @@ public class ServerTcpMessageHandler {
      * @return 是否发送成功或添加时间轮成功
      */
     boolean sendMsgTrafficControl(IMessage message) {
-        if (sendingMsgRepo.getLinkedBlockingDeque().size() > ServerSetting.LINKED_DEQUE_LIMIT_CAPACITY) {
-            sendingMsgRepo.getHashedWheelTimer()
+        if (getSendingMsgRepo().getLinkedBlockingDeque().size() > ServerSetting.LINKED_DEQUE_LIMIT_CAPACITY) {
+            getSendingMsgRepo().getHashedWheelTimer()
                     .newTimeout(timeout -> sendMsgTrafficControl(message), ServerSetting.COMMAND_DELAY_WAITING_TIME, TimeUnit.SECONDS);
             return true;
         }

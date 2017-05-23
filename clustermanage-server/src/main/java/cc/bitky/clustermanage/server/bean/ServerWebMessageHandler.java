@@ -16,6 +16,7 @@ import cc.bitky.clustermanage.server.message.base.IMessage;
 import cc.bitky.clustermanage.server.message.web.WebMsgDeployEmployeeCardNumber;
 import cc.bitky.clustermanage.server.message.web.WebMsgDeployEmployeeDepartment;
 import cc.bitky.clustermanage.server.message.web.WebMsgDeployEmployeeName;
+import cc.bitky.clustermanage.web.bean.QueueInfo;
 
 @Service
 public class ServerWebMessageHandler {
@@ -148,23 +149,29 @@ public class ServerWebMessageHandler {
         if (device == null) return;
 
         if (cardNumber && device.getCardNumber() != null)
-            kyServerCenterHandler.sendMsgTrafficControl(new WebMsgDeployEmployeeCardNumber(device.getGroupId(), device.getBoxId(), device.getCardNumber()));
+            kyServerCenterHandler.sendMsgTrafficControl(new WebMsgDeployEmployeeCardNumber(device.getGroupId(), device.getDeviceId(), device.getCardNumber()));
         else if (cardNumber && autoInit)
-            kyServerCenterHandler.sendMsgTrafficControl(new WebMsgDeployEmployeeCardNumber(device.getGroupId(), device.getBoxId(), "0"));
+            kyServerCenterHandler.sendMsgTrafficControl(new WebMsgDeployEmployeeCardNumber(device.getGroupId(), device.getDeviceId(), ServerSetting.DEFAULT_EMPLOYEE_CARD_NUMBER));
+
 
         if (!(name || department)) return;
         Employee employee = kyDbPresenter.obtainEmployeeByEmployeeObjectId(device.getEmployeeObjectId());
 
         if (employee != null) {
             if (name)
-                kyServerCenterHandler.sendMsgTrafficControl(new WebMsgDeployEmployeeName(device.getGroupId(), device.getBoxId(), employee.getName()));
+                kyServerCenterHandler.sendMsgTrafficControl(new WebMsgDeployEmployeeName(device.getGroupId(), device.getDeviceId(), employee.getName()));
             if (department)
-                kyServerCenterHandler.sendMsgTrafficControl(new WebMsgDeployEmployeeDepartment(device.getGroupId(), device.getBoxId(), employee.getDepartment()));
+                kyServerCenterHandler.sendMsgTrafficControl(new WebMsgDeployEmployeeDepartment(device.getGroupId(), device.getDeviceId(), employee.getDepartment()));
         } else if (autoInit) {
             if (name)
-                kyServerCenterHandler.sendMsgTrafficControl(new WebMsgDeployEmployeeName(device.getGroupId(), device.getBoxId(), "备用"));
+                kyServerCenterHandler.sendMsgTrafficControl(new WebMsgDeployEmployeeName(device.getGroupId(), device.getDeviceId(), ServerSetting.DEFAULT_EMPLOYEE_NAME));
             if (department)
-                kyServerCenterHandler.sendMsgTrafficControl(new WebMsgDeployEmployeeDepartment(device.getGroupId(), device.getBoxId(), "默认单位"));
+                kyServerCenterHandler.sendMsgTrafficControl(new WebMsgDeployEmployeeDepartment(device.getGroupId(), device.getDeviceId(), ServerSetting.DEFAULT_EMPLOYEE_DEPARTMENT));
         }
+    }
+
+    public QueueInfo obtainQueueFrame() {
+        return kyServerCenterHandler.obtainQueueFrame();
+
     }
 }
