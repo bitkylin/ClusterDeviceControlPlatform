@@ -21,25 +21,22 @@ import cc.bitky.clustermanage.server.message.web.WebMsgObtainDeviceStatus;
 import cc.bitky.clustermanage.server.message.web.WebMsgOperateBoxUnlock;
 import cc.bitky.clustermanage.tcp.util.TcpMsgBuilder;
 import io.netty.channel.ChannelHandler;
-import io.netty.channel.ChannelHandlerContext;
-import io.netty.channel.ChannelOutboundHandlerAdapter;
-import io.netty.channel.ChannelPromise;
 
 @Service
 @ChannelHandler.Sharable
-public class WebMsgOutBoundHandler extends ChannelOutboundHandlerAdapter {
+public class WebMsgOutBoundHandler  {
 
     private final TcpMsgBuilder tcpMsgBuilder;
+    private final QueuingOutBoundHandler queuingOutBoundHandler;
     private Logger logger = LoggerFactory.getLogger(getClass());
 
     @Autowired
-    public WebMsgOutBoundHandler(TcpMsgBuilder tcpMsgBuilder) {
+    public WebMsgOutBoundHandler(TcpMsgBuilder tcpMsgBuilder, QueuingOutBoundHandler queuingOutBoundHandler) {
         this.tcpMsgBuilder = tcpMsgBuilder;
+        this.queuingOutBoundHandler = queuingOutBoundHandler;
     }
 
-    @Override
-    public void write(ChannelHandlerContext ctx, Object msg, ChannelPromise promise) throws Exception {
-        IMessage message = (IMessage) msg;
+    public void write(IMessage message) {
         logger.info("Netty 通道获取 Message「" + message.getGroupId() + ", " + message.getDeviceId() + ", " + message.getMsgId() + "」");
 
         if (message.getMsgId() == MsgType.SERVER_SEND_SPECIAL) {
@@ -52,30 +49,29 @@ public class WebMsgOutBoundHandler extends ChannelOutboundHandlerAdapter {
                         for (int k = 1; k <= msgSpecial.getMaxGroupId(); k++) {
                             baseMsgSpecial.setDeviceId(j);
                             baseMsgSpecial.setGroupId(k);
-                            unpackComplexMsgToTcp(ctx, baseMsgSpecial, msgSpecial.isUrgent(), msgSpecial.isResponsive());
+                            unpackComplexMsgToTcp( baseMsgSpecial, msgSpecial.isUrgent(), msgSpecial.isResponsive());
                         }
                     }
                 } else {
                     for (int j = 1; j <= msgSpecial.getMaxBoxId(); j++) {
                         baseMsgSpecial.setDeviceId(j);
-                        unpackComplexMsgToTcp(ctx, baseMsgSpecial, msgSpecial.isUrgent(), msgSpecial.isResponsive());
+                        unpackComplexMsgToTcp(baseMsgSpecial, msgSpecial.isUrgent(), msgSpecial.isResponsive());
                     }
                 }
             } else {
-                unpackComplexMsgToTcp(ctx, baseMsgSpecial, msgSpecial.isUrgent(), msgSpecial.isResponsive());
+                unpackComplexMsgToTcp( baseMsgSpecial, msgSpecial.isUrgent(), msgSpecial.isResponsive());
             }
         } else {
-            unpackComplexMsgToTcp(ctx, message, false, true);
+            unpackComplexMsgToTcp( message, false, true);
         }
     }
 
     /**
      * 将非成组的特殊 Message 转化为 byte[] -> SendableMsg 并传入下一级通道
      *
-     * @param ctx     上下文
      * @param message 信息 bean
      */
-    private void unpackComplexMsgToTcp(ChannelHandlerContext ctx, IMessage message, boolean urgent, boolean responsive) {
+    private void unpackComplexMsgToTcp( IMessage message, boolean urgent, boolean responsive) {
         switch (message.getMsgId()) {
             case MsgType.SERVER_SET_EMPLOYEE_DEPARTMENT_1:
                 byte[] bytesDepartment = buildByMessage(message);
@@ -83,8 +79,8 @@ public class WebMsgOutBoundHandler extends ChannelOutboundHandlerAdapter {
                 byte[] bytesD2 = new byte[13];
                 System.arraycopy(bytesDepartment, 0, bytesD1, 0, 13);
                 System.arraycopy(bytesDepartment, 13, bytesD2, 0, 13);
-                deployWriteTcpSpecial(ctx, bytesD1, urgent, responsive);
-                deployWriteTcpSpecial(ctx, bytesD2, urgent, responsive);
+                deployWriteTcpSpecial( bytesD1, urgent, responsive);
+                deployWriteTcpSpecial( bytesD2, urgent, responsive);
                 return;
 
             case MsgType.SERVER_SET_FREE_CARD_NUMBER:
@@ -94,19 +90,18 @@ public class WebMsgOutBoundHandler extends ChannelOutboundHandlerAdapter {
                     byte[] bytesF = new byte[13];
                     System.arraycopy(bytesFree, 13 * i, bytesF, 0, 13);
                     bytesF[0] += 8;
-                    deployWriteTcpSpecial(ctx, bytesF, urgent, responsive);
+                    deployWriteTcpSpecial( bytesF, urgent, responsive);
                 }
                 return;
         }
-        deployWriteTcpSpecial(ctx, buildByMessage(message), urgent, responsive);
+        deployWriteTcpSpecial(buildByMessage(message), urgent, responsive);
     }
 
     /**
      * 「特殊的的」将 byte[] 转化为 SendableMsg 并传入下一级写出通道
      *
-     * @param ctx 上下文
      */
-    private void deployWriteTcpSpecial(ChannelHandlerContext ctx, byte[] bytes, boolean urgent, boolean responsive) {
+    private void deployWriteTcpSpecial(byte[] bytes, boolean urgent, boolean responsive) {
         if (bytes == null || bytes.length == 0) {
             logger.info("未生成 CAN 帧，该 Message 被丢弃");
             return;
@@ -114,7 +109,7 @@ public class WebMsgOutBoundHandler extends ChannelOutboundHandlerAdapter {
         SendableMsg sendableMsg = new SendableMsg(bytes);
         sendableMsg.setUrgent(urgent);
         sendableMsg.setResponsive(responsive);
-        ctx.write(sendableMsg);
+        queuingOutBoundHandler.write(sendableMsg);
     }
 
     private byte[] buildByMessage(IMessage message) {

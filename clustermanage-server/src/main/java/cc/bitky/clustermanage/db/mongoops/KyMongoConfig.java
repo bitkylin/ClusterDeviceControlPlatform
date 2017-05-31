@@ -7,7 +7,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.data.mongodb.MongoDbFactory;
 import org.springframework.data.mongodb.core.SimpleMongoDbFactory;
 
-import cc.bitky.clustermanage.ServerSetting;
+import cc.bitky.clustermanage.global.ServerSetting;
 
 @Configuration
 public class KyMongoConfig {

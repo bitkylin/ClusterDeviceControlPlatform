@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-import cc.bitky.clustermanage.ServerSetting;
+import cc.bitky.clustermanage.global.ServerSetting;
 import cc.bitky.clustermanage.db.bean.Device;
 import cc.bitky.clustermanage.db.bean.Employee;
 import cc.bitky.clustermanage.db.presenter.KyDbPresenter;
@@ -158,10 +158,15 @@ public class ServerWebMessageHandler {
         Employee employee = kyDbPresenter.obtainEmployeeByEmployeeObjectId(device.getEmployeeObjectId());
 
         if (employee != null) {
-            if (name)
+            if (name && employee.getName() != null)
                 kyServerCenterHandler.sendMsgTrafficControl(new WebMsgDeployEmployeeName(device.getGroupId(), device.getDeviceId(), employee.getName()));
-            if (department)
+            else if (name && autoInit)
+                kyServerCenterHandler.sendMsgTrafficControl(new WebMsgDeployEmployeeName(device.getGroupId(), device.getDeviceId(), ServerSetting.DEFAULT_EMPLOYEE_NAME));
+            if (department && employee.getDepartment() != null)
                 kyServerCenterHandler.sendMsgTrafficControl(new WebMsgDeployEmployeeDepartment(device.getGroupId(), device.getDeviceId(), employee.getDepartment()));
+            else if (department && autoInit)
+                kyServerCenterHandler.sendMsgTrafficControl(new WebMsgDeployEmployeeDepartment(device.getGroupId(), device.getDeviceId(), ServerSetting.DEFAULT_EMPLOYEE_DEPARTMENT));
+
         } else if (autoInit) {
             if (name)
                 kyServerCenterHandler.sendMsgTrafficControl(new WebMsgDeployEmployeeName(device.getGroupId(), device.getDeviceId(), ServerSetting.DEFAULT_EMPLOYEE_NAME));

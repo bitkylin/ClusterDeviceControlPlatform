@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.concurrent.TimeUnit;
 
-import cc.bitky.clustermanage.ServerSetting;
+import cc.bitky.clustermanage.global.ServerSetting;
 import cc.bitky.clustermanage.db.bean.Device;
 import cc.bitky.clustermanage.db.presenter.KyDbPresenter;
 import cc.bitky.clustermanage.server.message.MsgType;

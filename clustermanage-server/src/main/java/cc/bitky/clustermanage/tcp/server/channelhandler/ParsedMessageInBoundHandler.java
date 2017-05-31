@@ -2,7 +2,6 @@ package cc.bitky.clustermanage.tcp.server.channelhandler;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import cc.bitky.clustermanage.server.bean.ServerTcpMessageHandler;
@@ -16,16 +15,15 @@ import io.netty.channel.SimpleChannelInboundHandler;
 @Service
 @ChannelHandler.Sharable
 public class ParsedMessageInBoundHandler extends SimpleChannelInboundHandler<IMessage> {
-    private final ServerTcpMessageHandler serverTcpMessageHandler;
+    private ServerChannelInitializer serverChannelInitializer;
     private Logger logger = LoggerFactory.getLogger(this.getClass());
 
-    @Autowired
-    public ParsedMessageInBoundHandler(ServerTcpMessageHandler serverTcpMessageHandler) {
-        this.serverTcpMessageHandler = serverTcpMessageHandler;
+    public void setServerChannelInitializer(ServerChannelInitializer serverChannelInitializer) {
+        this.serverChannelInitializer = serverChannelInitializer;
     }
 
     ServerTcpMessageHandler getServerTcpMessageHandler() {
-        return serverTcpMessageHandler;
+        return serverChannelInitializer.getServerTcpMessageHandler();
     }
 
     @Override
@@ -36,17 +34,17 @@ public class ParsedMessageInBoundHandler extends SimpleChannelInboundHandler<IMe
 
         //将常规回复帧信息传入「常规回复信息处理方法」
         if (msg.getMsgId() > 0x40 && msg.getMsgId() <= 0x4F) {
-            serverTcpMessageHandler.handleTcpResponseMsg((BaseTcpResponseMsg) msg);
+            getServerTcpMessageHandler().handleTcpResponseMsg((BaseTcpResponseMsg) msg);
             return;
         }
 
         if (msg.getMsgId() >= ((byte) 0x80) && msg.getMsgId() <= ((byte) 0x8F)) {
-            serverTcpMessageHandler.handleTcpResponseMsg((BaseTcpResponseMsg) msg);
+            getServerTcpMessageHandler().handleTcpResponseMsg((BaseTcpResponseMsg) msg);
             return;
         }
 
         if (msg.getMsgId() == 0x40) {
-            serverTcpMessageHandler.handleResDeviceStatus((TcpMsgResponseStatus) msg);
+            getServerTcpMessageHandler().handleResDeviceStatus((TcpMsgResponseStatus) msg);
             return;
         }
 
@@ -54,11 +52,11 @@ public class ParsedMessageInBoundHandler extends SimpleChannelInboundHandler<IMe
         byte a0 = (byte) 0xA0;
         byte af = (byte) 0xAF;
         if (msg.getMsgId() >= a0 && msg.getMsgId() <= af) {
-            serverTcpMessageHandler.handleTcpInitMsg(msg);
+            getServerTcpMessageHandler().handleTcpInitMsg(msg);
             return;
         }
 
         //将其余功能帧信息传入「功能信息处理方法」
-        serverTcpMessageHandler.handleTcpMsg(msg);
+        getServerTcpMessageHandler().handleTcpMsg(msg);
     }
 }

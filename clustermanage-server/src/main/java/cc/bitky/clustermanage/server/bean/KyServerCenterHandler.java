@@ -3,7 +3,7 @@ package cc.bitky.clustermanage.server.bean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import cc.bitky.clustermanage.ServerSetting;
+import cc.bitky.clustermanage.global.ServerSetting;
 import cc.bitky.clustermanage.db.presenter.KyDbPresenter;
 import cc.bitky.clustermanage.server.message.CardType;
 import cc.bitky.clustermanage.server.message.base.IMessage;

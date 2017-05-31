@@ -50,12 +50,12 @@ class DbDevicePresenter {
         int newStatus = msgStatus.getStatus();
         if (newStatus > 5 || newStatus < 0) newStatus = 6;
 
-        if (rawStatus >= 5) {
-            logger.info("设备「" + msgStatus.getGroupId() + ", " + msgStatus.getDeviceId() + "」『"
-                    + rawStatus + "->" + newStatus + "』: 状态无法更改");
-            device.setStatus(-1);
-            return device;
-        }
+//        if (rawStatus >= 5) {
+//            logger.info("设备「" + msgStatus.getGroupId() + ", " + msgStatus.getDeviceId() + "」『"
+//                    + rawStatus + "->" + newStatus + "』: 状态无法更改");
+//            device.setStatus(-1);
+//            return device;
+//        }
 
         if (newStatus == rawStatus) {
             logger.info("设备「" + msgStatus.getGroupId() + ", " + msgStatus.getDeviceId() + "」『"

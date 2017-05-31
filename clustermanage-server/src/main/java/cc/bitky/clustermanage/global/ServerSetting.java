@@ -1,4 +1,4 @@
-package cc.bitky.clustermanage;
+package cc.bitky.clustermanage.global;
 
 public class ServerSetting {
 
@@ -27,7 +27,7 @@ public class ServerSetting {
     /**
      * 当设备中记录的剩余充电次数小于该值时，则向设备发送剩余充电次数
      */
-    public static final int DEPLOY_REMAIN_CHARGE_TIMES = 20;
+    public static int DEPLOY_REMAIN_CHARGE_TIMES = 20;
     /**
      * 待发送缓冲双端队列的限定容量，当队列中存在的 Message 大于该值时，使用时间轮延时向队列添加 Message
      */
@@ -38,7 +38,7 @@ public class ServerSetting {
     /**
      * 待发送缓冲队列中，帧发送间隔「单位/ms」
      */
-    public static final int FRAME_SEND_INTERVAL = 20;
+    public static int FRAME_SEND_INTERVAL = 50;
     /**
      * 已发送帧后，在该间隔时间后，检测接收回复帧的状态，用于检错重发功能「单位/s」
      */
@@ -52,7 +52,7 @@ public class ServerSetting {
     /**
      * 项目版本号
      */
-    public static final String VERSION = "0.8.6";
+    public static final String VERSION = "0.9.1";
     /**
      * 主机名
      */
@@ -60,5 +60,7 @@ public class ServerSetting {
     /**
      * 数据库
      */
-    public static String DATABASE = "ChargeDevice";
+    public static final String DATABASE = "ChargeDevice";
+    public static final String CONFIG_FILE_PATH = "setting.json";
+
 }
