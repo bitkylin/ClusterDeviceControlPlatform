@@ -1,37 +1,40 @@
 package cc.bitky.clustermanage.db.mongoops;
 
+import com.mongodb.Mongo;
 import com.mongodb.MongoClient;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.data.mongodb.MongoDbFactory;
-import org.springframework.data.mongodb.core.SimpleMongoDbFactory;
+import org.springframework.data.mongodb.config.AbstractMongoConfiguration;
+import org.springframework.data.mongodb.core.convert.DefaultMongoTypeMapper;
+import org.springframework.data.mongodb.core.convert.MappingMongoConverter;
 
 import cc.bitky.clustermanage.global.ServerSetting;
 
 @Configuration
-public class KyMongoConfig {
+public class KyMongoConfig extends AbstractMongoConfiguration {
+//
+//    @Bean
+//    public MongoClient mongoClient() {
+//        return new MongoClient(ServerSetting.HOST);
+//    }
 
     @Bean
-    public MongoClient mongoClient() {
+    @Override
+    public MappingMongoConverter mappingMongoConverter() throws Exception {
+        MappingMongoConverter mmc = super.mappingMongoConverter();
+        //remove _class
+        mmc.setTypeMapper(new DefaultMongoTypeMapper(null));
+        return mmc;
+    }
+
+    @Override
+    protected String getDatabaseName() {
+        return ServerSetting.DATABASE;
+    }
+
+    @Override
+    public Mongo mongo() throws Exception {
         return new MongoClient(ServerSetting.HOST);
     }
-
-    @Bean
-    public MongoDbFactory mongoDbFactory() throws Exception {
-        return new SimpleMongoDbFactory(mongoClient(), ServerSetting.DATABASE);
-    }
-
-
-//    public @Bean
-//    MongoClientFactoryBean mongo() {
-//        MongoClientFactoryBean mongo = new MongoClientFactoryBean();
-//        mongo.setHost("localhost");
-//
-//        return mongo;
-//    }
-//    @Bean
-//    public MongoOperations mongoTemplate() {
-//        return new MongoTemplate(mongoClient(), "bitky");
-//    }
 }

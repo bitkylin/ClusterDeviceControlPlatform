@@ -3,15 +3,12 @@ package cc.bitky.clustermanage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.Scanner;
-
 import cc.bitky.clustermanage.netty.NettyClient;
 import cc.bitky.clustermanage.view.MainView;
 
 public class NettyLauncher {
     private static Logger logger = LoggerFactory.getLogger(NettyLauncher.class);
     private static NettyLauncher nettyLauncher;
-    private Scanner scanner = new Scanner(System.in);
     private NettyClient nettyClient;
 
     private NettyLauncher() {
@@ -28,7 +25,7 @@ public class NettyLauncher {
             MainView.getInstance().setLabelConnStatus(isSuccess);
         });
         nettyClient.setFinishSuccessfulListener(isSuccess -> {
-            System.out.println("客户端优雅关闭成功");
+            logger.info("客户端优雅关闭成功");
             System.exit(0);
         });
         nettyClient.start(hostName, port);
@@ -38,5 +35,4 @@ public class NettyLauncher {
         if (nettyClient != null)
             nettyClient.shutdown();
     }
-
 }
