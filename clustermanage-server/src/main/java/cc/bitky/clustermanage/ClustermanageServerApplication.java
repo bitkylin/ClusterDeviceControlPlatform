@@ -30,8 +30,15 @@ public class ClusterManageServerApplication {
     private static void initSetting() {
         ExSetting exSetting = null;
         try {
-            String readStr = new String(Files.readAllBytes(Paths.get(ServerSetting.CONFIG_FILE_PATH)), StandardCharsets.UTF_8);
-            exSetting = JSON.parseObject(readStr, ExSetting.class);
+            String[] strings = new String(Files.readAllBytes(Paths.get(ServerSetting.CONFIG_FILE_PATH)), StandardCharsets.UTF_8).split("\r\n");
+            StringBuilder builder = new StringBuilder();
+            builder.append("{");
+            for (String string : strings) {
+                if (string.startsWith("!")) continue;
+                builder.append(string);
+            }
+            builder.append("}");
+            exSetting = JSON.parseObject(builder.toString(), ExSetting.class);
         } catch (IOException e) {
             logger.info("「外部配置文件」未能读取到配置文件");
         } catch (JSONException e) {

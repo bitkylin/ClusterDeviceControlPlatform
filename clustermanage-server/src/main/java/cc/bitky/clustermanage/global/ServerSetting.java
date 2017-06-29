@@ -61,6 +61,5 @@ public class ServerSetting {
      * 数据库
      */
     public static final String DATABASE = "ChargeDevice";
-    public static final String CONFIG_FILE_PATH = "setting.json";
-
+    public static final String CONFIG_FILE_PATH = "setting.ini";
 }

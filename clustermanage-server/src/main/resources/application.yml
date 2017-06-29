@@ -7,3 +7,5 @@ debug: false
 logging:
   level:
     root: info
+server:
+  port: 8080
