@@ -7,9 +7,9 @@ import org.springframework.stereotype.Service;
 
 import java.util.concurrent.TimeUnit;
 
-import cc.bitky.clustermanage.global.ServerSetting;
 import cc.bitky.clustermanage.db.bean.Device;
 import cc.bitky.clustermanage.db.presenter.KyDbPresenter;
+import cc.bitky.clustermanage.global.ServerSetting;
 import cc.bitky.clustermanage.server.message.MsgType;
 import cc.bitky.clustermanage.server.message.base.BaseTcpResponseMsg;
 import cc.bitky.clustermanage.server.message.base.IMessage;
@@ -21,6 +21,7 @@ import cc.bitky.clustermanage.server.message.web.WebMsgInitMarchConfirmCardRespo
 import cc.bitky.clustermanage.server.schedule.MsgKey;
 import cc.bitky.clustermanage.server.schedule.SendingMsgRepo;
 import cc.bitky.clustermanage.tcp.server.netty.SendWebMessagesListener;
+import io.netty.util.internal.StringUtil;
 
 @Service
 public class ServerTcpMessageHandler {
@@ -92,7 +93,7 @@ public class ServerTcpMessageHandler {
         logger.info("");
         logger.info("");
         logger.info("***********进入常规回复消息处理方法「" + message.getGroupId() + ", " + message.getDeviceId()
-                + ", " + message.getMsgId() + "『" + message.getStatus() + "』」***********");
+                + ", " + StringUtil.byteToHexStringPadded(message.getMsgId()) + "『" + message.getStatus() + "』」***********");
         switch (message.getMsgId()) {
             case MsgType.DEVICE_RESPONSE_REMAIN_CHARGE_TIMES:
                 logger.info("收到：充电次数回复");
@@ -163,7 +164,7 @@ public class ServerTcpMessageHandler {
         logger.info("");
         logger.info("");
         logger.info("***********进入初始化消息处理方法「" + message.getGroupId() + ", " + message.getDeviceId()
-                + ", " + message.getMsgId() + "」***********");
+                + ", " + StringUtil.byteToHexStringPadded(message.getMsgId()) + "」***********");
 
         //从数据库中匹配员工卡号或确认卡号，获取相应信息并发送至 Netty 的 Handler
         if (message.getMsgId() == MsgType.INITIALIZE_DEVICE_RESPONSE_CARD) {
@@ -230,6 +231,7 @@ public class ServerTcpMessageHandler {
         }
         return sendMsgToTcp(message);
     }
+
     /**
      * 直接将 Message 发送至 Netty 的处理通道
      *
@@ -243,7 +245,6 @@ public class ServerTcpMessageHandler {
         }
         return sendWebMessagesListener.sendMessagesToTcp(message);
     }
-
 
     void setKyServerCenterHandler(KyServerCenterHandler kyServerCenterHandler) {
         this.kyServerCenterHandler = kyServerCenterHandler;
