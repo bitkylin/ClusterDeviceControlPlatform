@@ -45,7 +45,7 @@ public class WebMsgOutBoundHandler  {
             IMessage baseMsgSpecial = msgSpecial.getMessage();
             if (msgSpecial.isGrouped()) {
                 if (msgSpecial.getMaxGroupId() > 0) {
-                    for (int j = 1; j <= msgSpecial.getMaxBoxId(); j++) {
+                    for (int j = 1; j <= msgSpecial.getMaxDeviceId(); j++) {
                         for (int k = 1; k <= msgSpecial.getMaxGroupId(); k++) {
                             baseMsgSpecial.setDeviceId(j);
                             baseMsgSpecial.setGroupId(k);
@@ -53,7 +53,7 @@ public class WebMsgOutBoundHandler  {
                         }
                     }
                 } else {
-                    for (int j = 1; j <= msgSpecial.getMaxBoxId(); j++) {
+                    for (int j = 1; j <= msgSpecial.getMaxDeviceId(); j++) {
                         baseMsgSpecial.setDeviceId(j);
                         unpackComplexMsgToTcp(baseMsgSpecial, msgSpecial.isUrgent(), msgSpecial.isResponsive());
                     }

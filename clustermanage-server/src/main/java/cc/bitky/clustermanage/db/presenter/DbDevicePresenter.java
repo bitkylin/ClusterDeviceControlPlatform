@@ -48,7 +48,7 @@ class DbDevicePresenter {
         if (device == null) return null;
         int rawStatus = device.getStatus();
         int newStatus = msgStatus.getStatus();
-        if (newStatus > 5 || newStatus < 0) newStatus = 6;
+        if (newStatus > 6 || newStatus < 0) newStatus = 50;
 
 //        if (rawStatus >= 5) {
 //            logger.info("设备「" + msgStatus.getGroupId() + ", " + msgStatus.getDeviceId() + "」『"

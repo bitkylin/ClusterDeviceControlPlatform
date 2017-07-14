@@ -3,11 +3,11 @@ package cc.bitky.clustermanage.server.schedule;
 public class MsgKey {
     private byte msgId;
     private byte groupId;
-    private byte boxId;
+    private byte deviceId;
 
-    public MsgKey(byte groupId, byte boxId, byte msgId) {
+    public MsgKey(byte groupId, byte deviceId, byte msgId) {
         this.groupId = groupId;
-        this.boxId = boxId;
+        this.deviceId = deviceId;
         this.msgId = msgId;
     }
 
@@ -23,14 +23,14 @@ public class MsgKey {
 
         MsgKey msgKey = (MsgKey) o;
 
-        return msgId == msgKey.msgId && groupId == msgKey.groupId && boxId == msgKey.boxId;
+        return msgId == msgKey.msgId && groupId == msgKey.groupId && deviceId == msgKey.deviceId;
     }
 
     @Override
     public int hashCode() {
         int result = msgId & 0xff;
         result = 31 * result + (groupId & 0xff);
-        result = 31 * result + (boxId & 0xff);
+        result = 31 * result + (deviceId & 0xff);
         return result;
     }
 
@@ -42,8 +42,8 @@ public class MsgKey {
         return groupId;
     }
 
-    public byte getBoxId() {
-        return boxId;
+    public byte getDeviceId() {
+        return deviceId;
     }
 
     @Override
@@ -51,7 +51,7 @@ public class MsgKey {
         return "MsgKey{" +
                 "msgId=" + msgId +
                 ", groupId=" + groupId +
-                ", boxId=" + boxId +
+                ", deviceId=" + deviceId +
                 '}';
     }
 }

@@ -70,7 +70,7 @@ public class QueuingOutBoundHandler {
                     getMsgHashMap().remove(msgKey);
                     logger.info("时间轮「4」：记录");
                     getServerTcpMessageHandler().handleResDeviceStatus(
-                            new TcpMsgResponseStatus(msgKey.getGroupId(), msgKey.getBoxId(), 5, TcpMsgResponseStatus.ResSource.SERVER));
+                            new TcpMsgResponseStatus(msgKey.getGroupId(), msgKey.getDeviceId(), 5, TcpMsgResponseStatus.ResSource.SERVER));
                 } else {
                     logger.info("时间轮「4」：重新设置");
                     if (message.isUrgent()) {
