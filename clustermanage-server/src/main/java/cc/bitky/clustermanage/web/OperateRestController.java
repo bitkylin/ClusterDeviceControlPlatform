@@ -1,7 +1,5 @@
 package cc.bitky.clustermanage.web;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -20,7 +18,6 @@ import cc.bitky.clustermanage.server.message.web.WebMsgOperateBoxUnlock;
 public class OperateRestController {
 
     private final ServerWebMessageHandler serverWebMessageHandler;
-    private Logger logger = LoggerFactory.getLogger(OperateRestController.class);
 
     @Autowired
     public OperateRestController(ServerWebMessageHandler serverWebMessageHandler) {

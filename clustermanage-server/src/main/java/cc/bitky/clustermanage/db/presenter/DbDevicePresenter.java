@@ -110,7 +110,7 @@ class DbDevicePresenter {
      *
      * @param device 设备 bean
      */
-    public void updateDevice(Device device) {
+    void updateDevice(Device device) {
         deviceRepository.save(device);
     }
 }

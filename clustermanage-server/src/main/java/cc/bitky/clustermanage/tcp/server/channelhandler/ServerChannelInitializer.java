@@ -1,7 +1,5 @@
 package cc.bitky.clustermanage.tcp.server.channelhandler;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -22,9 +20,7 @@ public class ServerChannelInitializer extends ChannelInitializer<NioSocketChanne
     private final ParsedMessageInBoundHandler parsedMessageInBoundHandler;
     private final WebMsgOutBoundHandler webMsgOutBoundHandler;
     private final SendingOutBoundHandler sendingOutBoundHandler;
-    private final QueuingOutBoundHandler queuingOutBoundHandler;
     private final ServerTcpMessageHandler serverTcpMessageHandler;
-    private Logger logger = LoggerFactory.getLogger(this.getClass());
 
     @Autowired
     public ServerChannelInitializer(ServerTcpMessageHandler serverTcpMessageHandler,
@@ -40,7 +36,6 @@ public class ServerChannelInitializer extends ChannelInitializer<NioSocketChanne
         this.canFrameChannelInboundHandler = canFrameChannelInboundHandler;
         this.parsedMessageInBoundHandler = parsedMessageInBoundHandler;
         this.webMsgOutBoundHandler = webMsgOutBoundHandler;
-        this.queuingOutBoundHandler = queuingOutBoundHandler;
         this.sendingOutBoundHandler = sendingOutBoundHandler;
 
         queuingOutBoundHandler.setServerChannelInitializer(this);

@@ -13,11 +13,6 @@ import cc.bitky.clustermanage.global.ServerSetting;
 
 @Configuration
 public class KyMongoConfig extends AbstractMongoConfiguration {
-//
-//    @Bean
-//    public MongoClient mongoClient() {
-//        return new MongoClient(ServerSetting.HOST);
-//    }
 
     @Bean
     @Override

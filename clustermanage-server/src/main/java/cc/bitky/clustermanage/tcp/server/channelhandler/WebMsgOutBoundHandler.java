@@ -36,7 +36,7 @@ public class WebMsgOutBoundHandler  {
         this.queuingOutBoundHandler = queuingOutBoundHandler;
     }
 
-    public void write(IMessage message) {
+    void write(IMessage message) {
         logger.info("Netty 通道获取 Message「" + message.getGroupId() + ", " + message.getDeviceId() + ", " + message.getMsgId() + "」");
 
         if (message.getMsgId() == MsgType.SERVER_SEND_SPECIAL) {

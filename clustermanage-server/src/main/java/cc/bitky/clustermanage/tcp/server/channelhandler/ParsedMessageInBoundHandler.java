@@ -1,7 +1,5 @@
 package cc.bitky.clustermanage.tcp.server.channelhandler;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import cc.bitky.clustermanage.server.bean.ServerTcpMessageHandler;
@@ -16,13 +14,12 @@ import io.netty.channel.SimpleChannelInboundHandler;
 @ChannelHandler.Sharable
 public class ParsedMessageInBoundHandler extends SimpleChannelInboundHandler<IMessage> {
     private ServerChannelInitializer serverChannelInitializer;
-    private Logger logger = LoggerFactory.getLogger(this.getClass());
 
-    public void setServerChannelInitializer(ServerChannelInitializer serverChannelInitializer) {
+    void setServerChannelInitializer(ServerChannelInitializer serverChannelInitializer) {
         this.serverChannelInitializer = serverChannelInitializer;
     }
 
-    ServerTcpMessageHandler getServerTcpMessageHandler() {
+    private ServerTcpMessageHandler getServerTcpMessageHandler() {
         return serverChannelInitializer.getServerTcpMessageHandler();
     }
 
@@ -57,6 +54,6 @@ public class ParsedMessageInBoundHandler extends SimpleChannelInboundHandler<IMe
         }
 
         //将其余功能帧信息传入「功能信息处理方法」
-        getServerTcpMessageHandler().handleTcpMsg(msg);
+        getServerTcpMessageHandler().handleTcpMsg();
     }
 }

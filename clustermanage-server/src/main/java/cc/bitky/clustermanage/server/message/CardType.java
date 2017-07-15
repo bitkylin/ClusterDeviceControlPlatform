@@ -9,8 +9,4 @@ public enum CardType {
      * 确认卡
      */
     CONFIRM,
-    /**
-     * 员工卡
-     */
-    EMPLOYEE
 }

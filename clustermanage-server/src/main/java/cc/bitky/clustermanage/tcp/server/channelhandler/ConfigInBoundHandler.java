@@ -18,7 +18,7 @@ public class ConfigInBoundHandler extends ChannelInboundHandlerAdapter {
     private Logger logger = LoggerFactory.getLogger(ConfigInBoundHandler.class);
     private int i = 0;
 
-    public void setServerChannelInitializer(ServerChannelInitializer serverChannelInitializer) {
+    void setServerChannelInitializer(ServerChannelInitializer serverChannelInitializer) {
         this.serverChannelInitializer = serverChannelInitializer;
     }
 

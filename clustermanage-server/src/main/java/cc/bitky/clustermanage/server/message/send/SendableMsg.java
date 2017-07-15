@@ -2,23 +2,11 @@ package cc.bitky.clustermanage.server.message.send;
 
 import cc.bitky.clustermanage.server.message.base.ISendableMsg;
 import cc.bitky.clustermanage.server.schedule.MsgKey;
-import io.netty.channel.ChannelHandlerContext;
 
 //保持发送状态、发送规则、和消息的 bean
 public class SendableMsg implements ISendableMsg {
     private final MsgKey msgKey;
     private final byte[] bytes;
-
-    public ChannelHandlerContext getCtx() {
-        return ctx;
-    }
-
-    public void setCtx(ChannelHandlerContext ctx) {
-        this.ctx = ctx;
-    }
-
-    ChannelHandlerContext ctx;
-
 
     private boolean responsive = true;
     private boolean urgent = false;

@@ -1,7 +1,5 @@
 package cc.bitky.clustermanage.server.bean;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -22,7 +20,6 @@ import cc.bitky.clustermanage.web.bean.QueueInfo;
 public class ServerWebMessageHandler {
     private final KyDbPresenter kyDbPresenter;
     private KyServerCenterHandler kyServerCenterHandler;
-    private Logger logger = LoggerFactory.getLogger(ServerWebMessageHandler.class);
 
     @Autowired
     public ServerWebMessageHandler(KyDbPresenter kyDbPresenter) {

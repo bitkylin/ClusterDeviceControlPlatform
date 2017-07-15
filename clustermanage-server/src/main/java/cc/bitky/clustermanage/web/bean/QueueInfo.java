@@ -1,9 +1,21 @@
 package cc.bitky.clustermanage.web.bean;
 
 
+/**
+ * CAN 帧发送队列局部信息
+ */
 public class QueueInfo {
+    /**
+     * CAN 帧发送队列中帧的数量
+     */
     private int size;
+    /**
+     * CAN 帧发送队列容量
+     */
     private int capacity;
+    /**
+     * CAN 帧发送间隔
+     */
     private int interval;
 
     public QueueInfo(int size, int capacity, int interval) {

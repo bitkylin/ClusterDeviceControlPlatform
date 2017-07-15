@@ -26,15 +26,15 @@ public class QueuingOutBoundHandler {
 
     private Logger logger = LoggerFactory.getLogger(getClass());
 
-    public void setServerChannelInitializer(ServerChannelInitializer serverChannelInitializer) {
+    void setServerChannelInitializer(ServerChannelInitializer serverChannelInitializer) {
         this.serverChannelInitializer = serverChannelInitializer;
     }
 
-    ServerTcpMessageHandler getServerTcpMessageHandler() {
+    private ServerTcpMessageHandler getServerTcpMessageHandler() {
         return serverChannelInitializer.getServerTcpMessageHandler();
     }
 
-    public void write(SendableMsg message) {
+    void write(SendableMsg message) {
         if (message.isUrgent()) {
             getLinkedBlockingDeque().offerFirst(message);
         } else {

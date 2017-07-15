@@ -27,7 +27,7 @@ public class KyServerCenterHandler {
         this.kyDbPresenter = kyDbPresenter;
     }
 
-    public SendingMsgRepo getSendingMsgRepo() {
+    SendingMsgRepo getSendingMsgRepo() {
         return sendingMsgRepo;
     }
 

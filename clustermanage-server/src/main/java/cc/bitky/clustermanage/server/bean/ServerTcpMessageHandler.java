@@ -64,9 +64,8 @@ public class ServerTcpMessageHandler {
     /**
      * 其他功能消息处理方法
      *
-     * @param message 功能消息 bean
      */
-    public void handleTcpMsg(IMessage message) {
+    public void handleTcpMsg() {
 
     }
 

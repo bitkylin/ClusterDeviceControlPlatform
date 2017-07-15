@@ -11,11 +11,6 @@ public class MsgKey {
         this.msgId = msgId;
     }
 
-
-    public void increaseMsgId(int n) {
-        msgId += n;
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

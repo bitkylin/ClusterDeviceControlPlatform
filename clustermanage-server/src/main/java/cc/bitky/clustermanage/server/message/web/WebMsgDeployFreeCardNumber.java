@@ -32,7 +32,4 @@ public class WebMsgDeployFreeCardNumber extends BaseMessage {
         return cardNumbers;
     }
 
-    public WebMsgDeployFreeCardNumber kyClone(int groupId) {
-        return new WebMsgDeployFreeCardNumber(groupId, getDeviceId(), cardNumbers);
-    }
 }

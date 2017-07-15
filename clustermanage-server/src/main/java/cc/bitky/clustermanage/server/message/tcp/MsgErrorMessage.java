@@ -12,10 +12,6 @@ public class MsgErrorMessage extends BaseMessage {
     setMsgId(MsgType.ERROR);
   }
 
-  public MsgErrorMessage() {
-    this(-1);
-  }
-
   private MsgErrorMessage(int groupId, String msg) {
     this(groupId);
     this.msg = msg;
