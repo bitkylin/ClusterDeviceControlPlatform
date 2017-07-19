@@ -99,13 +99,4 @@ public class CanFrameChannelInboundHandler extends SimpleChannelInboundHandler<B
                 return new MsgErrorMessage(exMsg);
         }
     }
-
-
-//    private long byteArrayToLong(byte[] bytes) {
-//        long num = 0;
-//        for (int i = 0; i <= 7; i++) {
-//            num += (bytes[i] & 0xffL) << ((7 - i) * 8);
-//        }
-//        return num;
-//    }
 }

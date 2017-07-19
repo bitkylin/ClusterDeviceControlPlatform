@@ -3,6 +3,7 @@ package cc.bitky.clustermanage.utils;
 import java.util.Optional;
 import java.util.Properties;
 
+import cc.bitky.clustermanage.netty.message.TcpMsgResponseRandomDeviceStatus;
 import cc.bitky.clustermanage.netty.message.tcp.TcpMsgResponseDeviceStatus;
 import javafx.application.Platform;
 import javafx.geometry.Insets;
@@ -150,9 +151,80 @@ public class ViewUtil {
         return dialog.showAndWait();
     }
 
+    public static Optional<TcpMsgResponseRandomDeviceStatus> randomDeviceStatus() throws NumberFormatException {
+        Dialog<TcpMsgResponseRandomDeviceStatus> dialog = new Dialog<>();
+        dialog.setTitle("随机状态信息");
+        dialog.setHeaderText("随机设备的状态信息");
+
+        ButtonType loginButtonType = new ButtonType("发送", ButtonBar.ButtonData.OK_DONE);
+        dialog.getDialogPane().getButtonTypes().addAll(loginButtonType, ButtonType.CANCEL);
+
+        // Create the username and password labels and fields.
+        GridPane grid = new GridPane();
+        grid.setHgap(10);
+        grid.setVgap(10);
+        grid.setPadding(new Insets(20, 150, 10, 10));
+
+        TextField textFieldGroupId = new TextField();
+        textFieldGroupId.setPromptText("1 - 120");
+
+        TextField textFieldLength = new TextField();
+        textFieldLength.setPromptText("1 - 60_0000");
+
+        TextField textFieldStatus = new TextField();
+        textFieldStatus.setPromptText("1 - 6");
+
+
+        grid.add(new Label("组号: "), 0, 0);
+        grid.add(textFieldGroupId, 1, 0);
+        grid.add(new Label("范围: "), 0, 1);
+        grid.add(textFieldLength, 1, 1);
+        grid.addRow(2, new Label("状态码: "));
+        //      grid.add(, 0, 2);
+        grid.add(textFieldStatus, 1, 2);
+
+        // Enable/Disable login button depending on whether a username was entered.
+        Node loginButton = dialog.getDialogPane().lookupButton(loginButtonType);
+        loginButton.setDisable(true);
+
+        // Do some validation (using the Java 8 lambda syntax).
+        textFieldGroupId.textProperty().addListener((observable, oldValue, newValue) -> loginButton.setDisable(fieldisEmpty(textFieldGroupId, textFieldLength, textFieldStatus)));
+        textFieldLength.textProperty().addListener((observable, oldValue, newValue) -> loginButton.setDisable(fieldisEmpty(textFieldGroupId, textFieldLength, textFieldStatus)));
+        textFieldStatus.textProperty().addListener((observable, oldValue, newValue) -> loginButton.setDisable(fieldisEmpty(textFieldGroupId, textFieldLength, textFieldStatus)));
+
+        dialog.getDialogPane().setContent(grid);
+
+        // Request focus on the username field by default.
+        Platform.runLater(textFieldGroupId::requestFocus);
+
+        dialog.setResultConverter(dialogButton -> {
+
+            if (dialogButton == loginButtonType) {
+                try {
+                    TcpMsgResponseRandomDeviceStatus tcpMsgResponseDeviceStatus = new TcpMsgResponseRandomDeviceStatus(Integer.parseInt(
+                            textFieldGroupId.getText().trim()),
+                            Integer.parseInt(textFieldStatus.getText().trim()),
+                            Integer.parseInt(textFieldLength.getText().trim()));
+                    return tcpMsgResponseDeviceStatus;
+                } catch (NumberFormatException e) {
+                    System.out.println("空");
+                    return new TcpMsgResponseRandomDeviceStatus(-1, -1, -1);
+                }
+            }
+            return null;
+        });
+        return dialog.showAndWait();
+    }
+
+
+    private static boolean fieldisEmpty(TextField textFieldGroupId, TextField textFieldStatus) {
+        return textFieldGroupId.getText().trim().isEmpty()
+                || textFieldStatus.getText().trim().isEmpty();
+    }
+
     private static boolean fieldisEmpty(TextField textFieldGroupId, TextField textFieldDeviceId, TextField textFieldStatus) {
         return textFieldGroupId.getText().trim().isEmpty()
-                || textFieldDeviceId.getText().trim().isEmpty()
-                || textFieldStatus.getText().trim().isEmpty();
+                || textFieldStatus.getText().trim().isEmpty()
+                || textFieldDeviceId.getText().trim().isEmpty();
     }
 }

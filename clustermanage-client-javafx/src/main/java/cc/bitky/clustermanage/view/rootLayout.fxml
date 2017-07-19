@@ -13,14 +13,15 @@
 <?import javafx.scene.layout.FlowPane?>
 <?import javafx.scene.layout.HBox?>
 
-<fx:root maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="400.0" minWidth="600.0" prefHeight="400.0" prefWidth="600.0" type="BorderPane" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1">
+<fx:root maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="400.0" minWidth="600.0" prefHeight="400.0" prefWidth="600.0" type="BorderPane" xmlns="http://javafx.com/javafx/8.0.112" xmlns:fx="http://javafx.com/fxml/1">
    <top>
       <MenuBar BorderPane.alignment="CENTER">
          <menus>
             <Menu mnemonicParsing="false" text="设置  ">
                <items>
                   <MenuItem fx:id="menuItemConn" mnemonicParsing="false" onAction="#onActionMenuItemConn" text="连接" />
-                  <MenuItem fx:id="menuItemSend" disable="true" mnemonicParsing="false" onAction="#onActionMenuItemSend" text="发送" />
+                  <MenuItem fx:id="menuItemSend" disable="true" mnemonicParsing="false" onAction="#onActionMenuItemSend" text="发送状态" />
+                  <MenuItem fx:id="menuItemRandomSend" mnemonicParsing="false" onAction="#onActionMenuItemRandomSend" text="随机状态" />
                </items>
             </Menu>
             <Menu mnemonicParsing="false" text="帮助  ">

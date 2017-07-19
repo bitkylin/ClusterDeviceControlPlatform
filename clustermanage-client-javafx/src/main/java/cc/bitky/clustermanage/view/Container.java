@@ -8,6 +8,7 @@ import cc.bitky.clustermanage.view.viewbean.DeviceView;
 
 public class Container {
 
-    public static final HashMap<Integer, DeviceView> deviceViewHashMap = new HashMap<>(100);
+    static final HashMap<Integer, DeviceView> deviceViewHashMap = new HashMap<>(100);
+
     public static final HashMap<DeviceKey, Device> deviceHashMap = new HashMap<>(10000);
 }

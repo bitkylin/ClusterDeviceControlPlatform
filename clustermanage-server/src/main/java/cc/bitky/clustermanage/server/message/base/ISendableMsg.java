@@ -8,7 +8,7 @@ public interface ISendableMsg {
 
     void increaseSendTimes();
 
-    public MsgKey getMsgKey();
+    MsgKey getMsgKey();
 
-    public byte[] getBytes();
+    byte[] getBytes();
 }

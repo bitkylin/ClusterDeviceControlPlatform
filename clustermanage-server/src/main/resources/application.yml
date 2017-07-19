@@ -1,9 +1,11 @@
-spring:
-  data:
-    mongodb:
-      host: lml-desktop
-      database: bitky
+#spring:
+#  data:
+#    mongodb:
+#      host: localhost
+#      database: bitky
 debug: false
 logging:
   level:
     root: info
+server:
+  port: 8080

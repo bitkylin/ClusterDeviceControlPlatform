@@ -11,8 +11,8 @@ public class TcpMsgResponseStatus extends BaseMessage {
     private int status;
     private long time;
 
-    public TcpMsgResponseStatus(int groupId, int boxId, int status) {
-        super(groupId, boxId);
+    public TcpMsgResponseStatus(int groupId, int deviceId, int status) {
+        super(groupId, deviceId);
         this.status = status;
         this.time = System.currentTimeMillis();
         setMsgId(MsgType.DEVICE_RESPONSE_STATUS);

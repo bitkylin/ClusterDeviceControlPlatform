@@ -1,27 +1,25 @@
 package cc.bitky.clustermanage.server.bean;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-import cc.bitky.clustermanage.ServerSetting;
 import cc.bitky.clustermanage.db.bean.Device;
 import cc.bitky.clustermanage.db.bean.Employee;
 import cc.bitky.clustermanage.db.presenter.KyDbPresenter;
+import cc.bitky.clustermanage.global.ServerSetting;
 import cc.bitky.clustermanage.server.message.CardType;
 import cc.bitky.clustermanage.server.message.base.IMessage;
 import cc.bitky.clustermanage.server.message.web.WebMsgDeployEmployeeCardNumber;
 import cc.bitky.clustermanage.server.message.web.WebMsgDeployEmployeeDepartment;
 import cc.bitky.clustermanage.server.message.web.WebMsgDeployEmployeeName;
+import cc.bitky.clustermanage.web.bean.QueueInfo;
 
 @Service
 public class ServerWebMessageHandler {
     private final KyDbPresenter kyDbPresenter;
     private KyServerCenterHandler kyServerCenterHandler;
-    private Logger logger = LoggerFactory.getLogger(ServerWebMessageHandler.class);
 
     @Autowired
     public ServerWebMessageHandler(KyDbPresenter kyDbPresenter) {
@@ -50,20 +48,6 @@ public class ServerWebMessageHandler {
         return kyDbPresenter.getDevices(groupId, deviceId);
     }
 
-//    /**
-//     * 服务器处理「 Web 信息 bean 」，更新设备的信息
-//     *
-//     * @param messages Web信息 bean 的集合
-//     * @return 是否成功处理
-//     */
-//    public boolean deployDeviceMsg(List<IMessage> messages) {
-//        boolean isSuccess = true;
-//        for (IMessage message : messages) {
-//            if (!kyServerCenterHandler.deployDeviceMsg(message, 0)) isSuccess = false;
-//        }
-//        return isSuccess;
-//    }
-
     /**
      * 服务器处理「 Web 信息 bean 」，更新设备的信息
      *
@@ -77,7 +61,6 @@ public class ServerWebMessageHandler {
     void setKyServerCenterHandler(KyServerCenterHandler kyServerCenterHandler) {
         this.kyServerCenterHandler = kyServerCenterHandler;
     }
-
 
     /**
      * 从数据库中获取万能卡号的集合
@@ -148,23 +131,34 @@ public class ServerWebMessageHandler {
         if (device == null) return;
 
         if (cardNumber && device.getCardNumber() != null)
-            kyServerCenterHandler.sendMsgTrafficControl(new WebMsgDeployEmployeeCardNumber(device.getGroupId(), device.getBoxId(), device.getCardNumber()));
+            kyServerCenterHandler.sendMsgTrafficControl(new WebMsgDeployEmployeeCardNumber(device.getGroupId(), device.getDeviceId(), device.getCardNumber()));
         else if (cardNumber && autoInit)
-            kyServerCenterHandler.sendMsgTrafficControl(new WebMsgDeployEmployeeCardNumber(device.getGroupId(), device.getBoxId(), "0"));
+            kyServerCenterHandler.sendMsgTrafficControl(new WebMsgDeployEmployeeCardNumber(device.getGroupId(), device.getDeviceId(), ServerSetting.DEFAULT_EMPLOYEE_CARD_NUMBER));
+
 
         if (!(name || department)) return;
         Employee employee = kyDbPresenter.obtainEmployeeByEmployeeObjectId(device.getEmployeeObjectId());
 
         if (employee != null) {
-            if (name)
-                kyServerCenterHandler.sendMsgTrafficControl(new WebMsgDeployEmployeeName(device.getGroupId(), device.getBoxId(), employee.getName()));
-            if (department)
-                kyServerCenterHandler.sendMsgTrafficControl(new WebMsgDeployEmployeeDepartment(device.getGroupId(), device.getBoxId(), employee.getDepartment()));
+            if (name && employee.getName() != null)
+                kyServerCenterHandler.sendMsgTrafficControl(new WebMsgDeployEmployeeName(device.getGroupId(), device.getDeviceId(), employee.getName()));
+            else if (name && autoInit)
+                kyServerCenterHandler.sendMsgTrafficControl(new WebMsgDeployEmployeeName(device.getGroupId(), device.getDeviceId(), ServerSetting.DEFAULT_EMPLOYEE_NAME));
+            if (department && employee.getDepartment() != null)
+                kyServerCenterHandler.sendMsgTrafficControl(new WebMsgDeployEmployeeDepartment(device.getGroupId(), device.getDeviceId(), employee.getDepartment()));
+            else if (department && autoInit)
+                kyServerCenterHandler.sendMsgTrafficControl(new WebMsgDeployEmployeeDepartment(device.getGroupId(), device.getDeviceId(), ServerSetting.DEFAULT_EMPLOYEE_DEPARTMENT));
+
         } else if (autoInit) {
             if (name)
-                kyServerCenterHandler.sendMsgTrafficControl(new WebMsgDeployEmployeeName(device.getGroupId(), device.getBoxId(), "备用"));
+                kyServerCenterHandler.sendMsgTrafficControl(new WebMsgDeployEmployeeName(device.getGroupId(), device.getDeviceId(), ServerSetting.DEFAULT_EMPLOYEE_NAME));
             if (department)
-                kyServerCenterHandler.sendMsgTrafficControl(new WebMsgDeployEmployeeDepartment(device.getGroupId(), device.getBoxId(), "默认单位"));
+                kyServerCenterHandler.sendMsgTrafficControl(new WebMsgDeployEmployeeDepartment(device.getGroupId(), device.getDeviceId(), ServerSetting.DEFAULT_EMPLOYEE_DEPARTMENT));
         }
+    }
+
+    public QueueInfo obtainQueueFrame() {
+        return kyServerCenterHandler.obtainQueueFrame();
+
     }
 }

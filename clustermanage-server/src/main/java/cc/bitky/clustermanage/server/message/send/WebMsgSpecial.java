@@ -11,7 +11,7 @@ public class WebMsgSpecial extends BaseMessage {
 
     private final IMessage message;
     private int maxGroupId;
-    private int maxBoxId;
+    private int maxDeviceId;
     private boolean responsive = true;
     private boolean urgent = false;
     private boolean grouped = false;
@@ -26,7 +26,7 @@ public class WebMsgSpecial extends BaseMessage {
         this(message);
         grouped = true;
         this.maxGroupId = maxGroupId;
-        maxBoxId = 100;
+        maxDeviceId = 100;
         this.urgent = urgent;
         this.responsive = responsive;
     }
@@ -63,8 +63,8 @@ public class WebMsgSpecial extends BaseMessage {
         return maxGroupId;
     }
 
-    public int getMaxBoxId() {
-        return maxBoxId;
+    public int getMaxDeviceId() {
+        return maxDeviceId;
     }
 
     public boolean isGrouped() {

@@ -106,7 +106,7 @@ public class KyDbPresenter {
         //更新设备的状态信息
         Device device = dbDevicePresenter.handleMsgDeviceStatus(tcpMsgResponseStatus);
         if (device == null) {
-            logger.warn("设备(" + tcpMsgResponseStatus.getGroupId() + ", " + tcpMsgResponseStatus.getBoxId() + ") 不存在，无法处理");
+            logger.warn("设备(" + tcpMsgResponseStatus.getGroupId() + ", " + tcpMsgResponseStatus.getDeviceId() + ") 不存在，无法处理");
             return null;
         }
         if (device.getStatus() == -1) {
@@ -118,7 +118,7 @@ public class KyDbPresenter {
 
         //若设备对应的员工不存在，则自动创建员工
         if (device.getEmployeeObjectId() == null && autoCreate) {
-            Employee employee = dbEmployeePresenter.createEmployee(device.getGroupId(), device.getBoxId());
+            Employee employee = dbEmployeePresenter.createEmployee(device.getGroupId(), device.getDeviceId());
             if (employee == null) {
                 logger.warn("未能创建员工");
                 return null;
@@ -151,23 +151,23 @@ public class KyDbPresenter {
         return dbDevicePresenter.getDevices(groupId, boxId);
     }
 
-    /**
-     * 设备初始化: 根据员工卡号获取员工信息
-     *
-     * @param cardNumber 员工卡号
-     * @return 通过员工卡号查询整合而成的信息 bean
-     */
-    public Employee obtainEmployeeByEmployeeCard(long cardNumber) {
-        Device device = dbDevicePresenter.obtainEmployeeObjectIdByCardNum(cardNumber);
-        if (device == null) return null;
-
-        Employee employee = dbEmployeePresenter.ObtainEmployeeByObjectId(device.getEmployeeObjectId());
-        if (employee == null) return null;
-
-        employee.setGroupId(device.getGroupId());
-        employee.setDeviceId(device.getBoxId());
-        return employee;
-    }
+//    /**
+//     * 设备初始化: 根据员工卡号获取员工信息
+//     *
+//     * @param cardNumber 员工卡号
+//     * @return 通过员工卡号查询整合而成的信息 bean
+//     */
+//    public Employee obtainEmployeeByEmployeeCard(String cardNumber) {
+//        Device device = dbDevicePresenter.obtainEmployeeObjectIdByCardNum(cardNumber);
+//        if (device == null) return null;
+//
+//        Employee employee = dbEmployeePresenter.ObtainEmployeeByObjectId(device.getEmployeeObjectId());
+//        if (employee == null) return null;
+//
+//        employee.setGroupId(device.getGroupId());
+//        employee.setDeviceId(device.getDeviceId());
+//        return employee;
+//    }
 
     /**
      * 设备初始化: 根据员工 objectId 获取员工信息

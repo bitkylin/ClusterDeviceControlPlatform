@@ -3,9 +3,9 @@ package cc.bitky.clustermanage.server.message.base;
 public interface IMessage {
     int getMsgId();
 
-    int getBoxId();
+    int getDeviceId();
 
-    void setBoxId(int boxId);
+    void setDeviceId(int deviceId);
 
     int getGroupId();
 

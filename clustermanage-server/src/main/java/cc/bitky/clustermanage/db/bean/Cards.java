@@ -3,10 +3,12 @@ package cc.bitky.clustermanage.db.bean;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-@Document
-public class KySetting {
+@Document(collection = "Cards")
+public class Cards {
     @Id
     private String id;
+    private String[] freeCardList;
+    private String[] confirmCardList;
 
     public String[] getFreeCardList() {
         return freeCardList;
@@ -24,11 +26,6 @@ public class KySetting {
         this.confirmCardList = confirmCardList;
     }
 
-    private String[] freeCardList;
-    private String[] confirmCardList;
-
-
-
     public String getId() {
         return id;
     }
@@ -37,4 +34,4 @@ public class KySetting {
         this.id = id;
     }
 
- }
+}

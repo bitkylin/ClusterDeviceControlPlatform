@@ -29,23 +29,19 @@ import javafx.scene.layout.FlowPane;
 
 public class MainView extends BorderPane implements Initializable {
     private static MainView mainView;
-    ObservableList<DeviceGroup> deviceGroups;
+    private ObservableList<DeviceGroup> deviceGroups;
     private int groupId;
     private MainViewActionListener listener;
     @FXML
     private ListView<DeviceGroup> deviceGroupList;
     @FXML
     private FlowPane deviceFlowPane;
-
     @FXML
     private Label labelCurrentGroupId;
-
     @FXML
     private Label labelConnStatus;
-
     @FXML
     private Label labelRecCount;
-
     @FXML
     private Button btnCleanRecCount;
     @FXML
@@ -97,8 +93,6 @@ public class MainView extends BorderPane implements Initializable {
                 if (listener != null) listener.btnChargeChanged(tcpMsgResponseDeviceStatus);
             }));
         }
-
-
     }
 
     public void updateGroupCount(int groupId) {
@@ -162,6 +156,13 @@ public class MainView extends BorderPane implements Initializable {
     void onActionMenuItemSend(ActionEvent event) {
         ViewUtil.ResponseDeviceStatusResult().ifPresent(tcpMsgResponseDeviceStatus -> {
             if (listener != null) listener.btnChargeChanged(tcpMsgResponseDeviceStatus);
+        });
+    }
+
+    @FXML
+    void onActionMenuItemRandomSend(ActionEvent event) {
+        ViewUtil.randomDeviceStatus().ifPresent(tcpMsgResponseDeviceStatus -> {
+            if (listener != null) listener.btnRandomChargeChanged(tcpMsgResponseDeviceStatus);
         });
     }
 
