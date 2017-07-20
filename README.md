@@ -67,7 +67,7 @@ Java 后端项目，大规模集群设备的管理平台，使用 Spring 作为�
 
 [JavaFX 8 下简化自定义控件的外部调用以及流式布局示例](http://www.jianshu.com/p/9b5300b44f39)
 
-[Maven 集成 JavaFX 8 以及 <fx:root> 问题探讨](http://www.jianshu.com/p/fce816babefc)
+[Maven 集成 JavaFX 8 以及 fx:root 问题探讨](http://www.jianshu.com/p/fce816babefc)
 
 
 
