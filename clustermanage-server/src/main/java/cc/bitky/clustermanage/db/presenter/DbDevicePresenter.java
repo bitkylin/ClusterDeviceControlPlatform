@@ -64,7 +64,7 @@ class DbDevicePresenter {
             return device;
         }
 
-        if (rawStatus == 2 && newStatus == 3) {
+        if (rawStatus == 2 && newStatus == 3 && device.getRemainChargeTime() > 0) {
             device.setRemainChargeTime(device.getRemainChargeTime() - 1);
         }
         device.setStatus(newStatus);
@@ -78,8 +78,8 @@ class DbDevicePresenter {
     /**
      * 获取设备的集合
      *
-     * @param groupId 组 Id
-     * @param deviceId   设备 Id
+     * @param groupId  组 Id
+     * @param deviceId 设备 Id
      * @return 设备的集合
      */
     List<Device> getDevices(int groupId, int deviceId) {

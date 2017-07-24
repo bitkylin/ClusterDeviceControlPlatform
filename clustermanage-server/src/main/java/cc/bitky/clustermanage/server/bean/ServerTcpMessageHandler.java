@@ -54,6 +54,7 @@ public class ServerTcpMessageHandler {
             logger.info("收到：设备状态请求的回复");
         long l1 = System.currentTimeMillis();
         Device device = kyDbPresenter.handleMsgDeviceStatus(message, ServerSetting.AUTO_CREATE_DEVICE_EMPLOYEE);
+        //部署剩余充电次数
         if (device != null) {
             deployRemainChargeTimes(device);
         }
@@ -63,7 +64,6 @@ public class ServerTcpMessageHandler {
 
     /**
      * 其他功能消息处理方法
-     *
      */
     public void handleTcpMsg() {
 
@@ -74,11 +74,13 @@ public class ServerTcpMessageHandler {
      *
      * @param device 处理后的 Device
      */
-
     private void deployRemainChargeTimes(Device device) {
-        if (device.getRemainChargeTime() <= ServerSetting.DEPLOY_REMAIN_CHARGE_TIMES) {
+
+        //当当前充电状态为「充满」，并且剩余充电次数小于或等于阈值时，部署剩余充电次数
+        if (device.getStatus() == 3 && device.getRemainChargeTime() <= ServerSetting.DEPLOY_REMAIN_CHARGE_TIMES) {
             int remainTimes = device.getRemainChargeTime();
             remainTimes = remainTimes > 0 ? remainTimes : 0;
+            remainTimes = remainTimes <= 100 ? remainTimes : 100;
             sendMsgToTcpSpecial(new WebMsgDeployRemainChargeTimes(device.getGroupId(), device.getDeviceId(), remainTimes), true, true);
         }
     }

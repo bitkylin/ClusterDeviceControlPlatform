@@ -135,7 +135,7 @@ public class KyDbPresenter {
             logger.info("无指定设备对应的员工和考勤表，且无法自动创建");
         }
         long l5 = System.currentTimeMillis();
-        logger.info("时间耗费：" + (l2 - l1) + "ms; " + (l3 - l2) + "ms; " + (l4 - l3) + "ms; " + (l5 - l4) + "ms");
+        logger.info("时间耗费：" + (l2 - l1) + "ms; " + (l3 - l2) + "ms; " + (l4 - l3) + "ms; " + (l5 - l4)  + "ms");
         return device;
     }
 
