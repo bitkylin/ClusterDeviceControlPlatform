@@ -1,5 +1,5 @@
 # 基于 Spring 和 Netty 的集群设备管理平台
-
+# 厉害了亮亮
 [![GitHub stars](https://img.shields.io/github/stars/bitkylin/ClusterDeviceControlPlatform.svg)](https://github.com/bitkylin/ClusterDeviceControlPlatform/stargazers)
 ![技术](https://img.shields.io/badge/%E6%8A%80%E6%9C%AF-Spring%7CNetty%7CJavaFX%7CMongoDB-brightgreen.svg)
 [![许可证](https://img.shields.io/badge/许可证-MIT-blue.svg)](https://github.com/bitkylin/ClusterDeviceControlPlatform/blob/master/LICENSE)
