@@ -7,4 +7,5 @@ public class ExSetting {
     public String 员工默认部门;
     public int 部署剩余充电次数阈值;
     public int 帧发送间隔;
+    public int 检错重发最大重复次数;
 }

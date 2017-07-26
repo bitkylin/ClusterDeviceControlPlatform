@@ -52,6 +52,7 @@ public class ClusterManageServerApplication {
             ServerSetting.DEFAULT_EMPLOYEE_CARD_NUMBER = exSetting.员工默认卡号;
             ServerSetting.DEFAULT_EMPLOYEE_NAME = exSetting.员工默认姓名;
             ServerSetting.DEFAULT_EMPLOYEE_DEPARTMENT = exSetting.员工默认部门;
+            ServerSetting.AUTO_REPEAT_REQUEST_TIMES = exSetting.检错重发最大重复次数;
         }
     }
 }

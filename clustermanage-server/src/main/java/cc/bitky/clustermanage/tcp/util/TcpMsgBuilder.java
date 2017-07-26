@@ -18,7 +18,7 @@ import cc.bitky.clustermanage.server.message.web.WebMsgOperateBoxUnlock;
 
 @Component
 public class TcpMsgBuilder {
-    private Charset charset_GB2312 = Charset.forName("EUC-CN");
+       private Charset charset_GB2312 = Charset.forName("EUC-CN");
 
     public static String byteArrayToString(byte[] cards) {
         StringBuilder builder = new StringBuilder();
