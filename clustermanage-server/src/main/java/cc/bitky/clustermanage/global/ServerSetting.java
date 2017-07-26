@@ -48,11 +48,16 @@ public class ServerSetting {
      */
     public static final int COMMAND_DELAY_WAITING_TIME = 30;
 
+    /**
+     * 检错重发最大次数，服务器向 TCP 通道发送 CAN 帧，最大重复发送次数
+     */
+    public static int AUTO_REPEAT_REQUEST_TIMES = 5;
+
     //-----------------------接收到充电状态帧时的处理策略----------------------------
     /**
      * 项目版本号
      */
-    public static final String VERSION = "0.9.2";
+    public static final String VERSION = "0.9.3";
     /**
      * 主机名
      */

@@ -135,6 +135,10 @@ public class KyServerCenterHandler {
         return kyDbPresenter.marchConfirmCard(cardNumber);
     }
 
+    /**
+     * 获取 CAN 帧发送队列的信息
+     * @return CAN帧发送队列信息集合
+     */
     QueueInfo obtainQueueFrame() {
         int size = getSendingMsgRepo().getLinkedBlockingDeque().size();
         int capacity = ServerSetting.LINKED_DEQUE_LIMIT_CAPACITY;

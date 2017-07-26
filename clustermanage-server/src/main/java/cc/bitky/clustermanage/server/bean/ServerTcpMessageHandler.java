@@ -20,19 +20,21 @@ import cc.bitky.clustermanage.server.message.web.WebMsgDeployRemainChargeTimes;
 import cc.bitky.clustermanage.server.message.web.WebMsgInitMarchConfirmCardResponse;
 import cc.bitky.clustermanage.server.schedule.MsgKey;
 import cc.bitky.clustermanage.server.schedule.SendingMsgRepo;
-import cc.bitky.clustermanage.tcp.server.netty.SendWebMessagesListener;
+import cc.bitky.clustermanage.tcp.TcpMediator;
 import io.netty.util.internal.StringUtil;
 
 @Service
 public class ServerTcpMessageHandler {
     private final KyDbPresenter kyDbPresenter;
+    private final TcpMediator tcpMediator;
     private Logger logger = LoggerFactory.getLogger(getClass());
-    private SendWebMessagesListener sendWebMessagesListener;
     private KyServerCenterHandler kyServerCenterHandler;
 
     @Autowired
-    public ServerTcpMessageHandler(KyDbPresenter kyDbPresenter) {
+    public ServerTcpMessageHandler(KyDbPresenter kyDbPresenter, TcpMediator tcpMediator) {
         this.kyDbPresenter = kyDbPresenter;
+        this.tcpMediator = tcpMediator;
+        tcpMediator.setServerTcpMessageHandler(this);
     }
 
     public SendingMsgRepo getSendingMsgRepo() {
@@ -54,6 +56,7 @@ public class ServerTcpMessageHandler {
             logger.info("收到：设备状态请求的回复");
         long l1 = System.currentTimeMillis();
         Device device = kyDbPresenter.handleMsgDeviceStatus(message, ServerSetting.AUTO_CREATE_DEVICE_EMPLOYEE);
+        //部署剩余充电次数
         if (device != null) {
             deployRemainChargeTimes(device);
         }
@@ -63,7 +66,6 @@ public class ServerTcpMessageHandler {
 
     /**
      * 其他功能消息处理方法
-     *
      */
     public void handleTcpMsg() {
 
@@ -74,11 +76,13 @@ public class ServerTcpMessageHandler {
      *
      * @param device 处理后的 Device
      */
-
     private void deployRemainChargeTimes(Device device) {
-        if (device.getRemainChargeTime() <= ServerSetting.DEPLOY_REMAIN_CHARGE_TIMES) {
+
+        //当当前充电状态为「充满」，并且剩余充电次数小于或等于阈值时，部署剩余充电次数
+        if (device.getStatus() == 3 && device.getRemainChargeTime() <= ServerSetting.DEPLOY_REMAIN_CHARGE_TIMES) {
             int remainTimes = device.getRemainChargeTime();
             remainTimes = remainTimes > 0 ? remainTimes : 0;
+            remainTimes = remainTimes <= 100 ? remainTimes : 100;
             sendMsgToTcpSpecial(new WebMsgDeployRemainChargeTimes(device.getGroupId(), device.getDeviceId(), remainTimes), true, true);
         }
     }
@@ -198,10 +202,6 @@ public class ServerTcpMessageHandler {
         }
     }
 
-    public void setSendWebMessagesListener(SendWebMessagesListener sendWebMessagesListener) {
-        this.sendWebMessagesListener = sendWebMessagesListener;
-    }
-
     /**
      * 「特殊的」将特殊的 Message 发送至 Netty 的处理通道
      *
@@ -228,21 +228,7 @@ public class ServerTcpMessageHandler {
                     .newTimeout(timeout -> sendMsgTrafficControl(message), ServerSetting.COMMAND_DELAY_WAITING_TIME, TimeUnit.SECONDS);
             return true;
         }
-        return sendMsgToTcp(message);
-    }
-
-    /**
-     * 直接将 Message 发送至 Netty 的处理通道
-     *
-     * @param message 普通消息 Message
-     * @return 是否发送成功
-     */
-    private boolean sendMsgToTcp(IMessage message) {
-        if (sendWebMessagesListener == null) {
-            logger.warn("Server 模块未能与 Netty 模块建立连接，故不能发送消息集合");
-            return false;
-        }
-        return sendWebMessagesListener.sendMessagesToTcp(message);
+        return tcpMediator.sendMsgToNetty(message);
     }
 
     void setKyServerCenterHandler(KyServerCenterHandler kyServerCenterHandler) {
