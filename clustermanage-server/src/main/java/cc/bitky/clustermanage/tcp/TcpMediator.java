@@ -64,7 +64,7 @@ public class TcpMediator {
     }
 
     public void handleResDeviceStatus(TcpMsgResponseStatus msg) {
-        serverTcpMessageHandler.handleResDeviceStatus(msg);
+        serverTcpMessageHandler.handleReceivedDeviceStatus(msg);
     }
 
     public void handleTcpInitMsg(IMessage msg) {

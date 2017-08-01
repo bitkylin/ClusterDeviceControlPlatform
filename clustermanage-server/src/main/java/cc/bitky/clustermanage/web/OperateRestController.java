@@ -28,13 +28,13 @@ public class OperateRestController {
     /**
      * 从数据库中获取并更新设备的信息
      *
-     * @param groupId    设备组 ID
-     * @param deviceId   设备 ID
-     * @param name       是否更新姓名
-     * @param department 是否更新部门
-     * @param cardnumber 是否更新卡号
+     * @param groupId          设备组 ID
+     * @param deviceId         设备 ID
+     * @param name             是否更新姓名
+     * @param department       是否更新部门
+     * @param cardnumber       是否更新卡号
      * @param remainchargetime 是否更新剩余充电次数
-     * @param maxgroupid 若更新多个设备组，可指定更新设备组的 ID 范围为: 1 - maxgroupId
+     * @param maxgroupid       若更新多个设备组，可指定更新设备组的 ID 范围为: 1 - maxgroupId
      * @return 更新是否成功
      */
     @RequestMapping(value = "/devices/update/{groupId}/{deviceId}", method = RequestMethod.GET)

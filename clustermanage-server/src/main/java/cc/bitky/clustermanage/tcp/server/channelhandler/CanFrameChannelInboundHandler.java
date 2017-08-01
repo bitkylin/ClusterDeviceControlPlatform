@@ -38,9 +38,9 @@ public class CanFrameChannelInboundHandler extends SimpleChannelInboundHandler<B
         while (msg.readableBytes() >= 13) {
             msg.skipBytes(2);
             int msgId = msg.readByte();
-            int boxId = msg.readByte();
+            int deviceId = msg.readByte();
             int groupId = msg.readByte();
-            IMessage message = handleMessage(msgId, boxId, groupId, msg);
+            IMessage message = handleMessage(msgId, deviceId, groupId, msg);
             ctx.fireChannelRead(message);
         }
     }

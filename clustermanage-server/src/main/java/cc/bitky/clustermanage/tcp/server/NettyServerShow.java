@@ -34,7 +34,6 @@ public class NettyServerShow implements CommandLineRunner {
                     logger.warn("服务器启动失败！");
                 }
             });
-
             nettyServer.start();
             running = true;
         }

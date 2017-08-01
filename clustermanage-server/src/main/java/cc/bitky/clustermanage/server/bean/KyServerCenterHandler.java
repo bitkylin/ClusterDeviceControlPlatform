@@ -3,8 +3,8 @@ package cc.bitky.clustermanage.server.bean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import cc.bitky.clustermanage.global.ServerSetting;
 import cc.bitky.clustermanage.db.presenter.KyDbPresenter;
+import cc.bitky.clustermanage.global.ServerSetting;
 import cc.bitky.clustermanage.server.message.CardType;
 import cc.bitky.clustermanage.server.message.base.IMessage;
 import cc.bitky.clustermanage.server.message.send.WebMsgSpecial;
@@ -137,6 +137,7 @@ public class KyServerCenterHandler {
 
     /**
      * 获取 CAN 帧发送队列的信息
+     *
      * @return CAN帧发送队列信息集合
      */
     QueueInfo obtainQueueFrame() {
@@ -144,5 +145,5 @@ public class KyServerCenterHandler {
         int capacity = ServerSetting.LINKED_DEQUE_LIMIT_CAPACITY;
         int interval = ServerSetting.FRAME_SEND_INTERVAL;
         return new QueueInfo(size, capacity, interval);
-     }
+    }
 }
