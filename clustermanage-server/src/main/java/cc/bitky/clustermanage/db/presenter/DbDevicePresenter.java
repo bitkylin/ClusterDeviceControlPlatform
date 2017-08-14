@@ -15,8 +15,7 @@ import cc.bitky.clustermanage.server.message.ChargeStatus;
 import cc.bitky.clustermanage.server.message.tcp.TcpMsgResponseStatus;
 
 @Service
-class
-DbDevicePresenter {
+class DbDevicePresenter {
     private final DeviceRepository deviceRepository;
     private Logger logger = LoggerFactory.getLogger(DbDevicePresenter.class);
 
