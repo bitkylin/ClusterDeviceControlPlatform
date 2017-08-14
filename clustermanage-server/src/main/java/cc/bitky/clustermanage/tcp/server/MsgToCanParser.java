@@ -101,7 +101,7 @@ public class MsgToCanParser {
     }
 
     /**
-     * 「特殊的的」将 byte[] 转化为 SendableMsg 并传入下一级写出通道
+     * 「特殊的」将 byte[] 转化为 SendableMsg 并传入下一级写出通道
      */
     private void deployWriteTcpSpecial(byte[] bytes, boolean urgent, boolean responsive) {
         if (bytes == null || bytes.length == 0) {

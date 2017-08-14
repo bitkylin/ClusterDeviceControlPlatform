@@ -53,11 +53,19 @@ public class ServerSetting {
      */
     public static int AUTO_REPEAT_REQUEST_TIMES = 5;
 
-    //-----------------------接收到充电状态帧时的处理策略----------------------------
+    //-----------------------------服务器总体配置----------------------------------
     /**
      * 项目版本号
      */
-    public static final String VERSION = "0.9.3";
+    public static final String VERSION = "1.0.0";
+    /**
+     * 最大设备组数量
+     */
+    public static final int MAX_DEVICE_GROUP_SIZE = 127;
+    /**
+     * 单设备组中最大的设备数量
+     */
+    public static final int MAX_DEVICE_SIZE_EACH_GROUP = 100;
     /**
      * 主机名
      */

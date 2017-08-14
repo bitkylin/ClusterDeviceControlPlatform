@@ -3,6 +3,13 @@
 #    mongodb:
 #      host: localhost
 #      database: bitky
+#
+#spring:
+#
+#  redis:
+#    host: host:lml-desktop
+#    port: 6379
+
 debug: false
 logging:
   level:
