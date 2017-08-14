@@ -12,6 +12,7 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 import cc.bitky.clustermanage.global.ServerSetting;
+import cc.bitky.clustermanage.server.message.ChargeStatus;
 import cc.bitky.clustermanage.server.message.send.SendableMsg;
 import cc.bitky.clustermanage.server.message.tcp.TcpMsgResponseStatus;
 import cc.bitky.clustermanage.server.schedule.MsgKey;
@@ -47,10 +48,11 @@ public class PolicyCanTransmitter {
             scheduledExecutorService.scheduleWithFixedDelay(() -> {
                 if (!getLinkedBlockingDeque().isEmpty()) {
                     SendableMsg message = getLinkedBlockingDeque().poll();
-                    getMsgHashMap().put(message.getMsgKey(), message.getBytes());
                     tcpMediator.writeCanToTcp(message);
-                    if (message.isResponsive())
+                    if (message.isResponsive()) {
+                        getMsgHashMap().put(message.getMsgKey(), message.getBytes());
                         setWheelTask(message);
+                    }
                 }
             }, 0, ServerSetting.FRAME_SEND_INTERVAL, TimeUnit.MILLISECONDS);
         }
@@ -68,15 +70,10 @@ public class PolicyCanTransmitter {
                     getMsgHashMap().remove(msgKey);
                     logger.info("时间轮「4」：记录");
                     tcpMediator.handleResDeviceStatus(
-                            new TcpMsgResponseStatus(msgKey.getGroupId(), msgKey.getDeviceId(), 5, TcpMsgResponseStatus.ResSource.SERVER));
+                            new TcpMsgResponseStatus(msgKey.getGroupId(), msgKey.getDeviceId(), ChargeStatus.TRAFFIC_ERROR, TcpMsgResponseStatus.ResSource.SERVER));
                 } else {
                     logger.info("时间轮「4」：重新设置");
-                    if (message.isUrgent()) {
-                        getLinkedBlockingDeque().offerFirst(message);
-                    } else {
-                        getLinkedBlockingDeque().offerLast(message);
-                    }
-                    setWheelTask(message);
+                    write(message);
                 }
             } else logger.info("时间轮「3」：成功");
         }, ServerSetting.FRAME_SENT_TO_DETECT_INTERVAL, TimeUnit.SECONDS);

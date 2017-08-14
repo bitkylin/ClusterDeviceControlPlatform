@@ -3,13 +3,14 @@ package cc.bitky.clustermanage.db.presenter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Repository;
 
-import java.util.Date;
 import java.util.List;
+import java.util.Random;
+import java.util.concurrent.TimeUnit;
 
 import cc.bitky.clustermanage.db.bean.Device;
-import cc.bitky.clustermanage.db.bean.DeviceGroup;
 import cc.bitky.clustermanage.db.bean.Employee;
 import cc.bitky.clustermanage.db.repository.DeviceGroupRepository;
 import cc.bitky.clustermanage.server.message.CardType;
@@ -23,50 +24,54 @@ public class KyDbPresenter {
     private final DbSettingPresenter dbSettingPresenter;
     private final DbDevicePresenter dbDevicePresenter;
     private final DbRoutinePresenter dbRoutinePresenter;
-
-    private int groupSize = 0;
+    private final StringRedisTemplate stringRedisTemplate;
+    Random random = new Random();
+    //   private int groupSize = 0;
+    private int maxGroupId = 0;
 
     private Logger logger = LoggerFactory.getLogger(KyDbPresenter.class);
 
     @Autowired
     public KyDbPresenter(DbRoutinePresenter dbRoutinePresenter, DbEmployeePresenter dbEmployeePresenter
             , DeviceGroupRepository deviceGroupRepository, DbDevicePresenter dbDevicePresenter
-            , DbSettingPresenter dbSettingPresenter) {
+            , DbSettingPresenter dbSettingPresenter, StringRedisTemplate stringRedisTemplate) {
         this.dbRoutinePresenter = dbRoutinePresenter;
         this.deviceGroupRepository = deviceGroupRepository;
         this.dbSettingPresenter = dbSettingPresenter;
         this.dbDevicePresenter = dbDevicePresenter;
         this.dbEmployeePresenter = dbEmployeePresenter;
+        this.stringRedisTemplate = stringRedisTemplate;
     }
 
 
-    /**
-     * 调整(或增加)设备组的数量，使之满足获取到的数据帧的要求
-     *
-     * @param groupId    获取到的数据帧的组 Id
-     * @param autoCreate 是否自动初始化任意组设备
-     */
-    private void initDbDeviceGroup(int groupId, boolean autoCreate) {
-        if (groupSize < groupId)
-            groupSize = (int) deviceGroupRepository.count();
+//    /**
+//     * 调整(或增加)设备组的数量，使之满足获取到的数据帧的要求
+//     *
+//     * @param groupId    获取到的数据帧的组 Id
+//     * @param autoCreate 是否自动初始化任意组设备
+//     */
+//    private void initDbDeviceGroup(int groupId, boolean autoCreate) {
+//        if (groupSize < groupId)
+//            groupSize = (int) deviceGroupRepository.count();
+//
+//        while (groupSize < groupId) {
+//            groupSize++;
+//            deviceGroupRepository.save(new DeviceGroup(groupSize));
+//            if (autoCreate)
+//                dbDevicePresenter.InitDbDevices(groupSize);
+//        }
+//    }
 
-        while (groupSize < groupId) {
-            groupSize++;
-            deviceGroupRepository.save(new DeviceGroup(groupSize));
-            if (autoCreate)
-                dbDevicePresenter.InitDbDevices(groupSize);
-        }
-    }
-
     /**
-     * 获得设备组的数量
+     * 获得最大的设备组 ID
      *
-     * @return 设备组的数量
+     * @return 设备组的ID
      */
-    public int obtainDeviceGroupCount() {
-        if (groupSize == 0)
-            groupSize = (int) deviceGroupRepository.count();
-        return groupSize;
+    public int obtainMaxDeviceGroupId() {
+//        if (groupSize == 0)
+//            groupSize = (int) deviceGroupRepository.count();
+//        return groupSize;
+        return maxGroupId;
     }
 
     /**
@@ -76,17 +81,21 @@ public class KyDbPresenter {
      * @param autoCreate      自动在数据库中创建设备
      */
     private void handleMsgHeartBeat(IMessage tcpMsgHeartBeat, boolean autoCreate) {
-
-        initDbDeviceGroup(tcpMsgHeartBeat.getGroupId(), autoCreate);
-
-        DeviceGroup deviceGroup = deviceGroupRepository.findByGroupId(tcpMsgHeartBeat.getGroupId());
-        if (deviceGroup == null) {
-            logger.warn("设备组(" + tcpMsgHeartBeat.getGroupId() + ") 不存在，心跳无法处理");
-            return;
-        }
-        deviceGroup.setHeartBeatTime(new Date(System.currentTimeMillis()));
-        deviceGroupRepository.save(deviceGroup);
-        logger.info("设备组(" + tcpMsgHeartBeat.getGroupId() + ") 心跳处理完毕");
+        int groupId = tcpMsgHeartBeat.getGroupId();
+        if (maxGroupId < groupId) maxGroupId = groupId;
+        String exec = "deviceGroup-exist-" + groupId;
+        stringRedisTemplate.opsForValue().set(exec, "1", 60, TimeUnit.SECONDS);
+//
+//        initDbDeviceGroup(tcpMsgHeartBeat.getGroupId(), autoCreate);
+//
+//        DeviceGroup deviceGroup = deviceGroupRepository.findByGroupId(tcpMsgHeartBeat.getGroupId());
+//        if (deviceGroup == null) {
+//            logger.warn("设备组(" + tcpMsgHeartBeat.getGroupId() + ") 不存在，心跳无法处理");
+//            return;
+//        }
+//        deviceGroup.setHeartBeatTime(new Date(System.currentTimeMillis()));
+//        deviceGroupRepository.save(deviceGroup);
+//        logger.info("设备组(" + tcpMsgHeartBeat.getGroupId() + ") 心跳处理完毕");
     }
 
     /**
@@ -103,12 +112,30 @@ public class KyDbPresenter {
         handleMsgHeartBeat(tcpMsgResponseStatus, autoCreate);
         long l2 = System.currentTimeMillis();
 
+        int status = -1;
         //更新设备的状态信息
-        Device device = dbDevicePresenter.handleMsgDeviceStatus(tcpMsgResponseStatus);
+        String s = stringRedisTemplate.opsForValue().get("deviceStatus-" + tcpMsgResponseStatus.getGroupId() + "-" + tcpMsgResponseStatus.getDeviceId());
+        try {
+            status = Integer.valueOf(s);
+        } catch (NumberFormatException ignored) {
+        }
+        Device device = null;
+        if (status == -1 || status != tcpMsgResponseStatus.getStatus())
+            device = dbDevicePresenter.handleMsgDeviceStatus(tcpMsgResponseStatus);
+
         if (device == null) {
-            logger.warn("设备(" + tcpMsgResponseStatus.getGroupId() + ", " + tcpMsgResponseStatus.getDeviceId() + ") 不存在，无法处理");
+            if (status == tcpMsgResponseStatus.getStatus()) {
+                logger.info("设备「" + tcpMsgResponseStatus.getGroupId() + ", " + tcpMsgResponseStatus.getDeviceId() + "」『"
+                        + status + "->" + status + "』: 状态无更新");
+            } else
+                logger.warn("设备(" + tcpMsgResponseStatus.getGroupId() + ", " + tcpMsgResponseStatus.getDeviceId() + ") 不存在，无法处理");
             return null;
         }
+        if (device.getStatus() != -1) {
+            String exec = "deviceStatus-" + tcpMsgResponseStatus.getGroupId() + "-" + tcpMsgResponseStatus.getDeviceId();
+            stringRedisTemplate.opsForValue().set(exec, device.getStatus() + "", (600 + random.nextInt(60)), TimeUnit.SECONDS);
+        }
+
         if (device.getStatus() == -1) {
             logger.info("考勤表无更新");
             logger.info("时间耗费：" + (l2 - l1) + "ms; " + (System.currentTimeMillis() - l2) + "ms");

@@ -1,5 +1,7 @@
 package cc.bitky.clustermanage.web;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -8,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import cc.bitky.clustermanage.global.ServerSetting;
 import cc.bitky.clustermanage.server.bean.ServerWebMessageHandler;
 import cc.bitky.clustermanage.server.message.CardType;
 import cc.bitky.clustermanage.server.message.web.WebMsgInitClearDeviceStatus;
@@ -19,6 +22,7 @@ import cc.bitky.clustermanage.web.bean.QueueDevice;
 public class OperateRestController {
 
     private final ServerWebMessageHandler serverWebMessageHandler;
+    private final Logger logger = LoggerFactory.getLogger(getClass());
 
     @Autowired
     public OperateRestController(ServerWebMessageHandler serverWebMessageHandler) {
@@ -28,13 +32,13 @@ public class OperateRestController {
     /**
      * 从数据库中获取并更新设备的信息
      *
-     * @param groupId    设备组 ID
-     * @param deviceId   设备 ID
-     * @param name       是否更新姓名
-     * @param department 是否更新部门
-     * @param cardnumber 是否更新卡号
+     * @param groupId          设备组 ID
+     * @param deviceId         设备 ID
+     * @param name             是否更新姓名
+     * @param department       是否更新部门
+     * @param cardnumber       是否更新卡号
      * @param remainchargetime 是否更新剩余充电次数
-     * @param maxgroupid 若更新多个设备组，可指定更新设备组的 ID 范围为: 1 - maxgroupId
+     * @param maxgroupid       若更新多个设备组，可指定更新设备组的 ID 范围为: 1 - maxgroupId
      * @return 更新是否成功
      */
     @RequestMapping(value = "/devices/update/{groupId}/{deviceId}", method = RequestMethod.GET)
@@ -52,18 +56,40 @@ public class OperateRestController {
 
 
     /**
-     * 「操作」远程开锁
+     * 「操作」远程开锁 [缺省方式]
      *
      * @param groupId    设备组 ID
      * @param deviceId   设备 ID
      * @param maxgroupid 最大设备组号
      * @return "开锁成功"消息
      */
-    @RequestMapping(value = "/devices/unlock/{groupId}/{deviceId}", method = RequestMethod.GET)
-    public String operateDeviceUnlock(@PathVariable int groupId,
-                                      @PathVariable int deviceId,
-                                      @RequestParam(defaultValue = "0") int maxgroupid) {
+    @RequestMapping(value = "/devices/unlock/default/{groupId}/{deviceId}", method = RequestMethod.GET)
+    public String operateDeviceUnlockByDefault(@PathVariable int groupId,
+                                               @PathVariable int deviceId,
+                                               @RequestParam(defaultValue = "0") int maxgroupid) {
         if (serverWebMessageHandler.deployDeviceMsg(new WebMsgOperateBoxUnlock(groupId, deviceId), maxgroupid, false, true)) {
+            return "success";
+        } else return "error";
+    }
+
+    /**
+     * 「操作」远程开锁 [虹膜方式]
+     *
+     * @param groupId  设备组 ID
+     * @param deviceId 设备 ID
+     * @return "开锁成功"消息
+     */
+    @RequestMapping(value = "/devices/unlock/iris/{groupId}/{deviceId}", method = RequestMethod.GET)
+    public String operateDeviceUnlockByIris(@PathVariable int groupId, @PathVariable int deviceId) {
+        if (groupId > ServerSetting.MAX_DEVICE_GROUP_SIZE
+                || groupId <= 0
+                || deviceId > ServerSetting.MAX_DEVICE_SIZE_EACH_GROUP
+                || deviceId <= 0) {
+
+            logger.warn("「虹膜模块接口调取异常」设备定位信息，组号：" + groupId + ", 设备号：" + deviceId);
+            return "error";
+        }
+        if (serverWebMessageHandler.deployDeviceMsg(new WebMsgOperateBoxUnlock(groupId, deviceId), 1, false, true)) {
             return "success";
         } else return "error";
     }

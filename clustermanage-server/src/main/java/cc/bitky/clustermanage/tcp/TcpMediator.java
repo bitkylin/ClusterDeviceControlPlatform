@@ -34,6 +34,11 @@ public class TcpMediator {
         return serverTcpMessageHandler.getSendingMsgRepo();
     }
 
+    /**
+     * 直接将 sendableMsg 发送至 Netty 的处理通道
+     *
+     * @param sendableMsg 可直接发送的包含 CAN 帧的 Message
+     */
     public void writeCanToTcp(SendableMsg sendableMsg) {
         List<ChannelPipeline> channelPipelines = getSendingMsgRepo().getChannelPipelines();
         if (channelPipelines.size() == 0) return;
@@ -41,7 +46,7 @@ public class TcpMediator {
     }
 
     /**
-     * 直接将 Message 发送至 Netty 的处理通道
+     * 直接将 Message 发送至 TCP 模块，处理并生成 CAN 帧
      *
      * @param message 普通消息 Message
      * @return 是否发送成功
@@ -64,7 +69,7 @@ public class TcpMediator {
     }
 
     public void handleResDeviceStatus(TcpMsgResponseStatus msg) {
-        serverTcpMessageHandler.handleResDeviceStatus(msg);
+        serverTcpMessageHandler.handleReceivedDeviceStatus(msg);
     }
 
     public void handleTcpInitMsg(IMessage msg) {

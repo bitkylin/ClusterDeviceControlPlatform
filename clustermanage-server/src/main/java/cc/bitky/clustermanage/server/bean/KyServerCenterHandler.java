@@ -1,10 +1,12 @@
 package cc.bitky.clustermanage.server.bean;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import cc.bitky.clustermanage.global.ServerSetting;
 import cc.bitky.clustermanage.db.presenter.KyDbPresenter;
+import cc.bitky.clustermanage.global.ServerSetting;
 import cc.bitky.clustermanage.server.message.CardType;
 import cc.bitky.clustermanage.server.message.base.IMessage;
 import cc.bitky.clustermanage.server.message.send.WebMsgSpecial;
@@ -17,6 +19,7 @@ public class KyServerCenterHandler {
     private final ServerTcpMessageHandler serverTcpMessageHandler;
     private final KyDbPresenter kyDbPresenter;
     private final SendingMsgRepo sendingMsgRepo;
+    private final Logger logger = LoggerFactory.getLogger(getClass());
 
     @Autowired
     public KyServerCenterHandler(SendingMsgRepo sendingMsgRepo, ServerTcpMessageHandler serverTcpMessageHandler, ServerWebMessageHandler serverWebMessageHandler, KyDbPresenter kyDbPresenter) {
@@ -70,27 +73,40 @@ public class KyServerCenterHandler {
      * @param message 原始信息
      * @return Message 信息是否已成功发送至 TCP 端
      */
-    private boolean deployGroupedMessage(IMessage message, int maxGroupId, boolean urgent, boolean responsive) {
-        boolean groupedGroup = message.getGroupId() == 255 || message.getGroupId() == 0;
-        boolean groupedBox = message.getDeviceId() == 255 || message.getDeviceId() == 0;
+    private boolean deployGroupedMessage(final IMessage message, int maxGroupId, final boolean urgent, final boolean responsive) {
+        final int groupId = message.getGroupId();
+        final int deviceId = message.getDeviceId();
+        final boolean groupedGroup = groupId == 255 || groupId == 0;
+        final boolean groupedBox = deviceId == 255 || deviceId == 0;
 
+        //消息中位置信息有效性判断有效性判断
+        if (groupId < 0 || deviceId < 0) {
+            logger.warn("设备位置信息有效性判断异常「异常小值」，设定组号：" + message.getGroupId() + ", 设备号：" + message.getDeviceId());
+            return false;
+        }
+        if ((deviceId > ServerSetting.MAX_DEVICE_SIZE_EACH_GROUP && groupId != 255)
+                || groupId > ServerSetting.MAX_DEVICE_GROUP_SIZE && groupId != 255) {
+            logger.warn("设备位置信息有效性判断异常「异常大值」，设定组号：" + message.getGroupId() + ", 设备号：" + message.getDeviceId());
+            return false;
+        }
+        //发送成组消息帧时，最大组号设定值必须不小于 0
+        if (groupedGroup && maxGroupId < 0) return false;
 
         if (!groupedGroup && !groupedBox) {
             return sendMsgToTcpSpecial(message, urgent, responsive);
-        }
-
-        if (groupedGroup && groupedBox) {
-            if (maxGroupId == 0)
-                maxGroupId = kyDbPresenter.obtainDeviceGroupCount();
-            if (maxGroupId == 0) return false;
-
-            return sendMsgTrafficControl(WebMsgSpecial.forAll(message, maxGroupId, urgent, responsive));
         }
 
         if (!groupedGroup && groupedBox) {
             return sendMsgTrafficControl(WebMsgSpecial.forBox(message, urgent, responsive));
         }
 
+        if (groupedGroup && groupedBox) {
+            if (maxGroupId == 0)
+                maxGroupId = kyDbPresenter.obtainMaxDeviceGroupId();
+            if (maxGroupId == 0) return false;
+
+            return sendMsgTrafficControl(WebMsgSpecial.forAll(message, maxGroupId, urgent, responsive));
+        }
         return false;
     }
 
@@ -137,6 +153,7 @@ public class KyServerCenterHandler {
 
     /**
      * 获取 CAN 帧发送队列的信息
+     *
      * @return CAN帧发送队列信息集合
      */
     QueueInfo obtainQueueFrame() {
@@ -144,5 +161,5 @@ public class KyServerCenterHandler {
         int capacity = ServerSetting.LINKED_DEQUE_LIMIT_CAPACITY;
         int interval = ServerSetting.FRAME_SEND_INTERVAL;
         return new QueueInfo(size, capacity, interval);
-     }
+    }
 }

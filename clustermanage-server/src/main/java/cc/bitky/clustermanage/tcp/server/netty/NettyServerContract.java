@@ -6,16 +6,17 @@ import cc.bitky.clustermanage.tcp.util.listener.SuccessfulListener;
 
 public class NettyServerContract {
 
-  public interface IServerView extends BaseView<IServerPresenter> {
-    void setLaunchSuccessfulListener(SuccessfulListener successfulListener);
-    void setFinishSuccessfulListener(SuccessfulListener successfulListener);
+    public interface IServerView extends BaseView<IServerPresenter> {
+        void setLaunchSuccessfulListener(SuccessfulListener successfulListener);
 
-    void start();
+        void setFinishSuccessfulListener(SuccessfulListener successfulListener);
 
-    void shutdown();
-  }
+        void start();
 
-  interface IServerPresenter extends BasePresenter {
+        void shutdown();
+    }
 
-  }
+    interface IServerPresenter extends BasePresenter {
+
+    }
 }

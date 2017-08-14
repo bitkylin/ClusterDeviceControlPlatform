@@ -8,21 +8,21 @@ import org.springframework.data.mongodb.core.mapping.Field;
 public class Employee {
 
     @Id
-    String id;
+    private String id;
 
     //个人信息
     @Field("Name")
-    String name;
+    private String name;
 
     @Field("Department")
-    String department;
+    private String department;
 
     //设备位置
     @Field("GroupId")
-    int groupId;
+    private int groupId;
 
     @Field("DeviceId")
-    int deviceId;
+    private int deviceId;
 
     public Employee(String name, String department) {
         this.name = name;

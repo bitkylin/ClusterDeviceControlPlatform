@@ -105,7 +105,7 @@ public class ServerWebMessageHandler {
     public boolean obtainDeployDeviceMsg(int groupId, int deviceId, QueueDevice queueDevice, int maxGroupId) {
         if (groupId == 255 || groupId == 0) {
             if (maxGroupId == 0)
-                maxGroupId = kyDbPresenter.obtainDeviceGroupCount();
+                maxGroupId = kyDbPresenter.obtainMaxDeviceGroupId();
             if (maxGroupId == 0) return false;
             for (int i = 1; i <= maxGroupId; i++) {
                 getDeviceInfo(i, deviceId).forEach(device -> deployEmployeeMsg(queueDevice, device));

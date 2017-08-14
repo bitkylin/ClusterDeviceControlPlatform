@@ -12,7 +12,7 @@ public class Device {
      * 员工卡号
      */
     @Field("CardNumber")
-    String cardNumber;
+    private String cardNumber;
 
     @Id
     private String id;

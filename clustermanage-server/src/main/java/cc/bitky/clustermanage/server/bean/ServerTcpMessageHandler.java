@@ -46,7 +46,7 @@ public class ServerTcpMessageHandler {
      *
      * @param message 设备状态回复 bean
      */
-    public void handleResDeviceStatus(TcpMsgResponseStatus message) {
+    public void handleReceivedDeviceStatus(TcpMsgResponseStatus message) {
         logger.info("");
         logger.info("");
         logger.info("***********进入功能消息处理方法「" + message.getGroupId() + ", " + message.getDeviceId() + "」***********");

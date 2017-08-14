@@ -5,8 +5,8 @@ public class BaseTcpResponseMsg extends BaseMessage {
 
     private final int status;
 
-    public BaseTcpResponseMsg(int groupId, int boxId, int status) {
-        super(groupId, boxId);
+    public BaseTcpResponseMsg(int groupId, int deviceId, int status) {
+        super(groupId, deviceId);
         this.status = status;
     }
 
