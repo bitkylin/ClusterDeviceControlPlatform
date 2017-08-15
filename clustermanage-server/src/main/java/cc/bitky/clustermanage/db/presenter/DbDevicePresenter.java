@@ -11,12 +11,12 @@ import java.util.List;
 
 import cc.bitky.clustermanage.db.bean.Device;
 import cc.bitky.clustermanage.db.repository.DeviceRepository;
+import cc.bitky.clustermanage.global.ServerSetting;
 import cc.bitky.clustermanage.server.message.ChargeStatus;
 import cc.bitky.clustermanage.server.message.tcp.TcpMsgResponseStatus;
 
 @Service
-class
-DbDevicePresenter {
+class DbDevicePresenter {
     private final DeviceRepository deviceRepository;
     private Logger logger = LoggerFactory.getLogger(DbDevicePresenter.class);
 
@@ -25,19 +25,18 @@ DbDevicePresenter {
         this.deviceRepository = deviceRepository;
     }
 
-
-    /**
-     * 调整(或增加)设备的数量，使之满足获取到的数据帧的要求
-     *
-     * @param groupId 获取到的数据帧的组 Id
-     */
-    void InitDbDevices(int groupId) {
-        List<Device> deviceList = new ArrayList<>(100);
-        for (int i = 1; i <= 100; i++) {
-            deviceList.add(new Device(groupId, i));
-        }
-        deviceRepository.save(deviceList);
-    }
+//    /**
+//     * 调整(或增加)设备的数量，使之满足获取到的数据帧的要求
+//     *
+//     * @param groupId 获取到的数据帧的组 Id
+//     */
+//    void InitDbDevices(int groupId) {
+//        List<Device> deviceList = new ArrayList<>(100);
+//        for (int i = 1; i <= 100; i++) {
+//            deviceList.add(new Device(groupId, i));
+//        }
+//        deviceRepository.save(deviceList);
+//    }
 
     /**
      * 处理设备状态包，更新设备的状态信息
@@ -91,21 +90,21 @@ DbDevicePresenter {
             return devices;
         }
         List<Device> devices = new ArrayList<>(1);
-        if (deviceId >= 1 && deviceId <= 100) {
+        if (deviceId >= 1 && deviceId <= ServerSetting.MAX_DEVICE_SIZE_EACH_GROUP) {
             devices.add(deviceRepository.findFirstByGroupIdAndDeviceId(groupId, deviceId));
         }
         return devices;
     }
 
-    /**
-     * 通过卡号查询相应的设备
-     *
-     * @param cardNum 员工卡号
-     * @return 相应的设备
-     */
-    Device obtainEmployeeObjectIdByCardNum(String cardNum) {
-        return deviceRepository.findFirstByCardNumber(cardNum);
-    }
+//    /**
+//     * 通过卡号查询相应的设备
+//     *
+//     * @param cardNum 员工卡号
+//     * @return 相应的设备
+//     */
+//    Device obtainEmployeeObjectIdByCardNum(String cardNum) {
+//        return deviceRepository.findFirstByCardNumber(cardNum);
+//    }
 
     /**
      * 更新设备

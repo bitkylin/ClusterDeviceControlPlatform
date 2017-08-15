@@ -29,6 +29,10 @@ public class ServerSetting {
      */
     public static int DEPLOY_REMAIN_CHARGE_TIMES = 20;
     /**
+     * 单个设备的初始充电次数
+     */
+    public static int DEVICE_INIT_CHARGE_TIMES = 500;
+    /**
      * 待发送缓冲双端队列的限定容量，当队列中存在的 Message 大于该值时，使用时间轮延时向队列添加 Message
      */
     public static final int LINKED_DEQUE_LIMIT_CAPACITY = 10000;
@@ -57,7 +61,7 @@ public class ServerSetting {
     /**
      * 项目版本号
      */
-    public static final String VERSION = "1.0.0";
+    public static final String VERSION = "1.0.1";
     /**
      * 最大设备组数量
      */
@@ -74,5 +78,5 @@ public class ServerSetting {
      * 数据库
      */
     public static final String DATABASE = "ChargeDevice";
-    public static final String CONFIG_FILE_PATH = "setting.ini";
+    public static final String CONFIG_FILE_PATH = "setting";
 }

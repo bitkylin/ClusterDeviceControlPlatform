@@ -13,6 +13,7 @@ import java.util.concurrent.TimeUnit;
 import cc.bitky.clustermanage.db.bean.Device;
 import cc.bitky.clustermanage.db.bean.Employee;
 import cc.bitky.clustermanage.db.repository.DeviceGroupRepository;
+import cc.bitky.clustermanage.global.ServerSetting;
 import cc.bitky.clustermanage.server.message.CardType;
 import cc.bitky.clustermanage.server.message.base.IMessage;
 import cc.bitky.clustermanage.server.message.tcp.TcpMsgResponseStatus;
@@ -234,5 +235,22 @@ public class KyDbPresenter {
      */
     public boolean marchConfirmCard(String cardNumber) {
         return dbSettingPresenter.marchConfirmCard(cardNumber);
+    }
+
+    /**
+     * 「操作」更换新的设备，将设备的剩余充电次数恢复为最大值
+     *
+     * @param groupId  设备组 ID
+     * @param deviceId 设备 ID
+     * @return 操作成功
+     */
+    public boolean devicesRenew(int groupId, int deviceId) {
+        List<Device> devices = dbDevicePresenter.getDevices(groupId, deviceId);
+        if (devices == null || devices.size() == 0) return false;
+        devices.forEach(device -> {
+            device.setRemainChargeTime(ServerSetting.DEVICE_INIT_CHARGE_TIMES);
+            dbDevicePresenter.updateDevice(device);
+        });
+        return true;
     }
 }
