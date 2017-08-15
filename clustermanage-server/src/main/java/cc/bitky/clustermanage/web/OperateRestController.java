@@ -89,7 +89,7 @@ public class OperateRestController {
             logger.warn("「虹膜模块接口调取异常」设备定位信息，组号：" + groupId + ", 设备号：" + deviceId);
             return "error";
         }
-        if (serverWebMessageHandler.deployDeviceMsg(new WebMsgOperateBoxUnlock(groupId, deviceId), 1, false, true)) {
+        if (serverWebMessageHandler.deployDeviceMsg(new WebMsgOperateBoxUnlock(groupId, deviceId), -1, false, true)) {
             return "success";
         } else return "error";
     }
@@ -107,6 +107,20 @@ public class OperateRestController {
                                      @PathVariable int deviceId,
                                      @RequestParam(defaultValue = "0") int maxgroupid) {
         if (serverWebMessageHandler.deployDeviceMsg(new WebMsgInitClearDeviceStatus(groupId, deviceId), maxgroupid, true, false)) {
+            return "success";
+        } else return "error";
+    }
+   /**
+     * 「操作」更换新的设备
+     *
+     * @param groupId    设备组 ID
+     * @param deviceId   设备 ID
+     * @return "更新操作成功"消息
+     */
+    @RequestMapping(value = "/devices/renew/{groupId}/{deviceId}", method = RequestMethod.GET)
+    public String operateDeviceRenew(@PathVariable int groupId,
+                                     @PathVariable int deviceId) {
+        if (serverWebMessageHandler.devicesRenew(groupId, deviceId)) {
             return "success";
         } else return "error";
     }

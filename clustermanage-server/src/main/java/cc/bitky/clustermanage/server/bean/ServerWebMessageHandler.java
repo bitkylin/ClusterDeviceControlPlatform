@@ -172,4 +172,15 @@ public class ServerWebMessageHandler {
     public QueueInfo obtainQueueFrame() {
         return kyServerCenterHandler.obtainQueueFrame();
     }
+
+    /**
+     * 「操作」更换新的设备，将设备的剩余充电次数恢复为最大值
+     *
+     * @param groupId  设备组 ID
+     * @param deviceId 设备 ID
+     * @return 操作成功
+     */
+    public boolean devicesRenew(int groupId, int deviceId) {
+        return kyDbPresenter.devicesRenew(groupId, deviceId);
+    }
 }
