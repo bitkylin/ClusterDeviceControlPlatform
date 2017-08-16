@@ -43,6 +43,17 @@ public class InfoRestController {
     }
 
     /**
+     * 从数据库中获取正在活动的设备组
+     *
+     * @return 设备集合
+     */
+    @RequestMapping(value = "/devicegroup/activated", method = RequestMethod.GET)
+    public List<Integer> getDeviceGroupActivated() {
+        return serverWebMessageHandler.getDeviceGroupActivated();
+    }
+
+
+    /**
      * 从数据库中获取万能卡号的集合
      *
      * @return 万能卡号的集合
