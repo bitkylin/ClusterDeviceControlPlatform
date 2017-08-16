@@ -43,8 +43,8 @@ public class KyChannelInitializer extends ChannelInitializer<SocketChannel> {
                 parsedMessageInBoundHandler.clearRecCount(rec, err);
             }
 
-            public boolean randomChargeChanged(TcpMsgResponseRandomDeviceStatus randomDeviceStatus) {
-                if (linkedBlockingDeque.size() > 100000) return false;
+            void randomChargeChanged(TcpMsgResponseRandomDeviceStatus randomDeviceStatus) {
+                if (linkedBlockingDeque.size() > 100000) return;
                 int length = randomDeviceStatus.getLength();
                 for (int i = 0; i < length; i++) {
                     int groupId = getRandomInt(1, randomDeviceStatus.getGroupId());
@@ -58,7 +58,6 @@ public class KyChannelInitializer extends ChannelInitializer<SocketChannel> {
                         pipeline.channel().writeAndFlush(message);
                     }
                 }, 0, 20, TimeUnit.MILLISECONDS);
-                return true;
             }
         });
     }

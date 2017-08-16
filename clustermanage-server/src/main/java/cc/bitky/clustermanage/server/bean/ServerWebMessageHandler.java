@@ -183,4 +183,13 @@ public class ServerWebMessageHandler {
     public boolean devicesRenew(int groupId, int deviceId) {
         return kyDbPresenter.devicesRenew(groupId, deviceId);
     }
+
+    /**
+     * 从数据库中获取正在活动的设备组
+     *
+     * @return 设备集合
+     */
+    public List<Integer> getDeviceGroupActivated() {
+        return kyDbPresenter.getDeviceGroupActivated();
+    }
 }

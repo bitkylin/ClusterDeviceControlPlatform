@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Repository;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 import java.util.concurrent.TimeUnit;
@@ -84,7 +85,7 @@ public class KyDbPresenter {
     private void handleMsgHeartBeat(IMessage tcpMsgHeartBeat, boolean autoCreate) {
         int groupId = tcpMsgHeartBeat.getGroupId();
         if (maxGroupId < groupId) maxGroupId = groupId;
-        String exec = "deviceGroup-exist-" + groupId;
+        String exec = "deviceGroup-activated-" + groupId;
         stringRedisTemplate.opsForValue().set(exec, "1", 60, TimeUnit.SECONDS);
 //
 //        initDbDeviceGroup(tcpMsgHeartBeat.getGroupId(), autoCreate);
@@ -117,26 +118,35 @@ public class KyDbPresenter {
         //更新设备的状态信息
         String s = stringRedisTemplate.opsForValue().get("deviceStatus-" + tcpMsgResponseStatus.getGroupId() + "-" + tcpMsgResponseStatus.getDeviceId());
         try {
-            status = Integer.valueOf(s);
+            if (s != null)
+                status = Integer.valueOf(s);
         } catch (NumberFormatException ignored) {
         }
         Device device = null;
+
+        //Redis 中未获取到设备状态或状态已改变
         if (status == -1 || status != tcpMsgResponseStatus.getStatus())
+            //从MongoDB中获取指定设备
             device = dbDevicePresenter.handleMsgDeviceStatus(tcpMsgResponseStatus);
 
         if (device == null) {
             if (status == tcpMsgResponseStatus.getStatus()) {
+                //未重新获取设备
                 logger.info("设备「" + tcpMsgResponseStatus.getGroupId() + ", " + tcpMsgResponseStatus.getDeviceId() + "」『"
                         + status + "->" + status + "』: 状态无更新");
             } else
+                //其他情况
                 logger.warn("设备(" + tcpMsgResponseStatus.getGroupId() + ", " + tcpMsgResponseStatus.getDeviceId() + ") 不存在，无法处理");
             return null;
         }
+
+        //设备状态已改变
         if (device.getStatus() != -1) {
             String exec = "deviceStatus-" + tcpMsgResponseStatus.getGroupId() + "-" + tcpMsgResponseStatus.getDeviceId();
-            stringRedisTemplate.opsForValue().set(exec, device.getStatus() + "", (600 + random.nextInt(60)), TimeUnit.SECONDS);
+            stringRedisTemplate.opsForValue().set(exec, device.getStatus() + "", (600 + random.nextInt(1200)), TimeUnit.SECONDS);
         }
 
+        //Redis未获取到设备且MongoDB中设备状态未改变
         if (device.getStatus() == -1) {
             logger.info("考勤表无更新");
             logger.info("时间耗费：" + (l2 - l1) + "ms; " + (System.currentTimeMillis() - l2) + "ms");
@@ -252,5 +262,24 @@ public class KyDbPresenter {
             dbDevicePresenter.updateDevice(device);
         });
         return true;
+    }
+
+    /**
+     * 从数据库中获取正在活动的设备组
+     *
+     * @return 设备集合
+     */
+    public List<Integer> getDeviceGroupActivated() {
+        List<Integer> list = new ArrayList<>();
+        if (maxGroupId <= 0) return list;
+        for (int i = 1; i <= maxGroupId; i++) {
+            String exec = "deviceGroup-activated-" + i;
+            String s = stringRedisTemplate.opsForValue().get(exec);
+            if (s != null) list.add(i);
+        }
+        if (list.size() > 0)
+            maxGroupId = list.get(list.size() - 1);
+
+        return list;
     }
 }
