@@ -8,7 +8,8 @@ import java.util.List;
 import cc.bitky.clustermanage.db.bean.Device;
 import cc.bitky.clustermanage.db.bean.Employee;
 import cc.bitky.clustermanage.db.presenter.KyDbPresenter;
-import cc.bitky.clustermanage.global.ServerSetting;
+import cc.bitky.clustermanage.global.CommSetting;
+import cc.bitky.clustermanage.global.DbSetting;
 import cc.bitky.clustermanage.server.message.CardType;
 import cc.bitky.clustermanage.server.message.base.IMessage;
 import cc.bitky.clustermanage.server.message.web.WebMsgDeployEmployeeCardNumber;
@@ -128,7 +129,7 @@ public class ServerWebMessageHandler {
         boolean cardNumber = queueDevice.isPostCardNumber();
         boolean remainChargeTime = queueDevice.isPostRemainChargeTime();
 
-        boolean AUTO_INIT = ServerSetting.DEPLOY_DEVICES_INIT;
+        boolean AUTO_INIT = CommSetting.DEPLOY_DEVICES_INIT;
 
         if (device == null) return;
 
@@ -136,7 +137,7 @@ public class ServerWebMessageHandler {
         if (cardNumber && device.getCardNumber() != null)
             kyServerCenterHandler.sendMsgTrafficControl(new WebMsgDeployEmployeeCardNumber(device.getGroupId(), device.getDeviceId(), device.getCardNumber()));
         else if (cardNumber && AUTO_INIT)
-            kyServerCenterHandler.sendMsgTrafficControl(new WebMsgDeployEmployeeCardNumber(device.getGroupId(), device.getDeviceId(), ServerSetting.DEFAULT_EMPLOYEE_CARD_NUMBER));
+            kyServerCenterHandler.sendMsgTrafficControl(new WebMsgDeployEmployeeCardNumber(device.getGroupId(), device.getDeviceId(), DbSetting.DEFAULT_EMPLOYEE_CARD_NUMBER));
 
         //部署剩余充电次数
         if (remainChargeTime) {
@@ -154,18 +155,18 @@ public class ServerWebMessageHandler {
             if (name && employee.getName() != null)
                 kyServerCenterHandler.sendMsgTrafficControl(new WebMsgDeployEmployeeName(device.getGroupId(), device.getDeviceId(), employee.getName()));
             else if (name && AUTO_INIT)
-                kyServerCenterHandler.sendMsgTrafficControl(new WebMsgDeployEmployeeName(device.getGroupId(), device.getDeviceId(), ServerSetting.DEFAULT_EMPLOYEE_NAME));
+                kyServerCenterHandler.sendMsgTrafficControl(new WebMsgDeployEmployeeName(device.getGroupId(), device.getDeviceId(), DbSetting.DEFAULT_EMPLOYEE_NAME));
 
             if (department && employee.getDepartment() != null)
                 kyServerCenterHandler.sendMsgTrafficControl(new WebMsgDeployEmployeeDepartment(device.getGroupId(), device.getDeviceId(), employee.getDepartment()));
             else if (department && AUTO_INIT)
-                kyServerCenterHandler.sendMsgTrafficControl(new WebMsgDeployEmployeeDepartment(device.getGroupId(), device.getDeviceId(), ServerSetting.DEFAULT_EMPLOYEE_DEPARTMENT));
+                kyServerCenterHandler.sendMsgTrafficControl(new WebMsgDeployEmployeeDepartment(device.getGroupId(), device.getDeviceId(), DbSetting.DEFAULT_EMPLOYEE_DEPARTMENT));
 
         } else if (AUTO_INIT) {
             if (name)
-                kyServerCenterHandler.sendMsgTrafficControl(new WebMsgDeployEmployeeName(device.getGroupId(), device.getDeviceId(), ServerSetting.DEFAULT_EMPLOYEE_NAME));
+                kyServerCenterHandler.sendMsgTrafficControl(new WebMsgDeployEmployeeName(device.getGroupId(), device.getDeviceId(), DbSetting.DEFAULT_EMPLOYEE_NAME));
             if (department)
-                kyServerCenterHandler.sendMsgTrafficControl(new WebMsgDeployEmployeeDepartment(device.getGroupId(), device.getDeviceId(), ServerSetting.DEFAULT_EMPLOYEE_DEPARTMENT));
+                kyServerCenterHandler.sendMsgTrafficControl(new WebMsgDeployEmployeeDepartment(device.getGroupId(), device.getDeviceId(), DbSetting.DEFAULT_EMPLOYEE_DEPARTMENT));
         }
     }
 

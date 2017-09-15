@@ -86,6 +86,16 @@ public class InfoRestController {
         return "error";
     }
 
+    /**
+     * 获取服务器状态
+     *
+     * @return 服务器状态
+     */
+    @RequestMapping(value = "/server/status", method = RequestMethod.GET)
+    public String obtainServerStatus() {
+        return "success";
+    }
+
     @RequestMapping(value = "/queueframe", method = RequestMethod.GET)
     public QueueInfo obtainQueueFrame() {
         return serverWebMessageHandler.obtainQueueFrame();

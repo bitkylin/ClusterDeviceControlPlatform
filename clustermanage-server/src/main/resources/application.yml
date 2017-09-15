@@ -9,10 +9,10 @@
 #  redis:
 #    host: host:lml-desktop
 #    port: 6379
-
 debug: false
 logging:
   level:
     root: info
 server:
   port: 8080
+

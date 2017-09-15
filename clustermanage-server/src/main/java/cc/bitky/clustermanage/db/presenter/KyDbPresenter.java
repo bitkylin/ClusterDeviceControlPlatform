@@ -14,7 +14,7 @@ import java.util.concurrent.TimeUnit;
 import cc.bitky.clustermanage.db.bean.Device;
 import cc.bitky.clustermanage.db.bean.Employee;
 import cc.bitky.clustermanage.db.repository.DeviceGroupRepository;
-import cc.bitky.clustermanage.global.ServerSetting;
+import cc.bitky.clustermanage.global.CommSetting;
 import cc.bitky.clustermanage.server.message.CardType;
 import cc.bitky.clustermanage.server.message.base.IMessage;
 import cc.bitky.clustermanage.server.message.tcp.TcpMsgResponseStatus;
@@ -258,7 +258,7 @@ public class KyDbPresenter {
         List<Device> devices = dbDevicePresenter.getDevices(groupId, deviceId);
         if (devices == null || devices.size() == 0) return false;
         devices.forEach(device -> {
-            device.setRemainChargeTime(ServerSetting.DEVICE_INIT_CHARGE_TIMES);
+            device.setRemainChargeTime(CommSetting.DEVICE_INIT_CHARGE_TIMES);
             dbDevicePresenter.updateDevice(device);
         });
         return true;
