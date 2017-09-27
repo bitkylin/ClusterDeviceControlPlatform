@@ -5,7 +5,7 @@
 
     <groupId>cc.bitky.clustermanage</groupId>
     <artifactId>clustermanage-client</artifactId>
-    <version>0.9.9-SNAPSHOT</version>
+    <version>0.9.9</version>
     <packaging>jar</packaging>
 
     <name>clustermanage-client-javafx</name>
