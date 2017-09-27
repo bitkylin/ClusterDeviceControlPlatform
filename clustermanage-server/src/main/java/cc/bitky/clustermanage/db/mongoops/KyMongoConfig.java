@@ -9,7 +9,7 @@ import org.springframework.data.mongodb.config.AbstractMongoConfiguration;
 import org.springframework.data.mongodb.core.convert.DefaultMongoTypeMapper;
 import org.springframework.data.mongodb.core.convert.MappingMongoConverter;
 
-import cc.bitky.clustermanage.global.ServerSetting;
+import cc.bitky.clustermanage.global.DbSetting;
 
 @Configuration
 public class KyMongoConfig extends AbstractMongoConfiguration {
@@ -25,11 +25,11 @@ public class KyMongoConfig extends AbstractMongoConfiguration {
 
     @Override
     protected String getDatabaseName() {
-        return ServerSetting.DATABASE;
+        return DbSetting.DATABASE;
     }
 
     @Override
     public Mongo mongo() throws Exception {
-        return new MongoClient(ServerSetting.HOST);
+        return new MongoClient(DbSetting.HOST);
     }
 }

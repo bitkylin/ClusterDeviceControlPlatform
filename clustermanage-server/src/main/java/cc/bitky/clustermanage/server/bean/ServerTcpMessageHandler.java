@@ -9,7 +9,7 @@ import java.util.concurrent.TimeUnit;
 
 import cc.bitky.clustermanage.db.bean.Device;
 import cc.bitky.clustermanage.db.presenter.KyDbPresenter;
-import cc.bitky.clustermanage.global.ServerSetting;
+import cc.bitky.clustermanage.global.CommSetting;
 import cc.bitky.clustermanage.server.message.MsgType;
 import cc.bitky.clustermanage.server.message.base.BaseTcpResponseMsg;
 import cc.bitky.clustermanage.server.message.base.IMessage;
@@ -55,7 +55,7 @@ public class ServerTcpMessageHandler {
         else
             logger.info("收到：设备状态请求的回复");
         long l1 = System.currentTimeMillis();
-        Device device = kyDbPresenter.handleMsgDeviceStatus(message, ServerSetting.AUTO_CREATE_DEVICE_EMPLOYEE);
+        Device device = kyDbPresenter.handleMsgDeviceStatus(message, CommSetting.AUTO_CREATE_DEVICE_EMPLOYEE);
         //部署剩余充电次数
         if (device != null) {
             deployRemainChargeTimes(device);
@@ -79,7 +79,7 @@ public class ServerTcpMessageHandler {
     private void deployRemainChargeTimes(Device device) {
 
         //当当前充电状态为「充满」，并且剩余充电次数小于或等于阈值时，部署剩余充电次数
-        if (device.getStatus() == 3 && device.getRemainChargeTime() <= ServerSetting.DEPLOY_REMAIN_CHARGE_TIMES) {
+        if (device.getStatus() == 3 && device.getRemainChargeTime() <= CommSetting.DEPLOY_REMAIN_CHARGE_TIMES) {
             int remainTimes = device.getRemainChargeTime();
             remainTimes = remainTimes > 0 ? remainTimes : 0;
             remainTimes = remainTimes <= 100 ? remainTimes : 100;
@@ -223,9 +223,9 @@ public class ServerTcpMessageHandler {
      * @return 是否发送成功或添加时间轮成功
      */
     boolean sendMsgTrafficControl(IMessage message) {
-        if (getSendingMsgRepo().getLinkedBlockingDeque().size() > ServerSetting.LINKED_DEQUE_LIMIT_CAPACITY) {
+        if (getSendingMsgRepo().getLinkedBlockingDeque().size() > CommSetting.LINKED_DEQUE_LIMIT_CAPACITY) {
             getSendingMsgRepo().getHashedWheelTimer()
-                    .newTimeout(timeout -> sendMsgTrafficControl(message), ServerSetting.COMMAND_DELAY_WAITING_TIME, TimeUnit.SECONDS);
+                    .newTimeout(timeout -> sendMsgTrafficControl(message), CommSetting.COMMAND_DELAY_WAITING_TIME, TimeUnit.SECONDS);
             return true;
         }
         return tcpMediator.sendMsgToNetty(message);

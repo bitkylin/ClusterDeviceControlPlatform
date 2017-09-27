@@ -25,8 +25,9 @@ public class ViewUtil {
      */
     public static String getOsInfo() {
         Properties props = System.getProperties();
-        return "Java运行时版本: " + props.getProperty("java.runtime.version") + "\n" +
-                "操作系统: " + props.getProperty("os.name") + "\n" +
+        return  "JVM: " + props.getProperty("java.vm.name") + "\n" +
+                "版本: " + props.getProperty("java.runtime.version") + "\n" +
+                "系统: " + props.getProperty("os.name") + "\n" +
                 "架构: " + props.getProperty("os.arch") + "\n" +
                 "语言: " + props.getProperty("user.language") + "\n" +
                 "用户名: " + props.getProperty("user.name") + "\n" +

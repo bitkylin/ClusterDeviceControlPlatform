@@ -22,16 +22,16 @@ public class NettyServerShow implements CommandLineRunner {
 
     private void startServer() {
         if (!running) {
-            logger.info("服务器正在启动...");
+            logger.info("「Netty」服务器正在启动...");
             nettyServer.setLaunchSuccessfulListener(isSuccess -> {
                 if (isSuccess) {
-                    logger.info("端口绑定成功");
+                    logger.info("「Netty」端口绑定成功");
                     // newThreadKeyIn();
                     //       newThreadToMain();
                 } else {
-                    logger.warn("端口绑定出错");
+                    logger.warn("「Netty」端口绑定出错");
                     running = false;
-                    logger.warn("服务器启动失败！");
+                    logger.warn("「Netty」服务器启动失败！");
                 }
             });
             nettyServer.start();
@@ -42,12 +42,12 @@ public class NettyServerShow implements CommandLineRunner {
     private void stopServer() {
         nettyServer.setFinishSuccessfulListener(isSuccess -> {
             if (isSuccess) {
-                logger.info("服务器优雅关闭成功");
+                logger.info("「Netty」服务器优雅关闭成功");
                 running = false;
                 nettyServer.setFinishSuccessfulListener(null);
                 nettyServer.setLaunchSuccessfulListener(null);
             } else {
-                logger.warn("服务器优雅关闭失败");
+                logger.warn("「Netty」服务器优雅关闭失败");
                 running = true;
             }
         });

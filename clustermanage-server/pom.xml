@@ -6,7 +6,7 @@
 
     <groupId>cc.bitky.clustermanage</groupId>
     <artifactId>clustermanage-server</artifactId>
-    <version>1.0.2-release</version>
+    <version>1.0.3-release</version>
     <packaging>jar</packaging>
 
     <name>clustermanage-server</name>

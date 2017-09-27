@@ -6,7 +6,7 @@ import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.connection.jedis.JedisConnectionFactory;
 import org.springframework.data.redis.core.StringRedisTemplate;
 
-import cc.bitky.clustermanage.global.ServerSetting;
+import cc.bitky.clustermanage.global.DbSetting;
 
 @Configuration
 public class KyRedisConfig {
@@ -14,7 +14,7 @@ public class KyRedisConfig {
     @Bean
     public RedisConnectionFactory redisConnectionFactory() {
         JedisConnectionFactory factory = new JedisConnectionFactory();
-        factory.setHostName(ServerSetting.HOST);
+        factory.setHostName(DbSetting.HOST);
         return factory;
     }
 

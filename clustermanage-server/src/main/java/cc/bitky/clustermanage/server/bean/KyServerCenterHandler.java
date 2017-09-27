@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import cc.bitky.clustermanage.db.presenter.KyDbPresenter;
+import cc.bitky.clustermanage.global.CommSetting;
 import cc.bitky.clustermanage.global.ServerSetting;
 import cc.bitky.clustermanage.server.message.CardType;
 import cc.bitky.clustermanage.server.message.base.IMessage;
@@ -84,7 +85,7 @@ public class KyServerCenterHandler {
             logger.warn("设备位置信息有效性判断异常「异常小值」，设定组号：" + message.getGroupId() + ", 设备号：" + message.getDeviceId());
             return false;
         }
-        if ((deviceId > ServerSetting.MAX_DEVICE_SIZE_EACH_GROUP && groupId != 255)
+        if ((deviceId > ServerSetting.MAX_DEVICE_SIZE_EACH_GROUP && deviceId != 255)
                 || groupId > ServerSetting.MAX_DEVICE_GROUP_SIZE && groupId != 255) {
             logger.warn("设备位置信息有效性判断异常「异常大值」，设定组号：" + message.getGroupId() + ", 设备号：" + message.getDeviceId());
             return false;
@@ -158,8 +159,8 @@ public class KyServerCenterHandler {
      */
     QueueInfo obtainQueueFrame() {
         int size = getSendingMsgRepo().getLinkedBlockingDeque().size();
-        int capacity = ServerSetting.LINKED_DEQUE_LIMIT_CAPACITY;
-        int interval = ServerSetting.FRAME_SEND_INTERVAL;
+        int capacity = CommSetting.LINKED_DEQUE_LIMIT_CAPACITY;
+        int interval = CommSetting.FRAME_SEND_INTERVAL;
         return new QueueInfo(size, capacity, interval);
     }
 }
