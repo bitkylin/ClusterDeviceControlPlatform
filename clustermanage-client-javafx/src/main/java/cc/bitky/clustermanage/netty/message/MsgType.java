@@ -93,7 +93,13 @@ public class MsgType {
      * 万能卡号设置的回复
      */
     public static final byte DEVICE_RESPONSE_FREE_CARD_NUMBER = (byte) 0x80;
-
+    //-------------------LED 消息-----------------------
+    public static final byte SERVER_LED_SETTING = 0x30;
+    public static final byte SERVER_LED_STOP = 0x31;
+    public static final byte SERVER_LED_TEXT = 0x33;
+    public static final byte DEVICE_RESPONSE_LED_SETTING = 0x60;
+    public static final byte DEVICE_RESPONSE_LED_STOP = 0x61;
+    public static final byte DEVICE_RESPONSE_TEXT = 0x63;
     //-------------------初始化流程信息-----------------------
 
     /**

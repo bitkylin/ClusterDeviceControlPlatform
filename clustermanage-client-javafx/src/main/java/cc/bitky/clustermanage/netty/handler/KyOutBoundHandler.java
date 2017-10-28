@@ -21,6 +21,8 @@ public class KyOutBoundHandler extends ChannelOutboundHandlerAdapter {
         IMessage message = (IMessage) msg;
         if (message.getMsgId() >= 0x40 && message.getMsgId() <= 0x4F) {
             ctx.writeAndFlush(Unpooled.wrappedBuffer(tcpMsgBuilder.buildResponseMsg((BaseTcpResponseMsg) message)));
+        } else if (message.getMsgId() >= 0x60 && message.getMsgId() <= 0x6F) {
+            ctx.writeAndFlush(Unpooled.wrappedBuffer(tcpMsgBuilder.buildResponseMsg((BaseTcpResponseMsg) message)));
         } else if (message.getMsgId() >= -128 && message.getMsgId() <= -113) {
             ctx.writeAndFlush(Unpooled.wrappedBuffer(tcpMsgBuilder.buildResponseMsg((BaseTcpResponseMsg) message)));
         } else if (message.getMsgId() == MsgType.INITIALIZE_DEVICE_RESPONSE_CARD)

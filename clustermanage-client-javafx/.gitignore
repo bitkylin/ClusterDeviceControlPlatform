@@ -1,6 +1,7 @@
 target/
 test/
 .mvn/
+out/
 
 ### STS ###
 .apt_generated

@@ -10,6 +10,7 @@ import cc.bitky.clustermanage.netty.message.tcp.TcpMsgResponseEmployeeDepartment
 import cc.bitky.clustermanage.netty.message.tcp.TcpMsgResponseEmployeeDepartment2;
 import cc.bitky.clustermanage.netty.message.tcp.TcpMsgResponseEmployeeName;
 import cc.bitky.clustermanage.netty.message.tcp.TcpMsgResponseFreeCardNumber;
+import cc.bitky.clustermanage.netty.message.tcp.TcpMsgResponseLed;
 import cc.bitky.clustermanage.netty.message.tcp.TcpMsgResponseOperateBoxUnlock;
 import cc.bitky.clustermanage.netty.message.tcp.TcpMsgResponseRemainChargeTimes;
 import cc.bitky.clustermanage.netty.message.web.WebMsgDeployEmployeeCardNumber;
@@ -18,6 +19,7 @@ import cc.bitky.clustermanage.netty.message.web.WebMsgDeployEmployeeDepartment2;
 import cc.bitky.clustermanage.netty.message.web.WebMsgDeployEmployeeDeviceId;
 import cc.bitky.clustermanage.netty.message.web.WebMsgDeployEmployeeName;
 import cc.bitky.clustermanage.netty.message.web.WebMsgDeployFreeCardSpecial;
+import cc.bitky.clustermanage.netty.message.web.WebMsgDeployLedSetting;
 import cc.bitky.clustermanage.netty.message.web.WebMsgDeployRemainChargeTimes;
 import cc.bitky.clustermanage.netty.message.web.WebMsgInitMarchConfirmCardResponse;
 import cc.bitky.clustermanage.view.Container;
@@ -44,6 +46,24 @@ public class ParsedMessageInBoundHandler extends SimpleChannelInboundHandler<IMe
         if (errorSum != 0)
             logger.warn("#%#%最终未能解析帧的数量：" + errorSum);
         Device device;
+
+        if (msg.getMsgId() >= 0x30 && msg.getMsgId() <= 0x3F) {
+            TcpMsgResponseLed responseLed = new TcpMsgResponseLed(msg.getGroupId(), msg.getBoxId(), 1);
+            responseLed.setMsgId(msg.getMsgId() + 0x30);
+            switch (msg.getMsgId()) {
+                case MsgType.SERVER_LED_SETTING:
+                    logger.debug("收到LED：设置");
+                    break;
+                case MsgType.SERVER_LED_STOP:
+                    logger.debug("收到LED：停止");
+                    break;
+                default:
+                    WebMsgDeployLedSetting deployLedSetting = (WebMsgDeployLedSetting) msg;
+                    logger.debug("收到LED文本：" + deployLedSetting.getText());
+            }
+            ctx.channel().writeAndFlush(responseLed);
+            return;
+        }
 
         switch (msg.getMsgId()) {
             case MsgType.SERVER_REQUSET_STATUS:
