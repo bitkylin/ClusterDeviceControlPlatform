@@ -5,15 +5,17 @@ import org.slf4j.LoggerFactory;
 
 import java.nio.charset.Charset;
 
-import cc.bitky.clustermanage.netty.message.web.WebMsgDeployEmployeeDepartment2;
 import cc.bitky.clustermanage.netty.message.MsgType;
-import cc.bitky.clustermanage.netty.message.web.WebMsgDeployFreeCardSpecial;
 import cc.bitky.clustermanage.netty.message.base.IMessage;
 import cc.bitky.clustermanage.netty.message.tcp.MsgErrorMessage;
 import cc.bitky.clustermanage.netty.message.web.WebMsgDeployEmployeeCardNumber;
 import cc.bitky.clustermanage.netty.message.web.WebMsgDeployEmployeeDepartment;
+import cc.bitky.clustermanage.netty.message.web.WebMsgDeployEmployeeDepartment2;
 import cc.bitky.clustermanage.netty.message.web.WebMsgDeployEmployeeDeviceId;
 import cc.bitky.clustermanage.netty.message.web.WebMsgDeployEmployeeName;
+import cc.bitky.clustermanage.netty.message.web.WebMsgDeployFreeCardSpecial;
+import cc.bitky.clustermanage.netty.message.web.WebMsgDeployLedSetting;
+import cc.bitky.clustermanage.netty.message.web.WebMsgDeployLedStop;
 import cc.bitky.clustermanage.netty.message.web.WebMsgDeployRemainChargeTimes;
 import cc.bitky.clustermanage.netty.message.web.WebMsgInitClearDeviceStatus;
 import cc.bitky.clustermanage.netty.message.web.WebMsgInitMarchConfirmCardResponse;
@@ -26,7 +28,7 @@ import io.netty.channel.SimpleChannelInboundHandler;
 
 public class CanFrameChannelInboundHandler extends SimpleChannelInboundHandler<ByteBuf> {
     private static final int frameHead = 0x80;
-    private Charset charset_GB2312 = Charset.forName("EUC-CN");
+    private Charset charset_GB2312 = Charset.forName("GB2312");
     private Logger logger = LoggerFactory.getLogger(this.getClass());
     private int errorCount = 0;
 
@@ -68,6 +70,22 @@ public class CanFrameChannelInboundHandler extends SimpleChannelInboundHandler<B
             msg.readBytes(bytes);
             String freeCardNumber = TcpMsgBuilder.byteArrayToString(bytes);
             return new WebMsgDeployFreeCardSpecial(groupId, boxId, freeCardNumber, msgId - 0x70);
+        }
+        if (msgId >= 0x30 && msgId <= 0x3F) {
+            switch (msgId) {
+                case MsgType.SERVER_LED_SETTING:
+                    msg.skipBytes(8);
+                    return new WebMsgDeployLedSetting(groupId, boxId);
+
+                case MsgType.SERVER_LED_STOP:
+                    msg.skipBytes(8);
+                    return new WebMsgDeployLedStop(groupId, boxId);
+                default:
+                    String str = readGB2312Body(msg);
+                    WebMsgDeployLedSetting ledSetting = new WebMsgDeployLedSetting(groupId, boxId, str);
+                    ledSetting.setMsgId(msgId);
+                    return ledSetting;
+            }
         }
 
         switch (msgId) {
