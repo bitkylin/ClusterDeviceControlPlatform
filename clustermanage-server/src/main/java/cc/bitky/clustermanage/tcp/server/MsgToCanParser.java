@@ -5,6 +5,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 import cc.bitky.clustermanage.server.message.MsgType;
 import cc.bitky.clustermanage.server.message.base.IMessage;
 import cc.bitky.clustermanage.server.message.send.SendableMsg;
@@ -14,6 +16,8 @@ import cc.bitky.clustermanage.server.message.web.WebMsgDeployEmployeeDepartment;
 import cc.bitky.clustermanage.server.message.web.WebMsgDeployEmployeeDeviceId;
 import cc.bitky.clustermanage.server.message.web.WebMsgDeployEmployeeName;
 import cc.bitky.clustermanage.server.message.web.WebMsgDeployFreeCardNumber;
+import cc.bitky.clustermanage.server.message.web.WebMsgDeployLedSetting;
+import cc.bitky.clustermanage.server.message.web.WebMsgDeployLedStop;
 import cc.bitky.clustermanage.server.message.web.WebMsgDeployRemainChargeTimes;
 import cc.bitky.clustermanage.server.message.web.WebMsgInitClearDeviceStatus;
 import cc.bitky.clustermanage.server.message.web.WebMsgInitMarchConfirmCardResponse;
@@ -44,10 +48,22 @@ public class MsgToCanParser {
 
         if (message.getMsgId() == MsgType.SERVER_SEND_SPECIAL) {
             WebMsgSpecial msgSpecial = (WebMsgSpecial) message;
-            logger.info("$$$$$$$$$$$$发送特殊帧「urgent:" + msgSpecial.isUrgent() + ", responsive:" + msgSpecial.isResponsive() + ", grouped:" + msgSpecial.isGrouped() + "」$$$$$$$$$$$$$$$");
+            logger.info("$$$$$$$$$$$$发送特殊帧「urgent:" + msgSpecial.isUrgent() + ", responsive:" + msgSpecial.isResponsive() + ", type:" + msgSpecial.getTpye().toString() + "」$$$$$$$$$$$$$$$");
             IMessage baseMsgSpecial = msgSpecial.getMessage();
-            if (msgSpecial.isGrouped()) {
-                if (msgSpecial.getMaxGroupId() > 0) {
+            switch (msgSpecial.getTpye()) {
+                case GROUP:
+                    for (int k = 1; k <= msgSpecial.getMaxGroupId(); k++) {
+                        baseMsgSpecial.setGroupId(k);
+                        unpackComplexMsgToTcp(baseMsgSpecial, msgSpecial.isUrgent(), msgSpecial.isResponsive());
+                    }
+                    break;
+                case BOX:
+                    for (int j = 1; j <= msgSpecial.getMaxDeviceId(); j++) {
+                        baseMsgSpecial.setDeviceId(j);
+                        unpackComplexMsgToTcp(baseMsgSpecial, msgSpecial.isUrgent(), msgSpecial.isResponsive());
+                    }
+                    break;
+                case ALL:
                     for (int j = 1; j <= msgSpecial.getMaxDeviceId(); j++) {
                         for (int k = 1; k <= msgSpecial.getMaxGroupId(); k++) {
                             baseMsgSpecial.setDeviceId(j);
@@ -55,15 +71,12 @@ public class MsgToCanParser {
                             unpackComplexMsgToTcp(baseMsgSpecial, msgSpecial.isUrgent(), msgSpecial.isResponsive());
                         }
                     }
-                } else {
-                    for (int j = 1; j <= msgSpecial.getMaxDeviceId(); j++) {
-                        baseMsgSpecial.setDeviceId(j);
-                        unpackComplexMsgToTcp(baseMsgSpecial, msgSpecial.isUrgent(), msgSpecial.isResponsive());
-                    }
-                }
-            } else {
-                unpackComplexMsgToTcp(baseMsgSpecial, msgSpecial.isUrgent(), msgSpecial.isResponsive());
+                    break;
+                case NONE:
+                    unpackComplexMsgToTcp(baseMsgSpecial, msgSpecial.isUrgent(), msgSpecial.isResponsive());
+                    break;
             }
+
         } else {
             unpackComplexMsgToTcp(message, false, true);
         }
@@ -95,6 +108,12 @@ public class MsgToCanParser {
                     bytesF[0] += 8;
                     deployWriteTcpSpecial(bytesF, urgent, responsive);
                 }
+                return;
+            case MsgType.SERVER_LED_SETTING:
+                WebMsgDeployLedSetting led = (WebMsgDeployLedSetting) message;
+                logger.info("生成帧：LED参数设置");
+                List<byte[]> list = tcpMsgBuilder.buildLedSetting(led);
+                list.forEach(bytes -> deployWriteTcpSpecial(bytes, urgent, responsive));
                 return;
         }
         deployWriteTcpSpecial(buildByMessage(message), urgent, responsive);
@@ -153,6 +172,10 @@ public class MsgToCanParser {
             case MsgType.SERVER_SET_FREE_CARD_NUMBER:
                 logger.info("生成帧：设置万能卡号");
                 return tcpMsgBuilder.buildFreeCardNumber((WebMsgDeployFreeCardNumber) message);
+
+            case MsgType.SERVER_LED_STOP:
+                logger.info("生成帧：LED停止");
+                return tcpMsgBuilder.buildMsgOutline((WebMsgDeployLedStop) message);
 
             case MsgType.INITIALIZE_SERVER_MARCH_CONFIRM_CARD_RESPONSE:
                 WebMsgInitMarchConfirmCardResponse marchConfirmCard = (WebMsgInitMarchConfirmCardResponse) message;

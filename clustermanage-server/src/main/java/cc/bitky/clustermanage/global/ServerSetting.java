@@ -15,7 +15,7 @@ public class ServerSetting {
     /**
      * 单设备组中最大的设备数量
      */
-    public static final int MAX_DEVICE_SIZE_EACH_GROUP = 100;
+    public static final int MAX_DEVICE_SIZE_EACH_GROUP = 127;
     /**
      * 本地配置文件
      */

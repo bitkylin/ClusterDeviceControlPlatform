@@ -14,6 +14,7 @@ import cc.bitky.clustermanage.server.message.tcp.TcpMsgResponseEmployeeDepartmen
 import cc.bitky.clustermanage.server.message.tcp.TcpMsgResponseEmployeeDepartment2;
 import cc.bitky.clustermanage.server.message.tcp.TcpMsgResponseEmployeeName;
 import cc.bitky.clustermanage.server.message.tcp.TcpMsgResponseFreeCardNumber;
+import cc.bitky.clustermanage.server.message.tcp.TcpMsgResponseLed;
 import cc.bitky.clustermanage.server.message.tcp.TcpMsgResponseOperateBoxUnlock;
 import cc.bitky.clustermanage.server.message.tcp.TcpMsgResponseRemainChargeTimes;
 import cc.bitky.clustermanage.server.message.tcp.TcpMsgResponseStatus;
@@ -136,7 +137,13 @@ public class CanFrameChannelInboundHandler extends SimpleChannelInboundHandler<B
                     return new TcpMsgResponseOperateBoxUnlock(groupId, deviceId, status);
             }
         }
-
+        if (msgId >= 0x60 && msgId <= 0x6F) {
+            int status = msg.readByte();
+            msg.skipBytes(7);
+            TcpMsgResponseLed responseLed = new TcpMsgResponseLed(groupId, deviceId, status);
+            responseLed.setMsgId(msgId);
+            return responseLed;
+        }
 
         if (msgId >= ((byte) 0x80) && msgId <= ((byte) 0x8F)) {
             int status = msg.readByte();

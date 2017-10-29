@@ -101,14 +101,14 @@ public class KyServerCenterHandler {
             return sendMsgTrafficControl(WebMsgSpecial.forBox(message, urgent, responsive));
         }
 
-        if (groupedGroup && groupedBox) {
-            if (maxGroupId == 0)
-                maxGroupId = kyDbPresenter.obtainMaxDeviceGroupId();
-            if (maxGroupId == 0) return false;
+        if (maxGroupId == 0)
+            maxGroupId = kyDbPresenter.obtainMaxDeviceGroupId();
+        if (maxGroupId == 0) return false;
 
+        if (groupedBox) {
             return sendMsgTrafficControl(WebMsgSpecial.forAll(message, maxGroupId, urgent, responsive));
-        }
-        return false;
+        } else
+            return sendMsgTrafficControl(WebMsgSpecial.forGroup(message, maxGroupId, urgent, responsive));
     }
 
     /**

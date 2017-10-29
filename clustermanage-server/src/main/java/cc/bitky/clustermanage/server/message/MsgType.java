@@ -105,4 +105,13 @@ public class MsgType {
      * 服务器清除设备的初始化状态
      */
     public static final byte INITIALIZE_SERVER_CLEAR_INITIALIZE_MESSAGE = (byte) 0xAD;
+
+    //-------------------LED 消息-----------------------
+    public static final byte SERVER_LED_SETTING = 0x30;
+    public static final byte SERVER_LED_STOP = 0x31;
+    public static final byte SERVER_LED_TEXT = 0x33;
+    public static final byte DEVICE_RESPONSE_LED_SETTING = 0x60;
+    public static final byte DEVICE_RESPONSE_LED_STOP = 0x61;
+    public static final byte DEVICE_RESPONSE_TEXT = 0x63;
+
 }

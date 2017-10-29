@@ -42,3 +42,4 @@ jspm_packages
 clustermanage-server/setting.ini
 clustermanage-server/setting
 clustermanage-server/src/test/java/
+/clustermanage-server/*.exe
