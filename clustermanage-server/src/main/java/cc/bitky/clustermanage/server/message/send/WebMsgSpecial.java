@@ -10,11 +10,11 @@ import cc.bitky.clustermanage.server.message.base.IMessage;
 public class WebMsgSpecial extends BaseMessage {
 
     private final IMessage message;
+    private Tpye tpye = Tpye.NONE;
     private int maxGroupId;
     private int maxDeviceId;
     private boolean responsive = true;
     private boolean urgent = false;
-    private boolean grouped = false;
 
     public WebMsgSpecial(IMessage message) {
         super(0, 0);
@@ -22,21 +22,29 @@ public class WebMsgSpecial extends BaseMessage {
         setMsgId(MsgType.SERVER_SEND_SPECIAL);
     }
 
-    private WebMsgSpecial(int maxGroupId, IMessage message, boolean urgent, boolean responsive) {
+    private WebMsgSpecial(int maxGroupId, int maxDeviceId, IMessage message, boolean urgent, boolean responsive, Tpye tpye) {
         this(message);
-        grouped = true;
+        this.tpye = tpye;
         this.maxGroupId = maxGroupId;
-        maxDeviceId = 100;
+        this.maxDeviceId = maxDeviceId;
         this.urgent = urgent;
         this.responsive = responsive;
     }
 
     public static WebMsgSpecial forAll(IMessage message, int maxGroupId, boolean urgent, boolean responsive) {
-        return new WebMsgSpecial(maxGroupId, message, urgent, responsive);
+        return new WebMsgSpecial(maxGroupId, 100, message, urgent, responsive, Tpye.ALL);
     }
 
     public static WebMsgSpecial forBox(IMessage message, boolean urgent, boolean responsive) {
-        return new WebMsgSpecial(0, message, urgent, responsive);
+        return new WebMsgSpecial(0, 100, message, urgent, responsive, Tpye.BOX);
+    }
+
+    public static WebMsgSpecial forGroup(IMessage message, int maxGroupId, boolean urgent, boolean responsive) {
+        return new WebMsgSpecial(maxGroupId, 120, message, urgent, responsive, Tpye.GROUP);
+    }
+
+    public Tpye getTpye() {
+        return tpye;
     }
 
     public IMessage getMessage() {
@@ -67,7 +75,10 @@ public class WebMsgSpecial extends BaseMessage {
         return maxDeviceId;
     }
 
-    public boolean isGrouped() {
-        return grouped;
+    public enum Tpye {
+        GROUP,
+        BOX,
+        ALL,
+        NONE
     }
 }

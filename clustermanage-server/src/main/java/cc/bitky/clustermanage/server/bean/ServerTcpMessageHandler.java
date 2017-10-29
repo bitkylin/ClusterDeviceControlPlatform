@@ -125,7 +125,8 @@ public class ServerTcpMessageHandler {
         }
 
 
-        if (message.getMsgId() > 0x40 && message.getMsgId() <= 0x4F) {
+        if ((message.getMsgId() > 0x40 && message.getMsgId() <= 0x4F)
+                || (message.getMsgId() >= 0x60 && message.getMsgId() <= 0x6F)) {
             if (message.getStatus() == 1) {
                 byte groupId = (byte) message.getGroupId();
                 byte boxId = (byte) message.getDeviceId();
@@ -187,13 +188,11 @@ public class ServerTcpMessageHandler {
         TcpMsgInitResponseCardNumber msgInitCard = (TcpMsgInitResponseCardNumber) message;
         logger.info("收到：设备发送的卡号: " + msgInitCard.getCardNumber());
 
-
         //卡号初始化为 0，故排除掉 0 以避免错误
         if (msgInitCard.getCardNumber().equals("0000000000000000")) {
             sendMsgToTcpSpecial(new WebMsgInitMarchConfirmCardResponse(msgInitCard.getGroupId(), msgInitCard.getDeviceId(), false), true, false);
             return;
         }
-
 
         if (kyServerCenterHandler.marchConfirmCard(msgInitCard.getCardNumber())) {
             sendMsgToTcpSpecial(new WebMsgInitMarchConfirmCardResponse(msgInitCard.getGroupId(), msgInitCard.getDeviceId(), true), true, false);

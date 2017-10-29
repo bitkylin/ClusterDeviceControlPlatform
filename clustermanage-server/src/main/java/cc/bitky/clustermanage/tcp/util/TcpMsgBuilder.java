@@ -3,6 +3,9 @@ package cc.bitky.clustermanage.tcp.util;
 import org.springframework.stereotype.Component;
 
 import java.nio.charset.Charset;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 import cc.bitky.clustermanage.server.message.base.BaseMessage;
 import cc.bitky.clustermanage.server.message.web.WebMsgDeployEmployeeCardNumber;
@@ -10,6 +13,7 @@ import cc.bitky.clustermanage.server.message.web.WebMsgDeployEmployeeDepartment;
 import cc.bitky.clustermanage.server.message.web.WebMsgDeployEmployeeDeviceId;
 import cc.bitky.clustermanage.server.message.web.WebMsgDeployEmployeeName;
 import cc.bitky.clustermanage.server.message.web.WebMsgDeployFreeCardNumber;
+import cc.bitky.clustermanage.server.message.web.WebMsgDeployLedSetting;
 import cc.bitky.clustermanage.server.message.web.WebMsgDeployRemainChargeTimes;
 import cc.bitky.clustermanage.server.message.web.WebMsgInitClearDeviceStatus;
 import cc.bitky.clustermanage.server.message.web.WebMsgInitMarchConfirmCardResponse;
@@ -18,7 +22,7 @@ import cc.bitky.clustermanage.server.message.web.WebMsgOperateBoxUnlock;
 
 @Component
 public class TcpMsgBuilder {
-       private Charset charset_GB2312 = Charset.forName("EUC-CN");
+    private Charset charset_GB2312 = Charset.forName("GB2312");
 
     public static String byteArrayToString(byte[] cards) {
         StringBuilder builder = new StringBuilder();
@@ -31,7 +35,7 @@ public class TcpMsgBuilder {
         return builder.toString();
     }
 
-    public static byte[] stringToByteArray(String cards) {
+    public static byte[] stringCardToByteArray(String cards) {
         if (cards.length() > 16) cards = cards.substring(0, 16);
         if (cards.length() < 16) {
             int count = 16 - cards.length();
@@ -145,7 +149,7 @@ public class TcpMsgBuilder {
     public byte[] buildEmployeeCardNumber(WebMsgDeployEmployeeCardNumber webMsgDeployEmployeeCardNumber) {
         byte[] bytes = buildMsgOutline(webMsgDeployEmployeeCardNumber);
         bytes[0] += 8;
-        byte[] byteCardNum = stringToByteArray(webMsgDeployEmployeeCardNumber.getCardNumber());
+        byte[] byteCardNum = stringCardToByteArray(webMsgDeployEmployeeCardNumber.getCardNumber());
         addMessageBody(bytes, byteCardNum, 0);
         return bytes;
     }
@@ -174,7 +178,7 @@ public class TcpMsgBuilder {
         for (int i = 0; i < count; i++) {
             byte[] bytes = buildMsgOutline(webMsgDeployFreeCardNumber);
             bytes[2] += i;
-            addMessageBody(bytes, stringToByteArray(cards[i]), 0);
+            addMessageBody(bytes, stringCardToByteArray(cards[i]), 0);
             System.arraycopy(bytes, 0, bytesSend, 13 * i, 13);
         }
         return bytesSend;
@@ -204,13 +208,41 @@ public class TcpMsgBuilder {
         return buildMsgOutline(clearDeviceStatus);
     }
 
+    public List<byte[]> buildLedSetting(WebMsgDeployLedSetting led) {
+        byte[] bytesBody = led.getText().getBytes(charset_GB2312);
+        bytesBody = Arrays.copyOf(bytesBody, bytesBody.length + 2);
+        bytesBody[bytesBody.length - 2] = 0x0D;
+        bytesBody[bytesBody.length - 1] = 0x0A;
+        int len = (int) Math.ceil(bytesBody.length / 8.0);
+        byte[] byteSetting = buildMsgOutline(led);
+        byteSetting[0] += 4;
+        byteSetting[5] = led.getBytePoint();
+        byteSetting[6] = (byte) led.getDuration();
+        byteSetting[7] = (byte) len;
+        byteSetting[8] = (byte) led.getBrightness();
+
+        List<byte[]> list = new ArrayList<>();
+        list.add(byteSetting);
+        byte[] bytesRaw = buildMsgOutline(led);
+        bytesRaw[2] += 3;
+        for (int i = 0; i < len; i++) {
+            byte[] bytes = Arrays.copyOf(bytesRaw, bytesRaw.length);
+            int frameLen = bytesBody.length - i * 8 > 8 ? 8 : bytesBody.length - i * 8;
+            bytes[0] += frameLen;
+            bytes[2] += i;
+            System.arraycopy(bytesBody, i * 8, bytes, 5, frameLen);
+            list.add(bytes);
+        }
+        return list;
+    }
+
     /**
      * 构建 CAN 帧的轮廓，只需再填入数据位即可
      *
      * @param message 欲构建为 CAN 帧的 bean
      * @return 轮廓 CAN 帧
      */
-    private byte[] buildMsgOutline(BaseMessage message) {
+    public byte[] buildMsgOutline(BaseMessage message) {
         byte[] bytes = new byte[13];
         bytes[0] = (byte) 0x80;
         bytes[2] = (byte) message.getMsgId();
@@ -228,9 +260,7 @@ public class TcpMsgBuilder {
      */
     private void addMessageBody(byte[] bytes, byte[] bytesBody, int offset) {
         int max = (bytesBody.length - offset) > 8 ? 8 : (bytesBody.length - offset);
-        for (int i = 0; i < max; i++) {
-            bytes[i + 5] = bytesBody[i + offset];
-        }
+        System.arraycopy(bytesBody, offset, bytes, 5, max);
     }
 
     private long byteArrayToLong(byte[] bytes) {
