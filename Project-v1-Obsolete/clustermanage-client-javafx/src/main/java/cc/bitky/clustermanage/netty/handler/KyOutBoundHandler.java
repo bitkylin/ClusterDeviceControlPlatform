@@ -25,12 +25,15 @@ public class KyOutBoundHandler extends ChannelOutboundHandlerAdapter {
             ctx.writeAndFlush(Unpooled.wrappedBuffer(tcpMsgBuilder.buildResponseMsg((BaseTcpResponseMsg) message)));
         } else if (message.getMsgId() >= -128 && message.getMsgId() <= -113) {
             ctx.writeAndFlush(Unpooled.wrappedBuffer(tcpMsgBuilder.buildResponseMsg((BaseTcpResponseMsg) message)));
-        } else if (message.getMsgId() == MsgType.INITIALIZE_DEVICE_RESPONSE_CARD)
+        } else if (message.getMsgId() == MsgType.INITIALIZE_DEVICE_RESPONSE_CARD) {
             ctx.writeAndFlush(Unpooled.wrappedBuffer(tcpMsgBuilder.buildInitConfirmCardNumber((TcpMsgInitResponseCardNumber) message)));
+        }
         if (message.getMsgId() == 0x00) {
             ctx.writeAndFlush(Unpooled.wrappedBuffer(tcpMsgBuilder.buildResponseMsg((BaseTcpResponseMsg) message)));
         }
-        if (sendListener != null) sendListener.send();
+        if (sendListener != null) {
+            sendListener.send();
+        }
     }
 
     void setSendListener(TcpSendListener sendListener) {

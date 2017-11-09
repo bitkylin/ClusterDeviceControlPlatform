@@ -1,6 +1,7 @@
 package cc.bitky.clustermanage.netty;
 
 import java.net.InetSocketAddress;
+import java.util.concurrent.Executors;
 
 import cc.bitky.clustermanage.netty.handler.KyChannelInitializer;
 import cc.bitky.clustermanage.utils.SuccessfulListener;
@@ -19,7 +20,7 @@ public class NettyClient {
 
 
     public void start(String hostName, int port) {
-        new Thread(() -> {
+        Executors.newSingleThreadExecutor().submit(() -> {
             group = new NioEventLoopGroup();
             Bootstrap bootstrap = new Bootstrap();
             bootstrap.group(group)
@@ -38,7 +39,7 @@ public class NettyClient {
             }
 
             startListenerHandle(channelFuture, launchListener);
-        }).start();
+        });
     }
 
     private void startListenerHandle(Future future, SuccessfulListener listener) {

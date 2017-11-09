@@ -75,7 +75,9 @@ public class PolicyCanTransmitter {
                     logger.info("时间轮「4」：重新设置");
                     write(message);
                 }
-            } else logger.info("时间轮「3」：成功");
+            } else {
+                logger.info("时间轮「3」：成功");
+            }
         }, CommSetting.FRAME_SENT_TO_DETECT_INTERVAL, TimeUnit.SECONDS);
     }
 
