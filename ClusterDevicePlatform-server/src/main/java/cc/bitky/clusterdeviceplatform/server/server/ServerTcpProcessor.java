@@ -19,14 +19,17 @@ import cc.bitky.clusterdeviceplatform.server.tcp.exception.ExceptionMsgTcp;
 import cc.bitky.clusterdeviceplatform.server.tcp.repo.TcpRepository;
 
 @Service
-public class ServerTcpHandler implements CommandLineRunner {
+public class ServerTcpProcessor implements CommandLineRunner {
     private static final Logger logger = LoggerFactory.getLogger(TcpRepository.class);
     private final TcpPresenter tcpPresenter;
+    private final ServerCenterProcessor centerProcessor;
 
     @Autowired
-    public ServerTcpHandler(TcpPresenter tcpPresenter) {
+    public ServerTcpProcessor(TcpPresenter tcpPresenter, ServerCenterProcessor centerProcessor) {
         this.tcpPresenter = tcpPresenter;
+        this.centerProcessor = centerProcessor;
         tcpPresenter.setServer(this);
+        centerProcessor.setTcpProcessor(this);
     }
 
     /**
@@ -78,7 +81,7 @@ public class ServerTcpHandler implements CommandLineRunner {
                         sendMessage(MsgCodecEmployeeName.create(1, 2, "李明亮"));
                         break;
                     case 1:
-                       // sendMessage(MsgCodecEmployeeName.create(1, 2, "李明亮"));
+                        // sendMessage(MsgCodecEmployeeName.create(1, 2, "李明亮"));
                         sendMessage(MsgCodecEmployeeDepartment.create(1, 2, "李明亮部门"));
                         break;
                     case 2:

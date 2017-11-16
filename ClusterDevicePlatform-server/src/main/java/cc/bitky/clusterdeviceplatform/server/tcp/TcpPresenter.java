@@ -18,9 +18,8 @@ import cc.bitky.clusterdeviceplatform.messageutils.define.frame.SendableMsgConta
 import cc.bitky.clusterdeviceplatform.messageutils.msg.MsgReplyChargeStatus;
 import cc.bitky.clusterdeviceplatform.messageutils.msg.MsgReplyNormal;
 import cc.bitky.clusterdeviceplatform.messageutils.msgcodec.MsgCodecHeartbeat;
-import cc.bitky.clusterdeviceplatform.server.server.ServerTcpHandler;
+import cc.bitky.clusterdeviceplatform.server.server.ServerTcpProcessor;
 import cc.bitky.clusterdeviceplatform.server.tcp.exception.ExceptionMsgTcp;
-import cc.bitky.clusterdeviceplatform.server.tcp.exception.MsgTouch;
 import cc.bitky.clusterdeviceplatform.server.tcp.repo.TcpRepository;
 import io.netty.channel.Channel;
 
@@ -28,12 +27,12 @@ import io.netty.channel.Channel;
  * TCP 通道的中介者
  */
 @Service
-public class TcpPresenter implements MsgTouch {
+public class TcpPresenter{
     private static final ScheduledExecutorService executorService = Executors.newScheduledThreadPool(DeviceSetting.MAX_GROUP_ID);
     private static final Logger logger = LoggerFactory.getLogger(TcpRepository.class);
     private final TcpRepository tcpRepository;
     private final MsgProcessor msgProcessor;
-    private ServerTcpHandler server;
+    private ServerTcpProcessor server;
 
     @Autowired
     public TcpPresenter(TcpRepository tcpRepository) {
@@ -58,7 +57,7 @@ public class TcpPresenter implements MsgTouch {
         return true;
     }
 
-    public void setServer(ServerTcpHandler server) {
+    public void setServer(ServerTcpProcessor server) {
         this.server = server;
     }
 
@@ -120,7 +119,6 @@ public class TcpPresenter implements MsgTouch {
      *
      * @param msg 一场消息对象
      */
-    @Override
     public void touchUnusualMsg(ExceptionMsgTcp msg) {
         server.touchUnusualMsg(msg);
     }

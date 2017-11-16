@@ -25,19 +25,6 @@ class DbDevicePresenter {
         this.deviceRepository = deviceRepository;
     }
 
-//    /**
-//     * 调整(或增加)设备的数量，使之满足获取到的数据帧的要求
-//     *
-//     * @param groupId 获取到的数据帧的组 Id
-//     */
-//    void InitDbDevices(int groupId) {
-//        List<Device> deviceList = new ArrayList<>(100);
-//        for (int i = 1; i <= 100; i++) {
-//            deviceList.add(new Device(groupId, i));
-//        }
-//        deviceRepository.save(deviceList);
-//    }
-
     /**
      * 处理设备状态包，更新设备的状态信息
      *
@@ -50,13 +37,6 @@ class DbDevicePresenter {
         int rawStatus = device.getStatus();
         int newStatus = msgStatus.getStatus();
         if (newStatus > 6 || newStatus < 0) newStatus = ChargeStatus.CRASH;
-
-//        if (rawStatus >= 5) {
-//            logger.info("设备「" + msgStatus.getGroupId() + ", " + msgStatus.getDeviceId() + "」『"
-//                    + rawStatus + "->" + newStatus + "』: 状态无法更改");
-//            device.setStatus(-1);
-//            return device;
-//        }
 
         if (newStatus == rawStatus) {
             logger.info("设备「" + msgStatus.getGroupId() + ", " + msgStatus.getDeviceId() + "」『"
@@ -95,16 +75,6 @@ class DbDevicePresenter {
         }
         return devices;
     }
-
-//    /**
-//     * 通过卡号查询相应的设备
-//     *
-//     * @param cardNum 员工卡号
-//     * @return 相应的设备
-//     */
-//    Device obtainEmployeeObjectIdByCardNum(String cardNum) {
-//        return deviceRepository.findFirstByCardNumber(cardNum);
-//    }
 
     /**
      * 更新设备

@@ -37,6 +37,6 @@ public class ConfigHandler extends ChannelInboundHandlerAdapter {
         super.channelInactive(ctx);
         Attribute<Integer> key = ctx.channel().attr(AttributeKey.valueOf("ID"));
         logger.info("Channel「" + key.get() + "」已经断开连接");
-        tcpPresenter.channelInactive(key.get().intValue());
+        tcpPresenter.channelInactive(key.get());
     }
 }

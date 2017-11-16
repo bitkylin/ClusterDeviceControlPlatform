@@ -34,13 +34,12 @@ tasks.withType(JavaCompile) {
 
 dependencies {
 //    compile('org.springframework.boot:spring-boot-starter-data-mongodb')
-    compile('org.springframework.boot:spring-boot-starter-data-redis')
-    compile('org.springframework.boot:spring-boot-starter-web')
+    compile('org.springframework.boot:spring-boot-starter-data-mongodb-reactive')
     compile('org.springframework.boot:spring-boot-starter-webflux')
     compile 'io.netty:netty-all:4.1.16.Final'
     compile 'com.alibaba:fastjson:1.2.39'
     compile files('libs/messageUtils-0.2.jar')
 
-    testCompile('org.springframework.boot:spring-boot-starter-test')
-    testCompile('io.projectreactor:reactor-test')
+ //   testCompile('org.springframework.boot:spring-boot-starter-test')
+ //   testCompile('io.projectreactor:reactor-test')
 }

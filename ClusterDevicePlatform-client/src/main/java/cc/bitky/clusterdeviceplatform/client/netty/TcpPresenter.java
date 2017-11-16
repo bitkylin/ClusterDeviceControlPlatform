@@ -14,8 +14,9 @@ import cc.bitky.clusterdeviceplatform.messageutils.MsgProcessor;
 import cc.bitky.clusterdeviceplatform.messageutils.config.JointMsgType;
 import cc.bitky.clusterdeviceplatform.messageutils.define.BaseMsg;
 import cc.bitky.clusterdeviceplatform.messageutils.define.frame.FrameMajorHeader;
-import cc.bitky.clusterdeviceplatform.messageutils.msg.MsgReplyHeartbeat;
-import cc.bitky.clusterdeviceplatform.messageutils.msgcodec.MsgCodecReplyHeartbeat;
+import cc.bitky.clusterdeviceplatform.messageutils.msg.MsgReplyNormal;
+import cc.bitky.clusterdeviceplatform.messageutils.msgcodec.MsgCodecHeartbeat;
+import cc.bitky.clusterdeviceplatform.messageutils.msgcodec.MsgCodecReplyNormal;
 import io.netty.channel.Channel;
 import io.netty.util.Attribute;
 import io.netty.util.AttributeKey;
@@ -61,20 +62,20 @@ public class TcpPresenter {
                 break;
             case JointMsgType.HeartBeat:
                 Attribute<Integer> key = channel.attr(AttributeKey.valueOf("ID"));
-                MsgReplyHeartbeat replyHeartbeat = MsgCodecReplyHeartbeat.create(key.get());
+                MsgReplyNormal replyHeartbeat = MsgCodecReplyNormal.createByBaseMsg(MsgCodecHeartbeat.create(key.get()));
                 logger.info("已生成并发送正常回复消息对象：「" + replyHeartbeat.getMsgDetail() + "」");
                 sendMessageToTcp(replyHeartbeat);
                 break;
             default:
                 //剩下的均为正常需回复消息
                 server.huntMessage(msg);
-//                MsgReplyNormal replyNormal = MsgCodecReplyNormal.createByBaseMsg(msg, 1);
-//                if (replyNormal == null) {
-//                    logger.warn("生成正常回复消息对象出错");
-//                    return;
-//                }
-//                logger.info("已生成并发送正常回复消息对象：「" + replyNormal.getMsgDetail() + "」");
-//                sendMessageToTcp(replyNormal);
+                MsgReplyNormal replyNormal = MsgCodecReplyNormal.createByBaseMsg(msg);
+                if (replyNormal == null) {
+                    logger.warn("生成正常回复消息对象出错");
+                    return;
+                }
+                logger.info("已生成并发送正常回复消息对象：「" + replyNormal.getMsgDetail() + "」");
+                sendMessageToTcp(replyNormal);
         }
     }
 

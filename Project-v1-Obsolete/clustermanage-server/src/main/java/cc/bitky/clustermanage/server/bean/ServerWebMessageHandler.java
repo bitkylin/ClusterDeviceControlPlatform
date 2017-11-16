@@ -47,7 +47,7 @@ public class ServerWebMessageHandler {
      * @param deviceId 设备 Id
      * @return 设备信息的集合
      */
-    public List<Device> getDeviceInfo(int groupId, int deviceId) {
+    public List<Device> queryDeviceInfo(int groupId, int deviceId) {
         return kyDbPresenter.getDevices(groupId, deviceId);
     }
 
@@ -109,10 +109,10 @@ public class ServerWebMessageHandler {
                 maxGroupId = kyDbPresenter.obtainMaxDeviceGroupId();
             if (maxGroupId == 0) return false;
             for (int i = 1; i <= maxGroupId; i++) {
-                getDeviceInfo(i, deviceId).forEach(device -> deployEmployeeMsg(queueDevice, device));
+                queryDeviceInfo(i, deviceId).forEach(device -> deployEmployeeMsg(queueDevice, device));
             }
 
-        } else getDeviceInfo(groupId, deviceId)
+        } else queryDeviceInfo(groupId, deviceId)
                 .forEach(device -> deployEmployeeMsg(queueDevice, device));
         return true;
     }

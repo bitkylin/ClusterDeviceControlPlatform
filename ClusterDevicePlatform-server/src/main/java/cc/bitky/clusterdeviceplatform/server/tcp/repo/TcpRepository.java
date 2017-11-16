@@ -80,6 +80,7 @@ public class TcpRepository {
                 Thread.sleep(AWAKE_TO_PROCESS_INTERVAL);
                 Channel channel = touchChannel(channelId);
                 if (channel == null || !channel.isActive()) {
+                    logger.warn("「Channel」" + " Channel「" + channelId + "」无效，无法下发该帧");
                     removeChannelCompleted(channel);
                     deque.clear();
                     return;
@@ -170,12 +171,12 @@ public class TcpRepository {
      */
     public void accessibleChannel(Channel channel) {
         String id = channel.id().asLongText();
-        logger.info("「channel」" + "新的 Channel 接入 [" + id + "]");
+        logger.info("「Channel」" + "新的 Channel 接入 [" + id + "]");
         CHANNEL_MAP.put(id, -1);
         HASHED_WHEEL_TIMER.newTimeout(task -> {
             Integer index = CHANNEL_MAP.get(id);
             if (index == -1) {
-                logger.warn("「channel」" + "新的 Channel 未反馈 ID [" + id + "]");
+                logger.warn("「Channel」" + "新的 Channel 未反馈 ID [" + id + "]");
                 channel.disconnect();
             } else if (index > 0 && index <= DeviceSetting.MAX_GROUP_ID) {
                 SENDING_MESSAGE_QUEUE.get(index).clear();
@@ -183,13 +184,13 @@ public class TcpRepository {
                 if (oldChannel != null && oldChannel.isActive()) {
                     manualRemoveChannel(CHANNEL_ARRAY.get(index));
                     manualRemoveChannel(channel);
-                    logger.warn("「channel」" + "新的 Channel 欲覆盖已激活的 Channel [" + id + "]");
+                    logger.warn("「Channel」" + "新的 Channel 欲覆盖已激活的 Channel [" + id + "]");
                 } else {
                     CHANNEL_ARRAY.set(index, channel);
-                    logger.info("「channel」" + "新的 Channel「" + index + "」已成功装配 [" + id + "]");
+                    logger.info("「Channel」" + "新的 Channel「" + index + "」已成功装配 [" + id + "]");
                 }
             } else {
-                logger.warn("「channel」" + "新的 Channel 装配出错 [" + id + "]");
+                logger.warn("「Channel」" + "新的 Channel 装配出错 [" + id + "]");
             }
         }, CommSetting.ACCESSIBLE_CHANNEL_REPLY_INTERVAL, TimeUnit.SECONDS);
     }
@@ -202,7 +203,7 @@ public class TcpRepository {
      */
     public void accessChannelSuccessful(BaseMsg msg, Channel channel) {
         String id = channel.id().asLongText();
-        logger.info("「channel」" + "新的 Channel 接入 [" + id + "]");
+        logger.info("「Channel」" + "新的 Channel 接入 [" + id + "]");
         CHANNEL_MAP.put(id, msg.getGroupId());
     }
 
@@ -224,9 +225,9 @@ public class TcpRepository {
         if (index != null && index > 0 && index <= DeviceSetting.MAX_GROUP_ID) {
             CHANNEL_ARRAY.set(index, null);
             SENDING_MESSAGE_QUEUE.get(index).clear();
-            logger.info("「channel」" + "移除成功 Channel「" + index + "」[" + id + "]");
+            logger.info("「Channel」" + "移除成功 Channel「" + index + "」[" + id + "]");
         } else {
-            logger.warn("「channel」" + "移除出错 Channel「" + index + "」[" + id + "]");
+            logger.warn("「Channel」" + "移除出错 Channel「" + index + "」[" + id + "]");
         }
     }
 

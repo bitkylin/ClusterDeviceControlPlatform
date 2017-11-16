@@ -39,7 +39,7 @@ public class InfoRestController {
     @RequestMapping(value = "/devices/{groupId}/{deviceId}", method = RequestMethod.GET)
     public List<Device> getDevices(@PathVariable int groupId, @PathVariable int deviceId) {
         if (groupId > 120) return new ArrayList<>();
-        return serverWebMessageHandler.getDeviceInfo(groupId, deviceId);
+        return serverWebMessageHandler.queryDeviceInfo(groupId, deviceId);
     }
 
     /**

@@ -4,7 +4,14 @@ package cc.bitky.clustermanage.web.bean;
  * 选择是否部署设备中的信息
  */
 public class QueueDevice {
-
+    /**
+     * 设备组号
+     */
+    private int groupId;
+    /**
+     * 设备号
+     */
+    private int deviceId;
     /**
      * 部署姓名
      */
@@ -22,43 +29,36 @@ public class QueueDevice {
      */
     private boolean postRemainChargeTime;
 
-    public QueueDevice(boolean postName, boolean postDepartment, boolean postCardNumber, boolean postRemainChargeTime) {
+    public QueueDevice(int groupId, int deviceId, boolean postName, boolean postDepartment, boolean postCardNumber, boolean postRemainChargeTime) {
+        this.groupId = groupId;
+        this.deviceId = deviceId;
         this.postName = postName;
         this.postDepartment = postDepartment;
         this.postCardNumber = postCardNumber;
         this.postRemainChargeTime = postRemainChargeTime;
     }
 
+    public int getGroupId() {
+        return groupId;
+    }
+
+    public int getDeviceId() {
+        return deviceId;
+    }
 
     public boolean isPostName() {
         return postName;
-    }
-
-    public void setPostName(boolean postName) {
-        this.postName = postName;
     }
 
     public boolean isPostDepartment() {
         return postDepartment;
     }
 
-    public void setPostDepartment(boolean postDepartment) {
-        this.postDepartment = postDepartment;
-    }
-
     public boolean isPostCardNumber() {
         return postCardNumber;
     }
 
-    public void setPostCardNumber(boolean postCardNumber) {
-        this.postCardNumber = postCardNumber;
-    }
-
     public boolean isPostRemainChargeTime() {
         return postRemainChargeTime;
-    }
-
-    public void setPostRemainChargeTime(boolean postRemainChargeTime) {
-        this.postRemainChargeTime = postRemainChargeTime;
     }
 }
