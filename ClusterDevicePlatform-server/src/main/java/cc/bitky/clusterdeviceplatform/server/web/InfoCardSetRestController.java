@@ -8,6 +8,13 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import cc.bitky.clusterdeviceplatform.messageutils.msgcodec.card.MsgCodecCardClear;
+import cc.bitky.clusterdeviceplatform.messageutils.msgcodec.card.MsgCodecCardConfirm;
+import cc.bitky.clusterdeviceplatform.messageutils.msgcodec.card.MsgCodecCardFree;
+import cc.bitky.clusterdeviceplatform.server.db.bean.CardSet;
 import cc.bitky.clusterdeviceplatform.server.server.ServerWebProcessor;
 import cc.bitky.clusterdeviceplatform.server.web.bean.CardType;
 import reactor.core.publisher.Mono;
@@ -30,7 +37,7 @@ public class InfoCardSetRestController {
      */
     @GetMapping("/freecard")
     public Mono<String[]> queryFreeCards() {
-        return serverProcessor.queryCards(CardType.Free);
+        return queryCards(CardType.Free);
     }
 
     /**
@@ -40,7 +47,7 @@ public class InfoCardSetRestController {
      */
     @GetMapping("/confirmcard")
     public Mono<String[]> queryConfirmCard() {
-        return serverProcessor.queryCards(CardType.Confirm);
+        return queryCards(CardType.Confirm);
     }
 
     /**
@@ -50,56 +57,8 @@ public class InfoCardSetRestController {
      */
     @GetMapping("/clearcard")
     public Mono<String[]> queryClearCards() {
-        return serverProcessor.queryCards(CardType.Clear);
+        return queryCards(CardType.Clear);
     }
-
-//    /**
-//     * 保存确认卡号到数据库
-//     *
-//     * @param confirmCards 确认卡号数组
-//     * @return @return "保存确认卡号成功"消息
-//     */
-//    @PostMapping(path = "/confirmcard", consumes = "application/json")
-//    public String saveConfirmCard(@RequestBody String[] confirmCards) {
-//        boolean success = serverProcessor.saveCards(confirmCards, CardType.Confirm);
-//        if (success) {
-//            return "success";
-//        } else {
-//            return "error";
-//        }
-//    }
-//
-//    /**
-//     * 保存万能卡号到数据库
-//     *
-//     * @param freeCards 万能卡号数组
-//     * @return @return "保存万能卡号成功"消息
-//     */
-//    @PostMapping(path = "/freecard", consumes = "application/json")
-//    public String saveFreeCard(@RequestBody String[] freeCards) {
-//        boolean success = serverProcessor.saveCards(freeCards, CardType.Free);
-//        if (success) {
-//            return "success";
-//        } else {
-//            return "error";
-//        }
-//    }
-//
-//    /**
-//     * 保存清除卡号到数据库
-//     *
-//     * @param clearCards 清除卡号数组
-//     * @return @return "保存清除卡号成功"消息
-//     */
-//    @PostMapping(path = "/clearcard", consumes = "application/json")
-//    public String saveClearCard(@RequestBody String[] clearCards) {
-//        boolean success = serverProcessor.saveCards(clearCards, CardType.Clear);
-//        if (success) {
-//            return "success";
-//        } else {
-//            return "error";
-//        }
-//    }
 
     /**
      * 部署万能卡号的集合
@@ -108,10 +67,8 @@ public class InfoCardSetRestController {
      */
     @PostMapping(path = "/freecard/{groupId}/{deviceId}", consumes = "application/json")
     public String deployFreeCards(@PathVariable int groupId, @PathVariable int deviceId, @RequestBody String[] cards) {
-        if (!serverProcessor.saveCards(cards, CardType.Free)) {
-            return "error";
-        }
-        if (serverProcessor.ungroupCardSet(groupId, deviceId, CardType.Free)) {
+        CardSet cardSet = saveCards(cards, CardType.Free).block();
+        if (sendCardSetGrouped(groupId, deviceId, cardSet.getCardList(), CardType.Free)) {
             return "success";
         } else {
             return "error";
@@ -125,10 +82,8 @@ public class InfoCardSetRestController {
      */
     @PostMapping(path = "/confirmcard/{groupId}", consumes = "application/json")
     public String deployConfirmCard(@PathVariable int groupId, @PathVariable int deviceId, @RequestBody String[] cards) {
-        if (!serverProcessor.saveCards(cards, CardType.Confirm)) {
-            return "error";
-        }
-        if (serverProcessor.ungroupCardSet(groupId, 0, CardType.Confirm)) {
+        CardSet cardSet = saveCards(cards, CardType.Confirm).block();
+        if (sendCardSetGrouped(groupId, 0, cardSet.getCardList(), CardType.Confirm)) {
             return "success";
         } else {
             return "error";
@@ -142,14 +97,59 @@ public class InfoCardSetRestController {
      */
     @PostMapping(path = "/clearcard/{groupId}", consumes = "application/json")
     public String deployClearCards(@PathVariable int groupId, @PathVariable int deviceId, @RequestBody String[] cards) {
-        if (!serverProcessor.saveCards(cards, CardType.Clear)) {
-            return "error";
-        }
-        if (serverProcessor.ungroupCardSet(groupId, 0, CardType.Clear)) {
+        CardSet cardSet = saveCards(cards, CardType.Clear).block();
+        if (sendCardSetGrouped(groupId, 0, cardSet.getCardList(), CardType.Clear)) {
             return "success";
         } else {
             return "error";
         }
     }
 
+    /**
+     * 根据类型获取指定的卡号组
+     *
+     * @param type 卡号组的类型
+     * @return 特定的卡号组
+     */
+    private Mono<String[]> queryCards(CardType type) {
+        return serverProcessor.getDbPresenter().queryCardSet(type);
+    }
+
+    /**
+     * 保存特定的卡号组
+     *
+     * @param cards 特定的卡号组
+     * @param type  卡号组的类型
+     * @return 保存成功
+     */
+    private Mono<CardSet> saveCards(String[] cards, CardType type) {
+        return serverProcessor.getDbPresenter().saveCardSet(cards, type);
+    }
+
+    /**
+     * 向设备部署卡号的集合
+     *
+     * @param groupId  设备组号
+     * @param deviceId 设备号
+     * @param cards    卡号字符串的集合
+     * @param type     卡号类型
+     * @return 部署成功
+     */
+    private boolean sendCardSetGrouped(int groupId, int deviceId, String[] cards, CardType type) {
+        List<Integer> cardInt = new ArrayList<>(cards.length);
+        for (String card : cards) {
+            cardInt.add(Integer.parseUnsignedInt(card, 16));
+        }
+
+        switch (type) {
+            case Free:
+                return serverProcessor.sendMessageGrouped(MsgCodecCardFree.create(groupId, deviceId, cardInt));
+            case Confirm:
+                return serverProcessor.sendMessageGrouped(MsgCodecCardConfirm.create(groupId, deviceId, cardInt));
+            case Clear:
+                return serverProcessor.sendMessageGrouped(MsgCodecCardClear.create(groupId, deviceId, cardInt));
+            default:
+                return false;
+        }
+    }
 }

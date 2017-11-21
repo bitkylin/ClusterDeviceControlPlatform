@@ -10,6 +10,7 @@ import java.util.concurrent.LinkedBlockingDeque;
 import java.util.concurrent.ScheduledExecutorService;
 
 import cc.bitky.clusterdeviceplatform.messageutils.MsgProcessor;
+import cc.bitky.clusterdeviceplatform.messageutils.config.ChargeStatus;
 import cc.bitky.clusterdeviceplatform.messageutils.config.DeviceSetting;
 import cc.bitky.clusterdeviceplatform.messageutils.config.JointMsgType;
 import cc.bitky.clusterdeviceplatform.messageutils.define.BaseMsg;
@@ -18,6 +19,7 @@ import cc.bitky.clusterdeviceplatform.messageutils.define.frame.SendableMsgConta
 import cc.bitky.clusterdeviceplatform.messageutils.msg.MsgReplyChargeStatus;
 import cc.bitky.clusterdeviceplatform.messageutils.msg.MsgReplyNormal;
 import cc.bitky.clusterdeviceplatform.messageutils.msgcodec.MsgCodecHeartbeat;
+import cc.bitky.clusterdeviceplatform.messageutils.msgcodec.MsgCodecReplyChargeStatus;
 import cc.bitky.clusterdeviceplatform.server.server.ServerTcpProcessor;
 import cc.bitky.clusterdeviceplatform.server.tcp.exception.ExceptionMsgTcp;
 import cc.bitky.clusterdeviceplatform.server.tcp.repo.TcpRepository;
@@ -27,7 +29,7 @@ import io.netty.channel.Channel;
  * TCP 通道的中介者
  */
 @Service
-public class TcpPresenter{
+public class TcpPresenter {
     private static final ScheduledExecutorService executorService = Executors.newScheduledThreadPool(DeviceSetting.MAX_GROUP_ID);
     private static final Logger logger = LoggerFactory.getLogger(TcpRepository.class);
     private final TcpRepository tcpRepository;
@@ -75,7 +77,7 @@ public class TcpPresenter{
     }
 
     /**
-     * 「内部使用」将 TCP 帧解码并转换为消息对象，而后传递至 Server
+     * 「内部使用」将 TCP 帧解码并转换为消息对象，而后传递至 Server 该方法可保证解析出的消息对象的设备号正确
      *
      * @param head     TCP 帧头
      * @param subMsgId TCP 子帧功能位
@@ -88,13 +90,17 @@ public class TcpPresenter{
             logger.warn("帧解析出错");
             return;
         }
+        if (msg.getGroupId() > DeviceSetting.MAX_GROUP_ID && msg.getDeviceId() > DeviceSetting.MAX_DEVICE_ID) {
+            logger.warn("设备号出错「GroupId:" + msg.getGroupId() + "; DeviceId:" + msg.getDeviceId() + "」");
+            return;
+        }
         logger.info("收到正常消息对象：「" + msg.getMsgDetail() + "」");
         switch (msg.getJointMsgFlag()) {
-            case JointMsgType.replyHeartBeat:
-                tcpRepository.accessChannelSuccessful(msg, channel);
-                break;
             case JointMsgType.replyChargeStatus:
                 server.huntChargeStatusMsg((MsgReplyChargeStatus) msg);
+                break;
+            case JointMsgType.replyHeartBeat:
+                tcpRepository.accessChannelSuccessful(msg, channel);
                 break;
             default:
                 if (msg instanceof MsgReplyNormal) {
@@ -121,5 +127,9 @@ public class TcpPresenter{
      */
     public void touchUnusualMsg(ExceptionMsgTcp msg) {
         server.touchUnusualMsg(msg);
+        BaseMsg baseMsg = msg.getBaseMsg();
+        if (msg.getType() == ExceptionMsgTcp.Type.RESEND_OUT_BOUND) {
+            server.huntChargeStatusMsg(MsgCodecReplyChargeStatus.create(baseMsg.getGroupId(), baseMsg.getDeviceId(), ChargeStatus.TRAFFIC_ERROR));
+        }
     }
 }

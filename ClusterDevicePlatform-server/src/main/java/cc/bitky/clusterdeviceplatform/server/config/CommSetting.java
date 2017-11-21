@@ -28,4 +28,8 @@ public class CommSetting {
      * 单个设备的初始充电次数
      */
     public static int DEVICE_INIT_CHARGE_TIMES = 500;
+    /**
+     * 当设备中记录的剩余充电次数小于该值时，则向设备发送剩余充电次数
+     */
+    public static int DEPLOY_REMAIN_CHARGE_TIMES = 20;
 }

@@ -6,9 +6,14 @@ public class ExceptionMsgTcp {
 
     private final BaseMsg baseMsg;
     private final Type type;
+
     public ExceptionMsgTcp(BaseMsg baseMsg, Type type) {
         this.baseMsg = baseMsg;
         this.type = type;
+    }
+
+    public Type getType() {
+        return type;
     }
 
     public BaseMsg getBaseMsg() {

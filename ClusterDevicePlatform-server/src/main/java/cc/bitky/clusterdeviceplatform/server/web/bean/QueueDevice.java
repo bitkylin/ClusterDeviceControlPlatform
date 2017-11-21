@@ -29,17 +29,9 @@ public class QueueDevice {
      */
     private boolean remainChargeTime;
     /**
-     * 部署解锁指令
-     */
-    private boolean unLock;
-    /**
-     * 部署设备初始化指令
-     */
-    private boolean initialize;
-    /**
      * 设备更新：重置剩余充电次数
      */
-    private boolean renew;
+    private boolean replace;
     /**
      * 卡号集合的类型
      */
@@ -66,28 +58,12 @@ public class QueueDevice {
         this.cardSetType = cardSetType;
     }
 
-    public boolean isRenew() {
-        return renew;
+    public boolean isReplace() {
+        return replace;
     }
 
-    public void setRenew(boolean renew) {
-        this.renew = renew;
-    }
-
-    public boolean isInitialize() {
-        return initialize;
-    }
-
-    public void setInitialize(boolean initialize) {
-        this.initialize = initialize;
-    }
-
-    public boolean isUnLock() {
-        return unLock;
-    }
-
-    public void setUnLock(boolean unLock) {
-        this.unLock = unLock;
+    public void setReplace(boolean replace) {
+        this.replace = replace;
     }
 
     public int getGroupId() {

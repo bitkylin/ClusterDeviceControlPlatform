@@ -35,27 +35,27 @@ public class TcpRepository {
     /**
      * 时间轮计时器
      */
-    private static final HashedWheelTimer HASHED_WHEEL_TIMER = new HashedWheelTimer();
+    private final HashedWheelTimer HASHED_WHEEL_TIMER = new HashedWheelTimer();
     /**
      * 已激活「识别」的 Channel 容器
      */
-    private static final AtomicReferenceArray<Channel> CHANNEL_ARRAY = new AtomicReferenceArray<>(DeviceSetting.MAX_GROUP_ID + 1);
+    private final AtomicReferenceArray<Channel> CHANNEL_ARRAY = new AtomicReferenceArray<>(DeviceSetting.MAX_GROUP_ID + 1);
     /**
      * 待识别的已接入的 Channel 容器
      */
-    private static final ConcurrentHashMap<String, Integer> CHANNEL_MAP = new ConcurrentHashMap<>(DeviceSetting.MAX_GROUP_ID + 1);
+    private final ConcurrentHashMap<String, Integer> CHANNEL_MAP = new ConcurrentHashMap<>(DeviceSetting.MAX_GROUP_ID + 1);
     /**
      * 消息对象检错重发机制的支撑容器
      */
-    private static final ConcurrentHashMap<Integer, BaseMsg> RESEND_MSG_MAP = new ConcurrentHashMap<>();
+    private final ConcurrentHashMap<Integer, BaseMsg> RESEND_MSG_MAP = new ConcurrentHashMap<>();
     /**
      * 待发送的消息队列的容器
      */
-    private static final AtomicReferenceArray<LinkedBlockingDeque<BaseMsg>> SENDING_MESSAGE_QUEUE = new AtomicReferenceArray<>(DeviceSetting.MAX_GROUP_ID + 1);
+    private final AtomicReferenceArray<LinkedBlockingDeque<BaseMsg>> SENDING_MESSAGE_QUEUE = new AtomicReferenceArray<>(DeviceSetting.MAX_GROUP_ID + 1);
     /**
      * 定时任务「定时检索待发送消息队列」执行线程池
      */
-    private static final ScheduledExecutorService executorService = Executors.newScheduledThreadPool(DeviceSetting.MAX_GROUP_ID);
+    private final ScheduledExecutorService executorService = Executors.newScheduledThreadPool(DeviceSetting.MAX_GROUP_ID);
     private final Logger logger = LoggerFactory.getLogger(TcpRepository.class);
     private TcpPresenter server;
 

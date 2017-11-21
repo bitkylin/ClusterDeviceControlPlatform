@@ -18,6 +18,8 @@ public interface DeviceRepository extends MongoRepository<Device, String> {
      */
     List<Device> findByGroupIdAndDeviceId(int groupId, int deviceId);
 
+    Device findFirstByGroupIdAndDeviceId(int groupId, int deviceId);
+
     /**
      * 通过组号查询特定设备组
      *
