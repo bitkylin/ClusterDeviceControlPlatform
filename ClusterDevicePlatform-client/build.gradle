@@ -36,6 +36,9 @@ dependencies {
     compile('org.springframework.boot:spring-boot-starter')
     compile group: 'io.netty', name: 'netty-all', version: '4.1.16.Final'
     compile group: 'com.alibaba', name: 'fastjson', version: '1.2.39'
+    compile 'com.jfoenix:jfoenix:1.10.0'
+    compile 'io.datafx:datafx:8.0.1'
+    compile 'io.datafx:flow:8.0.1'
     compile files('libs/messageUtils-0.2.jar')
 
     testCompile('org.springframework.boot:spring-boot-starter-test')
