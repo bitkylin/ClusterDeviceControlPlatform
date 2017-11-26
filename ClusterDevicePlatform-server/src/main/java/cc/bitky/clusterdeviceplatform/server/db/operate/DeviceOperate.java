@@ -10,7 +10,7 @@ import java.util.Date;
 import java.util.List;
 
 import cc.bitky.clusterdeviceplatform.messageutils.config.ChargeStatus;
-import cc.bitky.clusterdeviceplatform.messageutils.msg.MsgReplyChargeStatus;
+import cc.bitky.clusterdeviceplatform.messageutils.msg.MsgReplyDeviceStatus;
 import cc.bitky.clusterdeviceplatform.server.config.WebSetting;
 import cc.bitky.clusterdeviceplatform.server.db.bean.Device;
 import cc.bitky.clusterdeviceplatform.server.db.repository.DeviceRepository;
@@ -52,29 +52,55 @@ public class DeviceOperate {
      * @param msgStatus 设备状态包
      * @return null: 无法找到指定的设备；device.status 为 -1: 指定设备未进行任何状态更新
      */
-    public Device handleMsgDeviceStatus(MsgReplyChargeStatus msgStatus) {
+    public Device handleWorkStatus(MsgReplyDeviceStatus msgStatus) {
         Device device = repository.findFirstByGroupIdAndDeviceId(msgStatus.getGroupId(), msgStatus.getDeviceId());
         if (device == null) {
+            logger.warn("设备(" + msgStatus.getGroupId() + ", " + msgStatus.getDeviceId() + ") 不存在，无法处理");
             return null;
         }
-        int rawStatus = device.getStatus();
+        int rawStatus = device.getWorkStatus();
         int newStatus = msgStatus.getStatus();
-
         if (newStatus == rawStatus) {
             logger.info("设备「" + msgStatus.getGroupId() + ", " + msgStatus.getDeviceId() + "」『"
-                    + rawStatus + "->" + newStatus + "』: 状态无更新");
-            device.setStatus(ChargeStatus.FRAME_EXCEPTION);
-            return device;
+                    + rawStatus + "->" + newStatus + "』: 工作状态无更新");
+            return null;
+        }
+        device.setChargeStatus(newStatus);
+        device.setStatusTime(new Date(msgStatus.getTime()));
+        repository.save(device);
+        logger.info("设备「" + msgStatus.getGroupId() + ", " + msgStatus.getDeviceId() + "」『"
+                + rawStatus + "->" + newStatus + "』: 工作状态成功更新！");
+        return device;
+    }
+
+    /**
+     * 处理设备状态包，更新设备的充电状态信息
+     *
+     * @param msgStatus 设备充电状态包
+     * @return null: 无法找到指定的设备；device.status 为 -1: 指定设备未进行任何状态更新
+     */
+    public Device handleChargeStatus(MsgReplyDeviceStatus msgStatus) {
+        Device device = repository.findFirstByGroupIdAndDeviceId(msgStatus.getGroupId(), msgStatus.getDeviceId());
+        if (device == null) {
+            logger.warn("设备(" + msgStatus.getGroupId() + ", " + msgStatus.getDeviceId() + ") 不存在，无法处理");
+            return null;
+        }
+        int rawStatus = device.getChargeStatus();
+        int newStatus = msgStatus.getStatus();
+        if (newStatus == rawStatus) {
+            logger.info("设备「" + msgStatus.getGroupId() + ", " + msgStatus.getDeviceId() + "」『"
+                    + rawStatus + "->" + newStatus + "』: 充电状态无更新");
+            return null;
         }
 
         if (rawStatus == ChargeStatus.CHARGING && newStatus == ChargeStatus.FULL && device.getRemainChargeTime() > 0) {
             device.setRemainChargeTime(device.getRemainChargeTime() - 1);
         }
-        device.setStatus(newStatus);
-        device.setStatusTime(new Date());
+        device.setChargeStatus(newStatus);
+        device.setStatusTime(new Date(msgStatus.getTime()));
         repository.save(device);
         logger.info("设备「" + msgStatus.getGroupId() + ", " + msgStatus.getDeviceId() + "」『"
-                + rawStatus + "->" + newStatus + "』: 状态成功更新！");
+                + rawStatus + "->" + newStatus + "』: 充电状态成功更新！");
         return device;
     }
 

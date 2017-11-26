@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Optional;
 
 import cc.bitky.clusterdeviceplatform.messageutils.config.ChargeStatus;
-import cc.bitky.clusterdeviceplatform.messageutils.msg.MsgReplyChargeStatus;
+import cc.bitky.clusterdeviceplatform.messageutils.msg.MsgReplyDeviceStatus;
 import cc.bitky.clusterdeviceplatform.server.db.bean.CardSet;
 import cc.bitky.clusterdeviceplatform.server.db.bean.Device;
 import cc.bitky.clusterdeviceplatform.server.db.bean.Employee;
@@ -97,31 +97,29 @@ public class DbPresenter {
     /**
      * 处理设备状态包
      *
-     * @param chargeStatus 设备状态包
+     * @param msgStatus 设备状态包
      * @return 处理后的 Device。 null: 未找到指定的 Device 或 Device 无更新
      */
-    public Device handleMsgDeviceStatus(MsgReplyChargeStatus chargeStatus) {
+    public Device handleMsgDeviceStatus(MsgReplyDeviceStatus msgStatus) {
         long l1 = System.currentTimeMillis();
-        int status = deviceStatusRepo.getStatus(chargeStatus.getGroupId(), chargeStatus.getDeviceId());
-
-        //状态未更新
-        if (status == chargeStatus.getStatus()) {
-            logger.info("设备「" + chargeStatus.getGroupId() + ", " + chargeStatus.getDeviceId() + "」『"
-                    + status + "->" + status + "』: 状态无更新");
+        //比较服务器缓存，是否状态更新，未更新直接 return
+        int status = deviceStatusRepo.getStatus(msgStatus.getGroupId(), msgStatus.getDeviceId(), msgStatus.getType());
+        if (status == msgStatus.getStatus()) {
+            logger.info("设备「" + msgStatus.getGroupId() + ", " + msgStatus.getDeviceId() + "」『"
+                    + status + "->" + status + "』: 状态无更新 [" + msgStatus.getType().name() + "]");
             return null;
-        }
-        Device device = deviceOperate.handleMsgDeviceStatus(chargeStatus);
-
-        if (device == null) {
-            logger.warn("设备(" + chargeStatus.getGroupId() + ", " + chargeStatus.getDeviceId() + ") 不存在，无法处理");
-            return null;
+        } else {
+            deviceStatusRepo.setStatus(msgStatus.getGroupId(), msgStatus.getDeviceId(), msgStatus.getStatus(), msgStatus.getType());
         }
 
         //状态未更新
-        deviceStatusRepo.setStatus(chargeStatus.getGroupId(), chargeStatus.getDeviceId(), chargeStatus.getStatus());
-        if (device.getStatus() == ChargeStatus.FRAME_EXCEPTION) {
-            logger.info("设备「" + chargeStatus.getGroupId() + ", " + chargeStatus.getDeviceId() + "」『"
-                    + status + "->" + status + "』: 状态无更新");
+        Device device;
+        if (msgStatus.getType() == MsgReplyDeviceStatus.Type.CHARGE) {
+            device = deviceOperate.handleChargeStatus(msgStatus);
+        } else {
+            device = deviceOperate.handleWorkStatus(msgStatus);
+        }
+        if (device == null || device.getChargeStatus() == ChargeStatus.FRAME_EXCEPTION) {
             return null;
         }
 
@@ -129,7 +127,7 @@ public class DbPresenter {
         long l2 = System.currentTimeMillis();
         //根据设备中记录的考勤表索引，获取并更新员工的考勤表
         if (device.getEmployeeObjectId() != null) {
-            dbRoutineOperate.updateRoutineById(device.getEmployeeObjectId(), chargeStatus);
+            dbRoutineOperate.updateRoutineById(device.getEmployeeObjectId(), msgStatus, msgStatus.getType());
         } else {
             logger.info("无指定设备对应的员工，故未更新考勤表");
         }

@@ -16,10 +16,10 @@ import cc.bitky.clusterdeviceplatform.messageutils.config.JointMsgType;
 import cc.bitky.clusterdeviceplatform.messageutils.define.BaseMsg;
 import cc.bitky.clusterdeviceplatform.messageutils.define.frame.FrameMajorHeader;
 import cc.bitky.clusterdeviceplatform.messageutils.define.frame.SendableMsgContainer;
-import cc.bitky.clusterdeviceplatform.messageutils.msg.MsgReplyChargeStatus;
+import cc.bitky.clusterdeviceplatform.messageutils.msg.MsgReplyDeviceStatus;
 import cc.bitky.clusterdeviceplatform.messageutils.msg.MsgReplyNormal;
 import cc.bitky.clusterdeviceplatform.messageutils.msgcodec.MsgCodecHeartbeat;
-import cc.bitky.clusterdeviceplatform.messageutils.msgcodec.MsgCodecReplyChargeStatus;
+import cc.bitky.clusterdeviceplatform.messageutils.msgcodec.status.MsgCodecReplyStatusWork;
 import cc.bitky.clusterdeviceplatform.server.server.ServerTcpProcessor;
 import cc.bitky.clusterdeviceplatform.server.tcp.exception.ExceptionMsgTcp;
 import cc.bitky.clusterdeviceplatform.server.tcp.repo.TcpRepository;
@@ -96,8 +96,9 @@ public class TcpPresenter {
         }
         logger.info("收到正常消息对象：「" + msg.getMsgDetail() + "」");
         switch (msg.getJointMsgFlag()) {
+            case JointMsgType.replyWorkStatus:
             case JointMsgType.replyChargeStatus:
-                server.huntChargeStatusMsg((MsgReplyChargeStatus) msg);
+                server.huntDeviceStatusMsg((MsgReplyDeviceStatus) msg);
                 break;
             case JointMsgType.replyHeartBeat:
                 tcpRepository.accessChannelSuccessful(msg, channel);
@@ -129,7 +130,7 @@ public class TcpPresenter {
         server.touchUnusualMsg(msg);
         BaseMsg baseMsg = msg.getBaseMsg();
         if (msg.getType() == ExceptionMsgTcp.Type.RESEND_OUT_BOUND) {
-            server.huntChargeStatusMsg(MsgCodecReplyChargeStatus.create(baseMsg.getGroupId(), baseMsg.getDeviceId(), ChargeStatus.TRAFFIC_ERROR));
+            server.huntDeviceStatusMsg(MsgCodecReplyStatusWork.create(baseMsg.getGroupId(), baseMsg.getDeviceId(), ChargeStatus.TRAFFIC_ERROR));
         }
     }
 }

@@ -29,8 +29,10 @@ public class Device {
     /**
      * 当前状态
      */
-    @Field("Status")
-    private int status = 0;
+    @Field("ChargeStatus")
+    private int chargeStatus = 0;
+    @Field("WorkStatus")
+    private int workStatus = 0;
     /**
      * 组号
      */
@@ -74,12 +76,12 @@ public class Device {
         this.statusTime = statusTime;
     }
 
-    public int getStatus() {
-        return status;
+    public int getChargeStatus() {
+        return chargeStatus;
     }
 
-    public void setStatus(int status) {
-        this.status = status;
+    public void setChargeStatus(int chargeStatus) {
+        this.chargeStatus = chargeStatus;
     }
 
     public int getGroupId() {
@@ -112,5 +114,13 @@ public class Device {
 
     public void setRemainChargeTime(int remainChargeTime) {
         this.remainChargeTime = remainChargeTime;
+    }
+
+    public int getWorkStatus() {
+        return workStatus;
+    }
+
+    public void setWorkStatus(int workStatus) {
+        this.workStatus = workStatus;
     }
 }

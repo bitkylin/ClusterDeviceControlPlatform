@@ -13,8 +13,11 @@ public class LampStatusHistory {
     @Id
     private String id;
 
-    @Field("StatusList")
-    private List<HistoryInfo> statusList = new ArrayList<>();
+    @Field("ChargeStatus")
+    private List<HistoryInfo> chargeStatus = new ArrayList<>();
+
+    @Field("WorkStatus")
+    private List<HistoryInfo> workStatus = new ArrayList<>();
 
 
     public String getId() {
@@ -25,11 +28,19 @@ public class LampStatusHistory {
         this.id = id;
     }
 
-    public List<HistoryInfo> getStatusList() {
-        return statusList;
+    public List<HistoryInfo> getChargeStatus() {
+        return chargeStatus;
     }
 
-    public void setStatusList(List<HistoryInfo> statusList) {
-        this.statusList = statusList;
+    public void setChargeStatus(List<HistoryInfo> chargeStatus) {
+        this.chargeStatus = chargeStatus;
+    }
+
+    public List<HistoryInfo> getWorkStatus() {
+        return workStatus;
+    }
+
+    public void setWorkStatus(List<HistoryInfo> workStatus) {
+        this.workStatus = workStatus;
     }
 }

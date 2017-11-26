@@ -5,7 +5,7 @@ import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
 
-import cc.bitky.clusterdeviceplatform.messageutils.msg.MsgReplyChargeStatus;
+import cc.bitky.clusterdeviceplatform.messageutils.msg.MsgReplyDeviceStatus;
 import cc.bitky.clusterdeviceplatform.server.db.bean.routineinfo.HistoryInfo;
 import cc.bitky.clusterdeviceplatform.server.db.bean.routineinfo.LampStatusHistory;
 import cc.bitky.clusterdeviceplatform.server.db.repository.RoutineTableRepository;
@@ -25,14 +25,22 @@ public class DbRoutineOperate {
      * @param employeeObjectId 员工的 ObjectId，该值不能为 Null
      * @param chargeStatus     设备状态包
      */
-    public void updateRoutineById(String employeeObjectId, MsgReplyChargeStatus chargeStatus) {
+    public void updateRoutineById(String employeeObjectId, MsgReplyDeviceStatus chargeStatus, MsgReplyDeviceStatus.Type type) {
         Optional<LampStatusHistory> optional = repository.findById(employeeObjectId);
         LampStatusHistory document = optional.orElseGet(() -> {
             LampStatusHistory temp = new LampStatusHistory();
             temp.setId(employeeObjectId);
             return temp;
         });
-        document.getStatusList().add(new HistoryInfo(chargeStatus.getTime(), chargeStatus.getStatus()));
+        switch (type) {
+            case WORK:
+                document.getWorkStatus().add(new HistoryInfo(chargeStatus.getTime(), chargeStatus.getStatus()));
+                break;
+            case CHARGE:
+                document.getChargeStatus().add(new HistoryInfo(chargeStatus.getTime(), chargeStatus.getStatus()));
+                break;
+            default:
+        }
         repository.save(document);
     }
 }

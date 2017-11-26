@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service;
 
 import cc.bitky.clusterdeviceplatform.messageutils.config.ChargeStatus;
 import cc.bitky.clusterdeviceplatform.messageutils.define.BaseMsg;
-import cc.bitky.clusterdeviceplatform.messageutils.msg.MsgReplyChargeStatus;
+import cc.bitky.clusterdeviceplatform.messageutils.msg.MsgReplyDeviceStatus;
 import cc.bitky.clusterdeviceplatform.messageutils.msgcodec.MsgCodecDeviceRemainChargeTimes;
 import cc.bitky.clusterdeviceplatform.server.config.CommSetting;
 import cc.bitky.clusterdeviceplatform.server.db.DbPresenter;
@@ -52,12 +52,12 @@ public class ServerTcpProcessor {
     }
 
     /**
-     * Netty 模块捕获到「设备充电状态」消息对象
+     * Netty 模块捕获到「设备状态」消息对象
      *
      * @param message 消息对象
      */
-    public void huntChargeStatusMsg(MsgReplyChargeStatus message) {
-        logger.info("捕获到「充电状态」消息对象：「" + message.getMsgDetail() + "」");
+    public void huntDeviceStatusMsg(MsgReplyDeviceStatus message) {
+        logger.info("捕获到「设备状态」消息对象：「" + message.getMsgDetail() + "」");
         long l1 = System.currentTimeMillis();
         Device device = dbPresenter.handleMsgDeviceStatus(message);
         //部署剩余充电次数
@@ -75,7 +75,7 @@ public class ServerTcpProcessor {
      */
     private void deployRemainChargeTimes(Device device) {
         //当前充电状态为「充满」，并且剩余充电次数小于或等于阈值时，部署剩余充电次数
-        if (device.getStatus() == ChargeStatus.FULL && device.getRemainChargeTime() <= CommSetting.DEPLOY_REMAIN_CHARGE_TIMES) {
+        if (device.getChargeStatus() == ChargeStatus.FULL && device.getRemainChargeTime() <= CommSetting.DEPLOY_REMAIN_CHARGE_TIMES) {
             int remainTimes = device.getRemainChargeTime();
             remainTimes = remainTimes > 0 ? remainTimes : 0;
             sendMessage(MsgCodecDeviceRemainChargeTimes.create(device.getGroupId(), device.getDeviceId(), remainTimes));
