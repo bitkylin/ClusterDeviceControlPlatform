@@ -31,6 +31,7 @@ public class TcpPresenter {
     private final Logger logger = LoggerFactory.getLogger(getClass());
     private final TcpRepository tcpRepository;
     private ServerTcpHandler server;
+    private NettyClient nettyClient;
 
     @Autowired
     public TcpPresenter(TcpRepository tcpRepository) {
@@ -38,8 +39,13 @@ public class TcpPresenter {
         this.msgProcessor = MsgProcessor.getInstance();
     }
 
-    public void setServer(ServerTcpHandler server) {
-        this.server = server;
+    /**
+     * 启动特定编号的客户端
+     *
+     * @param groupId 欲启动的客户端编号
+     */
+    public void startClient(int groupId) {
+        nettyClient.start(groupId);
     }
 
     /**
@@ -58,8 +64,6 @@ public class TcpPresenter {
         }
         logger.info("收到正常消息对象：「" + msg.getMsgDetail() + "」");
         switch (msg.getJointMsgFlag()) {
-            case JointMsgType.ChargeStatus:
-                break;
             case JointMsgType.HeartBeat:
                 Attribute<Integer> key = channel.attr(AttributeKey.valueOf("ID"));
                 MsgReplyNormal replyHeartbeat = MsgCodecReplyNormal.createByBaseMsg(MsgCodecHeartbeat.create(key.get()));
@@ -111,5 +115,13 @@ public class TcpPresenter {
      */
     public void channelInactive(int i) {
         tcpRepository.inactiveChannel(i);
+    }
+
+    public void setServer(ServerTcpHandler server) {
+        this.server = server;
+    }
+
+    public void setNettyClient(NettyClient nettyClient) {
+        this.nettyClient = nettyClient;
     }
 }

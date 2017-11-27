@@ -3,24 +3,37 @@ package cc.bitky.clusterdeviceplatform.client.server;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.SpringApplication;
+import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Service;
 
 import cc.bitky.clusterdeviceplatform.client.netty.TcpPresenter;
-import cc.bitky.clusterdeviceplatform.client.netty.repo.TcpRepository;
+import cc.bitky.clusterdeviceplatform.client.ui.view.MainView;
 import cc.bitky.clusterdeviceplatform.messageutils.define.BaseMsg;
 
 @Service
 public class ServerTcpHandler {
-
-    private static final Logger logger = LoggerFactory.getLogger(TcpRepository.class);
-    private final TcpPresenter tcpPresenter;
+    private final Logger logger = LoggerFactory.getLogger(getClass());
+    private final ApplicationContext appContext;
+    private TcpPresenter tcpPresenter;
+    private MainView ui;
 
     @Autowired
-    public ServerTcpHandler(TcpPresenter tcpPresenter) {
+    public ServerTcpHandler(ApplicationContext appContext,TcpPresenter tcpPresenter) {
+        this.appContext = appContext;
         this.tcpPresenter = tcpPresenter;
         tcpPresenter.setServer(this);
     }
 
+
+    /**
+     * 启动特定编号的客户端
+     *
+     * @param groupId 欲启动的客户端编号
+     */
+    public void startClient(int groupId) {
+        tcpPresenter.startClient(groupId);
+    }
 
     /**
      * 将指定的消息对象发送至 TCP 通道
@@ -37,6 +50,17 @@ public class ServerTcpHandler {
      * @param message 消息对象
      */
     public void huntMessage(BaseMsg message) {
-  //      logger.info("捕获到「普通」消息对象：「" + message.getMsgDetail() + "」");
+
+    }
+
+    /**
+     * Netty 服务器优雅关闭
+     */
+    public void shutdown() {
+        System.exit(SpringApplication.exit(appContext));
+    }
+
+    public void setUi(MainView ui) {
+        this.ui = ui;
     }
 }

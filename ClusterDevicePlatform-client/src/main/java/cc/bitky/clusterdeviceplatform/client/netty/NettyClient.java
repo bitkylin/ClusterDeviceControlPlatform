@@ -25,10 +25,10 @@ public class NettyClient {
     private final AttributeKey<Integer> channelId = AttributeKey.newInstance("ID");
 
     @Autowired
-    public NettyClient(ClientChannelInitializer clientChannelInitializer) {
+    public NettyClient(TcpPresenter tcpPresenter, ClientChannelInitializer clientChannelInitializer) {
+        tcpPresenter.setNettyClient(this);
         this.clientChannelInitializer = clientChannelInitializer;
     }
-
 
     public void start(int id) {
         Executors.newSingleThreadExecutor().submit(() -> startClient(null, 30232, id));
@@ -46,12 +46,9 @@ public class NettyClient {
             bootstrap.remoteAddress(new InetSocketAddress(port));
         }
         try {
-            bootstrap.connect().sync().addListener(future -> {
-                logger.info("Channel「" + id + "」" + "已连接");
-            });
+            bootstrap.connect().sync().addListener(future -> logger.info("Channel「" + id + "」" + "已连接"));
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
     }
 }
-

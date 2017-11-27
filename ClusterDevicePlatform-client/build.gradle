@@ -43,3 +43,9 @@ dependencies {
 
     testCompile('org.springframework.boot:spring-boot-starter-test')
 }
+
+jar {
+    manifest {
+        attributes 'Main-Class': 'cc.bitky.clusterdeviceplatform.client.ClientApplication'
+    }
+}
