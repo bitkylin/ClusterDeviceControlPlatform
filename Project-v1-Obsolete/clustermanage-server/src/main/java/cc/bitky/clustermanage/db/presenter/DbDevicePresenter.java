@@ -24,7 +24,6 @@ class DbDevicePresenter {
     public DbDevicePresenter(DeviceRepository deviceRepository) {
         this.deviceRepository = deviceRepository;
     }
-
     /**
      * 处理设备状态包，更新设备的状态信息
      *
@@ -37,7 +36,6 @@ class DbDevicePresenter {
         int rawStatus = device.getStatus();
         int newStatus = msgStatus.getStatus();
         if (newStatus > 6 || newStatus < 0) newStatus = ChargeStatus.CRASH;
-
         if (newStatus == rawStatus) {
             logger.info("设备「" + msgStatus.getGroupId() + ", " + msgStatus.getDeviceId() + "」『"
                     + rawStatus + "->" + newStatus + "』: 状态无更新");
@@ -75,7 +73,6 @@ class DbDevicePresenter {
         }
         return devices;
     }
-
     /**
      * 更新设备
      *

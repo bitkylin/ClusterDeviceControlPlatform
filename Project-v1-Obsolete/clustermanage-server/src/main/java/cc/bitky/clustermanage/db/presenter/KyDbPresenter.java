@@ -43,7 +43,6 @@ public class KyDbPresenter {
         this.dbEmployeePresenter = dbEmployeePresenter;
         this.stringRedisTemplate = stringRedisTemplate;
     }
-
     /**
      * 获得最大的设备组 ID
      *
@@ -154,7 +153,6 @@ public class KyDbPresenter {
     public List<Device> getDevices(int groupId, int boxId) {
         return dbDevicePresenter.getDevices(groupId, boxId);
     }
-
     /**
      * 设备初始化: 根据员工 objectId 获取员工信息
      *

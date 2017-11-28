@@ -58,7 +58,6 @@ public class NettyServer implements IServerView {
     public void setLaunchSuccessfulListener(SuccessfulListener successfulListener) {
         this.launchListener = successfulListener;
     }
-
     @Override
     public void setFinishSuccessfulListener(SuccessfulListener finishListener) {
         this.finishListener = finishListener;

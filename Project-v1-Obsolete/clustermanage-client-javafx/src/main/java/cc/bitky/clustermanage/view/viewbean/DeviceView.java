@@ -165,7 +165,6 @@ public class DeviceView extends StackPane implements Initializable {
 
         device.setStatus(status);
         deployBtnText(status);
-
         if (listener != null && status < 5) {
             listener.btnChargeChanged(new TcpMsgResponseDeviceStatus(device.getGroupId(), device.getDeviceId(), device.getStatus()));
         }

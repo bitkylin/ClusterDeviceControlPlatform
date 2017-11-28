@@ -49,15 +49,12 @@ public class QueueDevice {
     public boolean isPostName() {
         return postName;
     }
-
     public boolean isPostDepartment() {
         return postDepartment;
     }
-
     public boolean isPostCardNumber() {
         return postCardNumber;
     }
-
     public boolean isPostRemainChargeTime() {
         return postRemainChargeTime;
     }
