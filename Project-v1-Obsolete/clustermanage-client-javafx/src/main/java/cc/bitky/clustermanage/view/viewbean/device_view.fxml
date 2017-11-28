@@ -1,69 +1,101 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import com.jfoenix.controls.JFXButton?>
+<?import com.jfoenix.controls.JFXListView?>
+<?import com.jfoenix.controls.JFXTabPane?>
 <?import javafx.geometry.Insets?>
-<?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
-<?import javafx.scene.control.ListView?>
-<?import javafx.scene.control.SplitPane?>
 <?import javafx.scene.control.Tab?>
-<?import javafx.scene.control.TabPane?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<fx:root maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="119.0" prefWidth="107.0" tabClosingPolicy="UNAVAILABLE" type="TabPane" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1">
-  <tabs>
-    <Tab fx:id="tabStatus" text="n号">
-      <content>
-        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
-               <children>
-                  <SplitPane dividerPositions="0.75" layoutX="136.0" layoutY="55.0" prefHeight="300.0" prefWidth="458.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-                    <items>
-                      <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0">
+
+<fx:root maxHeight="-Infinity" maxWidth="-Infinity" minHeight="100.0" minWidth="108.0" prefHeight="122.0" prefWidth="125.0" type="StackPane" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <JFXTabPane>
+         <tabs>
+            <Tab fx:id="tabStatus" text="n号">
+               <content>
+                  <AnchorPane style="-fx-background-color: #7cfff3;">
+                     <children>
+                        <GridPane layoutY="-52.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                           <columnConstraints>
+                              <ColumnConstraints hgrow="SOMETIMES" maxWidth="97.0" minWidth="30.0" prefWidth="57.0" />
+                              <ColumnConstraints hgrow="SOMETIMES" maxWidth="86.0" minWidth="20.0" prefWidth="58.0" />
+                           </columnConstraints>
+                           <rowConstraints>
+                              <RowConstraints minHeight="10.0" prefHeight="50.0" vgrow="SOMETIMES" />
+                           </rowConstraints>
                            <children>
-                              <VBox alignment="CENTER" prefHeight="298.0" prefWidth="132.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                              <VBox alignment="CENTER">
                                  <children>
                                     <Label fx:id="name" alignment="TOP_CENTER" contentDisplay="CENTER" text="备用" textAlignment="CENTER">
                                        <VBox.margin>
-                                          <Insets />
+                                          <Insets bottom="2.0" top="2.0" />
                                        </VBox.margin>
                                     </Label>
-                                    <Label fx:id="department" text="空部门" />
-                                    <Label fx:id="cardNumber" text="空卡号" />
-                                    <Button fx:id="btnWrong" mnemonicParsing="false" onAction="#btnWrongAction" prefHeight="0.0" prefWidth="80.0" text="好" textAlignment="CENTER">
-                                       <font>
-                                          <Font size="8.0" />
-                                       </font>
-                                    </Button>
+                                    <Label fx:id="department" text="空部门">
+                                       <VBox.margin>
+                                          <Insets bottom="2.0" top="2.0" />
+                                       </VBox.margin>
+                                    </Label>
+                                    <Label fx:id="cardNumber" text="空卡号">
+                                       <VBox.margin>
+                                          <Insets bottom="2.0" top="2.0" />
+                                       </VBox.margin>
+                                    </Label>
                                  </children>
                               </VBox>
-                           </children>
-                        </AnchorPane>
-                      <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="298.0" prefWidth="133.0">
-                           <children>
-                              <VBox layoutX="-36.0" layoutY="-37.0" prefHeight="77.0" prefWidth="34.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                              <VBox alignment="CENTER" GridPane.columnIndex="1">
                                  <children>
-                                    <Button fx:id="btnCharge" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onAction="#btnChargeAction" prefHeight="88.0" prefWidth="34.0" text="充电中" textAlignment="CENTER" wrapText="true">
+                                    <JFXButton fx:id="btnCharge" alignment="CENTER" onAction="#btnChargeAction" prefHeight="39.0" prefWidth="54.0" ripplerFill="BLACK" style="-fx-background-color: #00beff;" text="充电中" textAlignment="CENTER" textFill="WHITE" wrapText="true">
                                        <font>
-                                          <Font size="12.0" />
+                                          <Font name="System Bold" size="14.0" />
                                        </font>
-                                    </Button>
+                                       <padding>
+                                          <Insets left="5.0" right="5.0" />
+                                       </padding>
+                                       <VBox.margin>
+                                          <Insets bottom="1.0" />
+                                       </VBox.margin>
+                                    </JFXButton>
+                                    <JFXButton fx:id="btnWrong" onAction="#btnWrongAction" prefHeight="25.0" prefWidth="75.0" style="-fx-background-color: #00beff;" text="好" textFill="WHITE">
+                                       <VBox.margin>
+                                          <Insets top="1.0" />
+                                       </VBox.margin>
+                                       <font>
+                                          <Font name="System Bold Italic" size="14.0" />
+                                       </font>
+                                    </JFXButton>
                                  </children>
+                                 <padding>
+                                    <Insets bottom="2.0" left="2.0" right="2.0" top="2.0" />
+                                 </padding>
                               </VBox>
                            </children>
-                        </AnchorPane>
-                    </items>
-                  </SplitPane>
-               </children></AnchorPane>
-      </content>
-    </Tab>
-    <Tab fx:id="tabHistory" text="记">
-      <content>
-        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
-               <children>
-                  <ListView fx:id="historyList" prefHeight="79.0" prefWidth="130.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
-               </children></AnchorPane>
-      </content>
-    </Tab>
-  </tabs>
+                        </GridPane>
+                     </children>
+                  </AnchorPane>
+               </content>
+            </Tab>
+            <Tab fx:id="tabHistory" text="记">
+               <content>
+                  <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                     <children>
+                        <JFXListView fx:id="historyList" layoutX="-56.0" layoutY="-186.0" prefHeight="61.0" prefWidth="115.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                     </children>
+                  </AnchorPane>
+               </content>
+            </Tab>
+         </tabs>
+         <StackPane.margin>
+            <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+         </StackPane.margin>
+      </JFXTabPane>
+   </children>
 </fx:root>

@@ -15,11 +15,13 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.Tab;
-import javafx.scene.control.TabPane;
+import javafx.scene.layout.StackPane;
 
-public class DeviceView extends TabPane implements Initializable {
+public class DeviceView extends StackPane implements Initializable {
+
     private static Device deviceDefault = new Device();
-    DeviceStatusChangeListener listener;
+
+    private DeviceStatusChangeListener listener;
     @FXML
     private Tab tabStatus;
     @FXML
@@ -43,7 +45,6 @@ public class DeviceView extends TabPane implements Initializable {
         this.id = id;
         loadFxml();
         initView(null);
-
     }
 
     public void setListener(DeviceStatusChangeListener listener) {
@@ -51,7 +52,9 @@ public class DeviceView extends TabPane implements Initializable {
     }
 
     public void initView(Device inDevice) {
-        if (inDevice == null) inDevice = deviceDefault;
+        if (inDevice == null) {
+            inDevice = deviceDefault;
+        }
         this.device = inDevice;
         int setid = device.getDeviceId() == -1 ? this.id : device.getDeviceId();
         tabStatus.setText(setid + "号");
@@ -104,9 +107,9 @@ public class DeviceView extends TabPane implements Initializable {
                 btnCharge.setText("多种X");
                 btnWrong.setText("坏");
                 break;
+            default:
         }
     }
-
 
     private void loadFxml() {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("device_view.fxml"));
@@ -134,16 +137,21 @@ public class DeviceView extends TabPane implements Initializable {
 
         if (status >= 0 && status <= 2) {
             status++;
-        } else if (status == 3 || status == 4) status = 1;
-        else if (status == 5) status = 6;
-        else if (status == 6) status = 5;
-        else status = 0;
+        } else if (status == 3 || status == 4) {
+            status = 1;
+        } else if (status == 5) {
+            status = 6;
+        } else if (status == 6) {
+            status = 5;
+        } else {
+            status = 0;
+        }
 
         device.setStatus(status);
         deployBtnText(status);
-        if (listener != null && status < 5)
+        if (listener != null && status < 5) {
             listener.btnChargeChanged(new TcpMsgResponseDeviceStatus(device.getGroupId(), device.getDeviceId(), device.getStatus()));
-
+        }
     }
 
     @FXML
@@ -158,8 +166,9 @@ public class DeviceView extends TabPane implements Initializable {
         device.setStatus(status);
         deployBtnText(status);
 
-        if (listener != null && status < 5)
+        if (listener != null && status < 5) {
             listener.btnChargeChanged(new TcpMsgResponseDeviceStatus(device.getGroupId(), device.getDeviceId(), device.getStatus()));
+        }
     }
 
     void setBtnWrongText(String value) {
@@ -184,11 +193,13 @@ public class DeviceView extends TabPane implements Initializable {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
         DeviceView that = (DeviceView) o;
-
         return id == that.id;
     }
 

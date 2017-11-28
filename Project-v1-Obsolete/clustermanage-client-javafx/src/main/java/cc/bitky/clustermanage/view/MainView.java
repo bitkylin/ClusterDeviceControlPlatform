@@ -84,7 +84,6 @@ public class MainView extends BorderPane implements Initializable {
                         Container.deviceViewHashMap.get(i).initView(Container.deviceHashMap.get(new DeviceKey(groupId, i)));
                     }
                 });
-
         for (int i = 1; i <= 100; i++) {
             DeviceView deviceView = new DeviceView(i);
             deviceFlowPane.getChildren().add(deviceView);

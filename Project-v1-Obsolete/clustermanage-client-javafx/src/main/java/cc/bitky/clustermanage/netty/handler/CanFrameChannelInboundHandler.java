@@ -34,7 +34,9 @@ public class CanFrameChannelInboundHandler extends SimpleChannelInboundHandler<B
 
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, ByteBuf msg) {
-        if (errorCount != 0) logger.warn("接收到错误的 CAN 帧数量：" + errorCount);
+        if (errorCount != 0) {
+            logger.warn("接收到错误的 CAN 帧数量：" + errorCount);
+        }
         if (msg.readableBytes() % 13 != 0) {
             errorCount++;
             logger.warn("读取到非整数个 CAN 帧");

@@ -1,3 +1,5 @@
+.gradle/
+.idea/
 target/
 test/
 .mvn/
