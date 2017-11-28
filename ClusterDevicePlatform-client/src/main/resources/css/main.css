@@ -1,0 +1,50 @@
+/*******************************************************************************
+ *                                                                             *
+ * JFX Tool Bar                                                                *
+ *                                                                             *
+ ******************************************************************************/
+
+.jfx-tool-bar {
+    -fx-font-size: 20.0;
+    -fx-font-weight: normal;
+    -fx-background-color:  derive(rgb(0, 255, 92), -20%);
+    -fx-pref-width: 100.0%;
+    -fx-pref-height: 50px;
+}
+/*******************************************************************************
+*                                                                              *
+* JFX Decorator                                                                *
+*                                                                              *
+*******************************************************************************/
+
+.jfx-decorator {
+    -fx-decorator-color: derive(rgb(0, 255, 92), -20%);
+}
+
+.jfx-decorator .jfx-decorator-buttons-container {
+    -fx-background-color: -fx-decorator-color;
+}
+
+.jfx-decorator .resize-border {
+    -fx-border-color: -fx-decorator-color;
+    -fx-border-width: 0 4 4 4;
+}
+
+/*******************************************************************************
+*                                                                              *
+* dialog-accept                                                               *
+*                                                                              *
+*******************************************************************************/
+
+
+.dialog-accept {
+    -fx-text-fill: #03A9F4;
+    -fx-font-weight: BOLD;
+    -fx-padding: 0.7em 0.8em;
+}
+
+
+
+
+
+

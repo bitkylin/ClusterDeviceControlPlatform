@@ -1,0 +1,51 @@
+buildscript {
+    ext {
+        springBootVersion = '2.0.0.M6'
+    }
+    repositories {
+        google()
+        mavenCentral()
+        maven { url "https://repo.spring.io/snapshot" }
+        maven { url "https://repo.spring.io/milestone" }
+    }
+    dependencies {
+        classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
+    }
+}
+
+apply plugin: 'java'
+apply plugin: 'eclipse'
+apply plugin: 'org.springframework.boot'
+apply plugin: 'io.spring.dependency-management'
+
+group = 'cc.bitky.ClusterDevicePlatform'
+version = '0.0.1-SNAPSHOT'
+sourceCompatibility = 1.8
+
+repositories {
+    mavenCentral()
+    maven { url "https://repo.spring.io/snapshot" }
+    maven { url "https://repo.spring.io/milestone" }
+}
+
+tasks.withType(JavaCompile) {
+    options.encoding = "UTF-8"
+}
+
+dependencies {
+    compile('org.springframework.boot:spring-boot-starter')
+    compile group: 'io.netty', name: 'netty-all', version: '4.1.16.Final'
+    compile group: 'com.alibaba', name: 'fastjson', version: '1.2.39'
+    compile 'com.jfoenix:jfoenix:1.10.0'
+    compile 'io.datafx:datafx:8.0.1'
+    compile 'io.datafx:flow:8.0.1'
+    compile files('libs/messageUtils-0.2.jar')
+
+    testCompile('org.springframework.boot:spring-boot-starter-test')
+}
+
+jar {
+    manifest {
+        attributes 'Main-Class': 'cc.bitky.clusterdeviceplatform.client.ClientApplication'
+    }
+}

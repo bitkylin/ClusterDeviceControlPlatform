@@ -27,8 +27,7 @@ public class KyDbPresenter {
     private final DbDevicePresenter dbDevicePresenter;
     private final DbRoutinePresenter dbRoutinePresenter;
     private final StringRedisTemplate stringRedisTemplate;
-    Random random = new Random();
-    //   private int groupSize = 0;
+    private final Random random = new Random();
     private int maxGroupId = 0;
 
     private Logger logger = LoggerFactory.getLogger(KyDbPresenter.class);
@@ -44,35 +43,12 @@ public class KyDbPresenter {
         this.dbEmployeePresenter = dbEmployeePresenter;
         this.stringRedisTemplate = stringRedisTemplate;
     }
-
-
-//    /**
-//     * 调整(或增加)设备组的数量，使之满足获取到的数据帧的要求
-//     *
-//     * @param groupId    获取到的数据帧的组 Id
-//     * @param autoCreate 是否自动初始化任意组设备
-//     */
-//    private void initDbDeviceGroup(int groupId, boolean autoCreate) {
-//        if (groupSize < groupId)
-//            groupSize = (int) deviceGroupRepository.count();
-//
-//        while (groupSize < groupId) {
-//            groupSize++;
-//            deviceGroupRepository.save(new DeviceGroup(groupSize));
-//            if (autoCreate)
-//                dbDevicePresenter.InitDbDevices(groupSize);
-//        }
-//    }
-
     /**
      * 获得最大的设备组 ID
      *
      * @return 设备组的ID
      */
     public int obtainMaxDeviceGroupId() {
-//        if (groupSize == 0)
-//            groupSize = (int) deviceGroupRepository.count();
-//        return groupSize;
         return maxGroupId;
     }
 
@@ -87,17 +63,6 @@ public class KyDbPresenter {
         if (maxGroupId < groupId) maxGroupId = groupId;
         String exec = "deviceGroup-activated-" + groupId;
         stringRedisTemplate.opsForValue().set(exec, "1", 60, TimeUnit.SECONDS);
-//
-//        initDbDeviceGroup(tcpMsgHeartBeat.getGroupId(), autoCreate);
-//
-//        DeviceGroup deviceGroup = deviceGroupRepository.findByGroupId(tcpMsgHeartBeat.getGroupId());
-//        if (deviceGroup == null) {
-//            logger.warn("设备组(" + tcpMsgHeartBeat.getGroupId() + ") 不存在，心跳无法处理");
-//            return;
-//        }
-//        deviceGroup.setHeartBeatTime(new Date(System.currentTimeMillis()));
-//        deviceGroupRepository.save(deviceGroup);
-//        logger.info("设备组(" + tcpMsgHeartBeat.getGroupId() + ") 心跳处理完毕");
     }
 
     /**
@@ -188,25 +153,6 @@ public class KyDbPresenter {
     public List<Device> getDevices(int groupId, int boxId) {
         return dbDevicePresenter.getDevices(groupId, boxId);
     }
-
-//    /**
-//     * 设备初始化: 根据员工卡号获取员工信息
-//     *
-//     * @param cardNumber 员工卡号
-//     * @return 通过员工卡号查询整合而成的信息 bean
-//     */
-//    public Employee obtainEmployeeByEmployeeCard(String cardNumber) {
-//        Device device = dbDevicePresenter.obtainEmployeeObjectIdByCardNum(cardNumber);
-//        if (device == null) return null;
-//
-//        Employee employee = dbEmployeePresenter.ObtainEmployeeByObjectId(device.getEmployeeObjectId());
-//        if (employee == null) return null;
-//
-//        employee.setGroupId(device.getGroupId());
-//        employee.setDeviceId(device.getDeviceId());
-//        return employee;
-//    }
-
     /**
      * 设备初始化: 根据员工 objectId 获取员工信息
      *

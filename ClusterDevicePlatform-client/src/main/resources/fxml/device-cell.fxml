@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import com.jfoenix.controls.JFXButton?>
+<?import com.jfoenix.controls.JFXListView?>
+<?import com.jfoenix.controls.JFXTabPane?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Tab?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<fx:root maxHeight="122.0" maxWidth="160.0" prefHeight="122.0" prefWidth="188.0" type="JFXTabPane" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1">
+    <padding>
+        <Insets bottom="2.0" left="2.0" right="2.0" top="2.0" />
+    </padding>
+    <Tab fx:id="tabStatus" text="n号">
+        <AnchorPane style="-fx-background-color: #a8ecff;">
+            <GridPane layoutY="-52.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                <columnConstraints>
+                    <ColumnConstraints hgrow="SOMETIMES" maxWidth="69.0" minWidth="30.0" prefWidth="69.0" />
+                    <ColumnConstraints hgrow="SOMETIMES" maxWidth="87.0" minWidth="20.0" prefWidth="87.0" />
+                </columnConstraints>
+                <rowConstraints>
+                    <RowConstraints minHeight="10.0" prefHeight="50.0" vgrow="SOMETIMES" />
+                </rowConstraints>
+                <VBox alignment="CENTER">
+                    <Label fx:id="name" alignment="TOP_CENTER" contentDisplay="CENTER" text="备用" textAlignment="CENTER">
+                        <VBox.margin>
+                            <Insets bottom="2.0" top="2.0" />
+                        </VBox.margin>
+                    </Label>
+                    <Label fx:id="department" text="空部门">
+                        <VBox.margin>
+                            <Insets bottom="2.0" top="2.0" />
+                        </VBox.margin>
+                    </Label>
+                    <Label fx:id="cardNumber" text="空卡号">
+                        <VBox.margin>
+                            <Insets bottom="2.0" top="2.0" />
+                        </VBox.margin>
+                    </Label>
+                </VBox>
+                <VBox alignment="CENTER" GridPane.columnIndex="1">
+                    <padding>
+                        <Insets bottom="2.0" left="2.0" right="2.0" top="2.0" />
+                    </padding>
+                    <JFXButton fx:id="btnCharge" alignment="CENTER" buttonType="RAISED" onAction="#btnChargeAction" prefHeight="35.0" prefWidth="80.0" ripplerFill="BLACK" style="-fx-background-color: #00beff;" styleClass="mylistview" text="充电中" textAlignment="CENTER" textFill="WHITE" wrapText="true">
+                        <font>
+                            <Font name="System Bold" size="14.0" />
+                        </font>
+                        <VBox.margin>
+                            <Insets bottom="1.0" />
+                        </VBox.margin>
+                    </JFXButton>
+                    <JFXButton fx:id="btnWrong" buttonType="RAISED" onAction="#btnWorkAction" prefHeight="25.0" prefWidth="80.0" style="-fx-background-color: #00beff;" text="好" textAlignment="CENTER" textFill="WHITE">
+                        <VBox.margin>
+                            <Insets top="1.0" />
+                        </VBox.margin>
+                        <font>
+                            <Font name="System Bold Italic" size="14.0" />
+                        </font>
+                    </JFXButton>
+                </VBox>
+            </GridPane>
+        </AnchorPane>
+    </Tab>
+    <Tab fx:id="tabHistory" text="记">
+        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+            <JFXListView fx:id="historyList" layoutX="-56.0" layoutY="-186.0" prefHeight="61.0" prefWidth="115.0" styleClass="custom-jfx-list-view" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+        </AnchorPane>
+    </Tab>
+</fx:root>

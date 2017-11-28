@@ -48,5 +48,4 @@ public class TcpMsgResponseStatus extends BaseMessage {
          */
         SERVER
     }
-
 }

@@ -46,14 +46,19 @@ public class NettyServer implements IServerView {
     }
 
     private void startListenerHandle(Future future, SuccessfulListener listener) {
-        if (!future.isSuccess()) future.cause().printStackTrace();
-        if (listener != null) listener.onSuccess(future.isSuccess());
+        if (!future.isSuccess()) {
+            future.cause().printStackTrace();
+        }
+        if (listener != null) {
+            listener.onSuccess(future.isSuccess());
+        }
     }
 
+    @Override
     public void setLaunchSuccessfulListener(SuccessfulListener successfulListener) {
         this.launchListener = successfulListener;
     }
-
+    @Override
     public void setFinishSuccessfulListener(SuccessfulListener finishListener) {
         this.finishListener = finishListener;
     }
