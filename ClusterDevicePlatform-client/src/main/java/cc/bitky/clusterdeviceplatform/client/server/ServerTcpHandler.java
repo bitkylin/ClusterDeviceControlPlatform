@@ -7,9 +7,14 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 import cc.bitky.clusterdeviceplatform.client.netty.TcpPresenter;
+import cc.bitky.clusterdeviceplatform.client.ui.bean.Device;
+import cc.bitky.clusterdeviceplatform.client.ui.bean.DeviceCellRepo;
 import cc.bitky.clusterdeviceplatform.client.ui.view.MainView;
 import cc.bitky.clusterdeviceplatform.messageutils.define.BaseMsg;
+import io.netty.channel.Channel;
 
 @Service
 public class ServerTcpHandler {
@@ -19,12 +24,21 @@ public class ServerTcpHandler {
     private MainView ui;
 
     @Autowired
-    public ServerTcpHandler(ApplicationContext appContext,TcpPresenter tcpPresenter) {
+    public ServerTcpHandler(ApplicationContext appContext, TcpPresenter tcpPresenter) {
         this.appContext = appContext;
         this.tcpPresenter = tcpPresenter;
         tcpPresenter.setServer(this);
     }
 
+    /**
+     * 获取特定的已激活的 channel
+     *
+     * @param index 待获取的 channel 的序号
+     * @return 已获取的 channel
+     */
+    public Optional<Channel> touchChannel(int index) {
+        return tcpPresenter.touchChannel(index);
+    }
 
     /**
      * 启动特定编号的客户端
@@ -50,7 +64,8 @@ public class ServerTcpHandler {
      * @param message 消息对象
      */
     public void huntMessage(BaseMsg message) {
-
+        Device device = DeviceCellRepo.getDevice(message.getGroupId(), message.getDeviceId());
+        device.handleMsg(message);
     }
 
     /**

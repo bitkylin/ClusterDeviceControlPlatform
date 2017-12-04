@@ -57,7 +57,7 @@ public class ServerTcpProcessor {
      * @param message 消息对象
      */
     public void huntDeviceStatusMsg(MsgReplyDeviceStatus message) {
-        logger.info("捕获到「设备状态」消息对象：「" + message.getMsgDetail() + "」");
+        logger.info("捕获到「设备" + message.getType().name() + "」消息对象：「" + message.getMsgDetail() + "」");
         long l1 = System.currentTimeMillis();
         Device device = dbPresenter.handleMsgDeviceStatus(message);
         //部署剩余充电次数
@@ -65,7 +65,7 @@ public class ServerTcpProcessor {
             deployRemainChargeTimes(device);
         }
         long l2 = System.currentTimeMillis();
-        logger.info("处理「设备充电状态」总花费时间：" + (l2 - l1) + "ms");
+        logger.info("处理「设备" + message.getType().name() + "」总花费时间：" + (l2 - l1) + "ms");
     }
 
     /**
@@ -90,54 +90,4 @@ public class ServerTcpProcessor {
     public void touchUnusualMsg(ExceptionMsgTcp msg) {
         logger.info("捕获到异常消息：" + msg.getDetail() + "原始消息：「" + msg.getBaseMsg().getMsgDetail() + "」");
     }
-//
-//    @Override
-//    public void run(String... args) throws Exception {
-//
-//        Executors.newSingleThreadExecutor().submit(() -> {
-//            System.out.println("请输入要发送的消息:");
-//            Scanner scanner = new Scanner(System.in);
-//            while (true) {
-//                switch (scanner.nextInt()) {
-//                    case 0:
-//                        sendMessage(MsgCodecEmployeeName.create(1, 2, "李明亮"));
-//                        break;
-//                    case 1:
-//                        // sendMessage(MsgCodecEmployeeName.create(1, 2, "李明亮"));
-//                        sendMessage(MsgCodecEmployeeDepartment.create(1, 2, "李明亮部门"));
-//                        break;
-//                    case 2:
-//                        sendMessage(MsgCodecEmployeeName.create(1, 2, "李明亮"));
-//                        sendMessage(MsgCodecEmployeeDepartment.create(1, 2, "李明亮部门"));
-//                        sendMessage(MsgCodecCardEmployee.create(1, 2, "12345"));
-//                        break;
-//                    case 3:
-//                        sendMessage(MsgCodecEmployeeName.create(1, 4, "李明亮"));
-//                        sendMessage(MsgCodecEmployeeDepartment.create(1, 5, "李明亮部门"));
-//                        sendMessage(MsgCodecCardEmployee.create(1, 6, "12345"));
-//                        break;
-//                    case 4:
-//                        sendMessage(MsgCodecEmployeeName.create(2, 2, "李明亮"));
-//                        sendMessage(MsgCodecEmployeeDepartment.create(2, 2, "李明亮部门"));
-//                        sendMessage(MsgCodecCardEmployee.create(2, 2, "12345"));
-//                        break;
-//                    case 5:
-//                        sendMessage(MsgCodecEmployeeName.create(1, 2, "李明亮"));
-//                        sendMessage(MsgCodecEmployeeDepartment.create(1, 2, "李明亮部门"));
-//                        sendMessage(MsgCodecCardEmployee.create(1, 2, "12345"));
-//
-//                        sendMessage(MsgCodecEmployeeName.create(1, 4, "李明亮"));
-//                        sendMessage(MsgCodecEmployeeDepartment.create(1, 5, "李明亮部门"));
-//                        sendMessage(MsgCodecCardEmployee.create(1, 6, "12345"));
-//
-//                        sendMessage(MsgCodecEmployeeName.create(2, 2, "李明亮"));
-//                        sendMessage(MsgCodecEmployeeDepartment.create(2, 2, "李明亮部门"));
-//                        sendMessage(MsgCodecCardEmployee.create(2, 2, "12345"));
-//                        break;
-//                    default:
-//                }
-//            }
-//        });
-//
-//    }
 }

@@ -40,6 +40,7 @@ public class MainView extends StackPane {
         deviceGroupList.getFocusModel().focusedItemProperty().addListener((observable, oldValue, newValue) ->
         {
             int groupId = newValue.getGroupId();
+            uiPresenter.server.startClient(groupId);
             service.submit(() -> refreshDeviceCell(groupId));
         });
         List<DeviceGroup> groups = new ArrayList<>(DeviceSetting.MAX_GROUP_ID);

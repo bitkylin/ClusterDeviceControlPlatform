@@ -65,7 +65,7 @@ public class DeviceOperate {
                     + rawStatus + "->" + newStatus + "』: 工作状态无更新");
             return null;
         }
-        device.setChargeStatus(newStatus);
+        device.setWorkStatus(newStatus);
         device.setStatusTime(new Date(msgStatus.getTime()));
         repository.save(device);
         logger.info("设备「" + msgStatus.getGroupId() + ", " + msgStatus.getDeviceId() + "」『"

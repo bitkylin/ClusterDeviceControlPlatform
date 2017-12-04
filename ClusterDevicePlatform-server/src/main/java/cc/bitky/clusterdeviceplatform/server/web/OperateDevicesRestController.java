@@ -22,6 +22,7 @@ import cc.bitky.clusterdeviceplatform.server.config.CommSetting;
 import cc.bitky.clusterdeviceplatform.server.config.WebSetting;
 import cc.bitky.clusterdeviceplatform.server.db.bean.Device;
 import cc.bitky.clusterdeviceplatform.server.db.bean.Employee;
+import cc.bitky.clusterdeviceplatform.server.db.repository.EmployeeRepository;
 import cc.bitky.clusterdeviceplatform.server.server.ServerWebProcessor;
 import cc.bitky.clusterdeviceplatform.server.web.bean.QueueDevice;
 
@@ -31,10 +32,12 @@ public class OperateDevicesRestController {
 
     private final ServerWebProcessor webProcessor;
     private final Logger logger = LoggerFactory.getLogger(getClass());
+    EmployeeRepository repository;
 
     @Autowired
-    public OperateDevicesRestController(ServerWebProcessor webProcessor) {
+    public OperateDevicesRestController(ServerWebProcessor webProcessor, EmployeeRepository repository) {
         this.webProcessor = webProcessor;
+        this.repository = repository;
     }
 
     /**
@@ -164,7 +167,7 @@ public class OperateDevicesRestController {
      */
     private void deployEmployeeMsg(Device device, QueueDevice queue) {
         if (queue.isName() || queue.isDepartment()) {
-            Optional<Employee> optional = webProcessor.getDbPresenter().queryEmployee(device.getId());
+            Optional<Employee> optional = webProcessor.getDbPresenter().queryEmployee(device.getEmployeeObjectId());
             if (optional.isPresent() && queue.isName()) {
                 webProcessor.sendMessageGrouped(MsgCodecEmployeeName.create(device.getGroupId(), device.getDeviceId(), optional.get().getName()));
             }

@@ -33,7 +33,6 @@ public class InfoDevicesRestController {
     public List<Device> getDevices(@PathVariable int groupId, @PathVariable int deviceId) {
         return serverProcessor.getDbPresenter().queryDeviceInfo(groupId, deviceId);
     }
-
 //    /**
 //     * 获取正在活动的设备组
 //     *

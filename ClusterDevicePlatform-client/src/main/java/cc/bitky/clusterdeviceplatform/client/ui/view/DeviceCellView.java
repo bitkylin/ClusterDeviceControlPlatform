@@ -11,6 +11,8 @@ import cc.bitky.clusterdeviceplatform.client.ui.UiPresenter;
 import cc.bitky.clusterdeviceplatform.client.ui.bean.Device;
 import cc.bitky.clusterdeviceplatform.messageutils.config.ChargeStatus;
 import cc.bitky.clusterdeviceplatform.messageutils.config.WorkStatus;
+import cc.bitky.clusterdeviceplatform.messageutils.msgcodec.status.MsgCodecReplyStatusCharge;
+import cc.bitky.clusterdeviceplatform.messageutils.msgcodec.status.MsgCodecReplyStatusWork;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -35,10 +37,10 @@ public class DeviceCellView extends JFXTabPane {
     private Label cardNumber;
 
     @FXML
-    private JFXButton btnCharge;
+    private JFXButton btnChargeStatus;
 
     @FXML
-    private JFXButton btnWrong;
+    private JFXButton btnWorkStatus;
 
     @FXML
     private Tab tabHistory;
@@ -86,8 +88,8 @@ public class DeviceCellView extends JFXTabPane {
             name.setText(device.getName());
             department.setText(device.getDepartment());
             cardNumber.setText(device.getCardNumber() + "");
-            btnCharge.setText(obtainChargeStatus(device.getChargeStatus()));
-            btnWrong.setText(obtainWorkStatus(device.getWorkStatus()));
+            btnChargeStatus.setText(obtainChargeStatus(device.getChargeStatus()));
+            btnWorkStatus.setText(obtainWorkStatus(device.getWorkStatus()));
             historyList.getItems().clear();
             historyList.getItems().addAll(device.getHistoryList());
         });
@@ -142,7 +144,8 @@ public class DeviceCellView extends JFXTabPane {
                 status = ChargeStatus.USING;
             }
             device.setChargeStatus(status);
-            btnCharge.setText(obtainChargeStatus(status));
+            btnChargeStatus.setText(obtainChargeStatus(status));
+            sendMsgStatusCurrent(device);
         } else {
             nobindalertdialog();
         }
@@ -159,10 +162,20 @@ public class DeviceCellView extends JFXTabPane {
                 status = WorkStatus.OVERCURRENT;
             }
             device.setWorkStatus(status);
-            btnWrong.setText(obtainWorkStatus(status));
+            btnWorkStatus.setText(obtainWorkStatus(status));
+            sendMsgStatusCurrent(device);
         } else {
             nobindalertdialog();
         }
+    }
+
+    private void sendMsgStatusCurrent(Device device) {
+        int groupId = device.getGroupId();
+        int deviceId = device.getDeviceId();
+        int chargeStatus = device.getChargeStatus();
+        int workStatus = device.getWorkStatus();
+        uiPresenter.sendMessage(MsgCodecReplyStatusCharge.create(groupId, deviceId, chargeStatus));
+        uiPresenter.sendMessage(MsgCodecReplyStatusWork.create(groupId, deviceId, workStatus));
     }
 
     /**

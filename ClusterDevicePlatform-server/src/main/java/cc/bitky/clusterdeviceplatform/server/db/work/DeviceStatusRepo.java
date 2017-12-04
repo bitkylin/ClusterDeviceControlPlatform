@@ -1,4 +1,4 @@
-package cc.bitky.clusterdeviceplatform.server.db.operate;
+package cc.bitky.clusterdeviceplatform.server.db.work;
 
 import org.springframework.stereotype.Repository;
 

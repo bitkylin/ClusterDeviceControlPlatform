@@ -48,7 +48,7 @@
                     <padding>
                         <Insets bottom="2.0" left="2.0" right="2.0" top="2.0" />
                     </padding>
-                    <JFXButton fx:id="btnCharge" alignment="CENTER" buttonType="RAISED" onAction="#btnChargeAction" prefHeight="35.0" prefWidth="80.0" ripplerFill="BLACK" style="-fx-background-color: #00beff;" styleClass="mylistview" text="充电中" textAlignment="CENTER" textFill="WHITE" wrapText="true">
+                    <JFXButton fx:id="btnChargeStatus" alignment="CENTER" buttonType="RAISED" onAction="#btnChargeAction" prefHeight="35.0" prefWidth="80.0" ripplerFill="BLACK" style="-fx-background-color: #00beff;" styleClass="mylistview" text="充电中" textAlignment="CENTER" textFill="WHITE" wrapText="true">
                         <font>
                             <Font name="System Bold" size="14.0" />
                         </font>
@@ -56,7 +56,7 @@
                             <Insets bottom="1.0" />
                         </VBox.margin>
                     </JFXButton>
-                    <JFXButton fx:id="btnWrong" buttonType="RAISED" onAction="#btnWorkAction" prefHeight="25.0" prefWidth="80.0" style="-fx-background-color: #00beff;" text="好" textAlignment="CENTER" textFill="WHITE">
+                    <JFXButton fx:id="btnWorkStatus" buttonType="RAISED" onAction="#btnWorkAction" prefHeight="25.0" prefWidth="80.0" style="-fx-background-color: #00beff;" text="好" textAlignment="CENTER" textFill="WHITE">
                         <VBox.margin>
                             <Insets top="1.0" />
                         </VBox.margin>

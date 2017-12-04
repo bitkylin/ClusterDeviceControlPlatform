@@ -103,7 +103,7 @@ public class TcpRepository {
                     length += data.readableBytes();
                     dataList.add(data);
                     deque.poll();
-                    touchNeedReplyMsg(baseMsg);
+                    touchNeedReplyMsg(subMsg);
                 }
                 FrameMajorHeader frameHeader = new FrameMajorHeader(
                         baseMsg.getMajorMsgId(),

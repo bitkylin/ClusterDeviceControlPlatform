@@ -6,7 +6,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.concurrent.LinkedBlockingDeque;
+import java.util.Optional;
 
 import cc.bitky.clusterdeviceplatform.client.netty.repo.TcpRepository;
 import cc.bitky.clusterdeviceplatform.client.server.ServerTcpHandler;
@@ -40,12 +40,24 @@ public class TcpPresenter {
     }
 
     /**
+     * 获取特定的已激活的 channel
+     *
+     * @param index 待获取的 channel 的序号
+     * @return 已获取的 channel
+     */
+    public Optional<Channel> touchChannel(int index) {
+        return tcpRepository.touchChannel(index);
+    }
+
+    /**
      * 启动特定编号的客户端
      *
      * @param groupId 欲启动的客户端编号
      */
     public void startClient(int groupId) {
-        nettyClient.start(groupId);
+        if (!touchChannel(groupId).isPresent()) {
+            nettyClient.start(groupId);
+        }
     }
 
     /**
@@ -90,13 +102,11 @@ public class TcpPresenter {
      * @return 是否发送成功
      */
     public boolean sendMessageToTcp(BaseMsg message) {
-        Channel channel = TcpRepository.touchChannel(message.getGroupId());
-        LinkedBlockingDeque<BaseMsg> deque = tcpRepository.touchMessageQueue(message.getGroupId());
-        if (channel == null || deque == null) {
+        if (!tcpRepository.touchChannel(message.getGroupId()).isPresent()) {
             return false;
         }
-        deque.offer(message);
-        return true;
+        return tcpRepository.touchMessageQueue(message.getGroupId()).flatMap(
+                deque -> Optional.of(deque.offer(message))).orElse(false);
     }
 
     /**

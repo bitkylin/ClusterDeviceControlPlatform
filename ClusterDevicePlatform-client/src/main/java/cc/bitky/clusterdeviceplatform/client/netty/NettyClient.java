@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import java.net.InetSocketAddress;
 import java.util.concurrent.Executors;
 
+import cc.bitky.clusterdeviceplatform.client.config.CommSetting;
 import cc.bitky.clusterdeviceplatform.client.netty.handler.ClientChannelInitializer;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.EventLoopGroup;
@@ -31,7 +32,8 @@ public class NettyClient {
     }
 
     public void start(int id) {
-        Executors.newSingleThreadExecutor().submit(() -> startClient(null, 30232, id));
+        Executors.newSingleThreadExecutor().submit(() ->
+                startClient(CommSetting.SERVER_HOSTNAME, CommSetting.SERVER_PORT, id));
     }
 
     private void startClient(String hostName, int port, int id) {
