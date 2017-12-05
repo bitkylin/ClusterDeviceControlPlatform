@@ -1,6 +1,7 @@
 package cc.bitky.clusterdeviceplatform.server.tcp.exception;
 
-import cc.bitky.clusterdeviceplatform.messageutils.define.BaseMsg;
+
+import cc.bitky.clusterdeviceplatform.messageutils.define.base.BaseMsg;
 
 public class ExceptionMsgTcp {
 

@@ -3,7 +3,7 @@ package cc.bitky.clusterdeviceplatform.server.server;
 import org.springframework.stereotype.Service;
 
 import cc.bitky.clusterdeviceplatform.messageutils.config.DeviceSetting;
-import cc.bitky.clusterdeviceplatform.messageutils.define.BaseMsg;
+import cc.bitky.clusterdeviceplatform.messageutils.define.base.BaseMsg;
 import cc.bitky.clusterdeviceplatform.server.config.WebSetting;
 
 @Service

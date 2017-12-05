@@ -17,7 +17,7 @@ import java.util.concurrent.atomic.AtomicReferenceArray;
 import cc.bitky.clusterdeviceplatform.client.config.CommSetting;
 import cc.bitky.clusterdeviceplatform.messageutils.config.DeviceSetting;
 import cc.bitky.clusterdeviceplatform.messageutils.config.FrameSetting;
-import cc.bitky.clusterdeviceplatform.messageutils.define.BaseMsg;
+import cc.bitky.clusterdeviceplatform.messageutils.define.base.BaseMsg;
 import cc.bitky.clusterdeviceplatform.messageutils.define.frame.FrameMajorHeader;
 import cc.bitky.clusterdeviceplatform.messageutils.define.frame.SendableMsgContainer;
 import io.netty.buffer.ByteBuf;

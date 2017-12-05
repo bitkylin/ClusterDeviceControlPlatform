@@ -8,7 +8,7 @@ import java.util.concurrent.atomic.AtomicReference;
 import cc.bitky.clusterdeviceplatform.client.ui.view.DeviceCellView;
 import cc.bitky.clusterdeviceplatform.messageutils.config.ChargeStatus;
 import cc.bitky.clusterdeviceplatform.messageutils.config.WorkStatus;
-import cc.bitky.clusterdeviceplatform.messageutils.define.BaseMsg;
+import cc.bitky.clusterdeviceplatform.messageutils.define.base.BaseMsg;
 import cc.bitky.clusterdeviceplatform.messageutils.msg.MsgCardSet;
 import cc.bitky.clusterdeviceplatform.messageutils.msg.MsgEmployeeDepartment;
 import cc.bitky.clusterdeviceplatform.messageutils.msg.MsgEmployeeName;

@@ -10,10 +10,10 @@ import java.util.concurrent.LinkedBlockingDeque;
 import java.util.concurrent.ScheduledExecutorService;
 
 import cc.bitky.clusterdeviceplatform.messageutils.MsgProcessor;
-import cc.bitky.clusterdeviceplatform.messageutils.config.ChargeStatus;
 import cc.bitky.clusterdeviceplatform.messageutils.config.DeviceSetting;
 import cc.bitky.clusterdeviceplatform.messageutils.config.JointMsgType;
-import cc.bitky.clusterdeviceplatform.messageutils.define.BaseMsg;
+import cc.bitky.clusterdeviceplatform.messageutils.config.WorkStatus;
+import cc.bitky.clusterdeviceplatform.messageutils.define.base.BaseMsg;
 import cc.bitky.clusterdeviceplatform.messageutils.define.frame.FrameMajorHeader;
 import cc.bitky.clusterdeviceplatform.messageutils.define.frame.SendableMsgContainer;
 import cc.bitky.clusterdeviceplatform.messageutils.msg.MsgReplyDeviceStatus;
@@ -130,7 +130,7 @@ public class TcpPresenter {
         server.touchUnusualMsg(msg);
         BaseMsg baseMsg = msg.getBaseMsg();
         if (msg.getType() == ExceptionMsgTcp.Type.RESEND_OUT_BOUND) {
-            server.huntDeviceStatusMsg(MsgCodecReplyStatusWork.create(baseMsg.getGroupId(), baseMsg.getDeviceId(), ChargeStatus.TRAFFIC_ERROR));
+            server.huntDeviceStatusMsg(MsgCodecReplyStatusWork.create(baseMsg.getGroupId(), baseMsg.getDeviceId(), WorkStatus.TRAFFIC_ERROR));
         }
     }
 }

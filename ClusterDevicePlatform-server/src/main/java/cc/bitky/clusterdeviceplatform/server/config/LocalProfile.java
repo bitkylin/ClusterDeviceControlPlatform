@@ -1,6 +1,9 @@
 package cc.bitky.clusterdeviceplatform.server.config;
 
-public class ExSetting {
+/**
+ * 本地配置文件对象
+ */
+public class LocalProfile {
     /**
      * 监测帧是否成功送达客户端，未送达即重发
      */

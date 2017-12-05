@@ -31,7 +31,7 @@ public class FrameRecognitionInBoundHandler extends SimpleChannelInboundHandler<
             int msgId = byteBuf.readByte() & 0xFF;
             int deviceId = byteBuf.readByte() & 0xFF;
             int backupMsg = byteBuf.readByte() & 0xFF;
-            int dataLength = byteBuf.readShort() & 0xFF;
+            int dataLength = byteBuf.readShort() & 0xFFFF;
             FrameMajorHeader headMsg = new FrameMajorHeader(msgId, groupId, deviceId, dataLength, backupMsg);
             ByteBuf subBuf = ctx.alloc().buffer(dataLength);
             byteBuf.readBytes(subBuf, dataLength);

@@ -81,7 +81,7 @@ public class InfoCardSetRestController {
      * @return 确认卡号的集合
      */
     @PostMapping(path = "/confirmcard/{groupId}", consumes = "application/json")
-    public String deployConfirmCard(@PathVariable int groupId, @PathVariable int deviceId, @RequestBody String[] cards) {
+    public String deployConfirmCard(@PathVariable int groupId, @RequestBody String[] cards) {
         CardSet cardSet = saveCards(cards, CardType.Confirm).block();
         if (sendCardSetGrouped(groupId, 0, cardSet.getCardList(), CardType.Confirm)) {
             return "success";
@@ -96,7 +96,7 @@ public class InfoCardSetRestController {
      * @return 清除卡号的集合
      */
     @PostMapping(path = "/clearcard/{groupId}", consumes = "application/json")
-    public String deployClearCards(@PathVariable int groupId, @PathVariable int deviceId, @RequestBody String[] cards) {
+    public String deployClearCards(@PathVariable int groupId, @RequestBody String[] cards) {
         CardSet cardSet = saveCards(cards, CardType.Clear).block();
         if (sendCardSetGrouped(groupId, 0, cardSet.getCardList(), CardType.Clear)) {
             return "success";

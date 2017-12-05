@@ -2,10 +2,6 @@ package cc.bitky.clusterdeviceplatform.server.config;
 
 public class DbSetting {
     /**
-     * 本地配置文件名
-     */
-    public static final String CONFIG_FILE_PATH = "setting";
-    /**
      * 主机名
      */
     public static String HOST = "lml-desktop";

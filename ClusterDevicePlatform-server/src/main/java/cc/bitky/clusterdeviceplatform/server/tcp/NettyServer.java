@@ -35,9 +35,9 @@ public class NettyServer implements CommandLineRunner {
         ChannelFuture channelFuture = bootstrap.bind(new InetSocketAddress(30232));
         channelFuture.addListener(future -> {
             if (future.isSuccess()) {
-                logger.info("「Netty」服务器启动成功");
+                logger.info("「Netty」模块启动成功");
             } else {
-                logger.info("「Netty」服务器启动失败");
+                logger.info("「Netty」模块启动失败");
             }
         });
     }

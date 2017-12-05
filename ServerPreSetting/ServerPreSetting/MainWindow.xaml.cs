@@ -13,7 +13,7 @@ namespace ServerPreSetting
     public partial class MainWindow
     {
         private const string FILE_PATH = "setting";
-       private readonly Encoding UTF8_ENCODING = new UTF8Encoding(false);
+        private readonly Encoding UTF8_ENCODING = new UTF8Encoding(false);
 
         public MainWindow()
         {
@@ -41,7 +41,6 @@ namespace ServerPreSetting
 
             try
             {
-                
                 var streamReader = new StreamReader(filePath, UTF8_ENCODING);
                 var str = streamReader.ReadToEnd();
                 streamReader.Close();
@@ -68,9 +67,10 @@ namespace ServerPreSetting
             textBoxMaxResendTimes.Text = kySetting.检错重发最大重复次数.ToString();
             textBoxServerAddress.Text = kySetting.数据库服务器的主机名或IP;
             textBoxRemainChargeTimes.Text = kySetting.部署剩余充电次数阈值.ToString();
+            checkBoxMsgReply.IsChecked = kySetting.帧送达监测;
         }
 
-        private  void writeSettingToFile(string filePath, KySetting kySetting)
+        private void writeSettingToFile(string filePath, KySetting kySetting)
         {
             var streamWriter = new StreamWriter(filePath, false, UTF8_ENCODING);
             var strSerial = JsonConvert.SerializeObject(kySetting);
@@ -91,6 +91,7 @@ namespace ServerPreSetting
                 kySetting.检错重发最大重复次数 = int.Parse(textBoxMaxResendTimes.Text.Trim());
                 kySetting.数据库服务器的主机名或IP = textBoxServerAddress.Text.Trim() + "";
                 kySetting.部署剩余充电次数阈值 = int.Parse(textBoxRemainChargeTimes.Text.Trim());
+                kySetting.帧送达监测 = checkBoxMsgReply.IsChecked.GetValueOrDefault(false);
                 writeSettingToFile(FILE_PATH, kySetting);
                 MessageBox.Show("配置文件保存成功！\n请重启服务器应用程序以使配置生效", "提示");
                 Close();

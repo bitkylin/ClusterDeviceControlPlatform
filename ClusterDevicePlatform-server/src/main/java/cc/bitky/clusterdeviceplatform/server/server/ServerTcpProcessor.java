@@ -6,7 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import cc.bitky.clusterdeviceplatform.messageutils.config.ChargeStatus;
-import cc.bitky.clusterdeviceplatform.messageutils.define.BaseMsg;
+import cc.bitky.clusterdeviceplatform.messageutils.define.base.BaseMsg;
 import cc.bitky.clusterdeviceplatform.messageutils.msg.MsgReplyDeviceStatus;
 import cc.bitky.clusterdeviceplatform.messageutils.msgcodec.MsgCodecDeviceRemainChargeTimes;
 import cc.bitky.clusterdeviceplatform.server.config.CommSetting;

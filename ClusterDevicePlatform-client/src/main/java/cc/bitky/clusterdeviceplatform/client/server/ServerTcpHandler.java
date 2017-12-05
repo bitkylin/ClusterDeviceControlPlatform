@@ -13,7 +13,7 @@ import cc.bitky.clusterdeviceplatform.client.netty.TcpPresenter;
 import cc.bitky.clusterdeviceplatform.client.ui.bean.Device;
 import cc.bitky.clusterdeviceplatform.client.ui.bean.DeviceCellRepo;
 import cc.bitky.clusterdeviceplatform.client.ui.view.MainView;
-import cc.bitky.clusterdeviceplatform.messageutils.define.BaseMsg;
+import cc.bitky.clusterdeviceplatform.messageutils.define.base.BaseMsg;
 import io.netty.channel.Channel;
 
 @Service

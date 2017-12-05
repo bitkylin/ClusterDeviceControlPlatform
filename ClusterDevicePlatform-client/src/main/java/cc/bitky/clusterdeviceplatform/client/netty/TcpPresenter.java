@@ -12,7 +12,7 @@ import cc.bitky.clusterdeviceplatform.client.netty.repo.TcpRepository;
 import cc.bitky.clusterdeviceplatform.client.server.ServerTcpHandler;
 import cc.bitky.clusterdeviceplatform.messageutils.MsgProcessor;
 import cc.bitky.clusterdeviceplatform.messageutils.config.JointMsgType;
-import cc.bitky.clusterdeviceplatform.messageutils.define.BaseMsg;
+import cc.bitky.clusterdeviceplatform.messageutils.define.base.BaseMsg;
 import cc.bitky.clusterdeviceplatform.messageutils.define.frame.FrameMajorHeader;
 import cc.bitky.clusterdeviceplatform.messageutils.msg.MsgReplyNormal;
 import cc.bitky.clusterdeviceplatform.messageutils.msgcodec.MsgCodecHeartbeat;
