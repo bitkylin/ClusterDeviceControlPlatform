@@ -19,7 +19,7 @@ apply plugin: 'org.springframework.boot'
 apply plugin: 'io.spring.dependency-management'
 
 group = 'cc.bitky.ClusterDevicePlatform'
-version = '0.0.1-SNAPSHOT'
+version = '0.2-release'
 sourceCompatibility = 1.8
 
 repositories {
@@ -39,7 +39,7 @@ dependencies {
     compile 'com.jfoenix:jfoenix:1.10.0'
     compile 'io.datafx:datafx:8.0.1'
     compile 'io.datafx:flow:8.0.1'
-    compile files('libs/messageUtils-0.2.jar')
+    compile files('D:\\project\\github\\ClusterDevicePlatform\\messageUtils\\build\\libs\\messageUtils-0.2.jar')
 
     testCompile('org.springframework.boot:spring-boot-starter-test')
 }

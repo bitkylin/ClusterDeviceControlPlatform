@@ -5,7 +5,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.net.InetAddress;
 import java.net.InetSocketAddress;
+import java.net.UnknownHostException;
 import java.util.concurrent.Executors;
 
 import cc.bitky.clusterdeviceplatform.client.config.CommSetting;
@@ -36,14 +38,20 @@ public class NettyClient {
                 startClient(CommSetting.SERVER_HOSTNAME, CommSetting.SERVER_PORT, id));
     }
 
-    private void startClient(String hostName, int port, int id) {
+    private void startClient(String hostName, int port, int id)  {
         Bootstrap bootstrap = new Bootstrap();
         bootstrap.group(group)
                 .attr(channelId, id)
                 .channel(NioSocketChannel.class)
                 .handler(clientChannelInitializer);
         if (hostName != null && !"".equals(hostName)) {
-            bootstrap.remoteAddress(new InetSocketAddress(hostName, port));
+            try {
+                bootstrap.remoteAddress(new InetSocketAddress(InetAddress.getByName(hostName), port));
+            } catch (UnknownHostException e) {
+                e.printStackTrace();
+                return;
+            }
+            //     bootstrap.remoteAddress(new InetSocketAddress(hostName, port));
         } else {
             bootstrap.remoteAddress(new InetSocketAddress(port));
         }

@@ -78,9 +78,11 @@ public class TcpPresenter {
         switch (msg.getJointMsgFlag()) {
             case JointMsgType.HeartBeat:
                 Attribute<Integer> key = channel.attr(AttributeKey.valueOf("ID"));
+                //     if (new Random().nextInt(10) > 7) {
                 MsgReplyNormal replyHeartbeat = MsgCodecReplyNormal.createByBaseMsg(MsgCodecHeartbeat.create(key.get()));
                 logger.info("已生成并发送正常回复消息对象：「" + replyHeartbeat.getMsgDetail() + "」");
                 sendMessageToTcp(replyHeartbeat);
+                //     }
                 break;
             default:
                 //剩下的均为正常需回复消息
@@ -125,6 +127,7 @@ public class TcpPresenter {
      */
     public void channelInactive(int i) {
         tcpRepository.inactiveChannel(i);
+        startClient(i);
     }
 
     public void setServer(ServerTcpHandler server) {
