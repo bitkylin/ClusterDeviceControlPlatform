@@ -2,11 +2,11 @@ package cc.bitky.clusterdeviceplatform.server.config;
 
 public class DbSetting {
     /**
-     * 主机名
+     * MongoDB 的主机名
      */
-    public static String HOST = "lml-desktop";
+    public static String MONGODB_HOST = "lml-desktop";
     /**
-     * MongoDB的端口号
+     * MongoDB 的端口号
      */
     public static int MONGODB_PORT = 27017;
     /**
@@ -16,7 +16,7 @@ public class DbSetting {
     /**
      * 默认员工卡号
      */
-    public static String DEFAULT_EMPLOYEE_CARD_NUMBER = "";
+    public static String DEFAULT_EMPLOYEE_CARD_NUMBER = "0";
     /**
      * 默认员工姓名
      */

@@ -17,7 +17,7 @@ public class KyMongoConfig extends AbstractMongoConfiguration {
 
     @Bean
     public com.mongodb.reactivestreams.client.MongoClient reactiveMongoClient() {
-        return MongoClients.create("mongodb://" + DbSetting.HOST);
+        return MongoClients.create("mongodb://" + DbSetting.MONGODB_HOST);
     }
 
     @Bean
@@ -27,7 +27,7 @@ public class KyMongoConfig extends AbstractMongoConfiguration {
 
     @Override
     public MongoClient mongoClient() {
-        return new MongoClient(DbSetting.HOST);
+        return new MongoClient(DbSetting.MONGODB_HOST);
     }
 
     @Override

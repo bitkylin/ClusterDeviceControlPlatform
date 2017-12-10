@@ -25,6 +25,10 @@ public class QueueDevice {
      */
     private boolean card;
     /**
+     * 部署设备启用状态
+     */
+    private boolean enabled;
+    /**
      * 部署剩余充电次数
      */
     private boolean remainChargeTime;
@@ -36,18 +40,22 @@ public class QueueDevice {
      * 卡号集合的类型
      */
     private CardType cardSetType = CardType.None;
-
-    public QueueDevice(int groupId, int deviceId, boolean name, boolean department, boolean card, boolean remainChargeTime) {
+    public QueueDevice(int groupId, int deviceId, boolean name, boolean department, boolean card, boolean enabled, boolean remainChargeTime) {
         this(groupId, deviceId);
         this.name = name;
         this.department = department;
         this.card = card;
+        this.enabled = enabled;
         this.remainChargeTime = remainChargeTime;
     }
 
     public QueueDevice(int groupId, int deviceId) {
         this.groupId = groupId;
         this.deviceId = deviceId;
+    }
+
+    public boolean isEnabled() {
+        return enabled;
     }
 
     public CardType getCardSetType() {

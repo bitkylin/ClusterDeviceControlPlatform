@@ -22,10 +22,15 @@ public class Device {
     @Field("EmployeeObjectId")
     private String employeeObjectId;
     /**
-     * 状态改变时的时间
+     * 充电状态改变时的时间
      */
-    @Field("StatusTime")
-    private Date statusTime;
+    @Field("ChargeStatusTime")
+    private Date chargeStatusTime;
+    /**
+     * 充电状态改变时的时间
+     */
+    @Field("WorkStatusTime")
+    private Date workStatusTime;
     /**
      * 当前状态
      */
@@ -43,13 +48,19 @@ public class Device {
      */
     @Field("DeviceId")
     private int deviceId = -1;
-
     @Field("RemainChargeTime")
     private int remainChargeTime = 500;
-
     public Device(int groupId, int deviceId) {
         this.groupId = groupId;
         this.deviceId = deviceId;
+    }
+
+    public Date getWorkStatusTime() {
+        return workStatusTime;
+    }
+
+    public void setWorkStatusTime(Date workStatusTime) {
+        this.workStatusTime = workStatusTime;
     }
 
     public String getId() {
@@ -68,12 +79,12 @@ public class Device {
         this.employeeObjectId = employeeObjectId;
     }
 
-    public Date getStatusTime() {
-        return statusTime;
+    public Date getChargeStatusTime() {
+        return chargeStatusTime;
     }
 
-    public void setStatusTime(Date statusTime) {
-        this.statusTime = statusTime;
+    public void setChargeStatusTime(Date chargeStatusTime) {
+        this.chargeStatusTime = chargeStatusTime;
     }
 
     public int getChargeStatus() {

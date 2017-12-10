@@ -5,19 +5,35 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
 import java.util.Optional;
 
+import javax.imageio.ImageIO;
+
 import cc.bitky.clusterdeviceplatform.messageutils.config.DeviceSetting;
-import cc.bitky.clusterdeviceplatform.messageutils.msgcodec.MsgCodecDeviceClear;
-import cc.bitky.clusterdeviceplatform.messageutils.msgcodec.MsgCodecDeviceRemainChargeTimes;
-import cc.bitky.clusterdeviceplatform.messageutils.msgcodec.MsgCodecDeviceUnlock;
-import cc.bitky.clusterdeviceplatform.messageutils.msgcodec.MsgCodecEmployeeDepartment;
-import cc.bitky.clusterdeviceplatform.messageutils.msgcodec.MsgCodecEmployeeName;
+import cc.bitky.clusterdeviceplatform.messageutils.config.FrameSetting;
+import cc.bitky.clusterdeviceplatform.messageutils.define.utils.KyToArrayUtil;
+import cc.bitky.clusterdeviceplatform.messageutils.msg.MsgEmployeePortrait;
+import cc.bitky.clusterdeviceplatform.messageutils.msgcodec.MsgCodecEmployeePortrait;
 import cc.bitky.clusterdeviceplatform.messageutils.msgcodec.card.MsgCodecCardEmployee;
+import cc.bitky.clusterdeviceplatform.messageutils.msgcodec.device.MsgCodecDeviceClear;
+import cc.bitky.clusterdeviceplatform.messageutils.msgcodec.device.MsgCodecDeviceEnabled;
+import cc.bitky.clusterdeviceplatform.messageutils.msgcodec.device.MsgCodecDeviceRemainChargeTimes;
+import cc.bitky.clusterdeviceplatform.messageutils.msgcodec.device.MsgCodecDeviceSetEngineRotateDuration;
+import cc.bitky.clusterdeviceplatform.messageutils.msgcodec.device.MsgCodecDeviceSetOvertimeCharge;
+import cc.bitky.clusterdeviceplatform.messageutils.msgcodec.device.MsgCodecDeviceSetOvertimeWork;
+import cc.bitky.clusterdeviceplatform.messageutils.msgcodec.device.MsgCodecDeviceUnlock;
+import cc.bitky.clusterdeviceplatform.messageutils.msgcodec.device.MsgCodecEmployeeDepartment;
+import cc.bitky.clusterdeviceplatform.messageutils.msgcodec.device.MsgCodecEmployeeName;
 import cc.bitky.clusterdeviceplatform.server.config.CommSetting;
 import cc.bitky.clusterdeviceplatform.server.config.WebSetting;
 import cc.bitky.clusterdeviceplatform.server.db.bean.Device;
@@ -25,6 +41,8 @@ import cc.bitky.clusterdeviceplatform.server.db.bean.Employee;
 import cc.bitky.clusterdeviceplatform.server.db.repository.EmployeeRepository;
 import cc.bitky.clusterdeviceplatform.server.server.ServerWebProcessor;
 import cc.bitky.clusterdeviceplatform.server.web.bean.QueueDevice;
+import io.netty.buffer.ByteBuf;
+import io.netty.buffer.Unpooled;
 
 @RestController
 @RequestMapping(value = "/operate/devices")
@@ -54,11 +72,12 @@ public class OperateDevicesRestController {
     @GetMapping("/update/{groupId}/{deviceId}")
     public String updateDevices(@PathVariable int groupId,
                                 @PathVariable int deviceId,
-                                @RequestParam(required = false) boolean name,
-                                @RequestParam(required = false) boolean department,
-                                @RequestParam(required = false) boolean cardnumber,
-                                @RequestParam(required = false) boolean remainchargetime) {
-        if (queryAndDeployDeviceMsg(new QueueDevice(groupId, deviceId, name, department, cardnumber, remainchargetime))) {
+                                @RequestParam(required = false, defaultValue = "false") boolean name,
+                                @RequestParam(required = false, defaultValue = "false") boolean department,
+                                @RequestParam(required = false, defaultValue = "false") boolean cardnumber,
+                                @RequestParam(required = false, defaultValue = "false") boolean enabled,
+                                @RequestParam(required = false, defaultValue = "false") boolean remainchargetime) {
+        if (queryAndDeployDeviceMsg(new QueueDevice(groupId, deviceId, name, department, cardnumber, enabled, remainchargetime))) {
             return "success";
         } else {
             return "error";
@@ -142,6 +161,95 @@ public class OperateDevicesRestController {
         }
     }
 
+    @PostMapping("/portrait/{groupId}/{deviceId}")
+    @ResponseBody
+    public String operateDeviceDeployPortrait(@PathVariable int groupId,
+                                              @PathVariable int deviceId,
+                                              @RequestParam(required = false, defaultValue = "120") int width,
+                                              @RequestParam(required = false, defaultValue = "160") int height,
+                                              @RequestParam("file") MultipartFile file) throws IOException {
+        if (width * height > FrameSetting.EMPLOYEE_PORTRAIT_MAX_PIXEL_NUM) {
+            return "「失败」设置的图片分辨率过大";
+        }
+        byte[] bytes = file.getBytes();
+        BufferedImage image = ImageIO.read(new ByteArrayInputStream(bytes));
+        short[] shorts = KyToArrayUtil.photoToArray(image, 120, 160);
+        ByteBuf byteBuf = Unpooled.buffer(65536);
+        for (short i : shorts) {
+            byteBuf.writeShortLE(i);
+        }
+        logger.info("byteBuf:" + byteBuf.readableBytes());
+        int id = 0;
+        while (byteBuf.isReadable()) {
+            int length = byteBuf.readableBytes() > FrameSetting.EMPLOYEE_PORTRAIT_SEGMENT_SIZE ?
+                    FrameSetting.EMPLOYEE_PORTRAIT_SEGMENT_SIZE : byteBuf.readableBytes();
+            byte[] segmentArray = new byte[length];
+            byteBuf.readBytes(segmentArray, 0, length);
+            MsgEmployeePortrait msg = MsgCodecEmployeePortrait.create(groupId, deviceId, id++, segmentArray);
+            if (!webProcessor.sendMessageGrouped(msg)) {
+                return "error";
+            }
+        }
+        return "success";
+    }
+
+    /**
+     * 「操作」设置工作超时时间
+     *
+     * @param groupId  设备组 ID
+     * @param deviceId 设备 ID
+     * @return "设置成功"消息
+     */
+    @GetMapping("/option/overtime/work/{groupId}/{deviceId}")
+    public String operateDeviceSetOverTimeWork(@PathVariable int groupId,
+                                               @PathVariable int deviceId,
+                                               @RequestParam(required = false, defaultValue = "1") int hour,
+                                               @RequestParam(required = false, defaultValue = "0") int minute) {
+        if (webProcessor.sendMessageGrouped(MsgCodecDeviceSetOvertimeWork.create(groupId, deviceId, hour, minute))) {
+            return "success";
+        } else {
+            return "error";
+        }
+    }
+
+    /**
+     * 「操作」设置充电超时时间
+     *
+     * @param groupId  设备组 ID
+     * @param deviceId 设备 ID
+     * @return "设置成功"消息
+     */
+    @GetMapping("/option/overtime/charge/{groupId}/{deviceId}")
+    public String operateDeviceSetOverTimeCharge(@PathVariable int groupId,
+                                                 @PathVariable int deviceId,
+                                                 @RequestParam(required = false, defaultValue = "1") int hour,
+                                                 @RequestParam(required = false, defaultValue = "0") int minute) {
+        if (webProcessor.sendMessageGrouped(MsgCodecDeviceSetOvertimeCharge.create(groupId, deviceId, hour, minute))) {
+            return "success";
+        } else {
+            return "error";
+        }
+    }
+
+    /**
+     * 「操作」设备设置电机转动时间
+     *
+     * @param groupId  设备组 ID
+     * @param deviceId 设备 ID
+     * @return "设置成功"消息
+     */
+    @GetMapping("/option/engine/rotate/{groupId}/{deviceId}")
+    public String operateDeviceSetEngineRotateDuration(@PathVariable int groupId,
+                                                       @PathVariable int deviceId,
+                                                       @RequestParam(required = false, defaultValue = "0") int value1,
+                                                       @RequestParam(required = false, defaultValue = "0") int value2) {
+        if (webProcessor.sendMessageGrouped(MsgCodecDeviceSetEngineRotateDuration.create(groupId, deviceId, value1, value2))) {
+            return "success";
+        } else {
+            return "error";
+        }
+    }
+
     /**
      * 根据特定条件，检索并向设备部署相应的消息对象
      *
@@ -178,6 +286,8 @@ public class OperateDevicesRestController {
         if (queue.isCard()) {
             webProcessor.sendMessageGrouped(MsgCodecCardEmployee.create(device.getGroupId(), device.getDeviceId(), device.getCardNumber()));
         }
+
+
         if (queue.isRemainChargeTime()) {
             webProcessor.sendMessageGrouped(MsgCodecDeviceRemainChargeTimes.create(device.getGroupId(), device.getDeviceId(), device.getRemainChargeTime()));
         }
@@ -185,5 +295,6 @@ public class OperateDevicesRestController {
             device.setRemainChargeTime(CommSetting.DEVICE_INIT_CHARGE_TIMES);
             webProcessor.getDbPresenter().saveDeviceInfo(device);
         }
+        webProcessor.sendMessageGrouped(MsgCodecDeviceEnabled.create(device.getGroupId(), device.getDeviceId(), queue.isEnabled()));
     }
 }

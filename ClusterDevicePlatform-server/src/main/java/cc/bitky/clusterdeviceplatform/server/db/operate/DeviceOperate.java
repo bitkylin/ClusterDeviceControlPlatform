@@ -66,7 +66,7 @@ public class DeviceOperate {
             return null;
         }
         device.setWorkStatus(newStatus);
-        device.setStatusTime(new Date(msgStatus.getTime()));
+        device.setWorkStatusTime(new Date(msgStatus.getTime()));
         repository.save(device);
         logger.info("设备「" + msgStatus.getGroupId() + ", " + msgStatus.getDeviceId() + "」『"
                 + rawStatus + "->" + newStatus + "』: 工作状态成功更新！");
@@ -97,7 +97,7 @@ public class DeviceOperate {
             device.setRemainChargeTime(device.getRemainChargeTime() - 1);
         }
         device.setChargeStatus(newStatus);
-        device.setStatusTime(new Date(msgStatus.getTime()));
+        device.setChargeStatusTime(new Date(msgStatus.getTime()));
         repository.save(device);
         logger.info("设备「" + msgStatus.getGroupId() + ", " + msgStatus.getDeviceId() + "」『"
                 + rawStatus + "->" + newStatus + "』: 充电状态成功更新！");

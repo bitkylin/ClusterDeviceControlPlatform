@@ -16,8 +16,8 @@ import cc.bitky.clusterdeviceplatform.server.db.bean.Employee;
 import cc.bitky.clusterdeviceplatform.server.db.operate.CardSetOperate;
 import cc.bitky.clusterdeviceplatform.server.db.operate.DbRoutineOperate;
 import cc.bitky.clusterdeviceplatform.server.db.operate.DeviceOperate;
-import cc.bitky.clusterdeviceplatform.server.db.work.DeviceStatusRepo;
 import cc.bitky.clusterdeviceplatform.server.db.operate.EmployeeOperate;
+import cc.bitky.clusterdeviceplatform.server.db.work.DeviceStatusRepo;
 import cc.bitky.clusterdeviceplatform.server.web.bean.CardType;
 import reactor.core.publisher.Mono;
 
@@ -58,13 +58,8 @@ public class DbPresenter {
      * @param type 卡号组的类型
      * @return 特定的卡号组
      */
-    public Mono<String[]> queryCardSet(CardType type) {
-        Optional<CardSet> optional = Optional.ofNullable(cardSetOperate.obtainCardSet(type.name()).block());
-        if (optional.isPresent()) {
-            return Mono.justOrEmpty(optional.get().getCardList());
-        } else {
-            return Mono.just(new String[0]);
-        }
+    public Optional<CardSet> queryCardSet(CardType type) {
+        return Optional.ofNullable(cardSetOperate.obtainCardSet(type.name()).block());
     }
 
     /**

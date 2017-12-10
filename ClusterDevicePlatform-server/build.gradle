@@ -1,6 +1,6 @@
 buildscript {
     ext {
-        springBootVersion = '2.0.0.M6'
+        springBootVersion = '2.0.0.M7'
     }
     repositories {
         google()
@@ -19,7 +19,7 @@ apply plugin: 'org.springframework.boot'
 apply plugin: 'io.spring.dependency-management'
 
 group = 'cc.bitky.ClusterDevicePlatform'
-version = '0.0.1-SNAPSHOT'
+version = '0.2-release'
 sourceCompatibility = 1.8
 
 repositories {
@@ -33,13 +33,9 @@ tasks.withType(JavaCompile) {
 }
 
 dependencies {
-//    compile('org.springframework.boot:spring-boot-starter-data-mongodb')
     compile('org.springframework.boot:spring-boot-starter-data-mongodb-reactive')
-    compile('org.springframework.boot:spring-boot-starter-webflux')
+    compile('org.springframework.boot:spring-boot-starter-web')
     compile 'io.netty:netty-all:4.1.16.Final'
     compile 'com.alibaba:fastjson:1.2.39'
-    compile files('libs/messageUtils-0.2.jar')
-
- //   testCompile('org.springframework.boot:spring-boot-starter-test')
- //   testCompile('io.projectreactor:reactor-test')
+    compile files('D:\\project\\github\\ClusterDevicePlatform\\messageUtils\\build\\libs\\messageUtils-0.2.jar')
 }

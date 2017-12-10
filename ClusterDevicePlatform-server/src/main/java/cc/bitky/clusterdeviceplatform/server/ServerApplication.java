@@ -41,13 +41,14 @@ public class ServerApplication {
      */
     private static boolean dataBaseReachable() {
         try {
-            InetAddress inetAddress = InetAddress.getByName(DbSetting.HOST);
-            if (inetAddress.isReachable(500)) {
+            InetAddress inetAddress = InetAddress.getByName(DbSetting.MONGODB_HOST);
+            if (inetAddress.isReachable(CommSetting.ACCESSIBLE_CHANNEL_REPLY_INTERVAL)) {
                 Socket s = new Socket();
                 s.connect(new InetSocketAddress(inetAddress, DbSetting.MONGODB_PORT));
                 s.close();
                 return true;
             } else {
+                logger.error("数据库服务器不可达");
                 return false;
             }
         } catch (IOException e) {
@@ -74,7 +75,7 @@ public class ServerApplication {
         }
         if (localProfile != null) {
             logger.info("「外部配置文件」外部配置读取成功");
-            DbSetting.HOST = localProfile.数据库服务器的主机名或IP;
+            DbSetting.MONGODB_HOST = localProfile.数据库服务器的主机名或IP;
             CommSetting.FRAME_SEND_INTERVAL = localProfile.帧发送间隔;
             CommSetting.DEPLOY_REMAIN_CHARGE_TIMES = localProfile.部署剩余充电次数阈值;
             DbSetting.DEFAULT_EMPLOYEE_CARD_NUMBER = localProfile.员工默认卡号;
@@ -83,6 +84,7 @@ public class ServerApplication {
             CommSetting.AUTO_REPEAT_REQUEST_TIMES = localProfile.检错重发最大重复次数;
             CommSetting.DEVICE_INIT_CHARGE_TIMES = localProfile.初始充电次数;
             CommSetting.DEPLOY_MSG_NEED_REPLY = localProfile.帧送达监测;
+            ServerSetting.SERVER_PORT = localProfile.服务器端口号;
             return true;
         }
         logger.error("外部配置文件读取错误，请使用「服务器预设置」软件进行设置");

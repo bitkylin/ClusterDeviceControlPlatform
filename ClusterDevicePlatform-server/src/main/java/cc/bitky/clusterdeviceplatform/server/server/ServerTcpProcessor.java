@@ -8,17 +8,16 @@ import org.springframework.stereotype.Service;
 import cc.bitky.clusterdeviceplatform.messageutils.config.ChargeStatus;
 import cc.bitky.clusterdeviceplatform.messageutils.define.base.BaseMsg;
 import cc.bitky.clusterdeviceplatform.messageutils.msg.MsgReplyDeviceStatus;
-import cc.bitky.clusterdeviceplatform.messageutils.msgcodec.MsgCodecDeviceRemainChargeTimes;
+import cc.bitky.clusterdeviceplatform.messageutils.msgcodec.device.MsgCodecDeviceRemainChargeTimes;
 import cc.bitky.clusterdeviceplatform.server.config.CommSetting;
 import cc.bitky.clusterdeviceplatform.server.db.DbPresenter;
 import cc.bitky.clusterdeviceplatform.server.db.bean.Device;
 import cc.bitky.clusterdeviceplatform.server.tcp.TcpPresenter;
 import cc.bitky.clusterdeviceplatform.server.tcp.exception.ExceptionMsgTcp;
-import cc.bitky.clusterdeviceplatform.server.tcp.repo.TcpRepository;
 
 @Service
 public class ServerTcpProcessor {
-    private static final Logger logger = LoggerFactory.getLogger(TcpRepository.class);
+    private final Logger logger = LoggerFactory.getLogger(getClass());
     private final TcpPresenter tcpPresenter;
     private final ServerCenterProcessor centerProcessor;
     private final DbPresenter dbPresenter;
@@ -89,5 +88,9 @@ public class ServerTcpProcessor {
      */
     public void touchUnusualMsg(ExceptionMsgTcp msg) {
         logger.info("捕获到异常消息：" + msg.getDetail() + "原始消息：「" + msg.getBaseMsg().getMsgDetail() + "」");
+    }
+
+    public void shutDown() {
+        tcpPresenter.shutDown();
     }
 }

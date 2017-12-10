@@ -133,4 +133,8 @@ public class TcpPresenter {
             server.huntDeviceStatusMsg(MsgCodecReplyStatusWork.create(baseMsg.getGroupId(), baseMsg.getDeviceId(), WorkStatus.TRAFFIC_ERROR));
         }
     }
+
+    public void shutDown() {
+        tcpRepository.removeAllChannel();
+    }
 }

@@ -171,27 +171,30 @@ public class TcpRepository {
      */
     public void accessibleChannel(Channel channel) {
         String id = channel.id().asLongText();
-        logger.info("「Channel」" + "新的 Channel 接入 [" + id + "]");
+        logger.info("「Channel」" + "新的 Channel 等待接入 [" + id + "]");
         CHANNEL_MAP.put(id, -1);
         HASHED_WHEEL_TIMER.newTimeout(task -> {
-            Integer index = CHANNEL_MAP.get(id);
-            if (index == -1) {
-                logger.warn("「Channel」" + "新的 Channel 未反馈 ID [" + id + "]");
-                channel.disconnect();
-            } else if (index > 0 && index <= DeviceSetting.MAX_GROUP_ID) {
+            Integer index = CHANNEL_MAP.getOrDefault(id, -1);
+
+            if (index > 0 && index <= DeviceSetting.MAX_GROUP_ID) {
                 SENDING_MESSAGE_QUEUE.get(index).clear();
                 Channel oldChannel = CHANNEL_ARRAY.get(index);
                 if (oldChannel != null && oldChannel.isActive()) {
-                    manualRemoveChannel(CHANNEL_ARRAY.get(index));
+                    manualRemoveChannel(oldChannel);
                     manualRemoveChannel(channel);
-                    logger.warn("「Channel」" + "新的 Channel 欲覆盖已激活的 Channel [" + id + "]");
+                    logger.warn("「Channel[" + index + "]」" + "新的 Channel 欲覆盖已激活的 Channel");
                 } else {
                     CHANNEL_ARRAY.set(index, channel);
-                    logger.info("「Channel」" + "新的 Channel「" + index + "」已成功装配 [" + id + "]");
+                    logger.info("「Channel[" + index + "]」" + "新的 Channel 已成功装配 [" + id + "]");
                 }
-            } else {
-                logger.warn("「Channel」" + "新的 Channel 装配出错 [" + id + "]");
+                return;
             }
+            if (index == -1) {
+                logger.warn("「Channel[" + index + "]」" + "新的 Channel 未反馈 ID [" + id + "]");
+            } else {
+                logger.warn("「Channel[" + index + "]」" + "新的 Channel 的 ID 超出范围 [" + id + "]");
+            }
+            manualRemoveChannel(channel);
         }, CommSetting.ACCESSIBLE_CHANNEL_REPLY_INTERVAL, TimeUnit.SECONDS);
     }
 
@@ -203,8 +206,20 @@ public class TcpRepository {
      */
     public void accessChannelSuccessful(BaseMsg msg, Channel channel) {
         String id = channel.id().asLongText();
-        logger.info("「Channel」" + "新的 Channel 接入 [" + id + "]");
+        logger.info("「Channel[" + msg.getGroupId() + "]待接入」" + "新的 Channel 接入 [" + id + "]");
         CHANNEL_MAP.put(id, msg.getGroupId());
+    }
+
+    /**
+     * 手动移除相应的 Channel
+     *
+     * @param channel 欲被手动移除的 Channel
+     */
+    private void manualRemoveChannel(Channel channel) {
+        if (channel.isActive()) {
+            channel.disconnect();
+        }
+        removeChannelCompleted(channel);
     }
 
     /**
@@ -216,32 +231,15 @@ public class TcpRepository {
         if (channel == null) {
             return;
         }
-        if (channel.isActive()) {
-            manualRemoveChannel(channel);
-            return;
-        }
         String id = channel.id().asLongText();
         Integer index = CHANNEL_MAP.remove(id);
-        if (index != null && index > 0 && index <= DeviceSetting.MAX_GROUP_ID) {
-            CHANNEL_ARRAY.set(index, null);
-            SENDING_MESSAGE_QUEUE.get(index).clear();
-            logger.info("「Channel」" + "移除成功 Channel「" + index + "」[" + id + "]");
-        } else {
-            logger.warn("「Channel」" + "移除出错 Channel「" + index + "」[" + id + "]");
+        if (index == null || index <= 0 || index > DeviceSetting.MAX_GROUP_ID) {
+            logger.info("「Channel[" + (index == null ? "无" : index) + "]」" + "移除成功 Channel [" + id + "]");
+            return;
         }
-    }
-
-    /**
-     * 手动移除相应的 Channel
-     *
-     * @param channel 欲被手动移除的 Channel
-     */
-    private void manualRemoveChannel(Channel channel) {
-        if (channel.isActive()) {
-            channel.disconnect();
-        } else {
-            removeChannelCompleted(channel);
-        }
+        CHANNEL_ARRAY.set(index, null);
+        SENDING_MESSAGE_QUEUE.get(index).clear();
+        logger.info("「Channel[" + index + "]」" + "移除成功 Channel [" + id + "]");
     }
 
     /**
@@ -256,5 +254,14 @@ public class TcpRepository {
 
     public void setServer(TcpPresenter server) {
         this.server = server;
+    }
+
+    public void removeAllChannel() {
+        for (int i = 1; i < CHANNEL_ARRAY.length(); i++) {
+            Channel channel = CHANNEL_ARRAY.get(i);
+            if (channel != null && channel.isActive()) {
+                channel.disconnect();
+            }
+        }
     }
 }

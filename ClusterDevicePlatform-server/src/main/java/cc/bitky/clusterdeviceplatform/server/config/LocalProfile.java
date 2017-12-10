@@ -35,6 +35,10 @@ public class LocalProfile {
      */
     public int 初始充电次数 = 500;
     /**
+     * 服务器 TCP 客户端的端口号
+     */
+    public int 服务器端口号 = 30232;
+    /**
      * 数据库服务器的主机名或者IP地址
      */
     public String 数据库服务器的主机名或IP = "localhost";

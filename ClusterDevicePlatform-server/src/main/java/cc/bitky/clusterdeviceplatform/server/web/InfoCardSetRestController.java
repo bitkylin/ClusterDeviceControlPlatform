@@ -10,10 +10,12 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import cc.bitky.clusterdeviceplatform.messageutils.msgcodec.card.MsgCodecCardClear;
 import cc.bitky.clusterdeviceplatform.messageutils.msgcodec.card.MsgCodecCardConfirm;
 import cc.bitky.clusterdeviceplatform.messageutils.msgcodec.card.MsgCodecCardFree;
+import cc.bitky.clusterdeviceplatform.server.config.DbSetting;
 import cc.bitky.clusterdeviceplatform.server.db.bean.CardSet;
 import cc.bitky.clusterdeviceplatform.server.server.ServerWebProcessor;
 import cc.bitky.clusterdeviceplatform.server.web.bean.CardType;
@@ -35,9 +37,9 @@ public class InfoCardSetRestController {
      *
      * @return 万能卡号的集合
      */
-    @GetMapping("/freecard")
-    public Mono<String[]> queryFreeCards() {
-        return queryCards(CardType.Free);
+    @GetMapping("/freecard/")
+    public String[] queryFreeCards() {
+        return queryCards(CardType.Free).orElse(new String[0]);
     }
 
     /**
@@ -46,8 +48,8 @@ public class InfoCardSetRestController {
      * @return 确认卡号的集合
      */
     @GetMapping("/confirmcard")
-    public Mono<String[]> queryConfirmCard() {
-        return queryCards(CardType.Confirm);
+    public String[] queryConfirmCard() {
+        return queryCards(CardType.Confirm).orElse(new String[0]);
     }
 
     /**
@@ -56,8 +58,42 @@ public class InfoCardSetRestController {
      * @return 清除卡号的集合
      */
     @GetMapping("/clearcard")
-    public Mono<String[]> queryClearCards() {
-        return queryCards(CardType.Clear);
+    public String[] queryClearCards() {
+        return queryCards(CardType.Clear).orElse(new String[0]);
+    }
+
+    /**
+     * 保存万能卡号的集合
+     *
+     * @return 万能卡号的集合
+     */
+    @PostMapping(path = "/freecard", consumes = "application/json")
+    public String saveFreeCards(@RequestBody String[] cards) {
+        saveCards(cards, CardType.Free).block();
+        return "success";
+    }
+
+
+    /**
+     * 保存确认卡号的集合
+     *
+     * @return 确认卡号的集合
+     */
+    @PostMapping(path = "/confirmcard", consumes = "application/json")
+    public String saveConfirmCard(@RequestBody String[] cards) {
+        saveCards(cards, CardType.Confirm).block();
+        return "success";
+    }
+
+    /**
+     * 保存清除卡号的集合
+     *
+     * @return 清除卡号的集合
+     */
+    @PostMapping(path = "/clearcard", consumes = "application/json")
+    public String saveClearCards(@RequestBody String[] cards) {
+        saveCards(cards, CardType.Clear).block();
+        return "success";
     }
 
     /**
@@ -65,10 +101,10 @@ public class InfoCardSetRestController {
      *
      * @return 万能卡号的集合
      */
-    @PostMapping(path = "/freecard/{groupId}/{deviceId}", consumes = "application/json")
-    public String deployFreeCards(@PathVariable int groupId, @PathVariable int deviceId, @RequestBody String[] cards) {
-        CardSet cardSet = saveCards(cards, CardType.Free).block();
-        if (sendCardSetGrouped(groupId, deviceId, cardSet.getCardList(), CardType.Free)) {
+    @GetMapping(path = "/freecard/deploy/{groupId}/{deviceId}")
+    public String deployFreeCards(@PathVariable int groupId, @PathVariable int deviceId) {
+        String[] cardSet = queryCards(CardType.Free).orElse(new String[]{DbSetting.DEFAULT_EMPLOYEE_CARD_NUMBER});
+        if (sendCardSetGrouped(groupId, deviceId, cardSet, CardType.Free)) {
             return "success";
         } else {
             return "error";
@@ -80,10 +116,10 @@ public class InfoCardSetRestController {
      *
      * @return 确认卡号的集合
      */
-    @PostMapping(path = "/confirmcard/{groupId}", consumes = "application/json")
-    public String deployConfirmCard(@PathVariable int groupId, @RequestBody String[] cards) {
-        CardSet cardSet = saveCards(cards, CardType.Confirm).block();
-        if (sendCardSetGrouped(groupId, 0, cardSet.getCardList(), CardType.Confirm)) {
+    @GetMapping(path = "/confirmcard/deploy/{groupId}")
+    public String deployConfirmCard(@PathVariable int groupId) {
+        String[] cardSet = queryCards(CardType.Confirm).orElse(new String[]{DbSetting.DEFAULT_EMPLOYEE_CARD_NUMBER});
+        if (sendCardSetGrouped(groupId, 0, cardSet, CardType.Confirm)) {
             return "success";
         } else {
             return "error";
@@ -95,10 +131,10 @@ public class InfoCardSetRestController {
      *
      * @return 清除卡号的集合
      */
-    @PostMapping(path = "/clearcard/{groupId}", consumes = "application/json")
-    public String deployClearCards(@PathVariable int groupId, @RequestBody String[] cards) {
-        CardSet cardSet = saveCards(cards, CardType.Clear).block();
-        if (sendCardSetGrouped(groupId, 0, cardSet.getCardList(), CardType.Clear)) {
+    @GetMapping(path = "/clearcard/deploy/{groupId}")
+    public String deployClearCards(@PathVariable int groupId) {
+        String[] cardSet = queryCards(CardType.Clear).orElse(new String[]{DbSetting.DEFAULT_EMPLOYEE_CARD_NUMBER});
+        if (sendCardSetGrouped(groupId, 0, cardSet, CardType.Clear)) {
             return "success";
         } else {
             return "error";
@@ -111,8 +147,9 @@ public class InfoCardSetRestController {
      * @param type 卡号组的类型
      * @return 特定的卡号组
      */
-    private Mono<String[]> queryCards(CardType type) {
-        return serverProcessor.getDbPresenter().queryCardSet(type);
+    private Optional<String[]> queryCards(CardType type) {
+        CardSet cardSet = serverProcessor.getDbPresenter().queryCardSet(type).orElse(new CardSet());
+        return Optional.ofNullable(cardSet.getCardList());
     }
 
     /**
@@ -140,7 +177,6 @@ public class InfoCardSetRestController {
         for (String card : cards) {
             cardInt.add(Integer.parseUnsignedInt(card, 16));
         }
-
         switch (type) {
             case Free:
                 return serverProcessor.sendMessageGrouped(MsgCodecCardFree.create(groupId, deviceId, cardInt));
