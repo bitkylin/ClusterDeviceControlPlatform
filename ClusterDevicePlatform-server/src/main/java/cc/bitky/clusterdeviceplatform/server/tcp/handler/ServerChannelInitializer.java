@@ -5,8 +5,6 @@ import org.springframework.stereotype.Service;
 
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.socket.nio.NioSocketChannel;
-import io.netty.handler.logging.LogLevel;
-import io.netty.handler.logging.LoggingHandler;
 
 @Service
 public class ServerChannelInitializer extends ChannelInitializer<NioSocketChannel> {
@@ -27,7 +25,7 @@ public class ServerChannelInitializer extends ChannelInitializer<NioSocketChanne
     @Override
     protected void initChannel(NioSocketChannel ch) throws Exception {
         ch.pipeline().addLast(configHandler);
-        ch.pipeline().addLast(new LoggingHandler("kyOutlineLogger", LogLevel.INFO));
+      //  ch.pipeline().addLast(new LoggingHandler("kyOutlineLogger", LogLevel.INFO));
         ch.pipeline().addLast(frameRecognitionInBoundHandler);
         ch.pipeline().addLast(parsedMessageInBoundHandler);
         ch.pipeline().addLast(recognitionOutBoundHandler);

@@ -9,7 +9,7 @@ namespace ServerPreSetting
         public bool 帧送达监测 = true;
 
         //部署员工信息时，若数据库中无指定的相关信息，而部署的默认员工默认信息
-        public string 员工默认卡号 = "01020304";
+        public string 员工默认卡号 = "0";
 
         public string 员工默认姓名 = "备用";
 
@@ -27,6 +27,8 @@ namespace ServerPreSetting
         //新矿灯的初始化充电次数
         public int 初始充电次数 = 500;
 
+        //服务器 TCP 客户端的端口号
+        public int 服务器端口号 = 30232;
 
         //数据库服务器的主机名或者IP地址
         public string 数据库服务器的主机名或IP = "localhost";

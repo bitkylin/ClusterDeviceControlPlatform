@@ -56,7 +56,7 @@ public class ServerTcpProcessor {
      * @param message 消息对象
      */
     public void huntDeviceStatusMsg(MsgReplyDeviceStatus message) {
-        logger.info("捕获到「设备" + message.getType().name() + "」消息对象：「" + message.getMsgDetail() + "」");
+        logger.info("捕获到消息对象：「" + message.getMsgDetail() + "」");
         long l1 = System.currentTimeMillis();
         Device device = dbPresenter.handleMsgDeviceStatus(message);
         //部署剩余充电次数
@@ -64,7 +64,7 @@ public class ServerTcpProcessor {
             deployRemainChargeTimes(device);
         }
         long l2 = System.currentTimeMillis();
-        logger.info("处理「设备" + message.getType().name() + "」总花费时间：" + (l2 - l1) + "ms");
+        logger.info("处理总时间：" + (l2 - l1) + "ms");
     }
 
     /**

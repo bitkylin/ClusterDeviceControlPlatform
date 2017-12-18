@@ -105,7 +105,7 @@ public class DbPresenter {
         int status = deviceStatusRepo.getStatus(msgStatus.getGroupId(), msgStatus.getDeviceId(), msgStatus.getType());
         if (status == msgStatus.getStatus()) {
             logger.info("设备「" + msgStatus.getGroupId() + ", " + msgStatus.getDeviceId() + "」『"
-                    + status + "->" + status + "』: 状态无更新 [" + msgStatus.getType().name() + "]");
+                    + status + "->" + status + "』: " + msgStatus.getType().getDetail() + "无更新");
             return null;
         } else {
             deviceStatusRepo.setStatus(msgStatus.getGroupId(), msgStatus.getDeviceId(), msgStatus.getStatus(), msgStatus.getType());
@@ -131,7 +131,7 @@ public class DbPresenter {
             logger.info("无指定设备对应的员工，故未更新考勤表");
         }
         long l3 = System.currentTimeMillis();
-        logger.info("时间耗费：" + (l2 - l1) + "ms; " + (l3 - l2) + "ms");
+        logger.debug("时间耗费：" + (l2 - l1) + "ms; " + (l3 - l2) + "ms");
         return device;
     }
 }

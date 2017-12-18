@@ -68,6 +68,7 @@ namespace ServerPreSetting
             textBoxServerAddress.Text = kySetting.数据库服务器的主机名或IP;
             textBoxRemainChargeTimes.Text = kySetting.部署剩余充电次数阈值.ToString();
             checkBoxMsgReply.IsChecked = kySetting.帧送达监测;
+            textboxTcpPort.Text = kySetting.服务器端口号 + "";
         }
 
         private void writeSettingToFile(string filePath, KySetting kySetting)
@@ -92,6 +93,7 @@ namespace ServerPreSetting
                 kySetting.数据库服务器的主机名或IP = textBoxServerAddress.Text.Trim() + "";
                 kySetting.部署剩余充电次数阈值 = int.Parse(textBoxRemainChargeTimes.Text.Trim());
                 kySetting.帧送达监测 = checkBoxMsgReply.IsChecked.GetValueOrDefault(false);
+                kySetting.服务器端口号 = int.Parse(textboxTcpPort.Text.Trim());
                 writeSettingToFile(FILE_PATH, kySetting);
                 MessageBox.Show("配置文件保存成功！\n请重启服务器应用程序以使配置生效", "提示");
                 Close();

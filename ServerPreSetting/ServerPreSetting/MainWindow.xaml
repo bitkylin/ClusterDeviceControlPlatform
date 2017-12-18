@@ -37,7 +37,9 @@
         <Label Content="初始充电次数：" HorizontalAlignment="Left" Margin="248,221,0,0" VerticalAlignment="Top" Height="29" VerticalContentAlignment="Center" Width="121" HorizontalContentAlignment="Right"/>
         <TextBox HorizontalAlignment="Left" Height="29" Margin="138,188,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="60" Background="#7FFFFFFF" Opacity="0.95" VerticalContentAlignment="Center" Text="27017" IsEnabled="False"/>
         <Label Content="MongoDB 端口号：" HorizontalAlignment="Left" Margin="10,187,0,0" VerticalAlignment="Top" Height="29" VerticalContentAlignment="Center" Width="123" HorizontalContentAlignment="Right"/>
-        <CheckBox x:Name="checkBoxMsgReply" Content="    帧送达监测" HorizontalAlignment="Left" Margin="58,228,0,0" VerticalAlignment="Top" FlowDirection="RightToLeft" VerticalContentAlignment="Center"/>
+        <CheckBox x:Name="checkBoxMsgReply" Content="    帧送达监测" HorizontalAlignment="Left" Margin="10,263,0,0" VerticalAlignment="Top" FlowDirection="RightToLeft" VerticalContentAlignment="Center"/>
+        <TextBox x:Name="textboxTcpPort" HorizontalAlignment="Left" Height="29" Margin="138,222,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="60" Background="#7FFFFFFF" Opacity="0.95" VerticalContentAlignment="Center" Text="30232"/>
+        <Label Content="TCP 服务端端口号：" HorizontalAlignment="Left" Margin="10,221,0,0" VerticalAlignment="Top" Height="29" VerticalContentAlignment="Center" Width="123" HorizontalContentAlignment="Right"/>
 
     </Grid>
 </Window>

@@ -94,7 +94,7 @@ public class TcpPresenter {
             logger.warn("设备号出错「GroupId:" + msg.getGroupId() + "; DeviceId:" + msg.getDeviceId() + "」");
             return;
         }
-        logger.info("收到正常消息对象：「" + msg.getMsgDetail() + "」");
+        logger.debug("收到正常消息对象：「" + msg.getMsgDetail() + "」");
         switch (msg.getJointMsgFlag()) {
             case JointMsgType.replyWorkStatus:
             case JointMsgType.replyChargeStatus:
