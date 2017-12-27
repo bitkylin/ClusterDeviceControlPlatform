@@ -84,6 +84,7 @@ public class ServerApplication {
             CommSetting.AUTO_REPEAT_REQUEST_TIMES = localProfile.检错重发最大重复次数;
             CommSetting.DEVICE_INIT_CHARGE_TIMES = localProfile.初始充电次数;
             CommSetting.DEPLOY_MSG_NEED_REPLY = localProfile.帧送达监测;
+            ServerSetting.DEBUG = localProfile.调试模式;
             ServerSetting.SERVER_PORT = localProfile.服务器端口号;
             return true;
         }

@@ -8,7 +8,10 @@ public class LocalProfile {
      * 监测帧是否成功送达客户端，未送达即重发
      */
     public boolean 帧送达监测 = true;
-
+    /**
+     * 是否开启调试信息输出
+     */
+    public boolean 调试模式 = false;
     /**
      * 部署员工信息时，若数据库中无指定的相关信息，而部署的默认员工默认信息
      */

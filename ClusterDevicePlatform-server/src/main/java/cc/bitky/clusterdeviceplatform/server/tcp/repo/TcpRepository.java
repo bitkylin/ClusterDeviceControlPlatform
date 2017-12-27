@@ -256,6 +256,9 @@ public class TcpRepository {
         this.server = server;
     }
 
+    /**
+     * 服务器优雅关闭时，关闭所有的已激活 Channel
+     */
     public void removeAllChannel() {
         for (int i = 1; i < CHANNEL_ARRAY.length(); i++) {
             Channel channel = CHANNEL_ARRAY.get(i);

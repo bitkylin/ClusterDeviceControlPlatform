@@ -31,7 +31,7 @@ import io.netty.channel.Channel;
 @Service
 public class TcpPresenter {
     private static final ScheduledExecutorService executorService = Executors.newScheduledThreadPool(DeviceSetting.MAX_GROUP_ID);
-    private static final Logger logger = LoggerFactory.getLogger(TcpRepository.class);
+    private static final Logger logger = LoggerFactory.getLogger(TcpPresenter.class);
     private final TcpRepository tcpRepository;
     private final MsgProcessor msgProcessor;
     private ServerTcpProcessor server;
@@ -130,7 +130,7 @@ public class TcpPresenter {
         server.touchUnusualMsg(msg);
         BaseMsg baseMsg = msg.getBaseMsg();
         if (msg.getType() == ExceptionMsgTcp.Type.RESEND_OUT_BOUND) {
-            server.huntDeviceStatusMsg(MsgCodecReplyStatusWork.create(baseMsg.getGroupId(), baseMsg.getDeviceId(), WorkStatus.TRAFFIC_ERROR));
+            server.huntDeviceStatusMsg(MsgCodecReplyStatusWork.create(baseMsg.getGroupId(), baseMsg.getDeviceId(), WorkStatus.TRAFFIC_ERROR, System.currentTimeMillis()));
         }
     }
 

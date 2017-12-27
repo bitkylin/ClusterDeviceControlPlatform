@@ -10,6 +10,7 @@ import cc.bitky.clusterdeviceplatform.messageutils.define.base.BaseMsg;
 import cc.bitky.clusterdeviceplatform.messageutils.msg.MsgReplyDeviceStatus;
 import cc.bitky.clusterdeviceplatform.messageutils.msgcodec.device.MsgCodecDeviceRemainChargeTimes;
 import cc.bitky.clusterdeviceplatform.server.config.CommSetting;
+import cc.bitky.clusterdeviceplatform.server.config.ServerSetting;
 import cc.bitky.clusterdeviceplatform.server.db.DbPresenter;
 import cc.bitky.clusterdeviceplatform.server.db.bean.Device;
 import cc.bitky.clusterdeviceplatform.server.tcp.TcpPresenter;
@@ -19,13 +20,11 @@ import cc.bitky.clusterdeviceplatform.server.tcp.exception.ExceptionMsgTcp;
 public class ServerTcpProcessor {
     private final Logger logger = LoggerFactory.getLogger(getClass());
     private final TcpPresenter tcpPresenter;
-    private final ServerCenterProcessor centerProcessor;
     private final DbPresenter dbPresenter;
 
     @Autowired
     public ServerTcpProcessor(TcpPresenter tcpPresenter, ServerCenterProcessor centerProcessor, DbPresenter dbPresenter) {
         this.tcpPresenter = tcpPresenter;
-        this.centerProcessor = centerProcessor;
         this.dbPresenter = dbPresenter;
         tcpPresenter.setServer(this);
         centerProcessor.setTcpProcessor(this);
@@ -64,7 +63,9 @@ public class ServerTcpProcessor {
             deployRemainChargeTimes(device);
         }
         long l2 = System.currentTimeMillis();
-        logger.info("处理总时间：" + (l2 - l1) + "ms");
+        if (ServerSetting.DEBUG) {
+            logger.info("处理总时间：" + (l2 - l1) + "ms");
+        }
     }
 
     /**

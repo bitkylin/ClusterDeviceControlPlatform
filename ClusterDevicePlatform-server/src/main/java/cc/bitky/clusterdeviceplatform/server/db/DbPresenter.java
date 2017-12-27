@@ -10,9 +10,11 @@ import java.util.Optional;
 
 import cc.bitky.clusterdeviceplatform.messageutils.config.ChargeStatus;
 import cc.bitky.clusterdeviceplatform.messageutils.msg.MsgReplyDeviceStatus;
+import cc.bitky.clusterdeviceplatform.server.config.ServerSetting;
 import cc.bitky.clusterdeviceplatform.server.db.bean.CardSet;
 import cc.bitky.clusterdeviceplatform.server.db.bean.Device;
 import cc.bitky.clusterdeviceplatform.server.db.bean.Employee;
+import cc.bitky.clusterdeviceplatform.server.db.bean.routineinfo.StatusItem;
 import cc.bitky.clusterdeviceplatform.server.db.operate.CardSetOperate;
 import cc.bitky.clusterdeviceplatform.server.db.operate.DbRoutineOperate;
 import cc.bitky.clusterdeviceplatform.server.db.operate.DeviceOperate;
@@ -102,13 +104,21 @@ public class DbPresenter {
     public Device handleMsgDeviceStatus(MsgReplyDeviceStatus msgStatus) {
         long l1 = System.currentTimeMillis();
         //比较服务器缓存，是否状态更新，未更新直接 return
-        int status = deviceStatusRepo.getStatus(msgStatus.getGroupId(), msgStatus.getDeviceId(), msgStatus.getType());
-        if (status == msgStatus.getStatus()) {
-            logger.info("设备「" + msgStatus.getGroupId() + ", " + msgStatus.getDeviceId() + "」『"
-                    + status + "->" + status + "』: " + msgStatus.getType().getDetail() + "无更新");
+        StatusItem status = deviceStatusRepo.getStatus(msgStatus.getGroupId(), msgStatus.getDeviceId(), msgStatus.getType());
+        if (status.getStatus() == msgStatus.getStatus()) {
+            if (ServerSetting.DEBUG) {
+                logger.info("设备「" + msgStatus.getGroupId() + ", " + msgStatus.getDeviceId() + "」『"
+                        + status.getStatus() + "->" + msgStatus.getStatus() + "』: " + msgStatus.getType().getDetail() + "无更新");
+            }
+            return null;
+        } else if (status.getTime() >= msgStatus.getTime()) {
+            if (ServerSetting.DEBUG) {
+                logger.info("设备「" + msgStatus.getGroupId() + ", " + msgStatus.getDeviceId() + "」『"
+                        + status.getStatus() + "->" + msgStatus.getStatus() + "』: " + msgStatus.getType().getDetail() + "已过期");
+            }
             return null;
         } else {
-            deviceStatusRepo.setStatus(msgStatus.getGroupId(), msgStatus.getDeviceId(), msgStatus.getStatus(), msgStatus.getType());
+            deviceStatusRepo.setStatus(msgStatus.getGroupId(), msgStatus.getDeviceId(), StatusItem.newInstance(msgStatus), msgStatus.getType());
         }
 
         //状态未更新
@@ -131,7 +141,9 @@ public class DbPresenter {
             logger.info("无指定设备对应的员工，故未更新考勤表");
         }
         long l3 = System.currentTimeMillis();
-        logger.debug("时间耗费：" + (l2 - l1) + "ms; " + (l3 - l2) + "ms");
+        if (ServerSetting.DEBUG) {
+            logger.info("时间耗费：" + (l2 - l1) + "ms; " + (l3 - l2) + "ms");
+        }
         return device;
     }
 }

@@ -11,6 +11,7 @@ import java.util.List;
 
 import cc.bitky.clusterdeviceplatform.messageutils.config.ChargeStatus;
 import cc.bitky.clusterdeviceplatform.messageutils.msg.MsgReplyDeviceStatus;
+import cc.bitky.clusterdeviceplatform.server.config.ServerSetting;
 import cc.bitky.clusterdeviceplatform.server.config.WebSetting;
 import cc.bitky.clusterdeviceplatform.server.db.bean.Device;
 import cc.bitky.clusterdeviceplatform.server.db.repository.DeviceRepository;
@@ -61,15 +62,19 @@ public class DeviceOperate {
         int rawStatus = device.getWorkStatus();
         int newStatus = msgStatus.getStatus();
         if (newStatus == rawStatus) {
-            logger.info("设备「" + msgStatus.getGroupId() + ", " + msgStatus.getDeviceId() + "」『"
-                    + rawStatus + "->" + newStatus + "』: 工作状态无更新");
+            if (ServerSetting.DEBUG) {
+                logger.info("设备「" + msgStatus.getGroupId() + ", " + msgStatus.getDeviceId() + "」『"
+                        + rawStatus + "->" + newStatus + "』: 工作状态无更新");
+            }
             return null;
         }
         device.setWorkStatus(newStatus);
         device.setWorkStatusTime(new Date(msgStatus.getTime()));
         repository.save(device);
-        logger.info("设备「" + msgStatus.getGroupId() + ", " + msgStatus.getDeviceId() + "」『"
-                + rawStatus + "->" + newStatus + "』: 工作状态成功更新！");
+        if (ServerSetting.DEBUG) {
+            logger.info("设备「" + msgStatus.getGroupId() + ", " + msgStatus.getDeviceId() + "」『"
+                    + rawStatus + "->" + newStatus + "』: 工作状态成功更新！");
+        }
         return device;
     }
 
@@ -88,8 +93,10 @@ public class DeviceOperate {
         int rawStatus = device.getChargeStatus();
         int newStatus = msgStatus.getStatus();
         if (newStatus == rawStatus) {
-            logger.info("设备「" + msgStatus.getGroupId() + ", " + msgStatus.getDeviceId() + "」『"
-                    + rawStatus + "->" + newStatus + "』: 充电状态无更新");
+            if (ServerSetting.DEBUG) {
+                logger.info("设备「" + msgStatus.getGroupId() + ", " + msgStatus.getDeviceId() + "」『"
+                        + rawStatus + "->" + newStatus + "』: 充电状态无更新");
+            }
             return null;
         }
 
@@ -99,8 +106,10 @@ public class DeviceOperate {
         device.setChargeStatus(newStatus);
         device.setChargeStatusTime(new Date(msgStatus.getTime()));
         repository.save(device);
-        logger.info("设备「" + msgStatus.getGroupId() + ", " + msgStatus.getDeviceId() + "」『"
-                + rawStatus + "->" + newStatus + "』: 充电状态成功更新！");
+        if (ServerSetting.DEBUG) {
+            logger.info("设备「" + msgStatus.getGroupId() + ", " + msgStatus.getDeviceId() + "」『"
+                    + rawStatus + "->" + newStatus + "』: 充电状态成功更新！");
+        }
         return device;
     }
 

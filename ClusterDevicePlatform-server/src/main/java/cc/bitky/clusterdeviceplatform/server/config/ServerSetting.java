@@ -13,6 +13,8 @@ public class ServerSetting {
      * 服务器端口号
      */
     public static int SERVER_PORT = 30232;
-
-
+    /**
+     * 是否开启调试信息输出
+     */
+    public static boolean DEBUG = false;
 }
