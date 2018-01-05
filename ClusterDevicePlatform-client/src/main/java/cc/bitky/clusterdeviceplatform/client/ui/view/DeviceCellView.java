@@ -11,8 +11,8 @@ import cc.bitky.clusterdeviceplatform.client.ui.UiPresenter;
 import cc.bitky.clusterdeviceplatform.client.ui.bean.Device;
 import cc.bitky.clusterdeviceplatform.messageutils.config.ChargeStatus;
 import cc.bitky.clusterdeviceplatform.messageutils.config.WorkStatus;
-import cc.bitky.clusterdeviceplatform.messageutils.msgcodec.status.MsgCodecReplyStatusCharge;
-import cc.bitky.clusterdeviceplatform.messageutils.msgcodec.status.MsgCodecReplyStatusWork;
+import cc.bitky.clusterdeviceplatform.messageutils.msgcodec.statusreply.MsgCodecReplyStatusCharge;
+import cc.bitky.clusterdeviceplatform.messageutils.msgcodec.statusreply.MsgCodecReplyStatusWork;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -174,8 +174,8 @@ public class DeviceCellView extends JFXTabPane {
         int deviceId = device.getDeviceId();
         int chargeStatus = device.getChargeStatus();
         int workStatus = device.getWorkStatus();
-        uiPresenter.sendMessage(MsgCodecReplyStatusCharge.create(groupId, deviceId, chargeStatus));
-        uiPresenter.sendMessage(MsgCodecReplyStatusWork.create(groupId, deviceId, workStatus));
+        uiPresenter.sendMessage(MsgCodecReplyStatusCharge.create(groupId, deviceId, chargeStatus, System.currentTimeMillis()));
+        uiPresenter.sendMessage(MsgCodecReplyStatusWork.create(groupId, deviceId, workStatus, System.currentTimeMillis()));
     }
 
     /**

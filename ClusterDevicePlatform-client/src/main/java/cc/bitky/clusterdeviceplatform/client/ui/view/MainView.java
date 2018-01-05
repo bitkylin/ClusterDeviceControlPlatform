@@ -9,12 +9,12 @@ import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+import cc.bitky.clusterdeviceplatform.client.config.DeviceSetting;
 import cc.bitky.clusterdeviceplatform.client.ui.UiPresenter;
 import cc.bitky.clusterdeviceplatform.client.ui.bean.Device;
 import cc.bitky.clusterdeviceplatform.client.ui.bean.DeviceCellRepo;
 import cc.bitky.clusterdeviceplatform.client.ui.bean.DeviceGroup;
 import cc.bitky.clusterdeviceplatform.client.ui.bean.DeviceGroupListCell;
-import cc.bitky.clusterdeviceplatform.messageutils.config.DeviceSetting;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;

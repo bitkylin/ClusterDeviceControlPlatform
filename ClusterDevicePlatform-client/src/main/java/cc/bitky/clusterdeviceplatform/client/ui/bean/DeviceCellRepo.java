@@ -2,8 +2,9 @@ package cc.bitky.clusterdeviceplatform.client.ui.bean;
 
 import cc.bitky.clusterdeviceplatform.client.ui.view.DeviceCellView;
 
-import static cc.bitky.clusterdeviceplatform.messageutils.config.DeviceSetting.MAX_DEVICE_ID;
-import static cc.bitky.clusterdeviceplatform.messageutils.config.DeviceSetting.MAX_GROUP_ID;
+import static cc.bitky.clusterdeviceplatform.client.config.DeviceSetting.MAX_DEVICE_ID;
+import static cc.bitky.clusterdeviceplatform.client.config.DeviceSetting.MAX_GROUP_ID;
+
 
 /**
  * 设备及设备窗格缓存

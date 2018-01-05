@@ -18,7 +18,6 @@ import java.util.Optional;
 
 import javax.imageio.ImageIO;
 
-import cc.bitky.clusterdeviceplatform.messageutils.config.DeviceSetting;
 import cc.bitky.clusterdeviceplatform.messageutils.config.FrameSetting;
 import cc.bitky.clusterdeviceplatform.messageutils.define.utils.KyToArrayUtil;
 import cc.bitky.clusterdeviceplatform.messageutils.msg.device.MsgEmployeePortrait;
@@ -35,6 +34,7 @@ import cc.bitky.clusterdeviceplatform.messageutils.msgcodec.device.MsgCodecEmplo
 import cc.bitky.clusterdeviceplatform.messageutils.msgcodec.device.MsgCodecEmployeeName;
 import cc.bitky.clusterdeviceplatform.messageutils.msgcodec.device.MsgCodecEmployeePortrait;
 import cc.bitky.clusterdeviceplatform.server.config.CommSetting;
+import cc.bitky.clusterdeviceplatform.server.config.DeviceSetting;
 import cc.bitky.clusterdeviceplatform.server.config.WebSetting;
 import cc.bitky.clusterdeviceplatform.server.db.bean.Device;
 import cc.bitky.clusterdeviceplatform.server.db.bean.Employee;

@@ -14,10 +14,11 @@ import cc.bitky.clusterdeviceplatform.messageutils.MsgProcessor;
 import cc.bitky.clusterdeviceplatform.messageutils.config.JointMsgType;
 import cc.bitky.clusterdeviceplatform.messageutils.define.base.BaseMsg;
 import cc.bitky.clusterdeviceplatform.messageutils.define.frame.FrameMajorHeader;
-import cc.bitky.clusterdeviceplatform.messageutils.msg.MsgReplyNormal;
-import cc.bitky.clusterdeviceplatform.messageutils.msgcodec.MsgCodecHeartbeat;
-import cc.bitky.clusterdeviceplatform.messageutils.msgcodec.MsgCodecReplyNormal;
+import cc.bitky.clusterdeviceplatform.messageutils.msg.statusreply.MsgReplyNormal;
+import cc.bitky.clusterdeviceplatform.messageutils.msgcodec.controlcenter.MsgCodecHeartbeat;
+import cc.bitky.clusterdeviceplatform.messageutils.msgcodec.statusreply.MsgCodecReplyNormal;
 import io.netty.channel.Channel;
+import io.netty.channel.ChannelOutboundInvoker;
 import io.netty.util.Attribute;
 import io.netty.util.AttributeKey;
 
@@ -58,6 +59,15 @@ public class TcpPresenter {
         if (!touchChannel(groupId).isPresent()) {
             nettyClient.start(groupId);
         }
+    }
+
+    /**
+     * 主动断开特定 Channel 的连接
+     *
+     * @param i Channel 的 ID
+     */
+    public void removeChannel(int i) {
+        touchChannel(i).ifPresent(ChannelOutboundInvoker::disconnect);
     }
 
     /**
@@ -127,7 +137,7 @@ public class TcpPresenter {
      */
     public void channelInactive(int i) {
         tcpRepository.inactiveChannel(i);
-        startClient(i);
+        //   startClient(i);
     }
 
     public void setServer(ServerTcpHandler server) {

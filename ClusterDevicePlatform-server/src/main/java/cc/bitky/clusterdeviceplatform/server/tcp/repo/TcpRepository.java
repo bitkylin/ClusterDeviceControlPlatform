@@ -13,13 +13,13 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicReferenceArray;
 
-import cc.bitky.clusterdeviceplatform.messageutils.config.DeviceSetting;
 import cc.bitky.clusterdeviceplatform.messageutils.config.FrameSetting;
 import cc.bitky.clusterdeviceplatform.messageutils.define.base.BaseMsg;
 import cc.bitky.clusterdeviceplatform.messageutils.define.frame.FrameMajorHeader;
 import cc.bitky.clusterdeviceplatform.messageutils.define.frame.SendableMsgContainer;
 import cc.bitky.clusterdeviceplatform.messageutils.msg.statusreply.MsgReplyNormal;
 import cc.bitky.clusterdeviceplatform.server.config.CommSetting;
+import cc.bitky.clusterdeviceplatform.server.config.DeviceSetting;
 import cc.bitky.clusterdeviceplatform.server.tcp.TcpPresenter;
 import cc.bitky.clusterdeviceplatform.server.tcp.exception.ExceptionMsgTcp;
 import cc.bitky.clusterdeviceplatform.server.tcp.statistic.ChannelItem;

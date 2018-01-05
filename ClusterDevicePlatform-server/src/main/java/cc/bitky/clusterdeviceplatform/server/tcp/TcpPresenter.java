@@ -10,7 +10,6 @@ import java.util.concurrent.LinkedBlockingDeque;
 import java.util.concurrent.ScheduledExecutorService;
 
 import cc.bitky.clusterdeviceplatform.messageutils.MsgProcessor;
-import cc.bitky.clusterdeviceplatform.messageutils.config.DeviceSetting;
 import cc.bitky.clusterdeviceplatform.messageutils.config.JointMsgType;
 import cc.bitky.clusterdeviceplatform.messageutils.config.WorkStatus;
 import cc.bitky.clusterdeviceplatform.messageutils.define.base.BaseMsg;
@@ -20,6 +19,7 @@ import cc.bitky.clusterdeviceplatform.messageutils.msg.statusreply.MsgReplyDevic
 import cc.bitky.clusterdeviceplatform.messageutils.msg.statusreply.MsgReplyNormal;
 import cc.bitky.clusterdeviceplatform.messageutils.msgcodec.controlcenter.MsgCodecHeartbeat;
 import cc.bitky.clusterdeviceplatform.messageutils.msgcodec.statusreply.MsgCodecReplyStatusWork;
+import cc.bitky.clusterdeviceplatform.server.config.DeviceSetting;
 import cc.bitky.clusterdeviceplatform.server.server.ServerTcpProcessor;
 import cc.bitky.clusterdeviceplatform.server.tcp.exception.ExceptionMsgTcp;
 import cc.bitky.clusterdeviceplatform.server.tcp.repo.TcpRepository;
