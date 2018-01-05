@@ -1,6 +1,6 @@
-package cc.bitky.clusterdeviceplatform.server.web.bean;
+package cc.bitky.clusterdeviceplatform.server.web.client.bean;
 
-import cc.bitky.clusterdeviceplatform.messageutils.msg.led.MsgLedOn;
+import cc.bitky.clusterdeviceplatform.messageutils.msg.controlcenter.led.MsgLedOn;
 
 public class WebLed {
     private int duration;

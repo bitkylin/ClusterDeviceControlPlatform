@@ -18,6 +18,10 @@ public class ServerWebProcessor {
         this.dbPresenter = dbPresenter;
     }
 
+    public ServerTcpProcessor getTcpProcessor() {
+        return centerProcessor.getTcpProcessor();
+    }
+
     public DbPresenter getDbPresenter() {
         return dbPresenter;
     }

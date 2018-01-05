@@ -18,10 +18,12 @@ import cc.bitky.clusterdeviceplatform.messageutils.config.FrameSetting;
 import cc.bitky.clusterdeviceplatform.messageutils.define.base.BaseMsg;
 import cc.bitky.clusterdeviceplatform.messageutils.define.frame.FrameMajorHeader;
 import cc.bitky.clusterdeviceplatform.messageutils.define.frame.SendableMsgContainer;
-import cc.bitky.clusterdeviceplatform.messageutils.msg.MsgReplyNormal;
+import cc.bitky.clusterdeviceplatform.messageutils.msg.statusreply.MsgReplyNormal;
 import cc.bitky.clusterdeviceplatform.server.config.CommSetting;
 import cc.bitky.clusterdeviceplatform.server.tcp.TcpPresenter;
 import cc.bitky.clusterdeviceplatform.server.tcp.exception.ExceptionMsgTcp;
+import cc.bitky.clusterdeviceplatform.server.tcp.statistic.ChannelItem;
+import cc.bitky.clusterdeviceplatform.server.tcp.statistic.ChannelOutline;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.Channel;
 import io.netty.util.HashedWheelTimer;
@@ -37,7 +39,7 @@ public class TcpRepository {
      */
     private final HashedWheelTimer HASHED_WHEEL_TIMER = new HashedWheelTimer();
     /**
-     * 已激活「识别」的 Channel 容器
+     * 已激活的 Channel 容器
      */
     private final AtomicReferenceArray<Channel> CHANNEL_ARRAY = new AtomicReferenceArray<>(DeviceSetting.MAX_GROUP_ID + 1);
     /**
@@ -185,6 +187,7 @@ public class TcpRepository {
                     logger.warn("「Channel[" + index + "]」" + "新的 Channel 欲覆盖已激活的 Channel");
                 } else {
                     CHANNEL_ARRAY.set(index, channel);
+                    CHANNEL_MAP.remove(id);
                     logger.info("「Channel[" + index + "]」" + "新的 Channel 已成功装配 [" + id + "]");
                 }
                 return;
@@ -266,5 +269,30 @@ public class TcpRepository {
                 channel.disconnect();
             }
         }
+    }
+
+    //--------------- 数据统计 ---------------
+
+    /**
+     * 统计所有 Channel 的当前待发送消息数量
+     */
+    public ChannelOutline statisticChannelLoad() {
+        List<ChannelItem> items = new ArrayList<>(DeviceSetting.MAX_GROUP_ID);
+        int activated = 0;
+        int inactivated = 0;
+        for (int i = 1; i <= DeviceSetting.MAX_GROUP_ID; i++) {
+            Channel channel = CHANNEL_ARRAY.get(i);
+            boolean itemActivated = channel != null && channel.isActive();
+            if (itemActivated) {
+                activated++;
+            } else {
+                inactivated++;
+            }
+            ChannelItem item = new ChannelItem(i, itemActivated, SENDING_MESSAGE_QUEUE.get(i).size());
+            items.add(item);
+        }
+        int waitToActivate = CHANNEL_MAP.size();
+
+        return new ChannelOutline(items, activated, inactivated, waitToActivate);
     }
 }

@@ -1,4 +1,4 @@
-package cc.bitky.clusterdeviceplatform.server.web;
+package cc.bitky.clusterdeviceplatform.server.web.client;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -8,7 +8,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -22,9 +21,9 @@ import javax.imageio.ImageIO;
 import cc.bitky.clusterdeviceplatform.messageutils.config.DeviceSetting;
 import cc.bitky.clusterdeviceplatform.messageutils.config.FrameSetting;
 import cc.bitky.clusterdeviceplatform.messageutils.define.utils.KyToArrayUtil;
-import cc.bitky.clusterdeviceplatform.messageutils.msg.MsgEmployeePortrait;
-import cc.bitky.clusterdeviceplatform.messageutils.msgcodec.MsgCodecEmployeePortrait;
+import cc.bitky.clusterdeviceplatform.messageutils.msg.device.MsgEmployeePortrait;
 import cc.bitky.clusterdeviceplatform.messageutils.msgcodec.card.MsgCodecCardEmployee;
+import cc.bitky.clusterdeviceplatform.messageutils.msgcodec.controlcenter.MsgCodecTimestamp;
 import cc.bitky.clusterdeviceplatform.messageutils.msgcodec.device.MsgCodecDeviceClear;
 import cc.bitky.clusterdeviceplatform.messageutils.msgcodec.device.MsgCodecDeviceEnabled;
 import cc.bitky.clusterdeviceplatform.messageutils.msgcodec.device.MsgCodecDeviceRemainChargeTimes;
@@ -34,13 +33,13 @@ import cc.bitky.clusterdeviceplatform.messageutils.msgcodec.device.MsgCodecDevic
 import cc.bitky.clusterdeviceplatform.messageutils.msgcodec.device.MsgCodecDeviceUnlock;
 import cc.bitky.clusterdeviceplatform.messageutils.msgcodec.device.MsgCodecEmployeeDepartment;
 import cc.bitky.clusterdeviceplatform.messageutils.msgcodec.device.MsgCodecEmployeeName;
+import cc.bitky.clusterdeviceplatform.messageutils.msgcodec.device.MsgCodecEmployeePortrait;
 import cc.bitky.clusterdeviceplatform.server.config.CommSetting;
 import cc.bitky.clusterdeviceplatform.server.config.WebSetting;
 import cc.bitky.clusterdeviceplatform.server.db.bean.Device;
 import cc.bitky.clusterdeviceplatform.server.db.bean.Employee;
-import cc.bitky.clusterdeviceplatform.server.db.repository.EmployeeRepository;
 import cc.bitky.clusterdeviceplatform.server.server.ServerWebProcessor;
-import cc.bitky.clusterdeviceplatform.server.web.bean.QueueDevice;
+import cc.bitky.clusterdeviceplatform.server.web.client.bean.QueueDevice;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 
@@ -50,12 +49,10 @@ public class OperateDevicesRestController {
 
     private final ServerWebProcessor webProcessor;
     private final Logger logger = LoggerFactory.getLogger(getClass());
-    EmployeeRepository repository;
 
     @Autowired
-    public OperateDevicesRestController(ServerWebProcessor webProcessor, EmployeeRepository repository) {
+    public OperateDevicesRestController(ServerWebProcessor webProcessor) {
         this.webProcessor = webProcessor;
-        this.repository = repository;
     }
 
     /**
@@ -78,6 +75,15 @@ public class OperateDevicesRestController {
                                 @RequestParam(required = false, defaultValue = "false") boolean enabled,
                                 @RequestParam(required = false, defaultValue = "false") boolean remainchargetime) {
         if (queryAndDeployDeviceMsg(new QueueDevice(groupId, deviceId, name, department, cardnumber, enabled, remainchargetime))) {
+            return "success";
+        } else {
+            return "error";
+        }
+    }
+
+    @GetMapping("/update/timestamp/current/{groupId}")
+    public String updateUnixTimestamp(@PathVariable int groupId) {
+        if (webProcessor.sendMessageGrouped(MsgCodecTimestamp.create(groupId, 0, System.currentTimeMillis()))) {
             return "success";
         } else {
             return "error";
@@ -162,7 +168,6 @@ public class OperateDevicesRestController {
     }
 
     @PostMapping("/portrait/{groupId}/{deviceId}")
-    @ResponseBody
     public String operateDeviceDeployPortrait(@PathVariable int groupId,
                                               @PathVariable int deviceId,
                                               @RequestParam(required = false, defaultValue = "120") int width,

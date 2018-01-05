@@ -1,4 +1,4 @@
-package cc.bitky.clusterdeviceplatform.server.web;
+package cc.bitky.clusterdeviceplatform.server.web.client;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -9,11 +9,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import cc.bitky.clusterdeviceplatform.messageutils.msg.led.MsgLedOn;
-import cc.bitky.clusterdeviceplatform.messageutils.msgcodec.led.MsgCodecLedOff;
-import cc.bitky.clusterdeviceplatform.messageutils.msgcodec.led.MsgCodecLedOn;
+import cc.bitky.clusterdeviceplatform.messageutils.msg.controlcenter.led.MsgLedOn;
+import cc.bitky.clusterdeviceplatform.messageutils.msgcodec.controlcenter.led.MsgCodecLedOff;
+import cc.bitky.clusterdeviceplatform.messageutils.msgcodec.controlcenter.led.MsgCodecLedOn;
 import cc.bitky.clusterdeviceplatform.server.server.ServerWebProcessor;
-import cc.bitky.clusterdeviceplatform.server.web.bean.WebLed;
+import cc.bitky.clusterdeviceplatform.server.web.client.bean.WebLed;
 
 @RestController
 @RequestMapping(value = "/led")

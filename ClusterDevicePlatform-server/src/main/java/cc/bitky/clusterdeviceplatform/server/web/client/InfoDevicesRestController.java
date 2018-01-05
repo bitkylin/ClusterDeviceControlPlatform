@@ -1,4 +1,4 @@
-package cc.bitky.clusterdeviceplatform.server.web;
+package cc.bitky.clusterdeviceplatform.server.web.client;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;

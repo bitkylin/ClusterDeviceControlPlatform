@@ -10,7 +10,7 @@ import java.util.Date;
 import java.util.List;
 
 import cc.bitky.clusterdeviceplatform.messageutils.config.ChargeStatus;
-import cc.bitky.clusterdeviceplatform.messageutils.msg.MsgReplyDeviceStatus;
+import cc.bitky.clusterdeviceplatform.messageutils.msg.statusreply.MsgReplyDeviceStatus;
 import cc.bitky.clusterdeviceplatform.server.config.ServerSetting;
 import cc.bitky.clusterdeviceplatform.server.config.WebSetting;
 import cc.bitky.clusterdeviceplatform.server.db.bean.Device;

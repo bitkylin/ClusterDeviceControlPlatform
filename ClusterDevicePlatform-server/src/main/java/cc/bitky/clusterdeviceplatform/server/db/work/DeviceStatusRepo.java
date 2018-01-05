@@ -5,7 +5,7 @@ import org.springframework.stereotype.Repository;
 import java.util.concurrent.atomic.AtomicReferenceArray;
 
 import cc.bitky.clusterdeviceplatform.messageutils.config.DeviceSetting;
-import cc.bitky.clusterdeviceplatform.messageutils.msg.MsgReplyDeviceStatus;
+import cc.bitky.clusterdeviceplatform.messageutils.msg.statusreply.MsgReplyDeviceStatus;
 import cc.bitky.clusterdeviceplatform.server.db.bean.routineinfo.StatusItem;
 
 @Repository

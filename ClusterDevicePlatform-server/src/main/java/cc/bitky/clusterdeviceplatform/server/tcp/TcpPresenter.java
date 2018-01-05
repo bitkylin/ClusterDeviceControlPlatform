@@ -16,13 +16,14 @@ import cc.bitky.clusterdeviceplatform.messageutils.config.WorkStatus;
 import cc.bitky.clusterdeviceplatform.messageutils.define.base.BaseMsg;
 import cc.bitky.clusterdeviceplatform.messageutils.define.frame.FrameMajorHeader;
 import cc.bitky.clusterdeviceplatform.messageutils.define.frame.SendableMsgContainer;
-import cc.bitky.clusterdeviceplatform.messageutils.msg.MsgReplyDeviceStatus;
-import cc.bitky.clusterdeviceplatform.messageutils.msg.MsgReplyNormal;
-import cc.bitky.clusterdeviceplatform.messageutils.msgcodec.MsgCodecHeartbeat;
-import cc.bitky.clusterdeviceplatform.messageutils.msgcodec.status.MsgCodecReplyStatusWork;
+import cc.bitky.clusterdeviceplatform.messageutils.msg.statusreply.MsgReplyDeviceStatus;
+import cc.bitky.clusterdeviceplatform.messageutils.msg.statusreply.MsgReplyNormal;
+import cc.bitky.clusterdeviceplatform.messageutils.msgcodec.controlcenter.MsgCodecHeartbeat;
+import cc.bitky.clusterdeviceplatform.messageutils.msgcodec.statusreply.MsgCodecReplyStatusWork;
 import cc.bitky.clusterdeviceplatform.server.server.ServerTcpProcessor;
 import cc.bitky.clusterdeviceplatform.server.tcp.exception.ExceptionMsgTcp;
 import cc.bitky.clusterdeviceplatform.server.tcp.repo.TcpRepository;
+import cc.bitky.clusterdeviceplatform.server.tcp.statistic.ChannelOutline;
 import io.netty.channel.Channel;
 
 /**
@@ -122,7 +123,7 @@ public class TcpPresenter {
     }
 
     /**
-     * 「内部接口」发生异常时回调该接口传出异常信息
+     * 「内部接口」捕获到异常消息对象时，回调该接口传出异常信息
      *
      * @param msg 一场消息对象
      */
@@ -136,5 +137,14 @@ public class TcpPresenter {
 
     public void shutDown() {
         tcpRepository.removeAllChannel();
+    }
+
+    //--------------- 数据统计 ---------------
+
+    /**
+     * 统计所有 Channel 的当前待发送消息数量
+     */
+    public ChannelOutline statisticChannelLoad() {
+        return tcpRepository.statisticChannelLoad();
     }
 }

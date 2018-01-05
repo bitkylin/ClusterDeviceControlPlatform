@@ -1,4 +1,4 @@
-package cc.bitky.clusterdeviceplatform.server.web.bean;
+package cc.bitky.clusterdeviceplatform.server.web.client.bean;
 
 /**
  * 选择是否部署设备中的信息

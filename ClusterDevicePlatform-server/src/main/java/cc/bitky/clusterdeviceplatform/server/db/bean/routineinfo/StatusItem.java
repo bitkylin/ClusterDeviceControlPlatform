@@ -1,6 +1,7 @@
 package cc.bitky.clusterdeviceplatform.server.db.bean.routineinfo;
 
-import cc.bitky.clusterdeviceplatform.messageutils.msg.MsgReplyDeviceStatus;
+
+import cc.bitky.clusterdeviceplatform.messageutils.msg.statusreply.MsgReplyDeviceStatus;
 
 /**
  * 用于服务器临时存储的状态时间对象

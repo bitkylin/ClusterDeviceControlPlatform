@@ -33,7 +33,7 @@ public class NettyServer implements CommandLineRunner {
         bootstrap.group(group)
                 .channel(NioServerSocketChannel.class)
                 .childHandler(serverChannelInitializer);
-        ChannelFuture channelFuture = bootstrap.bind(new InetSocketAddress(ServerSetting.SERVER_PORT));
+        ChannelFuture channelFuture = bootstrap.bind(new InetSocketAddress(ServerSetting.SERVER_TCP_PORT));
         channelFuture.addListener(future -> {
             if (future.isSuccess()) {
                 logger.info("「Netty」模块启动成功");

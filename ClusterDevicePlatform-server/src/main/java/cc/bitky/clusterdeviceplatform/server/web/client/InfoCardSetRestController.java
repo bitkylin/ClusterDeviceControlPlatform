@@ -1,4 +1,4 @@
-package cc.bitky.clusterdeviceplatform.server.web;
+package cc.bitky.clusterdeviceplatform.server.web.client;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -18,8 +18,10 @@ import cc.bitky.clusterdeviceplatform.messageutils.msgcodec.card.MsgCodecCardFre
 import cc.bitky.clusterdeviceplatform.server.config.DbSetting;
 import cc.bitky.clusterdeviceplatform.server.db.bean.CardSet;
 import cc.bitky.clusterdeviceplatform.server.server.ServerWebProcessor;
-import cc.bitky.clusterdeviceplatform.server.web.bean.CardType;
+import cc.bitky.clusterdeviceplatform.server.web.client.bean.CardType;
 import reactor.core.publisher.Mono;
+
+import static cc.bitky.clusterdeviceplatform.server.web.client.bean.CardType.Free;
 
 @RestController
 @RequestMapping(value = "/info/cardset")
@@ -39,7 +41,7 @@ public class InfoCardSetRestController {
      */
     @GetMapping("/freecard/")
     public String[] queryFreeCards() {
-        return queryCards(CardType.Free).orElse(new String[0]);
+        return queryCards(Free).orElse(new String[0]);
     }
 
     /**
@@ -69,7 +71,7 @@ public class InfoCardSetRestController {
      */
     @PostMapping(path = "/freecard", consumes = "application/json")
     public String saveFreeCards(@RequestBody String[] cards) {
-        saveCards(cards, CardType.Free).block();
+        saveCards(cards, Free).block();
         return "success";
     }
 
@@ -103,8 +105,8 @@ public class InfoCardSetRestController {
      */
     @GetMapping(path = "/freecard/deploy/{groupId}/{deviceId}")
     public String deployFreeCards(@PathVariable int groupId, @PathVariable int deviceId) {
-        String[] cardSet = queryCards(CardType.Free).orElse(new String[]{DbSetting.DEFAULT_EMPLOYEE_CARD_NUMBER});
-        if (sendCardSetGrouped(groupId, deviceId, cardSet, CardType.Free)) {
+        String[] cardSet = queryCards(Free).orElse(new String[]{DbSetting.DEFAULT_EMPLOYEE_CARD_NUMBER});
+        if (sendCardSetGrouped(groupId, deviceId, cardSet, Free)) {
             return "success";
         } else {
             return "error";

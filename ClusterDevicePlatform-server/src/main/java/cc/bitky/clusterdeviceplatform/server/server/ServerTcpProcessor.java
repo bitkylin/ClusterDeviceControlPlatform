@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service;
 
 import cc.bitky.clusterdeviceplatform.messageutils.config.ChargeStatus;
 import cc.bitky.clusterdeviceplatform.messageutils.define.base.BaseMsg;
-import cc.bitky.clusterdeviceplatform.messageutils.msg.MsgReplyDeviceStatus;
+import cc.bitky.clusterdeviceplatform.messageutils.msg.statusreply.MsgReplyDeviceStatus;
 import cc.bitky.clusterdeviceplatform.messageutils.msgcodec.device.MsgCodecDeviceRemainChargeTimes;
 import cc.bitky.clusterdeviceplatform.server.config.CommSetting;
 import cc.bitky.clusterdeviceplatform.server.config.ServerSetting;
@@ -15,6 +15,7 @@ import cc.bitky.clusterdeviceplatform.server.db.DbPresenter;
 import cc.bitky.clusterdeviceplatform.server.db.bean.Device;
 import cc.bitky.clusterdeviceplatform.server.tcp.TcpPresenter;
 import cc.bitky.clusterdeviceplatform.server.tcp.exception.ExceptionMsgTcp;
+import cc.bitky.clusterdeviceplatform.server.tcp.statistic.ChannelOutline;
 
 @Service
 public class ServerTcpProcessor {
@@ -93,5 +94,14 @@ public class ServerTcpProcessor {
 
     public void shutDown() {
         tcpPresenter.shutDown();
+    }
+
+    //--------------- 数据统计 ---------------
+
+    /**
+     * 统计所有 Channel 概览信息
+     */
+    public ChannelOutline statisticChannelLoad() {
+        return tcpPresenter.statisticChannelLoad();
     }
 }

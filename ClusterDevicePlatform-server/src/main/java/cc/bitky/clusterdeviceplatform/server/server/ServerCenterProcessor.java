@@ -18,6 +18,14 @@ public class ServerCenterProcessor {
         jvmShutDown();
     }
 
+    public ServerTcpProcessor getTcpProcessor() {
+        return tcpProcessor;
+    }
+
+    void setTcpProcessor(ServerTcpProcessor tcpProcessor) {
+        this.tcpProcessor = tcpProcessor;
+    }
+
     private boolean sendMessage(BaseMsg message) {
         return message != null && tcpProcessor.sendMessage(message);
     }
@@ -69,8 +77,5 @@ public class ServerCenterProcessor {
             }
             logger.warn("服务器优雅关闭成功");
         }));
-    }
-    void setTcpProcessor(ServerTcpProcessor tcpProcessor) {
-        this.tcpProcessor = tcpProcessor;
     }
 }

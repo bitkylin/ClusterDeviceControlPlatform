@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Optional;
 
 import cc.bitky.clusterdeviceplatform.messageutils.config.ChargeStatus;
-import cc.bitky.clusterdeviceplatform.messageutils.msg.MsgReplyDeviceStatus;
+import cc.bitky.clusterdeviceplatform.messageutils.msg.statusreply.MsgReplyDeviceStatus;
 import cc.bitky.clusterdeviceplatform.server.config.ServerSetting;
 import cc.bitky.clusterdeviceplatform.server.db.bean.CardSet;
 import cc.bitky.clusterdeviceplatform.server.db.bean.Device;
@@ -20,7 +20,7 @@ import cc.bitky.clusterdeviceplatform.server.db.operate.DbRoutineOperate;
 import cc.bitky.clusterdeviceplatform.server.db.operate.DeviceOperate;
 import cc.bitky.clusterdeviceplatform.server.db.operate.EmployeeOperate;
 import cc.bitky.clusterdeviceplatform.server.db.work.DeviceStatusRepo;
-import cc.bitky.clusterdeviceplatform.server.web.bean.CardType;
+import cc.bitky.clusterdeviceplatform.server.web.client.bean.CardType;
 import reactor.core.publisher.Mono;
 
 @Service
