@@ -107,6 +107,7 @@ public class ServerApplication {
             CommSetting.DEVICE_INIT_CHARGE_TIMES = localProfile.初始充电次数;
             CommSetting.DEPLOY_MSG_NEED_REPLY = localProfile.帧送达监测;
             ServerSetting.DEBUG = localProfile.调试模式;
+            ServerSetting.WEB_RANDOM_DEBUG = localProfile.随机Web数据模式;
             ServerSetting.SERVER_TCP_PORT = localProfile.服务器端口号;
             return true;
         }

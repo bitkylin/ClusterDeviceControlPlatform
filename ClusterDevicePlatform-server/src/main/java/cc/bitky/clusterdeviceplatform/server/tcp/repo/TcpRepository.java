@@ -58,7 +58,7 @@ public class TcpRepository {
      * 定时任务「定时检索待发送消息队列」执行线程池
      */
     private final ScheduledExecutorService executorService = Executors.newScheduledThreadPool(DeviceSetting.MAX_GROUP_ID);
-    private final Logger logger = LoggerFactory.getLogger(TcpRepository.class);
+    private final Logger logger = LoggerFactory.getLogger(getClass());
     private TcpPresenter server;
 
     {
@@ -118,7 +118,7 @@ public class TcpRepository {
                 logger.warn("消息队列定时发送任务被中断");
                 //TODO 消息队列定时发送任务被中断
             }
-        }, channelId * 10, CommSetting.FRAME_SEND_INTERVAL, TimeUnit.MILLISECONDS);
+        }, channelId, CommSetting.FRAME_SEND_INTERVAL, TimeUnit.MILLISECONDS);
     }
 
     /**

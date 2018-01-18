@@ -56,7 +56,18 @@ public class DeviceStatusRepo {
         array.set(deviceId, item);
     }
 
+    /**
+     * 从服务器缓存中获取设备状态
+     *
+     * @param groupId  设备组 ID
+     * @param deviceId 设备 ID
+     * @param type     状态类型
+     * @return 状态 Item
+     */
     public StatusItem getStatus(int groupId, int deviceId, MsgReplyDeviceStatus.Type type) {
+        if (groupId > DeviceSetting.MAX_GROUP_ID || groupId <= 0 || deviceId > DeviceSetting.MAX_DEVICE_ID || deviceId <= 0) {
+            return new StatusItem();
+        }
         if (type == MsgReplyDeviceStatus.Type.CHARGE) {
             return getChargeStatus(groupId, deviceId);
         } else {

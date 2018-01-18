@@ -13,6 +13,10 @@ public class LocalProfile {
      */
     public boolean 调试模式 = false;
     /**
+     * 是否开启web调用返回随机数据
+     */
+    public boolean 随机Web数据模式 = true;
+    /**
      * 部署员工信息时，若数据库中无指定的相关信息，而部署的默认员工默认信息
      */
     public String 员工默认卡号 = "";

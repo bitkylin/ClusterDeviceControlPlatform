@@ -29,6 +29,7 @@ import cc.bitky.clusterdeviceplatform.messageutils.msgcodec.device.MsgCodecDevic
 import cc.bitky.clusterdeviceplatform.messageutils.msgcodec.device.MsgCodecDeviceSetEngineRotateDuration;
 import cc.bitky.clusterdeviceplatform.messageutils.msgcodec.device.MsgCodecDeviceSetOvertimeCharge;
 import cc.bitky.clusterdeviceplatform.messageutils.msgcodec.device.MsgCodecDeviceSetOvertimeWork;
+import cc.bitky.clusterdeviceplatform.messageutils.msgcodec.device.MsgCodecDeviceSetScreenBrightness;
 import cc.bitky.clusterdeviceplatform.messageutils.msgcodec.device.MsgCodecDeviceUnlock;
 import cc.bitky.clusterdeviceplatform.messageutils.msgcodec.device.MsgCodecEmployeeDepartment;
 import cc.bitky.clusterdeviceplatform.messageutils.msgcodec.device.MsgCodecEmployeeName;
@@ -167,6 +168,17 @@ public class OperateDevicesRestController {
         }
     }
 
+    /**
+     * 「操作」部署员工肖像
+     *
+     * @param groupId  设备组 ID
+     * @param deviceId 设备 ID
+     * @param width    图片宽度
+     * @param height   图片高度
+     * @param file     文件
+     * @return "更新操作成功"消息
+     * @throws IOException 图片读取异常
+     */
     @PostMapping("/portrait/{groupId}/{deviceId}")
     public String operateDeviceDeployPortrait(@PathVariable int groupId,
                                               @PathVariable int deviceId,
@@ -199,7 +211,7 @@ public class OperateDevicesRestController {
     }
 
     /**
-     * 「操作」设置工作超时时间
+     * 「操作设备」设置工作超时时间
      *
      * @param groupId  设备组 ID
      * @param deviceId 设备 ID
@@ -249,6 +261,24 @@ public class OperateDevicesRestController {
                                                        @RequestParam(required = false, defaultValue = "0") int value1,
                                                        @RequestParam(required = false, defaultValue = "0") int value2) {
         if (webProcessor.sendMessageGrouped(MsgCodecDeviceSetEngineRotateDuration.create(groupId, deviceId, value1, value2))) {
+            return "success";
+        } else {
+            return "error";
+        }
+    }
+
+    /**
+     * 「操作设备」设置屏幕亮度
+     *
+     * @param groupId  设备组 ID
+     * @param deviceId 设备 ID
+     * @return "设置成功"消息
+     */
+    @GetMapping("/option/screen/lighteness/{groupId}/{deviceId}")
+    public String operateDeviceSetScreenBrightness(@PathVariable int groupId,
+                                                   @PathVariable int deviceId,
+                                                   @RequestParam int intensity) {
+        if (webProcessor.sendMessageGrouped(MsgCodecDeviceSetScreenBrightness.create(groupId, deviceId, intensity))) {
             return "success";
         } else {
             return "error";
