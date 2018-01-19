@@ -5,10 +5,14 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.List;
 import java.util.Optional;
 
 import cc.bitky.clusterdeviceplatform.messageutils.config.ChargeStatus;
+import cc.bitky.clusterdeviceplatform.messageutils.config.WorkStatus;
 import cc.bitky.clusterdeviceplatform.messageutils.msg.statusreply.MsgReplyDeviceStatus;
 import cc.bitky.clusterdeviceplatform.server.config.ServerSetting;
 import cc.bitky.clusterdeviceplatform.server.db.bean.CardSet;
@@ -21,6 +25,8 @@ import cc.bitky.clusterdeviceplatform.server.db.operate.DeviceOperate;
 import cc.bitky.clusterdeviceplatform.server.db.operate.EmployeeOperate;
 import cc.bitky.clusterdeviceplatform.server.db.statistic.repo.ProcessedMsgRepo;
 import cc.bitky.clusterdeviceplatform.server.db.work.DeviceStatusRepo;
+import cc.bitky.clusterdeviceplatform.server.server.repo.TcpFeedBackRepository;
+import cc.bitky.clusterdeviceplatform.server.tcp.statistic.except.TcpFeedbackItem;
 import cc.bitky.clusterdeviceplatform.server.web.client.bean.CardType;
 import reactor.core.publisher.Mono;
 
@@ -32,16 +38,17 @@ public class DbPresenter {
     private final EmployeeOperate employeeOperate;
     private final DeviceStatusRepo deviceStatusRepo;
     private final DbRoutineOperate dbRoutineOperate;
-
+    private final TcpFeedBackRepository feedBackRepository;
     private Logger logger = LoggerFactory.getLogger(getClass());
 
     @Autowired
-    public DbPresenter(CardSetOperate cardSetOperate, DeviceOperate deviceOperate, EmployeeOperate employeeOperate, DeviceStatusRepo deviceStatusRepo, DbRoutineOperate dbRoutineOperate) {
+    public DbPresenter(CardSetOperate cardSetOperate, DeviceOperate deviceOperate, EmployeeOperate employeeOperate, DeviceStatusRepo deviceStatusRepo, DbRoutineOperate dbRoutineOperate, TcpFeedBackRepository feedBackRepository) {
         this.cardSetOperate = cardSetOperate;
         this.deviceOperate = deviceOperate;
         this.employeeOperate = employeeOperate;
         this.deviceStatusRepo = deviceStatusRepo;
         this.dbRoutineOperate = dbRoutineOperate;
+        this.feedBackRepository = feedBackRepository;
     }
 
     /**
@@ -109,6 +116,17 @@ public class DbPresenter {
     }
 
     /**
+     * 获取设备组最近通信时刻的时间戳
+     *
+     * @param groupId 设备组 ID
+     * @return 特定的时间戳
+     */
+    public long getDeviceGroupRecentCommTime(int groupId) {
+        return deviceStatusRepo.getDeviceGroupRecentCommTime(groupId);
+    }
+
+
+    /**
      * 总帧数统计
      *
      * @param msgStatus 状态回复消息
@@ -161,6 +179,10 @@ public class DbPresenter {
             return null;
         } else if (status.getTime() > msgStatus.getTime()) {
             if (ServerSetting.DEBUG) {
+                Instant cacheInstant = Instant.ofEpochMilli(status.getTime());
+                Instant msgInstant = Instant.ofEpochMilli(msgStatus.getTime());
+                logger.info("已缓存时间:" + LocalDateTime.ofInstant(cacheInstant, ZoneId.systemDefault()).toString());
+                logger.info("消息时间:" + LocalDateTime.ofInstant(msgInstant, ZoneId.systemDefault()).toString());
                 logger.info("设备「" + msgStatus.getGroupId() + ", " + msgStatus.getDeviceId() + "」『"
                         + status.getStatus() + "->" + msgStatus.getStatus() + "』: " + msgStatus.getType().getDetail() + "已过期");
                 statisticUpdateMsgCount(msgStatus, MessageType.fixed);
@@ -182,7 +204,12 @@ public class DbPresenter {
             return null;
         }
 
+        // 设备状态已改变时，更新统计信息
         statisticUpdateMsgCount(msgStatus, MessageType.variable);
+        if (msgStatus.getType() == MsgReplyDeviceStatus.Type.WORK && msgStatus.getStatus() != WorkStatus.NORMAL) {
+            feedBackRepository.putItemIfAbsent(TcpFeedbackItem.createDeviceWorkException(msgStatus));
+        }
+
         //设备状态已改变时，继续更新考勤信息
         long l2 = System.currentTimeMillis();
         //根据设备中记录的考勤表索引，获取并更新员工的考勤表

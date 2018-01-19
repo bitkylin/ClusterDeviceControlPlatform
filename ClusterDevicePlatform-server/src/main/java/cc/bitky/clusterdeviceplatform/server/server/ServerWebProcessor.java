@@ -10,12 +10,11 @@ import cc.bitky.clusterdeviceplatform.server.db.DbPresenter;
 public class ServerWebProcessor {
 
     private final ServerCenterProcessor centerProcessor;
-    private final DbPresenter dbPresenter;
+
 
     @Autowired
-    public ServerWebProcessor(ServerCenterProcessor centerProcessor, DbPresenter dbPresenter) {
+    public ServerWebProcessor(ServerCenterProcessor centerProcessor) {
         this.centerProcessor = centerProcessor;
-        this.dbPresenter = dbPresenter;
     }
 
     public ServerTcpProcessor getTcpProcessor() {
@@ -23,7 +22,7 @@ public class ServerWebProcessor {
     }
 
     public DbPresenter getDbPresenter() {
-        return dbPresenter;
+        return centerProcessor.getDbPresenter();
     }
 
     public boolean sendMessageGrouped(BaseMsg message) {

@@ -99,10 +99,11 @@ public class ServerApplication {
         if (localProfile != null) {
             DbSetting.MONGODB_HOST = localProfile.数据库服务器的主机名或IP;
             CommSetting.FRAME_SEND_INTERVAL = localProfile.帧发送间隔;
-            CommSetting.DEPLOY_REMAIN_CHARGE_TIMES = localProfile.部署剩余充电次数阈值;
+            CommSetting.DEPLOY_REMAIN_CHARGE_TIMES = localProfile.部署剩余充电次数阈值 >= CommSetting.REMAIN_CHARGE_TIMES_CLEAR ? CommSetting.REMAIN_CHARGE_TIMES_CLEAR - 1 : localProfile.部署剩余充电次数阈值;
             DbSetting.DEFAULT_EMPLOYEE_CARD_NUMBER = localProfile.员工默认卡号;
             DbSetting.DEFAULT_EMPLOYEE_NAME = localProfile.员工默认姓名;
             DbSetting.DEFAULT_EMPLOYEE_DEPARTMENT = localProfile.员工默认部门;
+            DbSetting.NO_RESPONSE_INTERVAL = localProfile.通道未响应时间 * 1000;
             CommSetting.AUTO_REPEAT_REQUEST_TIMES = localProfile.检错重发最大重复次数;
             CommSetting.DEVICE_INIT_CHARGE_TIMES = localProfile.初始充电次数;
             CommSetting.DEPLOY_MSG_NEED_REPLY = localProfile.帧送达监测;

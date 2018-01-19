@@ -21,9 +21,10 @@ import cc.bitky.clusterdeviceplatform.messageutils.msgcodec.controlcenter.MsgCod
 import cc.bitky.clusterdeviceplatform.messageutils.msgcodec.statusreply.MsgCodecReplyStatusWork;
 import cc.bitky.clusterdeviceplatform.server.config.DeviceSetting;
 import cc.bitky.clusterdeviceplatform.server.server.ServerTcpProcessor;
-import cc.bitky.clusterdeviceplatform.server.tcp.exception.ExceptionMsgTcp;
 import cc.bitky.clusterdeviceplatform.server.tcp.repo.TcpRepository;
-import cc.bitky.clusterdeviceplatform.server.tcp.statistic.ChannelOutline;
+import cc.bitky.clusterdeviceplatform.server.tcp.statistic.channel.ChannelOutline;
+import cc.bitky.clusterdeviceplatform.server.tcp.statistic.except.TcpFeedbackItem;
+import cc.bitky.clusterdeviceplatform.server.tcp.statistic.except.TypeEnum;
 import io.netty.channel.Channel;
 
 /**
@@ -114,24 +115,25 @@ public class TcpPresenter {
     }
 
     /**
-     * Channel 已断开，进行断开后的扫尾工作
+     * Channel 已断开，进行扫尾工作并向上级反馈
      *
      * @param channel 已断开的 Channel
      */
     public void channelInactiveCompleted(Channel channel) {
-        tcpRepository.removeChannelCompleted(channel);
+        int channelIndex = tcpRepository.removeChannelCompleted(channel);
+        server.touchUnusualMsg(TcpFeedbackItem.createChannelDisconnect(channelIndex));
     }
 
     /**
-     * 「内部接口」捕获到异常消息对象时，回调该接口传出异常信息
+     * 「内部接口」捕获到异常消息对象时，回调该接口传出异常信息并向上级反馈
      *
      * @param msg 一场消息对象
      */
-    public void touchUnusualMsg(ExceptionMsgTcp msg) {
+    public void touchUnusualMsg(TcpFeedbackItem msg) {
+        logger.info("捕获到异常消息：" + msg.getDescription() + "原始消息：「" + msg.getBaseMsg().getMsgDetail() + "」");
         server.touchUnusualMsg(msg);
-        BaseMsg baseMsg = msg.getBaseMsg();
-        if (msg.getType() == ExceptionMsgTcp.Type.RESEND_OUT_BOUND) {
-            server.huntDeviceStatusMsg(MsgCodecReplyStatusWork.create(baseMsg.getGroupId(), baseMsg.getDeviceId(), WorkStatus.TRAFFIC_ERROR, System.currentTimeMillis()));
+        if (msg.getType() == TypeEnum.RESEND_OUT_BOUND) {
+            server.huntDeviceStatusMsg(MsgCodecReplyStatusWork.create(msg.getGroupId(), msg.getDeviceId(), WorkStatus.TRAFFIC_ERROR, System.currentTimeMillis()));
         }
     }
 

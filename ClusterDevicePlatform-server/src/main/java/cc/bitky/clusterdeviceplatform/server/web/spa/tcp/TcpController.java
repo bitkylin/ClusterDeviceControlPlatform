@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import cc.bitky.clusterdeviceplatform.server.server.ServerWebProcessor;
-import cc.bitky.clusterdeviceplatform.server.tcp.statistic.ChannelOutline;
+import cc.bitky.clusterdeviceplatform.server.tcp.statistic.channel.ChannelOutline;
 import cc.bitky.clusterdeviceplatform.server.web.spa.utils.ResMsg;
 
 import static cc.bitky.clusterdeviceplatform.server.config.ServerSetting.WEB_RANDOM_DEBUG;

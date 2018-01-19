@@ -2,7 +2,7 @@ package cc.bitky.clusterdeviceplatform.server.db.statistic.pressure;
 
 import java.util.List;
 
-import cc.bitky.clusterdeviceplatform.server.tcp.statistic.ChannelItem;
+import cc.bitky.clusterdeviceplatform.server.tcp.statistic.channel.ChannelItem;
 
 public class GroupCacheItem {
     /**

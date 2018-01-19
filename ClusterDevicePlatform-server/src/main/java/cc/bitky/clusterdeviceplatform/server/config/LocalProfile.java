@@ -5,6 +5,10 @@ package cc.bitky.clusterdeviceplatform.server.config;
  */
 public class LocalProfile {
     /**
+     * 已连接设备组未响应持续的时间间隔
+     */
+    public int 通道未响应时间 = 2 * 60;
+    /**
      * 监测帧是否成功送达客户端，未送达即重发
      */
     public boolean 帧送达监测 = true;

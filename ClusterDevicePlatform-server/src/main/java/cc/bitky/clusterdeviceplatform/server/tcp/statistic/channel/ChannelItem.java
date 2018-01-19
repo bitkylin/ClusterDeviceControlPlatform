@@ -1,4 +1,4 @@
-package cc.bitky.clusterdeviceplatform.server.tcp.statistic;
+package cc.bitky.clusterdeviceplatform.server.tcp.statistic.channel;
 
 /**
  * TCP模块中单个 Channel 的当前负载量

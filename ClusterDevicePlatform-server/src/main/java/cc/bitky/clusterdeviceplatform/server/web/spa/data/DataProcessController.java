@@ -49,7 +49,7 @@ public class DataProcessController {
         if (WEB_RANDOM_DEBUG) {
             outline = KyRandom.createOutline();
         } else {
-            outline = webProcessor.getRepository().createOutline();
+            outline = webProcessor.getMsgProcessingRepository().createOutline();
         }
         outline.setAlarmLimit(10, 100);
         long l2 = System.currentTimeMillis();
@@ -65,7 +65,7 @@ public class DataProcessController {
     @GetMapping("/devicegroup/pressure")
     public ResMsg getDeviceGroupPressure() {
         logger.info("/server/dataprocess/devicegroup/pressure");
-        GroupCacheItem item = webProcessor.getRepository().statisticChannelLoad();
+        GroupCacheItem item = webProcessor.getMsgProcessingRepository().statisticChannelLoad();
         item.setAlarmLimit(100, 500);
         return new ResMsg(item);
     }
@@ -78,7 +78,7 @@ public class DataProcessController {
         if (WEB_RANDOM_DEBUG) {
             outline = KyRandom.createDetail(groupId);
         } else {
-            outline = webProcessor.getRepository().createDetail(groupId);
+            outline = webProcessor.getMsgProcessingRepository().createDetail(groupId);
         }
         outline.setAlarmLimit(10, 100);
         long l2 = System.currentTimeMillis();

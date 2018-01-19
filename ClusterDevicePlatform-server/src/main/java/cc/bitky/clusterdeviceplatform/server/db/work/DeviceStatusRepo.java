@@ -2,6 +2,7 @@ package cc.bitky.clusterdeviceplatform.server.db.work;
 
 import org.springframework.stereotype.Repository;
 
+import java.util.concurrent.atomic.AtomicLongArray;
 import java.util.concurrent.atomic.AtomicReferenceArray;
 
 import cc.bitky.clusterdeviceplatform.messageutils.msg.statusreply.MsgReplyDeviceStatus;
@@ -15,6 +16,10 @@ public class DeviceStatusRepo {
      */
     private final AtomicReferenceArray<AtomicReferenceArray<StatusItem>> CHARGE_STATUS_STORAGE = new AtomicReferenceArray<>(DeviceSetting.MAX_GROUP_ID + 1);
     private final AtomicReferenceArray<AtomicReferenceArray<StatusItem>> WORK_STATUS_STORAGE = new AtomicReferenceArray<>(DeviceSetting.MAX_GROUP_ID + 1);
+    /**
+     * 设备组最近通信时间
+     */
+    private final AtomicLongArray DEVICEGROUP_RECENT_COMM = new AtomicLongArray(DeviceSetting.MAX_GROUP_ID + 1);
 
     {
         for (int i = 1; i < CHARGE_STATUS_STORAGE.length(); i++) {
@@ -57,6 +62,31 @@ public class DeviceStatusRepo {
     }
 
     /**
+     * 获取设备组最近通信时刻的时间戳
+     *
+     * @param groupId 设备组 ID
+     * @return 特定的时间戳
+     */
+    public long getDeviceGroupRecentCommTime(int groupId) {
+        if (groupId > DeviceSetting.MAX_GROUP_ID || groupId <= 0) {
+            return 0;
+        }
+        return DEVICEGROUP_RECENT_COMM.get(groupId);
+    }
+
+    /**
+     * 更新设备组最近通信时刻的时间戳
+     *
+     * @param groupId 设备组 ID
+     */
+    private void updateDeviceGroupRecentCommTime(int groupId) {
+        if (groupId > DeviceSetting.MAX_GROUP_ID || groupId <= 0) {
+            return;
+        }
+        DEVICEGROUP_RECENT_COMM.set(groupId, System.currentTimeMillis());
+    }
+
+    /**
      * 从服务器缓存中获取设备状态
      *
      * @param groupId  设备组 ID
@@ -68,6 +98,7 @@ public class DeviceStatusRepo {
         if (groupId > DeviceSetting.MAX_GROUP_ID || groupId <= 0 || deviceId > DeviceSetting.MAX_DEVICE_ID || deviceId <= 0) {
             return new StatusItem();
         }
+        updateDeviceGroupRecentCommTime(groupId);
         if (type == MsgReplyDeviceStatus.Type.CHARGE) {
             return getChargeStatus(groupId, deviceId);
         } else {

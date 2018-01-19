@@ -14,7 +14,7 @@ public class ServerSetting {
     /**
      * 项目版本号
      */
-    public static final String VERSION = "1.0.8";
+    public static final String VERSION = "1.8.5";
     /**
      * 本地配置文件名
      */

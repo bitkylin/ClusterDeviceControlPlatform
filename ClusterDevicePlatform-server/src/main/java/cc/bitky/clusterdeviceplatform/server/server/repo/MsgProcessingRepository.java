@@ -2,7 +2,7 @@ package cc.bitky.clusterdeviceplatform.server.server.repo;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,9 +25,13 @@ import cc.bitky.clusterdeviceplatform.server.db.statistic.status.DeviceGroupItem
 import cc.bitky.clusterdeviceplatform.server.db.statistic.status.DeviceGroupOutline;
 import cc.bitky.clusterdeviceplatform.server.db.statistic.status.DeviceItem;
 import cc.bitky.clusterdeviceplatform.server.server.ServerCenterProcessor;
-import cc.bitky.clusterdeviceplatform.server.tcp.statistic.ChannelItem;
+import cc.bitky.clusterdeviceplatform.server.tcp.statistic.channel.ChannelItem;
 
-@Service
+/**
+ * 设备消息处理缓存容器
+ * 用于设备向服务器大量发送状态信息的信息缓存，以便于服务器能够从容地处理捕获到的设备消息
+ */
+@Repository
 public class MsgProcessingRepository {
     /**
      * 待处理的「状态消息」队列的容器

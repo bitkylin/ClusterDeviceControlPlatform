@@ -9,6 +9,7 @@ import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 
 import cc.bitky.clusterdeviceplatform.server.config.ServerSetting;
+import cc.bitky.clusterdeviceplatform.server.server.repo.TcpFeedBackRepository;
 
 /**
  * 服务器当前状态信息
@@ -35,9 +36,9 @@ public class ServerStatusInfo {
      */
     String currentTime;
     /**
-     * 已处理消息数
+     * 未处理消息数
      */
-    long processedMsgCount = 0;
+    long processedMsgCount;
 
     public ServerStatusInfo() {
         LocalDateTime start = ServerSetting.SYSTEM_START_DATE_TIME;
@@ -69,6 +70,7 @@ public class ServerStatusInfo {
         builder.append(second).append("秒");
 
         runningTime = builder.toString();
+        processedMsgCount = TcpFeedBackRepository.FEEDBACK_ITEMS_COUNT.get();
     }
 
     public String getPid() {

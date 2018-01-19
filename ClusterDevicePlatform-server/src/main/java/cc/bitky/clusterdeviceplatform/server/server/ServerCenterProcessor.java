@@ -5,6 +5,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.concurrent.LinkedBlockingDeque;
 
 import cc.bitky.clusterdeviceplatform.messageutils.config.ChargeStatus;
@@ -12,29 +13,45 @@ import cc.bitky.clusterdeviceplatform.messageutils.define.base.BaseMsg;
 import cc.bitky.clusterdeviceplatform.messageutils.msg.statusreply.MsgReplyDeviceStatus;
 import cc.bitky.clusterdeviceplatform.messageutils.msgcodec.device.MsgCodecDeviceRemainChargeTimes;
 import cc.bitky.clusterdeviceplatform.server.config.CommSetting;
+import cc.bitky.clusterdeviceplatform.server.config.DbSetting;
 import cc.bitky.clusterdeviceplatform.server.config.DeviceSetting;
 import cc.bitky.clusterdeviceplatform.server.config.WebSetting;
 import cc.bitky.clusterdeviceplatform.server.db.DbPresenter;
 import cc.bitky.clusterdeviceplatform.server.db.bean.Device;
 import cc.bitky.clusterdeviceplatform.server.db.statistic.repo.ProcessedMsgRepo;
 import cc.bitky.clusterdeviceplatform.server.server.repo.MsgProcessingRepository;
+import cc.bitky.clusterdeviceplatform.server.server.repo.TcpFeedBackRepository;
+import cc.bitky.clusterdeviceplatform.server.tcp.statistic.channel.ChannelOutline;
+import cc.bitky.clusterdeviceplatform.server.tcp.statistic.except.TcpFeedbackItem;
 
 @Service
 public class ServerCenterProcessor {
     private static final Logger logger = LoggerFactory.getLogger(ServerCenterProcessor.class);
-    private final MsgProcessingRepository repository;
+    private final MsgProcessingRepository msgProcessingRepository;
+    private final TcpFeedBackRepository tcpFeedBackRepository;
+    private final DbPresenter dbPresenter;
     private ServerTcpProcessor tcpProcessor;
 
     @Autowired
-    public ServerCenterProcessor(MsgProcessingRepository repository, DbPresenter dbPresenter) {
-        this.repository = repository;
-        repository.setDbPresenter(dbPresenter);
-        repository.setServer(this);
+    public ServerCenterProcessor(MsgProcessingRepository msgProcessingRepository, DbPresenter dbPresenter, TcpFeedBackRepository tcpFeedBackRepository) {
+        this.msgProcessingRepository = msgProcessingRepository;
+        this.tcpFeedBackRepository = tcpFeedBackRepository;
+        this.dbPresenter = dbPresenter;
+        msgProcessingRepository.setDbPresenter(dbPresenter);
+        msgProcessingRepository.setServer(this);
         addJvmShutDownHook();
     }
 
-    public MsgProcessingRepository getRepository() {
-        return repository;
+    public DbPresenter getDbPresenter() {
+        return dbPresenter;
+    }
+
+    public TcpFeedBackRepository getTcpFeedBackRepository() {
+        return tcpFeedBackRepository;
+    }
+
+    public MsgProcessingRepository getMsgProcessingRepository() {
+        return msgProcessingRepository;
     }
 
     ServerTcpProcessor getTcpProcessor() {
@@ -72,9 +89,10 @@ public class ServerCenterProcessor {
         }
 
         if (groupId == WebSetting.BROADCAST_GROUP_ID) {
+            success = false;
             for (int tempGroupId = 1; tempGroupId <= DeviceSetting.MAX_GROUP_ID; tempGroupId++) {
-                if (!sendMessage(message.clone(tempGroupId, deviceId))) {
-                    success = false;
+                if (sendMessage(message.clone(tempGroupId, deviceId))) {
+                    success = true;
                 }
             }
             return success;
@@ -109,7 +127,7 @@ public class ServerCenterProcessor {
 
     public void huntDeviceStatusMsg(MsgReplyDeviceStatus message) {
         ProcessedMsgRepo.MSG_COUNT.incrementAndGet();
-        LinkedBlockingDeque<MsgReplyDeviceStatus> deque = repository.touchMessageQueue(message.getGroupId());
+        LinkedBlockingDeque<MsgReplyDeviceStatus> deque = msgProcessingRepository.touchMessageQueue(message.getGroupId());
         if (deque == null) {
             logger.warn("待处理的「状态消息」执行队列不存在，id:" + message.getGroupId());
             return;
@@ -129,5 +147,16 @@ public class ServerCenterProcessor {
             remainTimes = remainTimes > 0 ? remainTimes : 0;
             sendMessage(MsgCodecDeviceRemainChargeTimes.create(device.getGroupId(), device.getDeviceId(), remainTimes));
         }
+    }
+
+    public List<TcpFeedbackItem> getTcpFeedBackItems(String user) {
+        long currentTimeMillis = System.currentTimeMillis();
+        ChannelOutline channelOutline = tcpProcessor.statisticChannelLoad();
+        channelOutline.getChannelItems().forEach(item -> {
+            if (item.isEnabled() && (currentTimeMillis - dbPresenter.getDeviceGroupRecentCommTime(item.getId())) > DbSetting.NO_RESPONSE_INTERVAL) {
+                getTcpFeedBackRepository().putItemIfAbsent(TcpFeedbackItem.createChannelNoResponse(item.getId()));
+            }
+        });
+        return getTcpFeedBackRepository().getItems(user);
     }
 }

@@ -21,9 +21,9 @@ import cc.bitky.clusterdeviceplatform.messageutils.msg.statusreply.MsgReplyNorma
 import cc.bitky.clusterdeviceplatform.server.config.CommSetting;
 import cc.bitky.clusterdeviceplatform.server.config.DeviceSetting;
 import cc.bitky.clusterdeviceplatform.server.tcp.TcpPresenter;
-import cc.bitky.clusterdeviceplatform.server.tcp.exception.ExceptionMsgTcp;
-import cc.bitky.clusterdeviceplatform.server.tcp.statistic.ChannelItem;
-import cc.bitky.clusterdeviceplatform.server.tcp.statistic.ChannelOutline;
+import cc.bitky.clusterdeviceplatform.server.tcp.statistic.channel.ChannelItem;
+import cc.bitky.clusterdeviceplatform.server.tcp.statistic.channel.ChannelOutline;
+import cc.bitky.clusterdeviceplatform.server.tcp.statistic.except.TcpFeedbackItem;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.Channel;
 import io.netty.util.HashedWheelTimer;
@@ -152,7 +152,7 @@ public class TcpRepository {
                 server.sendMessageToTcp(msg);
             } else if (server != null) {
                 logger.warn("消息未收到回复已达上限:" + msg.getMsgDetail());
-                server.touchUnusualMsg(new ExceptionMsgTcp(msg, ExceptionMsgTcp.Type.RESEND_OUT_BOUND));
+                server.touchUnusualMsg(TcpFeedbackItem.createResendOutBound(msg));
             }
         }, CommSetting.FRAME_SENT_TO_DETECT_INTERVAL, TimeUnit.SECONDS);
     }
@@ -187,7 +187,6 @@ public class TcpRepository {
                     logger.warn("「Channel[" + index + "]」" + "新的 Channel 欲覆盖已激活的 Channel");
                 } else {
                     CHANNEL_ARRAY.set(index, channel);
-                    CHANNEL_MAP.remove(id);
                     logger.info("「Channel[" + index + "]」" + "新的 Channel 已成功装配 [" + id + "]");
                 }
                 return;
@@ -229,20 +228,22 @@ public class TcpRepository {
      * Channel 已断开，进行断开后的扫尾工作
      *
      * @param channel 已断开的 Channel
+     * @return 已断开的 Channel 的 ID
      */
-    public void removeChannelCompleted(Channel channel) {
+    public int removeChannelCompleted(Channel channel) {
         if (channel == null) {
-            return;
+            return -1;
         }
         String id = channel.id().asLongText();
         Integer index = CHANNEL_MAP.remove(id);
         if (index == null || index <= 0 || index > DeviceSetting.MAX_GROUP_ID) {
             logger.info("「Channel[" + (index == null ? "无" : index) + "]」" + "移除成功 Channel [" + id + "]");
-            return;
+            return -1;
         }
         CHANNEL_ARRAY.set(index, null);
         SENDING_MESSAGE_QUEUE.get(index).clear();
         logger.info("「Channel[" + index + "]」" + "移除成功 Channel [" + id + "]");
+        return index;
     }
 
     /**

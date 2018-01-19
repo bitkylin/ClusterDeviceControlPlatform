@@ -324,7 +324,11 @@ public class OperateDevicesRestController {
 
 
         if (queue.isRemainChargeTime()) {
-            webProcessor.sendMessageGrouped(MsgCodecDeviceRemainChargeTimes.create(device.getGroupId(), device.getDeviceId(), device.getRemainChargeTime()));
+            int remainChargeTime = device.getRemainChargeTime();
+            if (remainChargeTime > CommSetting.DEPLOY_REMAIN_CHARGE_TIMES) {
+                remainChargeTime = CommSetting.REMAIN_CHARGE_TIMES_CLEAR;
+            }
+            webProcessor.sendMessageGrouped(MsgCodecDeviceRemainChargeTimes.create(device.getGroupId(), device.getDeviceId(), remainChargeTime));
         }
         if (queue.isReplace()) {
             device.setRemainChargeTime(CommSetting.DEVICE_INIT_CHARGE_TIMES);

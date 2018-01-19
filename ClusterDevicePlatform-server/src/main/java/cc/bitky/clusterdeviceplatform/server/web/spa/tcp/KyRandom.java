@@ -5,8 +5,8 @@ import java.util.List;
 import java.util.Random;
 
 import cc.bitky.clusterdeviceplatform.server.config.DeviceSetting;
-import cc.bitky.clusterdeviceplatform.server.tcp.statistic.ChannelItem;
-import cc.bitky.clusterdeviceplatform.server.tcp.statistic.ChannelOutline;
+import cc.bitky.clusterdeviceplatform.server.tcp.statistic.channel.ChannelItem;
+import cc.bitky.clusterdeviceplatform.server.tcp.statistic.channel.ChannelOutline;
 
 public class KyRandom {
     public ChannelOutline create() {

@@ -8,8 +8,8 @@ import org.springframework.stereotype.Service;
 import cc.bitky.clusterdeviceplatform.messageutils.define.base.BaseMsg;
 import cc.bitky.clusterdeviceplatform.messageutils.msg.statusreply.MsgReplyDeviceStatus;
 import cc.bitky.clusterdeviceplatform.server.tcp.TcpPresenter;
-import cc.bitky.clusterdeviceplatform.server.tcp.exception.ExceptionMsgTcp;
-import cc.bitky.clusterdeviceplatform.server.tcp.statistic.ChannelOutline;
+import cc.bitky.clusterdeviceplatform.server.tcp.statistic.channel.ChannelOutline;
+import cc.bitky.clusterdeviceplatform.server.tcp.statistic.except.TcpFeedbackItem;
 
 @Service
 public class ServerTcpProcessor {
@@ -59,8 +59,8 @@ public class ServerTcpProcessor {
      *
      * @param msg 一场消息对象
      */
-    public void touchUnusualMsg(ExceptionMsgTcp msg) {
-        logger.info("捕获到异常消息：" + msg.getDetail() + "原始消息：「" + msg.getBaseMsg().getMsgDetail() + "」");
+    public void touchUnusualMsg(TcpFeedbackItem msg) {
+        centerProcessor.getTcpFeedBackRepository().putItemIfAbsent(msg);
     }
 
     public void shutDown() {

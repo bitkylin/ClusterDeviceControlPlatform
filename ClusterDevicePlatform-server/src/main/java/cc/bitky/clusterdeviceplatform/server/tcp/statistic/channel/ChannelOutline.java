@@ -1,4 +1,4 @@
-package cc.bitky.clusterdeviceplatform.server.tcp.statistic;
+package cc.bitky.clusterdeviceplatform.server.tcp.statistic.channel;
 
 import java.util.List;
 
