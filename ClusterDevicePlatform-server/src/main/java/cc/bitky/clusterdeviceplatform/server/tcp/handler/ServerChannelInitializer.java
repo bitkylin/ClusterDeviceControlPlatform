@@ -17,6 +17,7 @@ public class ServerChannelInitializer extends ChannelInitializer<NioSocketChanne
     private final MsgRecognitionOutBoundHandler recognitionOutBoundHandler;
     private final ConfigHandler configHandler;
 
+
     @Autowired
     public ServerChannelInitializer(FrameRecognitionInBoundHandler frameRecognitionInBoundHandler,
                                     ParsedMessageInBoundHandler parsedMessageInBoundHandler,
@@ -38,5 +39,4 @@ public class ServerChannelInitializer extends ChannelInitializer<NioSocketChanne
         ch.pipeline().addLast(parsedMessageInBoundHandler);
         ch.pipeline().addLast(recognitionOutBoundHandler);
     }
-
 }

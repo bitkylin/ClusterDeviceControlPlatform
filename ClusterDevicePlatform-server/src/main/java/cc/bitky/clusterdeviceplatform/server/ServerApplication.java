@@ -35,7 +35,7 @@ public class ServerApplication {
 
     public static void main(String[] args) {
         long l1 = System.currentTimeMillis();
-        if (dataBaseReachable() && initSetting()) {
+        if (initSetting() && dataBaseReachable()) {
             long l2 = System.currentTimeMillis();
             print("服务器预检查完成，共耗时 " + (l2 - l1) + " ms");
             SpringApplication.run(ServerApplication.class, args);

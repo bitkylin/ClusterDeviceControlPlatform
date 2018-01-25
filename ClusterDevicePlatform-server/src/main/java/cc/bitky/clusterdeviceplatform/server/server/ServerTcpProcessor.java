@@ -51,6 +51,8 @@ public class ServerTcpProcessor {
      */
     public void huntDeviceStatusMsg(MsgReplyDeviceStatus message) {
         logger.info("捕获到「待处理」消息对象：「" + message.getMsgDetail() + "」");
+        centerProcessor.getTcpFeedBackRepository().removeItem(TcpFeedbackItem.createChannelDisconnect(message.getGroupId()));
+        centerProcessor.getTcpFeedBackRepository().removeItem(TcpFeedbackItem.createResendOutBound(message));
         centerProcessor.huntDeviceStatusMsg(message);
     }
 
@@ -60,7 +62,7 @@ public class ServerTcpProcessor {
      * @param msg 一场消息对象
      */
     public void touchUnusualMsg(TcpFeedbackItem msg) {
-        centerProcessor.getTcpFeedBackRepository().putItemIfAbsent(msg);
+        centerProcessor.getTcpFeedBackRepository().putItem(msg);
     }
 
     public void shutDown() {

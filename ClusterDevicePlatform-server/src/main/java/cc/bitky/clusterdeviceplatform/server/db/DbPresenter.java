@@ -17,14 +17,13 @@ import cc.bitky.clusterdeviceplatform.messageutils.msg.statusreply.MsgReplyDevic
 import cc.bitky.clusterdeviceplatform.server.config.ServerSetting;
 import cc.bitky.clusterdeviceplatform.server.db.bean.CardSet;
 import cc.bitky.clusterdeviceplatform.server.db.bean.Device;
-import cc.bitky.clusterdeviceplatform.server.db.bean.Employee;
-import cc.bitky.clusterdeviceplatform.server.db.bean.routineinfo.StatusItem;
 import cc.bitky.clusterdeviceplatform.server.db.operate.CardSetOperate;
 import cc.bitky.clusterdeviceplatform.server.db.operate.DbRoutineOperate;
 import cc.bitky.clusterdeviceplatform.server.db.operate.DeviceOperate;
 import cc.bitky.clusterdeviceplatform.server.db.operate.EmployeeOperate;
 import cc.bitky.clusterdeviceplatform.server.db.statistic.repo.ProcessedMsgRepo;
-import cc.bitky.clusterdeviceplatform.server.db.work.DeviceStatusRepo;
+import cc.bitky.clusterdeviceplatform.server.db.work.bean.StatusItem;
+import cc.bitky.clusterdeviceplatform.server.server.repo.DeviceStatusRepository;
 import cc.bitky.clusterdeviceplatform.server.server.repo.TcpFeedBackRepository;
 import cc.bitky.clusterdeviceplatform.server.tcp.statistic.except.TcpFeedbackItem;
 import cc.bitky.clusterdeviceplatform.server.web.client.bean.CardType;
@@ -36,19 +35,22 @@ public class DbPresenter {
     private final CardSetOperate cardSetOperate;
     private final DeviceOperate deviceOperate;
     private final EmployeeOperate employeeOperate;
-    private final DeviceStatusRepo deviceStatusRepo;
+    private final DeviceStatusRepository deviceStatusRepository;
     private final DbRoutineOperate dbRoutineOperate;
     private final TcpFeedBackRepository feedBackRepository;
     private Logger logger = LoggerFactory.getLogger(getClass());
-
     @Autowired
-    public DbPresenter(CardSetOperate cardSetOperate, DeviceOperate deviceOperate, EmployeeOperate employeeOperate, DeviceStatusRepo deviceStatusRepo, DbRoutineOperate dbRoutineOperate, TcpFeedBackRepository feedBackRepository) {
+    public DbPresenter(CardSetOperate cardSetOperate, DeviceOperate deviceOperate, EmployeeOperate employeeOperate, DeviceStatusRepository deviceStatusRepository, DbRoutineOperate dbRoutineOperate, TcpFeedBackRepository feedBackRepository) {
         this.cardSetOperate = cardSetOperate;
         this.deviceOperate = deviceOperate;
         this.employeeOperate = employeeOperate;
-        this.deviceStatusRepo = deviceStatusRepo;
+        this.deviceStatusRepository = deviceStatusRepository;
         this.dbRoutineOperate = dbRoutineOperate;
         this.feedBackRepository = feedBackRepository;
+    }
+
+    public EmployeeOperate getEmployeeOperate() {
+        return employeeOperate;
     }
 
     /**
@@ -94,16 +96,6 @@ public class DbPresenter {
     }
 
     /**
-     * 根据 ObjectId 检索指定的员工对象
-     *
-     * @param objectId 员工的 ObjectId
-     * @return 指定的员工对象
-     */
-    public Optional<Employee> queryEmployee(String objectId) {
-        return employeeOperate.queryEmployee(objectId);
-    }
-
-    /**
      * 从服务器缓存中获取设备状态
      *
      * @param groupId  设备组 ID
@@ -112,7 +104,7 @@ public class DbPresenter {
      * @return 状态 Item
      */
     public StatusItem obtainStatusByCache(int groupId, int deviceId, MsgReplyDeviceStatus.Type type) {
-        return deviceStatusRepo.getStatus(groupId, deviceId, type);
+        return deviceStatusRepository.getStatus(groupId, deviceId, type);
     }
 
     /**
@@ -122,7 +114,7 @@ public class DbPresenter {
      * @return 特定的时间戳
      */
     public long getDeviceGroupRecentCommTime(int groupId) {
-        return deviceStatusRepo.getDeviceGroupRecentCommTime(groupId);
+        return deviceStatusRepository.getDeviceGroupRecentCommTime(groupId);
     }
 
 
@@ -189,10 +181,17 @@ public class DbPresenter {
             }
             return null;
         } else {
-            deviceStatusRepo.setStatus(msgStatus.getGroupId(), msgStatus.getDeviceId(), StatusItem.newInstance(msgStatus), msgStatus.getType());
+            // 设备状态可能已改变时，服务器缓存状态被更新
+            deviceStatusRepository.setStatus(msgStatus.getGroupId(), msgStatus.getDeviceId(), StatusItem.newInstance(msgStatus), msgStatus.getType());
+            // 设备状态可能已改变时，更新统计信息
+            if (msgStatus.getType() == MsgReplyDeviceStatus.Type.WORK && msgStatus.getStatus() != WorkStatus.NORMAL) {
+                feedBackRepository.putItem(TcpFeedbackItem.createDeviceWorkException(msgStatus));
+            } else if (msgStatus.getType() == MsgReplyDeviceStatus.Type.WORK && msgStatus.getStatus() == WorkStatus.NORMAL) {
+                feedBackRepository.removeItem(TcpFeedbackItem.createDeviceWorkException(msgStatus));
+            }
         }
 
-        //将状态更新至数据库，如若状态未更新则不提交至数据库
+        // 设备状态可能已改变时，将状态更新至数据库，如若状态未更新则不提交至数据库
         Device device;
         if (msgStatus.getType() == MsgReplyDeviceStatus.Type.CHARGE) {
             device = deviceOperate.handleChargeStatus(msgStatus);
@@ -206,9 +205,6 @@ public class DbPresenter {
 
         // 设备状态已改变时，更新统计信息
         statisticUpdateMsgCount(msgStatus, MessageType.variable);
-        if (msgStatus.getType() == MsgReplyDeviceStatus.Type.WORK && msgStatus.getStatus() != WorkStatus.NORMAL) {
-            feedBackRepository.putItemIfAbsent(TcpFeedbackItem.createDeviceWorkException(msgStatus));
-        }
 
         //设备状态已改变时，继续更新考勤信息
         long l2 = System.currentTimeMillis();

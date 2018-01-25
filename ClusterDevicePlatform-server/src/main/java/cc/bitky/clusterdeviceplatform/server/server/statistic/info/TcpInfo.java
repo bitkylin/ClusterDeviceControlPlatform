@@ -27,7 +27,7 @@ public class TcpInfo {
     public TcpInfo() {
         this.frameSendInterval = CommSetting.FRAME_SEND_INTERVAL;
         this.detectInterval = CommSetting.FRAME_SENT_TO_DETECT_INTERVAL;
-        this.commDelay = CommSetting.ACCESSIBLE_CHANNEL_REPLY_INTERVAL;
+        this.commDelay = CommSetting.ACCESSIBLE_CHANNEL_REPLY_INTERVAL / 1000;
         this.autoRepeatTimes = CommSetting.AUTO_REPEAT_REQUEST_TIMES;
         this.remainChargeTimes = CommSetting.DEPLOY_REMAIN_CHARGE_TIMES;
     }

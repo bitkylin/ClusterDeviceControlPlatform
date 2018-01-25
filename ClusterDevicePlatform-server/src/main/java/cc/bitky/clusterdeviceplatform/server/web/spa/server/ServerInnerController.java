@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import cc.bitky.clusterdeviceplatform.server.db.statistic.repo.ProcessedMsgRepo;
-import cc.bitky.clusterdeviceplatform.server.server.ServerWebProcessor;
+import cc.bitky.clusterdeviceplatform.server.server.ServerCenterProcessor;
 import cc.bitky.clusterdeviceplatform.server.server.statistic.CollectInfo;
 import cc.bitky.clusterdeviceplatform.server.server.statistic.utils.Test;
 import cc.bitky.clusterdeviceplatform.server.web.spa.utils.ResMsg;
@@ -21,11 +21,11 @@ import cc.bitky.clusterdeviceplatform.server.web.spa.utils.ResMsg;
 @RestController
 @RequestMapping(value = "/server/inner")
 public class ServerInnerController {
-    private final ServerWebProcessor serverProcessor;
+    private final ServerCenterProcessor serverProcessor;
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
     @Autowired
-    public ServerInnerController(ServerWebProcessor serverProcessor) {
+    public ServerInnerController(ServerCenterProcessor serverProcessor) {
         this.serverProcessor = serverProcessor;
     }
 
@@ -33,7 +33,7 @@ public class ServerInnerController {
     public ResMsg serverOutline() {
         logger.info("/server/inner/outline");
         long l1 = System.currentTimeMillis();
-        CollectInfo collectInfo = new CollectInfo();
+        CollectInfo collectInfo = new CollectInfo(serverProcessor);
         long l2 = System.currentTimeMillis();
         logger.info("耗时：" + (l2 - l1) + " ms");
         return new ResMsg(collectInfo);

@@ -9,7 +9,7 @@ import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 
 import cc.bitky.clusterdeviceplatform.server.config.ServerSetting;
-import cc.bitky.clusterdeviceplatform.server.server.repo.TcpFeedBackRepository;
+import cc.bitky.clusterdeviceplatform.server.server.ServerCenterProcessor;
 
 /**
  * 服务器当前状态信息
@@ -40,7 +40,7 @@ public class ServerStatusInfo {
      */
     long processedMsgCount;
 
-    public ServerStatusInfo() {
+    public ServerStatusInfo(ServerCenterProcessor serverProcessor) {
         LocalDateTime start = ServerSetting.SYSTEM_START_DATE_TIME;
         StartTime = start.format(DateTimeFormatter.ISO_LOCAL_DATE_TIME).replace('T', ' ').split("\\.")[0];
         LocalDateTime now = LocalDateTime.ofInstant(Instant.now(), ZoneId.systemDefault());
@@ -70,7 +70,7 @@ public class ServerStatusInfo {
         builder.append(second).append("秒");
 
         runningTime = builder.toString();
-        processedMsgCount = TcpFeedBackRepository.FEEDBACK_ITEMS_COUNT.get();
+        processedMsgCount = serverProcessor.getTcpFeedBackItems().size();
     }
 
     public String getPid() {

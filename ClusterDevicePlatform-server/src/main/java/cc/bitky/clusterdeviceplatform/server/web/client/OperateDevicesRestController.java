@@ -40,6 +40,7 @@ import cc.bitky.clusterdeviceplatform.server.config.WebSetting;
 import cc.bitky.clusterdeviceplatform.server.db.bean.Device;
 import cc.bitky.clusterdeviceplatform.server.db.bean.Employee;
 import cc.bitky.clusterdeviceplatform.server.server.ServerWebProcessor;
+import cc.bitky.clusterdeviceplatform.server.server.utils.DeviceOutBoundDetect;
 import cc.bitky.clusterdeviceplatform.server.web.client.bean.QueueDevice;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
@@ -117,11 +118,7 @@ public class OperateDevicesRestController {
      */
     @GetMapping("/unlock/iris/{groupId}/{deviceId}")
     public String operateDeviceUnlockByIris(@PathVariable int groupId, @PathVariable int deviceId) {
-        if (groupId > DeviceSetting.MAX_GROUP_ID
-                || groupId <= 0
-                || deviceId > DeviceSetting.MAX_DEVICE_ID
-                || deviceId <= 0) {
-
+        if (DeviceOutBoundDetect.detect(groupId, deviceId)) {
             logger.warn("「虹膜模块接口调取异常」设备定位信息，组号：" + groupId + ", 设备号：" + deviceId);
             return "error";
         }
@@ -310,7 +307,7 @@ public class OperateDevicesRestController {
      */
     private void deployEmployeeMsg(Device device, QueueDevice queue) {
         if (queue.isName() || queue.isDepartment()) {
-            Optional<Employee> optional = webProcessor.getDbPresenter().queryEmployee(device.getEmployeeObjectId());
+            Optional<Employee> optional = webProcessor.getDbPresenter().getEmployeeOperate().queryEmployee(device.getEmployeeObjectId());
             if (optional.isPresent() && queue.isName()) {
                 webProcessor.sendMessageGrouped(MsgCodecEmployeeName.create(device.getGroupId(), device.getDeviceId(), optional.get().getName()));
             }

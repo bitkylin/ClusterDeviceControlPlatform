@@ -11,20 +11,17 @@ import java.util.concurrent.ScheduledExecutorService;
 
 import cc.bitky.clusterdeviceplatform.messageutils.MsgProcessor;
 import cc.bitky.clusterdeviceplatform.messageutils.config.JointMsgType;
-import cc.bitky.clusterdeviceplatform.messageutils.config.WorkStatus;
 import cc.bitky.clusterdeviceplatform.messageutils.define.base.BaseMsg;
 import cc.bitky.clusterdeviceplatform.messageutils.define.frame.FrameMajorHeader;
 import cc.bitky.clusterdeviceplatform.messageutils.define.frame.SendableMsgContainer;
 import cc.bitky.clusterdeviceplatform.messageutils.msg.statusreply.MsgReplyDeviceStatus;
 import cc.bitky.clusterdeviceplatform.messageutils.msg.statusreply.MsgReplyNormal;
 import cc.bitky.clusterdeviceplatform.messageutils.msgcodec.controlcenter.MsgCodecHeartbeat;
-import cc.bitky.clusterdeviceplatform.messageutils.msgcodec.statusreply.MsgCodecReplyStatusWork;
 import cc.bitky.clusterdeviceplatform.server.config.DeviceSetting;
 import cc.bitky.clusterdeviceplatform.server.server.ServerTcpProcessor;
 import cc.bitky.clusterdeviceplatform.server.tcp.repo.TcpRepository;
 import cc.bitky.clusterdeviceplatform.server.tcp.statistic.channel.ChannelOutline;
 import cc.bitky.clusterdeviceplatform.server.tcp.statistic.except.TcpFeedbackItem;
-import cc.bitky.clusterdeviceplatform.server.tcp.statistic.except.TypeEnum;
 import io.netty.channel.Channel;
 
 /**
@@ -54,7 +51,7 @@ public class TcpPresenter {
     public boolean sendMessageToTcp(BaseMsg message) {
         Channel channel = tcpRepository.touchChannel(message.getGroupId());
         LinkedBlockingDeque<BaseMsg> deque = tcpRepository.touchMessageQueue(message.getGroupId());
-        if (channel == null || deque == null) {
+        if (channel == null || deque == null || !channel.isActive()) {
             return false;
         }
         deque.offer(message);
@@ -103,6 +100,7 @@ public class TcpPresenter {
                 server.huntDeviceStatusMsg((MsgReplyDeviceStatus) msg);
                 break;
             case JointMsgType.replyHeartBeat:
+                // 收到心跳包，设备组已激活
                 tcpRepository.accessChannelSuccessful(msg, channel);
                 break;
             default:
@@ -132,9 +130,9 @@ public class TcpPresenter {
     public void touchUnusualMsg(TcpFeedbackItem msg) {
         logger.info("捕获到异常消息：" + msg.getDescription() + "原始消息：「" + msg.getBaseMsg().getMsgDetail() + "」");
         server.touchUnusualMsg(msg);
-        if (msg.getType() == TypeEnum.RESEND_OUT_BOUND) {
-            server.huntDeviceStatusMsg(MsgCodecReplyStatusWork.create(msg.getGroupId(), msg.getDeviceId(), WorkStatus.TRAFFIC_ERROR, System.currentTimeMillis()));
-        }
+//        if (msg.getType() == TypeEnum.RESEND_OUT_BOUND) {
+//            server.huntDeviceStatusMsg(MsgCodecReplyStatusWork.create(msg.getGroupId(), msg.getDeviceId(), WorkStatus.TRAFFIC_ERROR, System.currentTimeMillis()));
+//        }
     }
 
     public void shutDown() {

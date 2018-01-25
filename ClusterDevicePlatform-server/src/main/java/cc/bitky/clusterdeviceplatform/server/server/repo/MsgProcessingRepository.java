@@ -18,7 +18,7 @@ import cc.bitky.clusterdeviceplatform.server.config.DeviceSetting;
 import cc.bitky.clusterdeviceplatform.server.config.ServerSetting;
 import cc.bitky.clusterdeviceplatform.server.db.DbPresenter;
 import cc.bitky.clusterdeviceplatform.server.db.bean.Device;
-import cc.bitky.clusterdeviceplatform.server.db.bean.routineinfo.StatusItem;
+import cc.bitky.clusterdeviceplatform.server.db.work.bean.StatusItem;
 import cc.bitky.clusterdeviceplatform.server.db.statistic.pressure.GroupCacheItem;
 import cc.bitky.clusterdeviceplatform.server.db.statistic.pressure.MsgCount;
 import cc.bitky.clusterdeviceplatform.server.db.statistic.status.DeviceGroupItem;

@@ -1,4 +1,4 @@
-package cc.bitky.clusterdeviceplatform.server.db.bean.routineinfo;
+package cc.bitky.clusterdeviceplatform.server.db.work.bean;
 
 
 import cc.bitky.clusterdeviceplatform.messageutils.msg.statusreply.MsgReplyDeviceStatus;

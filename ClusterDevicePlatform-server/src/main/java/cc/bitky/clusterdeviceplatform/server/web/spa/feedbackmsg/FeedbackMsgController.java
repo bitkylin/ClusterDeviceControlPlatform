@@ -6,7 +6,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
@@ -31,10 +30,10 @@ public class FeedbackMsgController {
     }
 
     @GetMapping("")
-    public ResMsg getFeedbackItems(@RequestParam(defaultValue = "default") String user) {
+    public ResMsg getFeedbackItems() {
         logger.info("/server/feedback/items/get");
         long l1 = System.currentTimeMillis();
-        List<TcpFeedbackItem> items = webProcessor.getTcpFeedBackItems(user);
+        List<TcpFeedbackItem> items = webProcessor.getTcpFeedBackItems();
         long l2 = System.currentTimeMillis();
         logger.info("耗时：" + (l2 - l1) + " ms");
         return new ResMsg(items);

@@ -1,5 +1,6 @@
 package cc.bitky.clusterdeviceplatform.server.server.statistic;
 
+import cc.bitky.clusterdeviceplatform.server.server.ServerCenterProcessor;
 import cc.bitky.clusterdeviceplatform.server.server.statistic.info.DataBaseInfo;
 import cc.bitky.clusterdeviceplatform.server.server.statistic.info.ServerInfo;
 import cc.bitky.clusterdeviceplatform.server.server.statistic.info.ServerSettingInfo;
@@ -17,10 +18,10 @@ public class CollectInfo {
     private TcpInfo tcpInfo;
     private TcpDetailInfo tcpDetailInfo;
 
-    public CollectInfo() {
+    public CollectInfo(ServerCenterProcessor serverProcessor) {
         this.serverInfo = new ServerInfo();
         this.serverSettingInfo = new ServerSettingInfo();
-        this.serverStatusInfo = new ServerStatusInfo();
+        this.serverStatusInfo = new ServerStatusInfo(serverProcessor);
         this.sysEnvInfo = new SysEnvInfo();
         this.dataBaseInfo = new DataBaseInfo();
         this.tcpInfo = new TcpInfo();

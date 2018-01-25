@@ -19,7 +19,7 @@ public class CommSetting {
     /**
      * 收到一个已激活的 Channel，直到校验结束所需要的时间「单位/s」
      */
-    public static int ACCESSIBLE_CHANNEL_REPLY_INTERVAL = 1;
+    public static int ACCESSIBLE_CHANNEL_REPLY_INTERVAL = 1000;
     /**
      * 检错重发最大次数，服务器向 TCP 通道发送 CAN 帧，最大重复发送次数
      */

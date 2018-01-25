@@ -23,7 +23,7 @@ import static cc.bitky.clusterdeviceplatform.server.config.ServerSetting.WEB_RAN
  */
 @CrossOrigin
 @RestController
-@RequestMapping(value = "/server/dataprocess")
+@RequestMapping(value = "/server/dataprocess/devicegroup")
 public class DataProcessController {
 
     @Autowired
@@ -35,13 +35,18 @@ public class DataProcessController {
      *
      * @return 返回消息对象
      */
-    @GetMapping("/devicegroup/count")
+    @GetMapping("/maxgroupcount")
     public ResMsg getDeviceGroupCount() {
         logger.info("/server/dataprocess/devicegroup/count");
         return new ResMsg(DeviceSetting.MAX_GROUP_ID);
     }
 
-    @GetMapping("/devicegroup/outline")
+    @GetMapping("/maxdevicecount")
+    public ResMsg getDeviceCount() {
+        return new ResMsg(DeviceSetting.MAX_DEVICE_ID);
+    }
+
+    @GetMapping("/outline")
     public ResMsg getDeviceGroupOutline() {
         logger.info("/server/dataprocess/devicegroup/outline");
         long l1 = System.currentTimeMillis();
@@ -62,7 +67,7 @@ public class DataProcessController {
      *
      * @return 返回消息对象
      */
-    @GetMapping("/devicegroup/pressure")
+    @GetMapping("/pressure")
     public ResMsg getDeviceGroupPressure() {
         logger.info("/server/dataprocess/devicegroup/pressure");
         GroupCacheItem item = webProcessor.getMsgProcessingRepository().statisticChannelLoad();
@@ -70,9 +75,9 @@ public class DataProcessController {
         return new ResMsg(item);
     }
 
-    @GetMapping("/device/detail/{groupId}")
+    @GetMapping("/detail/{groupId}")
     public ResMsg getDeviceByGroupId(@PathVariable int groupId) {
-        logger.info("/server/dataprocess/device/detail/" + groupId);
+        logger.info("/server/dataprocess/devicegroup/detail/" + groupId);
         long l1 = System.currentTimeMillis();
         DeviceGroupOutline outline;
         if (WEB_RANDOM_DEBUG) {
@@ -84,11 +89,6 @@ public class DataProcessController {
         long l2 = System.currentTimeMillis();
         logger.info("耗时：" + (l2 - l1) + " ms");
         return new ResMsg(outline);
-    }
-
-    @GetMapping("/device/count")
-    public ResMsg getDeviceCount() {
-        return new ResMsg(DeviceSetting.MAX_DEVICE_ID);
     }
 
     @GetMapping("/test")

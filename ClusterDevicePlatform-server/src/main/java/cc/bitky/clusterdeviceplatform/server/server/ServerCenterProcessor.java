@@ -19,6 +19,7 @@ import cc.bitky.clusterdeviceplatform.server.config.WebSetting;
 import cc.bitky.clusterdeviceplatform.server.db.DbPresenter;
 import cc.bitky.clusterdeviceplatform.server.db.bean.Device;
 import cc.bitky.clusterdeviceplatform.server.db.statistic.repo.ProcessedMsgRepo;
+import cc.bitky.clusterdeviceplatform.server.server.repo.DeviceStatusRepository;
 import cc.bitky.clusterdeviceplatform.server.server.repo.MsgProcessingRepository;
 import cc.bitky.clusterdeviceplatform.server.server.repo.TcpFeedBackRepository;
 import cc.bitky.clusterdeviceplatform.server.tcp.statistic.channel.ChannelOutline;
@@ -29,21 +30,27 @@ public class ServerCenterProcessor {
     private static final Logger logger = LoggerFactory.getLogger(ServerCenterProcessor.class);
     private final MsgProcessingRepository msgProcessingRepository;
     private final TcpFeedBackRepository tcpFeedBackRepository;
+    private final DeviceStatusRepository deviceStatusRepository;
     private final DbPresenter dbPresenter;
     private ServerTcpProcessor tcpProcessor;
-
     @Autowired
-    public ServerCenterProcessor(MsgProcessingRepository msgProcessingRepository, DbPresenter dbPresenter, TcpFeedBackRepository tcpFeedBackRepository) {
+    public ServerCenterProcessor(MsgProcessingRepository msgProcessingRepository, DbPresenter dbPresenter, TcpFeedBackRepository tcpFeedBackRepository, DeviceStatusRepository deviceStatusRepository) {
         this.msgProcessingRepository = msgProcessingRepository;
         this.tcpFeedBackRepository = tcpFeedBackRepository;
         this.dbPresenter = dbPresenter;
+        this.deviceStatusRepository = deviceStatusRepository;
         msgProcessingRepository.setDbPresenter(dbPresenter);
         msgProcessingRepository.setServer(this);
         addJvmShutDownHook();
     }
 
+
     public DbPresenter getDbPresenter() {
         return dbPresenter;
+    }
+
+    public DeviceStatusRepository getDeviceStatusRepository() {
+        return deviceStatusRepository;
     }
 
     public TcpFeedBackRepository getTcpFeedBackRepository() {
@@ -75,9 +82,9 @@ public class ServerCenterProcessor {
     boolean sendMessageGrouped(BaseMsg message) {
         int groupId = message.getGroupId();
         int deviceId = message.getDeviceId();
-        boolean success = true;
 
         if (groupId == WebSetting.BROADCAST_GROUP_ID && deviceId == WebSetting.BROADCAST_DEVICE_ID) {
+        boolean success = true;
             for (int tempGroupId = 1; tempGroupId <= DeviceSetting.MAX_GROUP_ID; tempGroupId++) {
                 for (int tempDeviceId = 1; tempDeviceId <= DeviceSetting.MAX_DEVICE_ID; tempDeviceId++) {
                     if (!sendMessage(message.clone(tempGroupId, tempDeviceId))) {
@@ -89,7 +96,7 @@ public class ServerCenterProcessor {
         }
 
         if (groupId == WebSetting.BROADCAST_GROUP_ID) {
-            success = false;
+            boolean  success = false;
             for (int tempGroupId = 1; tempGroupId <= DeviceSetting.MAX_GROUP_ID; tempGroupId++) {
                 if (sendMessage(message.clone(tempGroupId, deviceId))) {
                     success = true;
@@ -99,6 +106,7 @@ public class ServerCenterProcessor {
         }
 
         if (deviceId == WebSetting.BROADCAST_DEVICE_ID) {
+        boolean success = true;
             for (int tempDeviceId = 1; tempDeviceId <= DeviceSetting.MAX_DEVICE_ID; tempDeviceId++) {
                 if (!sendMessage(message.clone(groupId, tempDeviceId))) {
                     success = false;
@@ -149,14 +157,15 @@ public class ServerCenterProcessor {
         }
     }
 
-    public List<TcpFeedbackItem> getTcpFeedBackItems(String user) {
+    public List<TcpFeedbackItem> getTcpFeedBackItems() {
         long currentTimeMillis = System.currentTimeMillis();
         ChannelOutline channelOutline = tcpProcessor.statisticChannelLoad();
+        List<TcpFeedbackItem> items = getTcpFeedBackRepository().getItems();
         channelOutline.getChannelItems().forEach(item -> {
             if (item.isEnabled() && (currentTimeMillis - dbPresenter.getDeviceGroupRecentCommTime(item.getId())) > DbSetting.NO_RESPONSE_INTERVAL) {
-                getTcpFeedBackRepository().putItemIfAbsent(TcpFeedbackItem.createChannelNoResponse(item.getId()));
+                items.add(TcpFeedbackItem.createChannelNoResponse(item.getId()));
             }
         });
-        return getTcpFeedBackRepository().getItems(user);
+        return items;
     }
 }

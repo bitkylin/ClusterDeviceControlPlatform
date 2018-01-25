@@ -197,7 +197,7 @@ public class TcpRepository {
                 logger.warn("「Channel[" + index + "]」" + "新的 Channel 的 ID 超出范围 [" + id + "]");
             }
             manualRemoveChannel(channel);
-        }, CommSetting.ACCESSIBLE_CHANNEL_REPLY_INTERVAL, TimeUnit.SECONDS);
+        }, CommSetting.ACCESSIBLE_CHANNEL_REPLY_INTERVAL, TimeUnit.MILLISECONDS);
     }
 
     /**
