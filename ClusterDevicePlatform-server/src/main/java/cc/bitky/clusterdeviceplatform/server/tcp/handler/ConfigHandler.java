@@ -6,7 +6,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import cc.bitky.clusterdeviceplatform.server.tcp.TcpPresenter;
-import cc.bitky.clusterdeviceplatform.server.tcp.repo.TcpRepository;
 import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
@@ -16,7 +15,7 @@ import io.netty.channel.ChannelInboundHandlerAdapter;
 public class ConfigHandler extends ChannelInboundHandlerAdapter {
 
     private final TcpPresenter tcpPresenter;
-    private final Logger logger = LoggerFactory.getLogger(TcpRepository.class);
+    private final Logger logger = LoggerFactory.getLogger(getClass());
 
     @Autowired
     public ConfigHandler(TcpPresenter tcpPresenter) {

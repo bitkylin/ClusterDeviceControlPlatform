@@ -8,23 +8,22 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Service;
 
 import cc.bitky.clusterdeviceplatform.client.netty.TcpPresenter;
-import cc.bitky.clusterdeviceplatform.client.ui.view.MainView;
-import cc.bitky.clusterdeviceplatform.messageutils.define.BaseMsg;
+import cc.bitky.clusterdeviceplatform.client.ui.bean.Device;
+import cc.bitky.clusterdeviceplatform.client.ui.bean.DeviceCellRepo;
+import cc.bitky.clusterdeviceplatform.messageutils.define.base.BaseMsg;
 
 @Service
 public class ServerTcpHandler {
     private final Logger logger = LoggerFactory.getLogger(getClass());
     private final ApplicationContext appContext;
     private TcpPresenter tcpPresenter;
-    private MainView ui;
 
     @Autowired
-    public ServerTcpHandler(ApplicationContext appContext,TcpPresenter tcpPresenter) {
+    public ServerTcpHandler(ApplicationContext appContext, TcpPresenter tcpPresenter) {
         this.appContext = appContext;
         this.tcpPresenter = tcpPresenter;
         tcpPresenter.setServer(this);
     }
-
 
     /**
      * 启动特定编号的客户端
@@ -33,6 +32,15 @@ public class ServerTcpHandler {
      */
     public void startClient(int groupId) {
         tcpPresenter.startClient(groupId);
+    }
+
+    /**
+     * 主动断开特定 Channel 的连接
+     *
+     * @param i Channel 的 ID
+     */
+    public void removeChannel(int i) {
+        tcpPresenter.removeChannel(i);
     }
 
     /**
@@ -50,7 +58,8 @@ public class ServerTcpHandler {
      * @param message 消息对象
      */
     public void huntMessage(BaseMsg message) {
-
+        Device device = DeviceCellRepo.getDevice(message.getGroupId(), message.getDeviceId());
+        device.handleMsg(message);
     }
 
     /**
@@ -58,9 +67,5 @@ public class ServerTcpHandler {
      */
     public void shutdown() {
         System.exit(SpringApplication.exit(appContext));
-    }
-
-    public void setUi(MainView ui) {
-        this.ui = ui;
     }
 }

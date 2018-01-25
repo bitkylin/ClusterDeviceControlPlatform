@@ -10,19 +10,18 @@ import java.util.concurrent.LinkedBlockingDeque;
 import java.util.concurrent.ScheduledExecutorService;
 
 import cc.bitky.clusterdeviceplatform.messageutils.MsgProcessor;
-import cc.bitky.clusterdeviceplatform.messageutils.config.ChargeStatus;
-import cc.bitky.clusterdeviceplatform.messageutils.config.DeviceSetting;
 import cc.bitky.clusterdeviceplatform.messageutils.config.JointMsgType;
-import cc.bitky.clusterdeviceplatform.messageutils.define.BaseMsg;
+import cc.bitky.clusterdeviceplatform.messageutils.define.base.BaseMsg;
 import cc.bitky.clusterdeviceplatform.messageutils.define.frame.FrameMajorHeader;
 import cc.bitky.clusterdeviceplatform.messageutils.define.frame.SendableMsgContainer;
-import cc.bitky.clusterdeviceplatform.messageutils.msg.MsgReplyDeviceStatus;
-import cc.bitky.clusterdeviceplatform.messageutils.msg.MsgReplyNormal;
-import cc.bitky.clusterdeviceplatform.messageutils.msgcodec.MsgCodecHeartbeat;
-import cc.bitky.clusterdeviceplatform.messageutils.msgcodec.status.MsgCodecReplyStatusWork;
+import cc.bitky.clusterdeviceplatform.messageutils.msg.statusreply.MsgReplyDeviceStatus;
+import cc.bitky.clusterdeviceplatform.messageutils.msg.statusreply.MsgReplyNormal;
+import cc.bitky.clusterdeviceplatform.messageutils.msgcodec.controlcenter.MsgCodecHeartbeat;
+import cc.bitky.clusterdeviceplatform.server.config.DeviceSetting;
 import cc.bitky.clusterdeviceplatform.server.server.ServerTcpProcessor;
-import cc.bitky.clusterdeviceplatform.server.tcp.exception.ExceptionMsgTcp;
 import cc.bitky.clusterdeviceplatform.server.tcp.repo.TcpRepository;
+import cc.bitky.clusterdeviceplatform.server.tcp.statistic.channel.ChannelOutline;
+import cc.bitky.clusterdeviceplatform.server.tcp.statistic.except.TcpFeedbackItem;
 import io.netty.channel.Channel;
 
 /**
@@ -31,7 +30,7 @@ import io.netty.channel.Channel;
 @Service
 public class TcpPresenter {
     private static final ScheduledExecutorService executorService = Executors.newScheduledThreadPool(DeviceSetting.MAX_GROUP_ID);
-    private static final Logger logger = LoggerFactory.getLogger(TcpRepository.class);
+    private static final Logger logger = LoggerFactory.getLogger(TcpPresenter.class);
     private final TcpRepository tcpRepository;
     private final MsgProcessor msgProcessor;
     private ServerTcpProcessor server;
@@ -52,7 +51,7 @@ public class TcpPresenter {
     public boolean sendMessageToTcp(BaseMsg message) {
         Channel channel = tcpRepository.touchChannel(message.getGroupId());
         LinkedBlockingDeque<BaseMsg> deque = tcpRepository.touchMessageQueue(message.getGroupId());
-        if (channel == null || deque == null) {
+        if (channel == null || deque == null || !channel.isActive()) {
             return false;
         }
         deque.offer(message);
@@ -94,13 +93,14 @@ public class TcpPresenter {
             logger.warn("设备号出错「GroupId:" + msg.getGroupId() + "; DeviceId:" + msg.getDeviceId() + "」");
             return;
         }
-        logger.info("收到正常消息对象：「" + msg.getMsgDetail() + "」");
+        logger.debug("收到正常消息对象：「" + msg.getMsgDetail() + "」");
         switch (msg.getJointMsgFlag()) {
             case JointMsgType.replyWorkStatus:
             case JointMsgType.replyChargeStatus:
                 server.huntDeviceStatusMsg((MsgReplyDeviceStatus) msg);
                 break;
             case JointMsgType.replyHeartBeat:
+                // 收到心跳包，设备组已激活
                 tcpRepository.accessChannelSuccessful(msg, channel);
                 break;
             default:
@@ -113,24 +113,38 @@ public class TcpPresenter {
     }
 
     /**
-     * Channel 已断开，进行断开后的扫尾工作
+     * Channel 已断开，进行扫尾工作并向上级反馈
      *
      * @param channel 已断开的 Channel
      */
     public void channelInactiveCompleted(Channel channel) {
-        tcpRepository.removeChannelCompleted(channel);
+        int channelIndex = tcpRepository.removeChannelCompleted(channel);
+        server.touchUnusualMsg(TcpFeedbackItem.createChannelDisconnect(channelIndex));
     }
 
     /**
-     * 「内部接口」发生异常时回调该接口传出异常信息
+     * 「内部接口」捕获到异常消息对象时，回调该接口传出异常信息并向上级反馈
      *
      * @param msg 一场消息对象
      */
-    public void touchUnusualMsg(ExceptionMsgTcp msg) {
+    public void touchUnusualMsg(TcpFeedbackItem msg) {
+        logger.info("捕获到异常消息：" + msg.getDescription() + "原始消息：「" + msg.getBaseMsg().getMsgDetail() + "」");
         server.touchUnusualMsg(msg);
-        BaseMsg baseMsg = msg.getBaseMsg();
-        if (msg.getType() == ExceptionMsgTcp.Type.RESEND_OUT_BOUND) {
-            server.huntDeviceStatusMsg(MsgCodecReplyStatusWork.create(baseMsg.getGroupId(), baseMsg.getDeviceId(), ChargeStatus.TRAFFIC_ERROR));
-        }
+//        if (msg.getType() == TypeEnum.RESEND_OUT_BOUND) {
+//            server.huntDeviceStatusMsg(MsgCodecReplyStatusWork.create(msg.getGroupId(), msg.getDeviceId(), WorkStatus.TRAFFIC_ERROR, System.currentTimeMillis()));
+//        }
+    }
+
+    public void shutDown() {
+        tcpRepository.removeAllChannel();
+    }
+
+    //--------------- 数据统计 ---------------
+
+    /**
+     * 统计所有 Channel 的当前待发送消息数量
+     */
+    public ChannelOutline statisticChannelLoad() {
+        return tcpRepository.statisticChannelLoad();
     }
 }

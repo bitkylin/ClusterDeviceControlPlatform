@@ -13,15 +13,17 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicReferenceArray;
 
-import cc.bitky.clusterdeviceplatform.messageutils.config.DeviceSetting;
 import cc.bitky.clusterdeviceplatform.messageutils.config.FrameSetting;
-import cc.bitky.clusterdeviceplatform.messageutils.define.BaseMsg;
+import cc.bitky.clusterdeviceplatform.messageutils.define.base.BaseMsg;
 import cc.bitky.clusterdeviceplatform.messageutils.define.frame.FrameMajorHeader;
 import cc.bitky.clusterdeviceplatform.messageutils.define.frame.SendableMsgContainer;
-import cc.bitky.clusterdeviceplatform.messageutils.msg.MsgReplyNormal;
+import cc.bitky.clusterdeviceplatform.messageutils.msg.statusreply.MsgReplyNormal;
 import cc.bitky.clusterdeviceplatform.server.config.CommSetting;
+import cc.bitky.clusterdeviceplatform.server.config.DeviceSetting;
 import cc.bitky.clusterdeviceplatform.server.tcp.TcpPresenter;
-import cc.bitky.clusterdeviceplatform.server.tcp.exception.ExceptionMsgTcp;
+import cc.bitky.clusterdeviceplatform.server.tcp.statistic.channel.ChannelItem;
+import cc.bitky.clusterdeviceplatform.server.tcp.statistic.channel.ChannelOutline;
+import cc.bitky.clusterdeviceplatform.server.tcp.statistic.except.TcpFeedbackItem;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.Channel;
 import io.netty.util.HashedWheelTimer;
@@ -37,7 +39,7 @@ public class TcpRepository {
      */
     private final HashedWheelTimer HASHED_WHEEL_TIMER = new HashedWheelTimer();
     /**
-     * 已激活「识别」的 Channel 容器
+     * 已激活的 Channel 容器
      */
     private final AtomicReferenceArray<Channel> CHANNEL_ARRAY = new AtomicReferenceArray<>(DeviceSetting.MAX_GROUP_ID + 1);
     /**
@@ -56,7 +58,7 @@ public class TcpRepository {
      * 定时任务「定时检索待发送消息队列」执行线程池
      */
     private final ScheduledExecutorService executorService = Executors.newScheduledThreadPool(DeviceSetting.MAX_GROUP_ID);
-    private final Logger logger = LoggerFactory.getLogger(TcpRepository.class);
+    private final Logger logger = LoggerFactory.getLogger(getClass());
     private TcpPresenter server;
 
     {
@@ -103,7 +105,7 @@ public class TcpRepository {
                     length += data.readableBytes();
                     dataList.add(data);
                     deque.poll();
-                    touchNeedReplyMsg(baseMsg);
+                    touchNeedReplyMsg(subMsg);
                 }
                 FrameMajorHeader frameHeader = new FrameMajorHeader(
                         baseMsg.getMajorMsgId(),
@@ -116,7 +118,7 @@ public class TcpRepository {
                 logger.warn("消息队列定时发送任务被中断");
                 //TODO 消息队列定时发送任务被中断
             }
-        }, channelId * 10, CommSetting.FRAME_SEND_INTERVAL, TimeUnit.MILLISECONDS);
+        }, channelId, CommSetting.FRAME_SEND_INTERVAL, TimeUnit.MILLISECONDS);
     }
 
     /**
@@ -150,7 +152,7 @@ public class TcpRepository {
                 server.sendMessageToTcp(msg);
             } else if (server != null) {
                 logger.warn("消息未收到回复已达上限:" + msg.getMsgDetail());
-                server.touchUnusualMsg(new ExceptionMsgTcp(msg, ExceptionMsgTcp.Type.RESEND_OUT_BOUND));
+                server.touchUnusualMsg(TcpFeedbackItem.createResendOutBound(msg));
             }
         }, CommSetting.FRAME_SENT_TO_DETECT_INTERVAL, TimeUnit.SECONDS);
     }
@@ -171,28 +173,31 @@ public class TcpRepository {
      */
     public void accessibleChannel(Channel channel) {
         String id = channel.id().asLongText();
-        logger.info("「Channel」" + "新的 Channel 接入 [" + id + "]");
+        logger.info("「Channel」" + "新的 Channel 等待接入 [" + id + "]");
         CHANNEL_MAP.put(id, -1);
         HASHED_WHEEL_TIMER.newTimeout(task -> {
-            Integer index = CHANNEL_MAP.get(id);
-            if (index == -1) {
-                logger.warn("「Channel」" + "新的 Channel 未反馈 ID [" + id + "]");
-                channel.disconnect();
-            } else if (index > 0 && index <= DeviceSetting.MAX_GROUP_ID) {
+            Integer index = CHANNEL_MAP.getOrDefault(id, -1);
+
+            if (index > 0 && index <= DeviceSetting.MAX_GROUP_ID) {
                 SENDING_MESSAGE_QUEUE.get(index).clear();
                 Channel oldChannel = CHANNEL_ARRAY.get(index);
                 if (oldChannel != null && oldChannel.isActive()) {
-                    manualRemoveChannel(CHANNEL_ARRAY.get(index));
+                    manualRemoveChannel(oldChannel);
                     manualRemoveChannel(channel);
-                    logger.warn("「Channel」" + "新的 Channel 欲覆盖已激活的 Channel [" + id + "]");
+                    logger.warn("「Channel[" + index + "]」" + "新的 Channel 欲覆盖已激活的 Channel");
                 } else {
                     CHANNEL_ARRAY.set(index, channel);
-                    logger.info("「Channel」" + "新的 Channel「" + index + "」已成功装配 [" + id + "]");
+                    logger.info("「Channel[" + index + "]」" + "新的 Channel 已成功装配 [" + id + "]");
                 }
-            } else {
-                logger.warn("「Channel」" + "新的 Channel 装配出错 [" + id + "]");
+                return;
             }
-        }, CommSetting.ACCESSIBLE_CHANNEL_REPLY_INTERVAL, TimeUnit.SECONDS);
+            if (index == -1) {
+                logger.warn("「Channel[" + index + "]」" + "新的 Channel 未反馈 ID [" + id + "]");
+            } else {
+                logger.warn("「Channel[" + index + "]」" + "新的 Channel 的 ID 超出范围 [" + id + "]");
+            }
+            manualRemoveChannel(channel);
+        }, CommSetting.ACCESSIBLE_CHANNEL_REPLY_INTERVAL, TimeUnit.MILLISECONDS);
     }
 
     /**
@@ -203,32 +208,8 @@ public class TcpRepository {
      */
     public void accessChannelSuccessful(BaseMsg msg, Channel channel) {
         String id = channel.id().asLongText();
-        logger.info("「Channel」" + "新的 Channel 接入 [" + id + "]");
+        logger.info("「Channel[" + msg.getGroupId() + "]待接入」" + "新的 Channel 接入 [" + id + "]");
         CHANNEL_MAP.put(id, msg.getGroupId());
-    }
-
-    /**
-     * Channel 已断开，进行断开后的扫尾工作
-     *
-     * @param channel 已断开的 Channel
-     */
-    public void removeChannelCompleted(Channel channel) {
-        if (channel == null) {
-            return;
-        }
-        if (channel.isActive()) {
-            manualRemoveChannel(channel);
-            return;
-        }
-        String id = channel.id().asLongText();
-        Integer index = CHANNEL_MAP.remove(id);
-        if (index != null && index > 0 && index <= DeviceSetting.MAX_GROUP_ID) {
-            CHANNEL_ARRAY.set(index, null);
-            SENDING_MESSAGE_QUEUE.get(index).clear();
-            logger.info("「Channel」" + "移除成功 Channel「" + index + "」[" + id + "]");
-        } else {
-            logger.warn("「Channel」" + "移除出错 Channel「" + index + "」[" + id + "]");
-        }
     }
 
     /**
@@ -239,9 +220,30 @@ public class TcpRepository {
     private void manualRemoveChannel(Channel channel) {
         if (channel.isActive()) {
             channel.disconnect();
-        } else {
-            removeChannelCompleted(channel);
         }
+        removeChannelCompleted(channel);
+    }
+
+    /**
+     * Channel 已断开，进行断开后的扫尾工作
+     *
+     * @param channel 已断开的 Channel
+     * @return 已断开的 Channel 的 ID
+     */
+    public int removeChannelCompleted(Channel channel) {
+        if (channel == null) {
+            return -1;
+        }
+        String id = channel.id().asLongText();
+        Integer index = CHANNEL_MAP.remove(id);
+        if (index == null || index <= 0 || index > DeviceSetting.MAX_GROUP_ID) {
+            logger.info("「Channel[" + (index == null ? "无" : index) + "]」" + "移除成功 Channel [" + id + "]");
+            return -1;
+        }
+        CHANNEL_ARRAY.set(index, null);
+        SENDING_MESSAGE_QUEUE.get(index).clear();
+        logger.info("「Channel[" + index + "]」" + "移除成功 Channel [" + id + "]");
+        return index;
     }
 
     /**
@@ -256,5 +258,42 @@ public class TcpRepository {
 
     public void setServer(TcpPresenter server) {
         this.server = server;
+    }
+
+    /**
+     * 服务器优雅关闭时，关闭所有的已激活 Channel
+     */
+    public void removeAllChannel() {
+        for (int i = 1; i < CHANNEL_ARRAY.length(); i++) {
+            Channel channel = CHANNEL_ARRAY.get(i);
+            if (channel != null && channel.isActive()) {
+                channel.disconnect();
+            }
+        }
+    }
+
+    //--------------- 数据统计 ---------------
+
+    /**
+     * 统计所有 Channel 的当前待发送消息数量
+     */
+    public ChannelOutline statisticChannelLoad() {
+        List<ChannelItem> items = new ArrayList<>(DeviceSetting.MAX_GROUP_ID);
+        int activated = 0;
+        int inactivated = 0;
+        for (int i = 1; i <= DeviceSetting.MAX_GROUP_ID; i++) {
+            Channel channel = CHANNEL_ARRAY.get(i);
+            boolean itemActivated = channel != null && channel.isActive();
+            if (itemActivated) {
+                activated++;
+            } else {
+                inactivated++;
+            }
+            ChannelItem item = new ChannelItem(i, itemActivated, SENDING_MESSAGE_QUEUE.get(i).size());
+            items.add(item);
+        }
+        int waitToActivate = CHANNEL_MAP.size();
+
+        return new ChannelOutline(items, activated, inactivated, waitToActivate);
     }
 }

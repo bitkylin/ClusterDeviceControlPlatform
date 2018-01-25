@@ -6,11 +6,12 @@ import org.springframework.stereotype.Service;
 
 import cc.bitky.clusterdeviceplatform.client.server.ServerTcpHandler;
 import cc.bitky.clusterdeviceplatform.client.ui.view.UiLauncher;
+import cc.bitky.clusterdeviceplatform.messageutils.define.base.BaseMsg;
 
 @Service
 public class UiPresenter implements CommandLineRunner {
 
-    private ServerTcpHandler server;
+    public final ServerTcpHandler server;
 
     @Autowired
     public UiPresenter(ServerTcpHandler server) {
@@ -24,5 +25,9 @@ public class UiPresenter implements CommandLineRunner {
 
     public void shutdown() {
         server.shutdown();
+    }
+
+    public void sendMessage(BaseMsg message) {
+        server.sendMessage(message);
     }
 }

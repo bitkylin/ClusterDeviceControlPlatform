@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import java.net.InetSocketAddress;
 
+import cc.bitky.clusterdeviceplatform.server.config.ServerSetting;
 import cc.bitky.clusterdeviceplatform.server.tcp.handler.ServerChannelInitializer;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelFuture;
@@ -32,12 +33,12 @@ public class NettyServer implements CommandLineRunner {
         bootstrap.group(group)
                 .channel(NioServerSocketChannel.class)
                 .childHandler(serverChannelInitializer);
-        ChannelFuture channelFuture = bootstrap.bind(new InetSocketAddress(30232));
+        ChannelFuture channelFuture = bootstrap.bind(new InetSocketAddress(ServerSetting.SERVER_TCP_PORT));
         channelFuture.addListener(future -> {
             if (future.isSuccess()) {
-                logger.info("「Netty」服务器启动成功");
+                logger.info("「Netty」模块启动成功");
             } else {
-                logger.info("「Netty」服务器启动失败");
+                logger.info("「Netty」模块启动失败");
             }
         });
     }

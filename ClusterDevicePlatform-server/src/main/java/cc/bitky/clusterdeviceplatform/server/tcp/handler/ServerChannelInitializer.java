@@ -3,6 +3,7 @@ package cc.bitky.clusterdeviceplatform.server.tcp.handler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import cc.bitky.clusterdeviceplatform.server.config.ServerSetting;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.socket.nio.NioSocketChannel;
 import io.netty.handler.logging.LogLevel;
@@ -16,8 +17,12 @@ public class ServerChannelInitializer extends ChannelInitializer<NioSocketChanne
     private final MsgRecognitionOutBoundHandler recognitionOutBoundHandler;
     private final ConfigHandler configHandler;
 
+
     @Autowired
-    public ServerChannelInitializer(FrameRecognitionInBoundHandler frameRecognitionInBoundHandler, ParsedMessageInBoundHandler parsedMessageInBoundHandler, MsgRecognitionOutBoundHandler recognitionOutBoundHandler, ConfigHandler configHandler) {
+    public ServerChannelInitializer(FrameRecognitionInBoundHandler frameRecognitionInBoundHandler,
+                                    ParsedMessageInBoundHandler parsedMessageInBoundHandler,
+                                    MsgRecognitionOutBoundHandler recognitionOutBoundHandler,
+                                    ConfigHandler configHandler) {
         this.frameRecognitionInBoundHandler = frameRecognitionInBoundHandler;
         this.parsedMessageInBoundHandler = parsedMessageInBoundHandler;
         this.recognitionOutBoundHandler = recognitionOutBoundHandler;
@@ -27,7 +32,9 @@ public class ServerChannelInitializer extends ChannelInitializer<NioSocketChanne
     @Override
     protected void initChannel(NioSocketChannel ch) throws Exception {
         ch.pipeline().addLast(configHandler);
-        ch.pipeline().addLast(new LoggingHandler("kyOutlineLogger", LogLevel.INFO));
+        if (ServerSetting.DEBUG) {
+            ch.pipeline().addLast(new LoggingHandler("kyOutlineLogger", LogLevel.INFO));
+        }
         ch.pipeline().addLast(frameRecognitionInBoundHandler);
         ch.pipeline().addLast(parsedMessageInBoundHandler);
         ch.pipeline().addLast(recognitionOutBoundHandler);

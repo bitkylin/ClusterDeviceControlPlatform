@@ -19,7 +19,7 @@ public class CommSetting {
     /**
      * 收到一个已激活的 Channel，直到校验结束所需要的时间「单位/s」
      */
-    public static int ACCESSIBLE_CHANNEL_REPLY_INTERVAL = 1;
+    public static int ACCESSIBLE_CHANNEL_REPLY_INTERVAL = 1000;
     /**
      * 检错重发最大次数，服务器向 TCP 通道发送 CAN 帧，最大重复发送次数
      */
@@ -32,4 +32,8 @@ public class CommSetting {
      * 当设备中记录的剩余充电次数小于该值时，则向设备发送剩余充电次数
      */
     public static int DEPLOY_REMAIN_CHARGE_TIMES = 20;
+    /**
+     * 下发该次数时，设备自行清空剩余充电次数的显示
+     */
+    public static int REMAIN_CHARGE_TIMES_CLEAR = 254;
 }
