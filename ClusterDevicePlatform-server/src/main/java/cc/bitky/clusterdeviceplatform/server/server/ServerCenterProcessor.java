@@ -13,7 +13,6 @@ import cc.bitky.clusterdeviceplatform.messageutils.define.base.BaseMsg;
 import cc.bitky.clusterdeviceplatform.messageutils.msg.statusreply.MsgReplyDeviceStatus;
 import cc.bitky.clusterdeviceplatform.messageutils.msgcodec.device.MsgCodecDeviceRemainChargeTimes;
 import cc.bitky.clusterdeviceplatform.server.config.CommSetting;
-import cc.bitky.clusterdeviceplatform.server.config.DbSetting;
 import cc.bitky.clusterdeviceplatform.server.config.DeviceSetting;
 import cc.bitky.clusterdeviceplatform.server.config.WebSetting;
 import cc.bitky.clusterdeviceplatform.server.db.DbPresenter;
@@ -22,7 +21,6 @@ import cc.bitky.clusterdeviceplatform.server.db.statistic.repo.ProcessedMsgRepo;
 import cc.bitky.clusterdeviceplatform.server.server.repo.DeviceStatusRepository;
 import cc.bitky.clusterdeviceplatform.server.server.repo.MsgProcessingRepository;
 import cc.bitky.clusterdeviceplatform.server.server.repo.TcpFeedBackRepository;
-import cc.bitky.clusterdeviceplatform.server.tcp.statistic.channel.ChannelOutline;
 import cc.bitky.clusterdeviceplatform.server.tcp.statistic.except.TcpFeedbackItem;
 
 @Service
@@ -159,13 +157,13 @@ public class ServerCenterProcessor {
 
     public List<TcpFeedbackItem> getTcpFeedBackItems() {
         long currentTimeMillis = System.currentTimeMillis();
-        ChannelOutline channelOutline = tcpProcessor.statisticChannelLoad();
         List<TcpFeedbackItem> items = getTcpFeedBackRepository().getItems();
-        channelOutline.getChannelItems().forEach(item -> {
-            if (item.isEnabled() && (currentTimeMillis - dbPresenter.getDeviceGroupRecentCommTime(item.getId())) > DbSetting.NO_RESPONSE_INTERVAL) {
-                items.add(TcpFeedbackItem.createChannelNoResponse(item.getId()));
-            }
-        });
         return items;
+//        ChannelOutline channelOutline = tcpProcessor.statisticChannelLoad();
+//        channelOutline.getChannelItems().forEach(item -> {
+//            if (item.isEnabled() && (currentTimeMillis - dbPresenter.getDeviceGroupRecentCommTime(item.getId())) > DbSetting.NO_RESPONSE_INTERVAL) {
+//                items.add(TcpFeedbackItem.createChannelNoResponse(item.getId()));
+//            }
+//        });
     }
 }

@@ -6,9 +6,13 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.LinkedBlockingDeque;
+import java.util.concurrent.atomic.AtomicBoolean;
 
+import cc.bitky.clusterdeviceplatform.messageutils.msgcodec.controlcenter.MsgCodecHeartbeat;
 import cc.bitky.clusterdeviceplatform.server.config.DbSetting;
+import cc.bitky.clusterdeviceplatform.server.config.DeviceSetting;
 import cc.bitky.clusterdeviceplatform.server.tcp.statistic.except.TcpFeedbackItem;
+import cc.bitky.clusterdeviceplatform.server.tcp.statistic.except.TypeEnum;
 
 /**
  * 用于TCP反馈消息对象的缓存容器
@@ -16,6 +20,16 @@ import cc.bitky.clusterdeviceplatform.server.tcp.statistic.except.TcpFeedbackIte
 @Repository
 public class TcpFeedBackRepository {
     private final LinkedBlockingDeque<TcpFeedbackItem> feedbackItems = new LinkedBlockingDeque<>();
+    /**
+     * 设备运行状态正常「无未响应，无断开，无重发」
+     */
+    private final AtomicBoolean[] channelNormalList = new AtomicBoolean[DeviceSetting.MAX_GROUP_ID + 1];
+
+    {
+        for (int i = 1; i <= DeviceSetting.MAX_GROUP_ID; i++) {
+            channelNormalList[i] = new AtomicBoolean(true);
+        }
+    }
 
     /**
      * 向队列中添加该项，若已存在该项，则覆盖
@@ -27,6 +41,12 @@ public class TcpFeedBackRepository {
         feedbackItems.offer(item);
         if (feedbackItems.size() > DbSetting.FEEDBACK_ITEM_SIZE_MAX) {
             feedbackItems.poll();
+        }
+
+        if (item.getType() == TypeEnum.RESEND_OUT_BOUND ||
+                item.getType() == TypeEnum.CHANNEL_DISCONNECT ||
+                item.getType() == TypeEnum.DEVICE_GROUP_NO_RESPONSE) {
+            channelNormalList[item.getGroupId()].set(false);
         }
     }
 
@@ -43,5 +63,19 @@ public class TcpFeedBackRepository {
 
     public void clearItems() {
         feedbackItems.clear();
+    }
+
+    /**
+     * 将设备的异常状态去除，恢复为正常状态
+     *
+     * @param groupId 设备组 ID
+     */
+    public void recoveryItem(int groupId) {
+        if (!channelNormalList[groupId].get()) {
+            removeItem(TcpFeedbackItem.createChannelDisconnect(groupId));
+            removeItem(TcpFeedbackItem.createChannelNoResponse(groupId));
+            removeItem(TcpFeedbackItem.createResendOutBound(MsgCodecHeartbeat.create(groupId)));
+            channelNormalList[groupId].set(true);
+        }
     }
 }

@@ -6,13 +6,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import cc.bitky.clusterdeviceplatform.server.tcp.TcpPresenter;
+import io.netty.channel.ChannelDuplexHandler;
 import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
-import io.netty.channel.ChannelInboundHandlerAdapter;
+import io.netty.handler.timeout.ReadTimeoutException;
 
 @Service
 @ChannelHandler.Sharable
-public class ConfigHandler extends ChannelInboundHandlerAdapter {
+public class ConfigHandler extends ChannelDuplexHandler {
 
     private final TcpPresenter tcpPresenter;
     private final Logger logger = LoggerFactory.getLogger(getClass());
@@ -36,6 +37,10 @@ public class ConfigHandler extends ChannelInboundHandlerAdapter {
 
     @Override
     public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
-        logger.info(cause.getLocalizedMessage());
+        logger.warn("Channel抛出异常: " + cause.toString());
+        if (cause instanceof ReadTimeoutException) {
+            logger.info("Channel未响应，正在断开");
+            tcpPresenter.channelNoResponse(ctx.channel());
+        }
     }
 }

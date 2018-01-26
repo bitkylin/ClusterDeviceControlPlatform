@@ -3,6 +3,7 @@ package cc.bitky.clusterdeviceplatform.server.tcp.handler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import cc.bitky.clusterdeviceplatform.server.config.CommSetting;
 import cc.bitky.clusterdeviceplatform.server.config.ServerSetting;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.socket.nio.NioSocketChannel;
@@ -30,7 +31,10 @@ public class ServerChannelInitializer extends ChannelInitializer<NioSocketChanne
     }
 
     @Override
-    protected void initChannel(NioSocketChannel ch) throws Exception {
+    protected void initChannel(NioSocketChannel ch) {
+        if (CommSetting.NO_RESPONSE_MONITOR) {
+            ch.pipeline().addLast(new KyReadTimeoutHandler(CommSetting.NO_RESPONSE_INTERVAL));
+        }
         ch.pipeline().addLast(configHandler);
         if (ServerSetting.DEBUG) {
             ch.pipeline().addLast(new LoggingHandler("kyOutlineLogger", LogLevel.INFO));

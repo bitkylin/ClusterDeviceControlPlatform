@@ -43,7 +43,7 @@ public class TcpRepository {
      */
     private final AtomicReferenceArray<Channel> CHANNEL_ARRAY = new AtomicReferenceArray<>(DeviceSetting.MAX_GROUP_ID + 1);
     /**
-     * 待识别的已接入的 Channel 容器
+     * 已接入的 Channel 容器「待识别及已激活」
      */
     private final ConcurrentHashMap<String, Integer> CHANNEL_MAP = new ConcurrentHashMap<>(DeviceSetting.MAX_GROUP_ID + 1);
     /**
@@ -67,6 +67,17 @@ public class TcpRepository {
             SENDING_MESSAGE_QUEUE.set(i, new LinkedBlockingDeque<>());
             startMessageQueueTask(SENDING_MESSAGE_QUEUE.get(i), i);
         }
+    }
+
+    /**
+     * 获取指定 Channel 的设备组 ID
+     *
+     * @param channel 指定的 Channel
+     * @return 指定的设备组 ID
+     */
+    public int getGroupIdByChannel(Channel channel) {
+        String id = channel.id().asLongText();
+        return CHANNEL_MAP.getOrDefault(id, -1);
     }
 
     /**
@@ -292,7 +303,8 @@ public class TcpRepository {
             ChannelItem item = new ChannelItem(i, itemActivated, SENDING_MESSAGE_QUEUE.get(i).size());
             items.add(item);
         }
-        int waitToActivate = CHANNEL_MAP.size();
+
+        int waitToActivate = CHANNEL_MAP.size() - activated;
 
         return new ChannelOutline(items, activated, inactivated, waitToActivate);
     }

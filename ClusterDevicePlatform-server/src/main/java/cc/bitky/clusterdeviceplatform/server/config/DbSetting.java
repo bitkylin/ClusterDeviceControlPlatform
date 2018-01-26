@@ -18,11 +18,6 @@ public class DbSetting {
      */
     public static int FEEDBACK_ITEM_SIZE_MAX = 500;
     /**
-     * 已连接通道未响应持续的时间间隔「ms」
-     */
-    public static int NO_RESPONSE_INTERVAL = 60 * 2 * 1000;
-
-    /**
      * 默认员工卡号
      */
     public static String DEFAULT_EMPLOYEE_CARD_NUMBER = "0";

@@ -103,16 +103,41 @@ public class ServerApplication {
             DbSetting.DEFAULT_EMPLOYEE_CARD_NUMBER = localProfile.员工默认卡号;
             DbSetting.DEFAULT_EMPLOYEE_NAME = localProfile.员工默认姓名;
             DbSetting.DEFAULT_EMPLOYEE_DEPARTMENT = localProfile.员工默认部门;
-            DbSetting.NO_RESPONSE_INTERVAL = localProfile.通道未响应时间 * 1000;
+            CommSetting.NO_RESPONSE_INTERVAL = localProfile.通道未响应时间;
             CommSetting.AUTO_REPEAT_REQUEST_TIMES = localProfile.检错重发最大重复次数;
-            CommSetting.DEVICE_INIT_CHARGE_TIMES = localProfile.初始充电次数;
+//            CommSetting.DEVICE_INIT_CHARGE_TIMES = localProfile.初始充电次数;
+            CommSetting.NO_RESPONSE_MONITOR = localProfile.通道无响应监测;
             CommSetting.DEPLOY_MSG_NEED_REPLY = localProfile.帧送达监测;
             ServerSetting.DEBUG = localProfile.调试模式;
             ServerSetting.WEB_RANDOM_DEBUG = localProfile.随机Web数据模式;
             ServerSetting.SERVER_TCP_PORT = localProfile.服务器端口号;
+            trimProfileProperty(localProfile);
             return true;
         }
         printWarn("外部配置文件读取错误，请使用「服务器预设置」软件进行设置");
         return false;
+    }
+
+    private static void trimProfileProperty(LocalProfile localProfile) {
+        if (localProfile.员工默认卡号 == null || "".equals(localProfile.员工默认卡号.trim())) {
+            localProfile.员工默认卡号 = "0";
+        } else {
+            localProfile.员工默认卡号 = localProfile.员工默认卡号.trim();
+        }
+        if (localProfile.员工默认姓名 == null || "".equals(localProfile.员工默认姓名.trim())) {
+            localProfile.员工默认姓名 = "";
+        } else {
+            localProfile.员工默认姓名 = localProfile.员工默认姓名.trim();
+        }
+        if (localProfile.员工默认部门 == null || "".equals(localProfile.员工默认部门.trim())) {
+            localProfile.员工默认部门 = "";
+        } else {
+            localProfile.员工默认部门 = localProfile.员工默认部门.trim();
+        }
+        if (localProfile.数据库服务器的主机名或IP == null || "".equals(localProfile.数据库服务器的主机名或IP.trim())) {
+            localProfile.数据库服务器的主机名或IP = "";
+        } else {
+            localProfile.数据库服务器的主机名或IP = localProfile.数据库服务器的主机名或IP.trim();
+        }
     }
 }

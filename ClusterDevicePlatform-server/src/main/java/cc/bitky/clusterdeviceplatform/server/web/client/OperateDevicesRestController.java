@@ -156,13 +156,13 @@ public class OperateDevicesRestController {
     @GetMapping("/replace/{groupId}/{deviceId}")
     public String operateDeviceReplace(@PathVariable int groupId,
                                        @PathVariable int deviceId) {
-        QueueDevice queueDevice = new QueueDevice(groupId, deviceId);
-        queueDevice.setReplace(true);
-        if (queryAndDeployDeviceMsg(queueDevice)) {
-            return "success";
-        } else {
-            return "error";
-        }
+//        QueueDevice queueDevice = new QueueDevice(groupId, deviceId);
+//        queueDevice.setReplace(true);
+//        if (queryAndDeployDeviceMsg(queueDevice)) {
+        return "已废弃";
+//        } else {
+//            return "error";
+//        }
     }
 
     /**
@@ -327,10 +327,10 @@ public class OperateDevicesRestController {
             }
             webProcessor.sendMessageGrouped(MsgCodecDeviceRemainChargeTimes.create(device.getGroupId(), device.getDeviceId(), remainChargeTime));
         }
-        if (queue.isReplace()) {
-            device.setRemainChargeTime(CommSetting.DEVICE_INIT_CHARGE_TIMES);
-            webProcessor.getDbPresenter().saveDeviceInfo(device);
-        }
+//        if (queue.isReplace()) {
+//            device.setRemainChargeTime(CommSetting.DEVICE_INIT_CHARGE_TIMES);
+//            webProcessor.getDbPresenter().saveDeviceInfo(device);
+//        }
         webProcessor.sendMessageGrouped(MsgCodecDeviceEnabled.create(device.getGroupId(), device.getDeviceId(), queue.isEnabled()));
     }
 }

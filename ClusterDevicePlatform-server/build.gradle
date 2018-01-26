@@ -19,7 +19,7 @@ apply plugin: 'org.springframework.boot'
 apply plugin: 'io.spring.dependency-management'
 
 group = 'cc.bitky.ClusterDevicePlatform'
-version = '1.8.6-release'
+version = '1.8.8-release'
 sourceCompatibility = 1.8
 
 repositories {
@@ -38,4 +38,5 @@ dependencies {
     compile 'io.netty:netty-all:4.1.19.Final'
     compile 'com.alibaba:fastjson:1.2.44'
     compile files('D:\\project\\github\\ClusterDevicePlatform\\messageUtils\\build\\libs\\messageUtils-1.6.jar')
+//    compile files('D:\\project\\github\\ClusterDevicePlatform\\整理\\ClusterDevicePlatform2018-1-23\\ClusterDevicePlatform-client-1.8.6-release.jar')
 }
