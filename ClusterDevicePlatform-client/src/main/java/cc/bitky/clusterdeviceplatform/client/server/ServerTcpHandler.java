@@ -7,6 +7,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Service;
 
+import cc.bitky.clusterdeviceplatform.client.config.DeviceSetting;
 import cc.bitky.clusterdeviceplatform.client.netty.TcpPresenter;
 import cc.bitky.clusterdeviceplatform.client.ui.bean.Device;
 import cc.bitky.clusterdeviceplatform.client.ui.bean.DeviceCellRepo;
@@ -66,6 +67,9 @@ public class ServerTcpHandler {
      * Netty 服务器优雅关闭
      */
     public void shutdown() {
+        for(int i = 1; i <= DeviceSetting.MAX_GROUP_ID; ++i) {
+            this.tcpPresenter.removeChannel(i);
+        }
         System.exit(SpringApplication.exit(appContext));
     }
 }

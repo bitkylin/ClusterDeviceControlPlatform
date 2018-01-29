@@ -13,4 +13,8 @@ public class CommSetting {
      * 服务器端口号
      */
     public static int SERVER_PORT = 30232;
+    /**
+     * TCP 通道验证时间
+     */
+    public static int ACCESSIBLE_CHANNEL_REPLY_INTERVAL = 1000;
 }
