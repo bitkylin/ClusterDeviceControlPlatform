@@ -97,6 +97,7 @@ public class ServerApplication {
             printWarn("「外部配置文件」反序列化失败");
         }
         if (localProfile != null) {
+            trimProfileProperty(localProfile);
             DbSetting.MONGODB_HOST = localProfile.数据库服务器的主机名或IP;
             CommSetting.FRAME_SEND_INTERVAL = localProfile.帧发送间隔;
             CommSetting.DEPLOY_REMAIN_CHARGE_TIMES = localProfile.部署剩余充电次数阈值 >= CommSetting.REMAIN_CHARGE_TIMES_CLEAR ? CommSetting.REMAIN_CHARGE_TIMES_CLEAR - 1 : localProfile.部署剩余充电次数阈值;
@@ -111,7 +112,6 @@ public class ServerApplication {
             ServerSetting.DEBUG = localProfile.调试模式;
             ServerSetting.WEB_RANDOM_DEBUG = localProfile.随机Web数据模式;
             ServerSetting.SERVER_TCP_PORT = localProfile.服务器端口号;
-            trimProfileProperty(localProfile);
             return true;
         }
         printWarn("外部配置文件读取错误，请使用「服务器预设置」软件进行设置");
