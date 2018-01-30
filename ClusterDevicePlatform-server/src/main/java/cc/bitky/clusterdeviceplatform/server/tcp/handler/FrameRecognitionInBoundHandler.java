@@ -18,7 +18,7 @@ import io.netty.channel.SimpleChannelInboundHandler;
 @Service
 @ChannelHandler.Sharable
 public class FrameRecognitionInBoundHandler extends SimpleChannelInboundHandler<ByteBuf> {
-    Logger logger = LoggerFactory.getLogger(getClass());
+    private Logger logger = LoggerFactory.getLogger(getClass());
 
 
     @Override

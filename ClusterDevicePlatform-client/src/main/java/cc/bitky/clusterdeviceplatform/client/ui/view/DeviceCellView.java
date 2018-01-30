@@ -101,14 +101,14 @@ public class DeviceCellView extends JFXTabPane {
                 return "正常";
             case WorkStatus.OVERCURRENT:
                 return "过流";
-            case WorkStatus.TRAFFIC_ERROR:
-                return "通信故障";
             case WorkStatus.HUNG_ERROR:
                 return "未挂好";
+            case WorkStatus.DOGE_ERROR:
+                return "DOGE故障";
             case WorkStatus.LIGHT_SENSE:
                 return "光感故障";
-            case WorkStatus.CHARGE_ERROR:
-                return "充电故障";
+            case WorkStatus.TRAFFIC_ERROR:
+                return "通信故障";
             case WorkStatus.WORK_TIME_OVER:
                 return "下井超时";
             case WorkStatus.CHARGING_TIME_OVER:
@@ -130,6 +130,8 @@ public class DeviceCellView extends JFXTabPane {
                 return "充电中";
             case ChargeStatus.FULL:
                 return "已充满";
+            case ChargeStatus.DOGE_ERROR:
+                return "DOGE";
             default:
                 return "未知状态";
         }

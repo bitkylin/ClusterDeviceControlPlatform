@@ -39,6 +39,7 @@ public class DbPresenter {
     private final DbRoutineOperate dbRoutineOperate;
     private final TcpFeedBackRepository feedBackRepository;
     private Logger logger = LoggerFactory.getLogger(getClass());
+
     @Autowired
     public DbPresenter(CardSetOperate cardSetOperate, DeviceOperate deviceOperate, EmployeeOperate employeeOperate, DeviceStatusRepository deviceStatusRepository, DbRoutineOperate dbRoutineOperate, TcpFeedBackRepository feedBackRepository) {
         this.cardSetOperate = cardSetOperate;

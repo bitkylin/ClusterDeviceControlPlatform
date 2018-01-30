@@ -57,7 +57,7 @@ public class StatusGatherController {
 
     @GetMapping("/gather")
     public ResMsg gatherEmployeeStatus() {
-        logger.info("/server/dataprocess/statusgather/rebuild");
+        logger.info("/server/dataprocess/statusgather/gather");
         long l1 = System.currentTimeMillis();
 
         DeviceStatusRepository repository = centerProcessor.getCenterProcessor().getDeviceStatusRepository();

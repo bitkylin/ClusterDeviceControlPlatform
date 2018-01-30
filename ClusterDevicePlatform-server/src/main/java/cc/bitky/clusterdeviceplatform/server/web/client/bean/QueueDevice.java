@@ -32,10 +32,10 @@ public class QueueDevice {
      * 部署剩余充电次数
      */
     private boolean remainChargeTime;
-    /**
-     * 设备更新：重置剩余充电次数
-     */
-    private boolean replace;
+//    /**
+//     * 设备更新：重置剩余充电次数
+//     */
+//    private boolean replace;
     /**
      * 卡号集合的类型
      */
@@ -64,14 +64,6 @@ public class QueueDevice {
 
     public void setCardSetType(CardType cardSetType) {
         this.cardSetType = cardSetType;
-    }
-
-    public boolean isReplace() {
-        return replace;
-    }
-
-    public void setReplace(boolean replace) {
-        this.replace = replace;
     }
 
     public int getGroupId() {

@@ -23,13 +23,22 @@ public class TcpInfo {
      * 当设备中记录的剩余充电次数小于该值时，则向设备发送剩余充电次数
      */
     private int remainChargeTimes;
+    /**
+     * 已连接通道未响应持续的时间间隔「s」
+     */
+    private int noResponseInterval;
 
     public TcpInfo() {
         this.frameSendInterval = CommSetting.FRAME_SEND_INTERVAL;
         this.detectInterval = CommSetting.FRAME_SENT_TO_DETECT_INTERVAL;
-        this.commDelay = CommSetting.ACCESSIBLE_CHANNEL_REPLY_INTERVAL / 1000;
+        this.commDelay = CommSetting.ACCESSIBLE_CHANNEL_REPLY_INTERVAL;
         this.autoRepeatTimes = CommSetting.AUTO_REPEAT_REQUEST_TIMES;
         this.remainChargeTimes = CommSetting.DEPLOY_REMAIN_CHARGE_TIMES;
+        this.noResponseInterval = CommSetting.NO_RESPONSE_INTERVAL;
+    }
+
+    public int getNoResponseInterval() {
+        return noResponseInterval;
     }
 
     public int getFrameSendInterval() {

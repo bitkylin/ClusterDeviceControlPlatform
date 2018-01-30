@@ -14,9 +14,11 @@ import cc.bitky.clusterdeviceplatform.messageutils.config.JointMsgType;
 import cc.bitky.clusterdeviceplatform.messageutils.define.base.BaseMsg;
 import cc.bitky.clusterdeviceplatform.messageutils.define.frame.FrameMajorHeader;
 import cc.bitky.clusterdeviceplatform.messageutils.define.frame.SendableMsgContainer;
+import cc.bitky.clusterdeviceplatform.messageutils.dynamicsetting.DefaultEmployeeInfo;
 import cc.bitky.clusterdeviceplatform.messageutils.msg.statusreply.MsgReplyDeviceStatus;
 import cc.bitky.clusterdeviceplatform.messageutils.msg.statusreply.MsgReplyNormal;
 import cc.bitky.clusterdeviceplatform.messageutils.msgcodec.controlcenter.MsgCodecHeartbeat;
+import cc.bitky.clusterdeviceplatform.server.config.DbSetting;
 import cc.bitky.clusterdeviceplatform.server.config.DeviceSetting;
 import cc.bitky.clusterdeviceplatform.server.server.ServerTcpProcessor;
 import cc.bitky.clusterdeviceplatform.server.tcp.repo.TcpRepository;
@@ -40,6 +42,7 @@ public class TcpPresenter {
         this.tcpRepository = tcpRepository;
         tcpRepository.setServer(this);
         this.msgProcessor = MsgProcessor.getInstance();
+        MsgProcessor.setDeviceDefaultDeploy(new DefaultEmployeeInfo(DbSetting.DEFAULT_EMPLOYEE_CARD_NUMBER, DbSetting.DEFAULT_EMPLOYEE_NAME, DbSetting.DEFAULT_EMPLOYEE_DEPARTMENT));
     }
 
     /**
@@ -130,9 +133,6 @@ public class TcpPresenter {
     public void touchUnusualMsg(TcpFeedbackItem msg) {
         logger.info("捕获到异常消息：" + msg.getDescription() + "原始消息：「" + msg.getBaseMsg().getMsgDetail() + "」");
         server.touchUnusualMsg(msg);
-//        if (msg.getType() == TypeEnum.RESEND_OUT_BOUND) {
-//            server.huntDeviceStatusMsg(MsgCodecReplyStatusWork.create(msg.getGroupId(), msg.getDeviceId(), WorkStatus.TRAFFIC_ERROR, System.currentTimeMillis()));
-//        }
     }
 
     public void shutDown() {
@@ -146,5 +146,15 @@ public class TcpPresenter {
      */
     public ChannelOutline statisticChannelLoad() {
         return tcpRepository.statisticChannelLoad();
+    }
+
+    /**
+     * 「内部接口」通道无响应时的回调方法
+     *
+     * @param channel 无响应的通道
+     */
+    public void channelNoResponse(Channel channel) {
+        int channelId = tcpRepository.getGroupIdByChannel(channel);
+        server.touchUnusualMsg(TcpFeedbackItem.createChannelNoResponse(channelId));
     }
 }

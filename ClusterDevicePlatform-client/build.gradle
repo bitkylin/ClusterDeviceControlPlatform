@@ -1,6 +1,6 @@
 buildscript {
     ext {
-        springBootVersion = '2.0.0.M6'
+        springBootVersion = '2.0.0.M7'
     }
     repositories {
         google()
@@ -19,7 +19,7 @@ apply plugin: 'org.springframework.boot'
 apply plugin: 'io.spring.dependency-management'
 
 group = 'cc.bitky.ClusterDevicePlatform'
-version = '0.5-dev'
+version = '1.8.8-release'
 sourceCompatibility = 1.8
 
 repositories {
@@ -34,12 +34,13 @@ tasks.withType(JavaCompile) {
 
 dependencies {
     compile('org.springframework.boot:spring-boot-starter')
-    compile group: 'io.netty', name: 'netty-all', version: '4.1.16.Final'
-    compile group: 'com.alibaba', name: 'fastjson', version: '1.2.39'
+    compile('org.springframework.boot:spring-boot-starter-web')
+    compile group: 'io.netty', name: 'netty-all', version: '4.1.19.Final'
+    compile group: 'com.alibaba', name: 'fastjson', version: '1.2.44'
     compile 'com.jfoenix:jfoenix:1.10.0'
     compile 'io.datafx:datafx:8.0.1'
     compile 'io.datafx:flow:8.0.1'
-    compile files('D:\\project\\github\\ClusterDevicePlatform\\messageUtils\\build\\libs\\messageUtils-0.2.jar')
+    compile files('D:\\project\\github\\ClusterDevicePlatform\\messageUtils\\build\\libs\\messageUtils-1.6.jar')
 
     testCompile('org.springframework.boot:spring-boot-starter-test')
 }
