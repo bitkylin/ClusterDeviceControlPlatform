@@ -1,3 +1,7 @@
+setting
+src/test/java/
+*.exe
+
 /.gradle/
 /build/
 /gradle/

@@ -13,6 +13,7 @@ import cc.bitky.clusterdeviceplatform.server.config.DeviceSetting;
 import cc.bitky.clusterdeviceplatform.server.db.statistic.pressure.GroupCacheItem;
 import cc.bitky.clusterdeviceplatform.server.db.statistic.status.DeviceGroupOutline;
 import cc.bitky.clusterdeviceplatform.server.server.ServerCenterProcessor;
+import cc.bitky.clusterdeviceplatform.server.web.spa.data.random.MsgCountRandom;
 import cc.bitky.clusterdeviceplatform.server.web.spa.utils.ResMsg;
 
 import static cc.bitky.clusterdeviceplatform.server.config.ServerSetting.WEB_RANDOM_DEBUG;
@@ -25,7 +26,7 @@ import static cc.bitky.clusterdeviceplatform.server.config.ServerSetting.WEB_RAN
 @RestController
 @RequestMapping(value = "/server/dataprocess/devicegroup")
 public class DataProcessController {
-
+    MsgCountRandom countRandom;
     @Autowired
     ServerCenterProcessor webProcessor;
     private Logger logger = LoggerFactory.getLogger(getClass());
@@ -70,7 +71,12 @@ public class DataProcessController {
     @GetMapping("/pressure")
     public ResMsg getDeviceGroupPressure() {
         logger.info("/server/dataprocess/devicegroup/pressure");
-        GroupCacheItem item = webProcessor.getMsgProcessingRepository().statisticChannelLoad();
+        GroupCacheItem item = null;
+        if (WEB_RANDOM_DEBUG) {
+            item = GroupCacheItem.randomInstance();
+        } else {
+            item = webProcessor.getMsgProcessingRepository().statisticChannelLoad();
+        }
         item.setAlarmLimit(100, 500);
         return new ResMsg(item);
     }

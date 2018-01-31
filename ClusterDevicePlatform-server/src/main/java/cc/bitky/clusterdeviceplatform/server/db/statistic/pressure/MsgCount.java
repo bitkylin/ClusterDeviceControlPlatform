@@ -9,31 +9,31 @@ public class MsgCount {
     /**
      * 已收到的消息总数
      */
-    long msgCount;
+    private long msgCount;
     /**
      * 已收到的充电状态帧总数
      */
-    long msgChargeCount;
+    private long msgChargeCount;
     /**
      * 状态已改变的充电状态帧总数
      */
-    long msgChargeCountFixed;
+    private long msgChargeCountFixed;
     /**
      * 状态未改变的充电状态帧总数
      */
-    long msgChargeCountVariable;
+    private long msgChargeCountVariable;
     /**
      * 已收到的工作状态帧总数
      */
-    long msgWorkCount;
+    private long msgWorkCount;
     /**
      * 状态已改变的工作状态帧总数
      */
-    long msgWorkCountFixed;
+    private long msgWorkCountFixed;
     /**
      * 状态未改变的工作状态帧总数
      */
-    long msgWorkCountVariable;
+    private long msgWorkCountVariable;
 
     public MsgCount() {
         this.msgCount = ProcessedMsgRepo.MSG_COUNT.get();
@@ -71,5 +71,33 @@ public class MsgCount {
 
     public long getMsgWorkCountVariable() {
         return msgWorkCountVariable;
+    }
+
+    protected void setMsgCount(long msgCount) {
+        this.msgCount = msgCount;
+    }
+
+    protected void setMsgChargeCount(long msgChargeCount) {
+        this.msgChargeCount = msgChargeCount;
+    }
+
+    protected void setMsgChargeCountFixed(long msgChargeCountFixed) {
+        this.msgChargeCountFixed = msgChargeCountFixed;
+    }
+
+    protected void setMsgChargeCountVariable(long msgChargeCountVariable) {
+        this.msgChargeCountVariable = msgChargeCountVariable;
+    }
+
+    protected void setMsgWorkCount(long msgWorkCount) {
+        this.msgWorkCount = msgWorkCount;
+    }
+
+    protected void setMsgWorkCountFixed(long msgWorkCountFixed) {
+        this.msgWorkCountFixed = msgWorkCountFixed;
+    }
+
+    protected void setMsgWorkCountVariable(long msgWorkCountVariable) {
+        this.msgWorkCountVariable = msgWorkCountVariable;
     }
 }
