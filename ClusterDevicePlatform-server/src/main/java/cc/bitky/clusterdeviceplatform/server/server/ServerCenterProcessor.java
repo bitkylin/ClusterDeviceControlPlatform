@@ -31,6 +31,7 @@ public class ServerCenterProcessor {
     private final DeviceStatusRepository deviceStatusRepository;
     private final DbPresenter dbPresenter;
     private ServerTcpProcessor tcpProcessor;
+
     @Autowired
     public ServerCenterProcessor(MsgProcessingRepository msgProcessingRepository, DbPresenter dbPresenter, TcpFeedBackRepository tcpFeedBackRepository, DeviceStatusRepository deviceStatusRepository) {
         this.msgProcessingRepository = msgProcessingRepository;
@@ -82,11 +83,13 @@ public class ServerCenterProcessor {
         int deviceId = message.getDeviceId();
 
         if (groupId == WebSetting.BROADCAST_GROUP_ID && deviceId == WebSetting.BROADCAST_DEVICE_ID) {
-        boolean success = true;
+            boolean success = false;
             for (int tempGroupId = 1; tempGroupId <= DeviceSetting.MAX_GROUP_ID; tempGroupId++) {
-                for (int tempDeviceId = 1; tempDeviceId <= DeviceSetting.MAX_DEVICE_ID; tempDeviceId++) {
-                    if (!sendMessage(message.clone(tempGroupId, tempDeviceId))) {
-                        success = false;
+                if (tcpProcessor.tcpIsAvailable(tempGroupId)) {
+                    for (int tempDeviceId = 1; tempDeviceId <= DeviceSetting.MAX_DEVICE_ID; tempDeviceId++) {
+                        if (sendMessage(message.clone(tempGroupId, tempDeviceId))) {
+                            success = true;
+                        }
                     }
                 }
             }
@@ -94,17 +97,21 @@ public class ServerCenterProcessor {
         }
 
         if (groupId == WebSetting.BROADCAST_GROUP_ID) {
-            boolean  success = false;
+            boolean success = false;
             for (int tempGroupId = 1; tempGroupId <= DeviceSetting.MAX_GROUP_ID; tempGroupId++) {
-                if (sendMessage(message.clone(tempGroupId, deviceId))) {
+                if (tcpProcessor.tcpIsAvailable(tempGroupId) && sendMessage(message.clone(tempGroupId, deviceId))) {
                     success = true;
                 }
             }
             return success;
         }
 
+        if (!tcpProcessor.tcpIsAvailable(groupId)) {
+            return false;
+        }
+
         if (deviceId == WebSetting.BROADCAST_DEVICE_ID) {
-        boolean success = true;
+            boolean success = true;
             for (int tempDeviceId = 1; tempDeviceId <= DeviceSetting.MAX_DEVICE_ID; tempDeviceId++) {
                 if (!sendMessage(message.clone(groupId, tempDeviceId))) {
                     success = false;

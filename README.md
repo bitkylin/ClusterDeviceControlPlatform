@@ -19,6 +19,37 @@ Java & Vue.js 全栈项目，大规模集群设备管理云平台，由以下几
 
 **注意：[「基于 Vue.js 的 Web 前端「SPA」单页应用程序」为单独的项目，点击此处跳转](https://github.com/bitkylin/ClusterDeviceControlPlatform-Web)**
 
+## 运行方法
+
+**注意：主项目未完成，可使用子项目进行演示，运行方法如下：** 
+
+下载并进入子工程「clusterdeviceplatform-demo」的根目录：
+
+```shell
+cd clusterdeviceplatform-demo
+```
+
+而后在命令行执行如下命令：
+
+```shell
+gradle assemble
+```
+
+或者执行：
+
+```shell
+gradle build
+```
+稍后即可生成 jar 文件，找到并执行该 jar 文件即可：
+
+```shell
+cd build\libs
+java -jar -Dfile.encoding=UTF-8 clusterdeviceplatform-demo-1.0.0.jar
+```
+
+而后进入[配套的 Web 前端项目](https://github.com/bitkylin/ClusterDeviceControlPlatform-Web)，根据该项目的说明，即可成功构建并运行 Web 页面。
+
+
 ## 项目图示
 
 ### 1. 基于 Vue.js 的 Web 前端「SPA」单页应用程序
