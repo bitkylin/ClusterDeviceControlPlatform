@@ -1,8 +1,9 @@
 # 集群设备管理云平台「Java、SPA、Spring、Netty、Vue.js 2.0、Element 2.0」
 
 [![GitHub stars](https://img.shields.io/github/stars/bitkylin/ClusterDeviceControlPlatform.svg)](https://github.com/bitkylin/ClusterDeviceControlPlatform/stargazers)
-![技术](https://img.shields.io/badge/%E6%8A%80%E6%9C%AF-Spring%7CVue.js%7CNetty%7CJavaFX%7CMongoDB-brightgreen.svg)
+[![Build Status](https://travis-ci.org/bitkylin/ClusterDeviceControlPlatform.svg?branch=master)](https://travis-ci.org/bitkylin/ClusterDeviceControlPlatform)
 [![许可证](https://img.shields.io/badge/许可证-MIT-blue.svg)](https://github.com/bitkylin/ClusterDeviceControlPlatform/blob/master/LICENSE)
+![技术](https://img.shields.io/badge/%E6%8A%80%E6%9C%AF-Spring%7CVue.js%7CNetty%7CJavaFX%7CMongoDB-brightgreen.svg)
 
 ## 项目描述
 

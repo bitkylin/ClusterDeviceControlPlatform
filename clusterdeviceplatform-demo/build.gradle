@@ -30,6 +30,6 @@ repositories {
 
 dependencies {
     compile('org.springframework.boot:spring-boot-starter-web')
-    compile files('D:\\project\\github\\ClusterDevicePlatform\\messageUtils\\build\\libs\\messageUtils-1.6.jar')
+    compile files('libs/messageUtils-1.6.jar')
     testCompile('org.springframework.boot:spring-boot-starter-test')
 }
