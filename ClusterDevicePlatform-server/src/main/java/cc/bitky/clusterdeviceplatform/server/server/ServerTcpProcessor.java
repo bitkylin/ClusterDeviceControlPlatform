@@ -56,6 +56,16 @@ public class ServerTcpProcessor {
     }
 
     /**
+     * 根据待发送的设备组 ID，判断指定的 Channel 是否可用
+     *
+     * @param groupId 指定的设备组 ID
+     * @return 指定的 Channel 是否可用
+     */
+    public boolean tcpIsAvailable(int groupId) {
+        return tcpPresenter.channelIsActivated(groupId);
+    }
+
+    /**
      * 「内部接口」发生异常时回调该接口传出异常信息
      *
      * @param msg 一场消息对象

@@ -52,13 +52,23 @@ public class TcpPresenter {
      * @return 是否发送成功
      */
     public boolean sendMessageToTcp(BaseMsg message) {
-        Channel channel = tcpRepository.touchChannel(message.getGroupId());
-        LinkedBlockingDeque<BaseMsg> deque = tcpRepository.touchMessageQueue(message.getGroupId());
-        if (channel == null || deque == null || !channel.isActive()) {
-            return false;
+        if (channelIsActivated(message.getGroupId())) {
+            LinkedBlockingDeque<BaseMsg> deque = tcpRepository.touchMessageQueue(message.getGroupId());
+            deque.offer(message);
+            return true;
         }
-        deque.offer(message);
-        return true;
+        return false;
+    }
+
+    /**
+     * 根据设备组 ID，判断指定的 Channel 是否激活
+     *
+     * @param groupId 特定的设备组 ID
+     * @return 指定的 Channel 是否激活
+     */
+    public boolean channelIsActivated(int groupId) {
+        Channel channel = tcpRepository.touchChannel(groupId);
+        return channel != null && channel.isActive();
     }
 
     public void setServer(ServerTcpProcessor server) {
