@@ -1,0 +1,35 @@
+buildscript {
+    ext {
+        springBootVersion = '2.0.0.M7'
+    }
+    repositories {
+        mavenCentral()
+        maven { url "https://repo.spring.io/snapshot" }
+        maven { url "https://repo.spring.io/milestone" }
+    }
+    dependencies {
+        classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
+    }
+}
+
+apply plugin: 'java'
+apply plugin: 'eclipse'
+apply plugin: 'org.springframework.boot'
+apply plugin: 'io.spring.dependency-management'
+
+group = 'cc.bitky.clusterdeviceplatform'
+version = '1.0.0'
+sourceCompatibility = 1.8
+
+repositories {
+    mavenCentral()
+    maven { url "https://repo.spring.io/snapshot" }
+    maven { url "https://repo.spring.io/milestone" }
+}
+
+
+dependencies {
+    compile('org.springframework.boot:spring-boot-starter-web')
+    compile files('D:\\project\\github\\ClusterDevicePlatform\\messageUtils\\build\\libs\\messageUtils-1.6.jar')
+    testCompile('org.springframework.boot:spring-boot-starter-test')
+}
