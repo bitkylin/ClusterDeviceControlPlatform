@@ -10,6 +10,7 @@ import java.time.format.DateTimeFormatter;
 
 import cc.bitky.clusterdeviceplatform.server.config.ServerSetting;
 import cc.bitky.clusterdeviceplatform.server.server.ServerCenterProcessor;
+import cc.bitky.clusterdeviceplatform.server.server.repo.TcpFeedBackRepository;
 
 /**
  * 服务器当前状态信息
@@ -36,9 +37,13 @@ public class ServerStatusInfo {
      */
     String currentTime;
     /**
-     * 未处理消息数
+     * 未处理异常消息数
      */
-    long processedMsgCount;
+    long exceptionMsgCount;
+    /**
+     * 未处理超时消息数
+     */
+    long timeoutMsgCount;
 
     public ServerStatusInfo(ServerCenterProcessor serverProcessor) {
         LocalDateTime start = ServerSetting.SYSTEM_START_DATE_TIME;
@@ -70,7 +75,16 @@ public class ServerStatusInfo {
         builder.append(second).append("秒");
 
         runningTime = builder.toString();
-        processedMsgCount = serverProcessor.getTcpFeedBackItems().size();
+        exceptionMsgCount = serverProcessor.getTcpFeedBackItemsCount(TcpFeedBackRepository.ItemType.EXCEPTION);
+        timeoutMsgCount = serverProcessor.getTcpFeedBackItemsCount(TcpFeedBackRepository.ItemType.TIMEOUT);
+    }
+
+    public long getExceptionMsgCount() {
+        return exceptionMsgCount;
+    }
+
+    public long getTimeoutMsgCount() {
+        return timeoutMsgCount;
     }
 
     public String getPid() {
@@ -91,9 +105,5 @@ public class ServerStatusInfo {
 
     public String getCurrentTime() {
         return currentTime;
-    }
-
-    public long getProcessedMsgCount() {
-        return processedMsgCount;
     }
 }

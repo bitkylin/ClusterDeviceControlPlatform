@@ -88,53 +88,11 @@ public class DeviceCellView extends JFXTabPane {
             name.setText(device.getName());
             department.setText(device.getDepartment());
             cardNumber.setText(device.getCardNumber() + "");
-            btnChargeStatus.setText(obtainChargeStatus(device.getChargeStatus()));
-            btnWorkStatus.setText(obtainWorkStatus(device.getWorkStatus()));
+            btnChargeStatus.setText(ChargeStatus.obtainDescription(device.getChargeStatus()));
+            btnWorkStatus.setText(WorkStatus.obtainDescription(device.getWorkStatus()));
             historyList.getItems().clear();
             historyList.getItems().addAll(device.getHistoryList());
         });
-    }
-
-    private String obtainWorkStatus(int workStatus) {
-        switch (workStatus) {
-            case WorkStatus.NORMAL:
-                return "正常";
-            case WorkStatus.OVERCURRENT:
-                return "过流";
-            case WorkStatus.HUNG_ERROR:
-                return "未挂好";
-            case WorkStatus.DOGE_ERROR:
-                return "DOGE故障";
-            case WorkStatus.LIGHT_SENSE:
-                return "光感故障";
-            case WorkStatus.TRAFFIC_ERROR:
-                return "通信故障";
-            case WorkStatus.WORK_TIME_OVER:
-                return "下井超时";
-            case WorkStatus.CHARGING_TIME_OVER:
-                return "充电超时";
-            case WorkStatus.CRASH:
-                return "多种故障";
-            default:
-                return "未知故障";
-        }
-    }
-
-    private String obtainChargeStatus(int chargeStatus) {
-        switch (chargeStatus) {
-            case ChargeStatus.UNINIT:
-                return "初始化";
-            case ChargeStatus.USING:
-                return "未充电";
-            case ChargeStatus.CHARGING:
-                return "充电中";
-            case ChargeStatus.FULL:
-                return "已充满";
-            case ChargeStatus.DOGE_ERROR:
-                return "DOGE";
-            default:
-                return "未知状态";
-        }
     }
 
     @FXML
@@ -146,7 +104,7 @@ public class DeviceCellView extends JFXTabPane {
                 status = ChargeStatus.USING;
             }
             device.setChargeStatus(status);
-            btnChargeStatus.setText(obtainChargeStatus(status));
+            btnChargeStatus.setText(ChargeStatus.obtainDescription(status));
             sendMsgStatusCurrent(device);
         } else {
             nobindalertdialog();
@@ -164,7 +122,7 @@ public class DeviceCellView extends JFXTabPane {
                 status = WorkStatus.OVERCURRENT;
             }
             device.setWorkStatus(status);
-            btnWorkStatus.setText(obtainWorkStatus(status));
+            btnWorkStatus.setText(WorkStatus.obtainDescription(status));
             sendMsgStatusCurrent(device);
         } else {
             nobindalertdialog();

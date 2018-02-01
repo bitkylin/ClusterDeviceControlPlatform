@@ -162,15 +162,23 @@ public class ServerCenterProcessor {
         }
     }
 
-    public List<TcpFeedbackItem> getTcpFeedBackItems() {
-        long currentTimeMillis = System.currentTimeMillis();
-        List<TcpFeedbackItem> items = getTcpFeedBackRepository().getItems();
-        return items;
-//        ChannelOutline channelOutline = tcpProcessor.statisticChannelLoad();
-//        channelOutline.getChannelItems().forEach(item -> {
-//            if (item.isEnabled() && (currentTimeMillis - dbPresenter.getDeviceGroupRecentCommTime(item.getId())) > DbSetting.NO_RESPONSE_INTERVAL) {
-//                items.add(TcpFeedbackItem.createChannelNoResponse(item.getId()));
-//            }
-//        });
+    /**
+     * 根据条件对List中的Item进行过滤，返回状态异常消息或超时消息
+     *
+     * @param type 请求类型
+     * @return 指定的返回的消息集合
+     */
+    public List<TcpFeedbackItem> getTcpFeedBackItems(TcpFeedBackRepository.ItemType type) {
+        return getTcpFeedBackRepository().getItems(type);
+    }
+
+    /**
+     * 根据条件对List中的Item进行过滤，返回状态异常消息或超时消息的数量
+     *
+     * @param type 请求类型
+     * @return 指定的返回的消息的数量
+     */
+    public long getTcpFeedBackItemsCount(TcpFeedBackRepository.ItemType type) {
+        return getTcpFeedBackRepository().getItemsCount(type);
     }
 }
