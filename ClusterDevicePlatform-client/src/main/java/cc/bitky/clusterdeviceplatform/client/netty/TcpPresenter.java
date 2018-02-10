@@ -84,13 +84,13 @@ public class TcpPresenter {
             logger.warn("帧解析出错");
             return;
         }
-        logger.info("收到正常消息对象：「" + msg.getMsgDetail() + "」");
+        logger.info("收到正常消息对象：「" + msg.msgDetailToString() + "」");
         switch (msg.getJointMsgFlag()) {
             case JointMsgType.HeartBeat:
                 Attribute<Integer> key = channel.attr(AttributeKey.valueOf("ID"));
                 //     if (new Random().nextInt(10) > 7) {
                 MsgReplyNormal replyHeartbeat = MsgCodecReplyNormal.createByBaseMsg(MsgCodecHeartbeat.create(key.get()));
-                logger.info("已生成并发送正常回复消息对象：「" + replyHeartbeat.getMsgDetail() + "」");
+                logger.info("已生成并发送正常回复消息对象：「" + replyHeartbeat.msgDetailToString() + "」");
                 sendMessageToTcp(replyHeartbeat);
                 //     }
                 break;
@@ -102,7 +102,7 @@ public class TcpPresenter {
                     logger.warn("生成正常回复消息对象出错");
                     return;
                 }
-                logger.info("已生成并发送正常回复消息对象：「" + replyNormal.getMsgDetail() + "」");
+                logger.info("已生成并发送正常回复消息对象：「" + replyNormal.msgDetailToString() + "」");
                 sendMessageToTcp(replyNormal);
         }
     }

@@ -154,15 +154,15 @@ public class TcpRepository {
         RESEND_MSG_MAP.put(msg.getMsgFlag(), msg);
         HASHED_WHEEL_TIMER.newTimeout(task -> {
             if (RESEND_MSG_MAP.get(msg.getMsgFlag()) == null) {
-                logger.info("消息已收到回复:" + msg.getMsgDetail());
+                logger.info("消息已收到回复:" + msg.msgDetailToString());
                 return;
             }
             if (msg.getResendTimes() < AUTO_REPEAT_REQUEST_TIMES - 1) {
-                logger.warn("消息未收到回复:" + msg.getMsgDetail());
+                logger.warn("消息未收到回复:" + msg.msgDetailToString());
                 msg.doResend();
                 server.sendMessageToTcp(msg);
             } else if (server != null) {
-                logger.warn("消息未收到回复已达上限:" + msg.getMsgDetail());
+                logger.warn("消息未收到回复已达上限:" + msg.msgDetailToString());
                 server.touchUnusualMsg(TcpFeedbackItem.createResendOutBound(msg));
             }
         }, CommSetting.FRAME_SENT_TO_DETECT_INTERVAL, TimeUnit.SECONDS);

@@ -8,7 +8,7 @@ public class CommSetting {
     /**
      * 服务器主机名
      */
-    public static String SERVER_HOSTNAME = "cdg-pc";
+    public static String SERVER_HOSTNAME = "localhost";
     /**
      * 服务器端口号
      */
