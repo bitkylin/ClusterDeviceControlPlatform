@@ -1,0 +1,1 @@
+﻿java -jar -Dfile.encoding=UTF-8 .\ClusterDevicePlatform-server-1.8.8-release.jar
