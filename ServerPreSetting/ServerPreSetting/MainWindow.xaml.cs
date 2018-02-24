@@ -63,18 +63,22 @@ namespace ServerPreSetting
             textBoxDefaultDepartment.Text = kySetting.员工默认部门;
             textBoxDefaultName.Text = kySetting.员工默认姓名;
             textBoxFrameSpace.Text = kySetting.帧发送间隔.ToString();
-            textBoxInitChargeTimes.Text = kySetting.初始充电次数.ToString();
+//            textBoxInitChargeTimes.Text = kySetting.初始充电次数.ToString();
             textBoxMaxResendTimes.Text = kySetting.检错重发最大重复次数.ToString();
             textBoxServerAddress.Text = kySetting.数据库服务器的主机名或IP;
             textBoxRemainChargeTimes.Text = kySetting.部署剩余充电次数阈值.ToString();
             checkBoxMsgReply.IsChecked = kySetting.帧送达监测;
-            textboxTcpPort.Text = kySetting.服务器端口号 + "";
+            checkBoxDebug.IsChecked = kySetting.调试模式;
+            checkBoxWebRandom.IsChecked = kySetting.随机Web数据模式;
+            textboxTcpPort.Text = kySetting.服务器端口号.ToString();
+            textBoxNoResponseTime.Text = kySetting.通道未响应时间.ToString();
+            checkBoxNoResponse.IsChecked = kySetting.通道无响应监测;
         }
 
         private void writeSettingToFile(string filePath, KySetting kySetting)
         {
             var streamWriter = new StreamWriter(filePath, false, UTF8_ENCODING);
-            var strSerial = JsonConvert.SerializeObject(kySetting);
+            var strSerial = JsonConvert.SerializeObject(kySetting, Formatting.Indented);
             streamWriter.Write(strSerial);
             streamWriter.Close();
         }
@@ -88,12 +92,16 @@ namespace ServerPreSetting
                 kySetting.员工默认部门 = textBoxDefaultDepartment.Text.Trim() + "";
                 kySetting.员工默认姓名 = textBoxDefaultName.Text.Trim() + "";
                 kySetting.帧发送间隔 = int.Parse(textBoxFrameSpace.Text.Trim());
-                kySetting.初始充电次数 = int.Parse(textBoxInitChargeTimes.Text.Trim());
+//                kySetting.初始充电次数 = int.Parse(textBoxInitChargeTimes.Text.Trim());
                 kySetting.检错重发最大重复次数 = int.Parse(textBoxMaxResendTimes.Text.Trim());
                 kySetting.数据库服务器的主机名或IP = textBoxServerAddress.Text.Trim() + "";
                 kySetting.部署剩余充电次数阈值 = int.Parse(textBoxRemainChargeTimes.Text.Trim());
-                kySetting.帧送达监测 = checkBoxMsgReply.IsChecked.GetValueOrDefault(false);
+                kySetting.帧送达监测 = checkBoxMsgReply.IsChecked.GetValueOrDefault(true);
+                kySetting.调试模式 = checkBoxDebug.IsChecked.GetValueOrDefault(false);
+                kySetting.随机Web数据模式 = checkBoxWebRandom.IsChecked.GetValueOrDefault(false);
                 kySetting.服务器端口号 = int.Parse(textboxTcpPort.Text.Trim());
+                kySetting.通道未响应时间 = int.Parse(textBoxNoResponseTime.Text.Trim());
+                kySetting.通道无响应监测 = checkBoxNoResponse.IsChecked.GetValueOrDefault(true);
                 writeSettingToFile(FILE_PATH, kySetting);
                 MessageBox.Show("配置文件保存成功！\n请重启服务器应用程序以使配置生效", "提示");
                 Close();

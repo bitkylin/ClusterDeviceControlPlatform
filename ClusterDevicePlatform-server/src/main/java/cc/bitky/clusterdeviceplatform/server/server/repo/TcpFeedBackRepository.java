@@ -2,12 +2,14 @@ package cc.bitky.clusterdeviceplatform.server.server.repo;
 
 import org.springframework.stereotype.Repository;
 
-import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.LinkedBlockingDeque;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
+import cc.bitky.clusterdeviceplatform.messageutils.config.WorkStatus;
+import cc.bitky.clusterdeviceplatform.messageutils.msg.statusreply.MsgReplyDeviceStatus;
 import cc.bitky.clusterdeviceplatform.messageutils.msgcodec.controlcenter.MsgCodecHeartbeat;
 import cc.bitky.clusterdeviceplatform.server.config.DbSetting;
 import cc.bitky.clusterdeviceplatform.server.config.DeviceSetting;
@@ -54,11 +56,51 @@ public class TcpFeedBackRepository {
         feedbackItems.remove(item);
     }
 
-    public List<TcpFeedbackItem> getItems() {
-        Iterator<TcpFeedbackItem> iterator = feedbackItems.iterator();
-        List<TcpFeedbackItem> items = new ArrayList<>(DbSetting.FEEDBACK_ITEM_SIZE_MAX);
-        iterator.forEachRemaining(items::add);
-        return items;
+    /**
+     * 根据条件对List中的Item进行过滤，返回状态异常消息或超时消息
+     *
+     * @param type 请求类型
+     * @return 指定的返回的消息集合
+     */
+    public List<TcpFeedbackItem> getItems(ItemType type) {
+        return getTcpFeedbackItemsStream(type).collect(Collectors.toList());
+    }
+
+    /**
+     * 根据条件对List中的Item进行过滤，返回状态异常消息或超时消息的数量
+     *
+     * @param type 请求类型
+     * @return 指定的返回的消息的数量
+     */
+    public long getItemsCount(ItemType type) {
+        return getTcpFeedbackItemsStream(type).count();
+    }
+
+    private Stream<TcpFeedbackItem> getTcpFeedbackItemsStream(ItemType type) {
+        switch (type) {
+            case EXCEPTION:
+                return feedbackItems.stream().filter(item -> {
+                    if (item.getType() == TypeEnum.WORK_STATUS_EXCEPTION) {
+                        MsgReplyDeviceStatus deviceStatus = (MsgReplyDeviceStatus) item.getBaseMsg();
+                        if (deviceStatus.getType() == MsgReplyDeviceStatus.Type.WORK) {
+                            return deviceStatus.getStatus() != WorkStatus.WORK_TIME_OVER && deviceStatus.getStatus() != WorkStatus.CHARGING_TIME_OVER;
+                        }
+                    }
+                    return true;
+                });
+            case TIMEOUT:
+                return feedbackItems.stream().filter(item -> {
+                    if (item.getType() == TypeEnum.WORK_STATUS_EXCEPTION) {
+                        MsgReplyDeviceStatus deviceStatus = (MsgReplyDeviceStatus) item.getBaseMsg();
+                        if (deviceStatus.getType() == MsgReplyDeviceStatus.Type.WORK) {
+                            return deviceStatus.getStatus() == WorkStatus.WORK_TIME_OVER || deviceStatus.getStatus() == WorkStatus.CHARGING_TIME_OVER;
+                        }
+                    }
+                    return false;
+                });
+            default:
+                return Stream.empty();
+        }
     }
 
     public void clearItems() {
@@ -77,5 +119,19 @@ public class TcpFeedBackRepository {
             removeItem(TcpFeedbackItem.createResendOutBound(MsgCodecHeartbeat.create(groupId)));
             channelNormalList[groupId].set(true);
         }
+    }
+
+    /**
+     * 消息类型
+     */
+    public enum ItemType {
+        /**
+         * 异常消息对象
+         */
+        EXCEPTION,
+        /**
+         * 超时消息对象
+         */
+        TIMEOUT
     }
 }

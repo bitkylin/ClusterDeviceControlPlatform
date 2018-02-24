@@ -31,7 +31,7 @@ public class ServerTcpProcessor {
      * @param message 指定的消息对象
      */
     boolean sendMessage(BaseMsg message) {
-        logger.info("发送消息：「" + message.getMsgDetail() + "」");
+        logger.info("发送消息：「" + message.msgDetailToString() + "」");
         return tcpPresenter.sendMessageToTcp(message);
     }
 
@@ -41,7 +41,7 @@ public class ServerTcpProcessor {
      * @param message 消息对象
      */
     public void huntMessage(BaseMsg message) {
-        logger.info("捕获到「普通」消息对象：「" + message.getMsgDetail() + "」");
+        logger.info("捕获到「普通」消息对象：「" + message.msgDetailToString() + "」");
     }
 
     /**
@@ -50,7 +50,7 @@ public class ServerTcpProcessor {
      * @param message 消息对象
      */
     public void huntDeviceStatusMsg(MsgReplyDeviceStatus message) {
-        logger.info("捕获到「待处理」消息对象：「" + message.getMsgDetail() + "」");
+        logger.info("捕获到「待处理」消息对象：「" + message.msgDetailToString() + "」");
         centerProcessor.getTcpFeedBackRepository().recoveryItem(message.getGroupId());
         centerProcessor.huntDeviceStatusMsg(message);
     }

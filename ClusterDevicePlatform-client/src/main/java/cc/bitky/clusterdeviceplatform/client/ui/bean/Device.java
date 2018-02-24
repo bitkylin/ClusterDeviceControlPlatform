@@ -40,7 +40,7 @@ public class Device {
     }
 
     public void handleMsg(BaseMsg msg) {
-        historyList.add(msg.getMsgDetail());
+        historyList.add(msg.msgDetailToString());
         switch (msg.getMajorMsgId()) {
             case 0x10:
                 updateDeviceView(msg);

@@ -106,7 +106,7 @@ public class TcpPresenter {
             logger.warn("设备号出错「GroupId:" + msg.getGroupId() + "; DeviceId:" + msg.getDeviceId() + "」");
             return;
         }
-        logger.debug("收到正常消息对象：「" + msg.getMsgDetail() + "」");
+        logger.debug("收到正常消息对象：「" + msg.msgDetailToString() + "」");
         switch (msg.getJointMsgFlag()) {
             case JointMsgType.replyWorkStatus:
             case JointMsgType.replyChargeStatus:
@@ -141,7 +141,7 @@ public class TcpPresenter {
      * @param msg 一场消息对象
      */
     public void touchUnusualMsg(TcpFeedbackItem msg) {
-        logger.info("捕获到异常消息：" + msg.getDescription() + "原始消息：「" + msg.getBaseMsg().getMsgDetail() + "」");
+        logger.info("捕获到异常消息：" + msg.getDescription() + "原始消息：「" + msg.getBaseMsg().msgDetailToString() + "」");
         server.touchUnusualMsg(msg);
     }
 

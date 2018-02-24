@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 import cc.bitky.clusterdeviceplatform.server.server.ServerCenterProcessor;
+import cc.bitky.clusterdeviceplatform.server.server.repo.TcpFeedBackRepository;
 import cc.bitky.clusterdeviceplatform.server.tcp.statistic.except.TcpFeedbackItem;
 import cc.bitky.clusterdeviceplatform.server.web.spa.utils.ResMsg;
 
@@ -29,11 +30,21 @@ public class FeedbackMsgController {
         this.webProcessor = webProcessor;
     }
 
-    @GetMapping("")
-    public ResMsg getFeedbackItems() {
-        logger.info("/server/feedback/items/get");
+    @GetMapping("/exception")
+    public ResMsg getFeedbackItemsException() {
+        logger.info("/server/feedback/items/exception");
         long l1 = System.currentTimeMillis();
-        List<TcpFeedbackItem> items = webProcessor.getTcpFeedBackItems();
+        List<TcpFeedbackItem> items = webProcessor.getTcpFeedBackItems(TcpFeedBackRepository.ItemType.EXCEPTION);
+        long l2 = System.currentTimeMillis();
+        logger.info("耗时：" + (l2 - l1) + " ms");
+        return new ResMsg(items);
+    }
+
+    @GetMapping("timeout")
+    public ResMsg getFeedbackItemsTimeout() {
+        logger.info("/server/feedback/items/timeout");
+        long l1 = System.currentTimeMillis();
+        List<TcpFeedbackItem> items = webProcessor.getTcpFeedBackItems(TcpFeedBackRepository.ItemType.TIMEOUT);
         long l2 = System.currentTimeMillis();
         logger.info("耗时：" + (l2 - l1) + " ms");
         return new ResMsg(items);
