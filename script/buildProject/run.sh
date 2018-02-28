@@ -1,43 +1,43 @@
 #!/bin/bash
-# 集群设备管理系统工程的web端、模拟客户端、服务器端等的整体清理、构建、打包、发布
+# 集群设备管理系统工程的 web 端、模拟客户端、服务器端等的整体清理、构建、打包、发布
 
+PROJECT_PATH=/mnt/d/project/github/ClusterDevicePlatform; # 工程所在目录
+WEB_PATH=/mnt/c/developer/cluster-device-platform-web;    # Web 模块所在目录
 SH_PATH=$(cd `dirname $0`; pwd)                           # 脚本所在目录
 BUILD_TIME=`date "+%Y-%m-%d_%H-%M"`                       # 脚本运行时间
-PROJECT_PATH=/mnt/d/project/github/ClusterDevicePlatform; # 工程所在目录 
-UTIL_JAR_PATH=$PROJECT_PATH/messageUtils;                 # 公共 Jar 模块所在目录 
-SERVER_PATH=$PROJECT_PATH/ClusterDevicePlatform-server;   # 服务器模块所在目录 
-CLIENT_PATH=$PROJECT_PATH/ClusterDevicePlatform-client;   # 硬件模拟客户端模块所在目录 
-WEB_PATH=/mnt/c/developer/cluster-device-platform-web;    # Web 模块所在目录 
+UTIL_JAR_PATH=$PROJECT_PATH/messageUtils;                 # 公共 Jar 模块所在目录
+SERVER_PATH=$PROJECT_PATH/ClusterDevicePlatform-server;   # 服务器模块所在目录
+CLIENT_PATH=$PROJECT_PATH/ClusterDevicePlatform-client;   # 硬件模拟客户端模块所在目录
 
 # 项目已编译历史文件的清理
-cd $UTIL_JAR_PATH; 
-rm -rf ./build; 
-cd $CLIENT_PATH; 
-rm -rf ./build; 
-cd $SERVER_PATH; 
-rm -rf ./build; 
-rm -rf ./src/main/resources/static; 
-cd $WEB_PATH; 
-rm -rf ./dist; 
+cd $UTIL_JAR_PATH;
+rm -rf ./build;
+cd $CLIENT_PATH;
+rm -rf ./build;
+cd $SERVER_PATH;
+rm -rf ./build;
+rm -rf ./src/main/resources/static;
+cd $WEB_PATH;
+rm -rf ./dist;
 
 # Web 编译并将静态页面文件移入服务器项目中
 npm run build
 if [ ! $? -eq 0 ]
-  then echo "Web 编译出错"
-  exit 1
+then echo "Web 编译出错"
+    exit 1
 fi
 echo Web 编译完毕
 mkdir $SERVER_PATH/src/main/resources/static
-cp -r ./dist $SERVER_PATH/src/main/resources/static
+cp -r ./dist/* $SERVER_PATH/src/main/resources/static
 
 # Client、Server 的编译
-cd $UTIL_JAR_PATH; 
+cd $UTIL_JAR_PATH;
 gradle build
 
-cd $CLIENT_PATH; 
+cd $CLIENT_PATH;
 gradle build
 
-cd $SERVER_PATH; 
+cd $SERVER_PATH;
 gradle build
 
 # 组织并集中编译生成的待发布文件
