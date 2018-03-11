@@ -1,7 +1,6 @@
 package cc.bitky.clusterdeviceplatform.demo.server.statistic.info;
 
 import cc.bitky.clusterdeviceplatform.demo.config.DbSetting;
-import cc.bitky.clusterdeviceplatform.demo.server.statistic.utils.IpUtil;
 
 public class DataBaseInfo {
     /**
@@ -29,7 +28,7 @@ public class DataBaseInfo {
         this.type = "MongoDB";
         this.port = DbSetting.MONGODB_PORT;
         this.host = DbSetting.MONGODB_HOST;
-        this.ip = IpUtil.getIP(host)[0];
+        this.ip = DbSetting.MONGODB_IP;
         this.database = DbSetting.DATABASE;
     }
 

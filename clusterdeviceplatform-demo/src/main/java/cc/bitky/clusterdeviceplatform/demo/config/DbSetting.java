@@ -10,6 +10,10 @@ public class DbSetting {
      */
     public static int MONGODB_PORT = 27017;
     /**
+     * MongoDB 的IP地址
+     */
+    public static String MONGODB_IP = "";
+    /**
      * 数据库
      */
     public static String DATABASE = "bitkyTest";
