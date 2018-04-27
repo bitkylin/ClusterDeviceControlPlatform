@@ -38,7 +38,11 @@ public class ServerStatusInfo {
     /**
      * 未处理消息数
      */
-    long processedMsgCount;
+    long exceptionMsgCount;
+    /**
+     * 超时消息数
+     */
+    long timeoutMsgCount;
 
     public ServerStatusInfo() {
         LocalDateTime start = ServerSetting.SYSTEM_START_DATE_TIME;
@@ -70,7 +74,14 @@ public class ServerStatusInfo {
         builder.append(second).append("秒");
 
         runningTime = builder.toString();
-        processedMsgCount = 0;
+    }
+
+    public long getExceptionMsgCount() {
+        return exceptionMsgCount;
+    }
+
+    public long getTimeoutMsgCount() {
+        return timeoutMsgCount;
     }
 
     public String getPid() {
@@ -91,9 +102,5 @@ public class ServerStatusInfo {
 
     public String getCurrentTime() {
         return currentTime;
-    }
-
-    public long getProcessedMsgCount() {
-        return processedMsgCount;
     }
 }

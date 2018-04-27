@@ -3,14 +3,15 @@ package cc.bitky.clusterdeviceplatform.demo;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
-import cc.bitky.clusterdeviceplatform.demo.config.DbSetting;
-import cc.bitky.clusterdeviceplatform.demo.server.statistic.utils.IpUtil;
+import cc.bitky.clusterdeviceplatform.messageutils.MsgProcessor;
 
 @SpringBootApplication
 public class DemoApplication {
 
+    private static MsgProcessor msgProcessor;
+
     public static void main(String[] args) {
+        msgProcessor = MsgProcessor.getInstance();
         SpringApplication.run(DemoApplication.class, args);
-        DbSetting.MONGODB_IP = IpUtil.getIP(DbSetting.MONGODB_HOST)[0];
     }
 }

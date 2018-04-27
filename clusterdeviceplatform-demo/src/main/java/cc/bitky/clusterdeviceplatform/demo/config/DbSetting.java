@@ -12,7 +12,7 @@ public class DbSetting {
     /**
      * MongoDB 的IP地址
      */
-    public static String MONGODB_IP = "";
+    public static String MONGODB_IP = "未知";
     /**
      * 数据库
      */
