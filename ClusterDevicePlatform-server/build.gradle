@@ -32,5 +32,6 @@ dependencies {
     compile('org.springframework.boot:spring-boot-starter-web')
     compile 'io.netty:netty-all:4.1.22.Final'
     compile 'com.alibaba:fastjson:1.2.46'
+    testCompile('org.springframework.boot:spring-boot-starter-test')
     compile files('../messageUtils/build/libs/messageUtils-1.9.1.jar')
 }
