@@ -6,7 +6,7 @@ import cc.bitky.clusterdeviceplatform.messageutils.config.WorkStatus;
 /**
  * TCP模块中单个 Channel 的当前负载量
  */
-public class DeviceItem {
+public class DeviceStatusItem {
     /**
      * 通道的 ID
      */
@@ -28,7 +28,7 @@ public class DeviceItem {
      */
     private String workStatusDescription;
 
-    public DeviceItem(int id, int chargeStatus, int workStatus) {
+    public DeviceStatusItem(int id, int chargeStatus, int workStatus) {
         this.id = id;
         this.chargeStatus = chargeStatus;
         this.chargeStatusDescription = ChargeStatus.obtainDescription(chargeStatus);

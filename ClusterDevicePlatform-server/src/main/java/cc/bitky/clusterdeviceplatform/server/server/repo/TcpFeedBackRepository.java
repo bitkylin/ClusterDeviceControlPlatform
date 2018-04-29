@@ -17,7 +17,7 @@ import cc.bitky.clusterdeviceplatform.server.tcp.statistic.except.TcpFeedbackIte
 import cc.bitky.clusterdeviceplatform.server.tcp.statistic.except.TypeEnum;
 
 /**
- * 用于TCP反馈消息对象的缓存容器
+ * 用于 TCP 异常反馈消息对象的缓存容器
  */
 @Repository
 public class TcpFeedBackRepository {

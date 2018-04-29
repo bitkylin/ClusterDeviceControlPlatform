@@ -36,8 +36,8 @@ public class ServerCenterProcessor {
     public ServerCenterProcessor(MsgProcessingRepository msgProcessingRepository, DbPresenter dbPresenter, TcpFeedBackRepository tcpFeedBackRepository, DeviceStatusRepository deviceStatusRepository) {
         this.msgProcessingRepository = msgProcessingRepository;
         this.tcpFeedBackRepository = tcpFeedBackRepository;
-        this.dbPresenter = dbPresenter;
         this.deviceStatusRepository = deviceStatusRepository;
+        this.dbPresenter = dbPresenter;
         msgProcessingRepository.setDbPresenter(dbPresenter);
         msgProcessingRepository.setServer(this);
         addJvmShutDownHook();
@@ -69,7 +69,11 @@ public class ServerCenterProcessor {
     }
 
     private boolean sendMessage(BaseMsg message) {
-        return message != null && tcpProcessor.sendMessage(message);
+        if (message == null) {
+            return false;
+        }
+        deviceStatusRepository.saveMsg(message);
+        return tcpProcessor.sendMessage(message);
     }
 
     /**

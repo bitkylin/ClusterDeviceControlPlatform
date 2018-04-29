@@ -43,8 +43,9 @@ public class ServerTcpProcessor {
      */
     public void touchNormalReplyMsg(MsgReplyNormal message) {
         logger.info("捕获到「正常回复」消息对象：「" + message.msgDetailToString() + "」");
-
+        centerProcessor.getDeviceStatusRepository().removeMsg(message);
     }
+
     /**
      * 服务模块捕获到「特殊反馈」消息对象
      *

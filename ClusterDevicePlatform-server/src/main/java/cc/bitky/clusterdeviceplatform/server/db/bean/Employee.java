@@ -4,20 +4,20 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 
+import java.util.Objects;
+
 @Document(collection = "Employee")
 public class Employee {
 
     @Id
     private String id;
 
-    //个人信息
     @Field("Name")
     private String name;
 
     @Field("Department")
     private String department;
 
-    //设备位置
     @Field("GroupId")
     private int groupId;
 
@@ -78,5 +78,27 @@ public class Employee {
                 ", groupId=" + groupId +
                 ", deviceId=" + deviceId +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        Employee employee = (Employee) o;
+        return groupId == employee.groupId &&
+                deviceId == employee.deviceId &&
+                Objects.equals(id, employee.id) &&
+                Objects.equals(name, employee.name) &&
+                Objects.equals(department, employee.department);
+    }
+
+    @Override
+    public int hashCode() {
+
+        return Objects.hash(id, name, department, groupId, deviceId);
     }
 }

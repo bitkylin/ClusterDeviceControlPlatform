@@ -1,4 +1,4 @@
-package cc.bitky.clusterdeviceplatform.server.db.work.bean;
+package cc.bitky.clusterdeviceplatform.server.server.repo.bean;
 
 
 import cc.bitky.clusterdeviceplatform.messageutils.msg.statusreply.MsgReplyDeviceStatus;
@@ -12,7 +12,7 @@ public class StatusItem {
 
     private final int status;
 
-    public StatusItem(long time, int status) {
+    private StatusItem(long time, int status) {
         this.time = time;
         this.status = status;
     }

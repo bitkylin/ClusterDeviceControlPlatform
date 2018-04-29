@@ -17,15 +17,15 @@ public class TcpFeedbackItem {
     /**
      * 当前日期
      */
-    String currentDate;
+    private String currentDate;
     /**
      * 当前时间
      */
-    String currentTime;
+    private String currentTime;
     /**
      * 当前时间戳
      */
-    long milliseconds;
+    private long milliseconds;
     private int groupId;
     private int deviceId;
     private TypeEnum type;

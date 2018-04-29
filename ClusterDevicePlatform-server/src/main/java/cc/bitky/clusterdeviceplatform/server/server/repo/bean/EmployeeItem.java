@@ -1,4 +1,4 @@
-package cc.bitky.clusterdeviceplatform.server.db.work.bean;
+package cc.bitky.clusterdeviceplatform.server.server.repo.bean;
 
 import java.util.Objects;
 
@@ -6,10 +6,9 @@ import cc.bitky.clusterdeviceplatform.server.db.bean.Employee;
 import cc.bitky.clusterdeviceplatform.server.server.utils.DeviceOutBoundDetect;
 
 public class EmployeeItem {
-    //个人信息
+
     private String department;
 
-    //设备位置
     private int groupId;
 
     private int deviceId;
