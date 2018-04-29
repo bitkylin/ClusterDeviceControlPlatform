@@ -15,6 +15,7 @@ import cc.bitky.clusterdeviceplatform.server.db.statistic.status.DeviceGroupOutl
 import cc.bitky.clusterdeviceplatform.server.server.ServerCenterProcessor;
 import cc.bitky.clusterdeviceplatform.server.web.spa.data.random.MsgCountRandom;
 import cc.bitky.clusterdeviceplatform.server.web.spa.utils.ResMsg;
+import cc.bitky.clusterdeviceplatform.server.web.spa.utils.WebUtil;
 
 import static cc.bitky.clusterdeviceplatform.server.config.ServerSetting.WEB_RANDOM_DEBUG;
 
@@ -58,8 +59,7 @@ public class DataProcessController {
             outline = webProcessor.getMsgProcessingRepository().createOutline();
         }
         outline.setAlarmLimit(10, 100);
-        long l2 = System.currentTimeMillis();
-        logger.info("耗时：" + (l2 - l1) + " ms");
+        WebUtil.printTimeConsumed(l1, logger);
         return new ResMsg(outline);
     }
 
@@ -71,6 +71,7 @@ public class DataProcessController {
     @GetMapping("/pressure")
     public ResMsg getDeviceGroupPressure() {
         logger.info("/server/dataprocess/devicegroup/pressure");
+        long l1 = System.currentTimeMillis();
         GroupCacheItem item = null;
         if (WEB_RANDOM_DEBUG) {
             item = GroupCacheItem.randomInstance();
@@ -78,6 +79,7 @@ public class DataProcessController {
             item = webProcessor.getMsgProcessingRepository().statisticChannelLoad();
         }
         item.setAlarmLimit(100, 500);
+        WebUtil.printTimeConsumed(l1, logger);
         return new ResMsg(item);
     }
 
@@ -92,8 +94,7 @@ public class DataProcessController {
             outline = webProcessor.getMsgProcessingRepository().createDetail(groupId);
         }
         outline.setAlarmLimit(10, 100);
-        long l2 = System.currentTimeMillis();
-        logger.info("耗时：" + (l2 - l1) + " ms");
+        WebUtil.printTimeConsumed(l1, logger);
         return new ResMsg(outline);
     }
 

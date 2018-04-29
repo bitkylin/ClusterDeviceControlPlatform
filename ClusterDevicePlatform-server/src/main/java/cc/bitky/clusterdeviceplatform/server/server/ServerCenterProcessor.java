@@ -142,6 +142,11 @@ public class ServerCenterProcessor {
         }));
     }
 
+    /**
+     * 服务器从TCP捕获到设备状态消息对象，并送入缓冲区等待处理
+     *
+     * @param message 设备状态消息对象
+     */
     public void huntDeviceStatusMsg(MsgReplyDeviceStatus message) {
         ProcessedMsgRepo.MSG_COUNT.incrementAndGet();
         LinkedBlockingDeque<MsgReplyDeviceStatus> deque = msgProcessingRepository.touchMessageQueue(message.getGroupId());

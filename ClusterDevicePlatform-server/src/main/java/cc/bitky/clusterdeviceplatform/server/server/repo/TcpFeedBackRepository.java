@@ -26,7 +26,6 @@ public class TcpFeedBackRepository {
      * 设备运行状态正常「无未响应，无断开，无重发」
      */
     private final AtomicBoolean[] channelNormalList = new AtomicBoolean[DeviceSetting.MAX_GROUP_ID + 1];
-
     {
         for (int i = 1; i <= DeviceSetting.MAX_GROUP_ID; i++) {
             channelNormalList[i] = new AtomicBoolean(true);

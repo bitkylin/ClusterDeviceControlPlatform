@@ -14,6 +14,7 @@ import cc.bitky.clusterdeviceplatform.server.server.ServerCenterProcessor;
 import cc.bitky.clusterdeviceplatform.server.server.repo.TcpFeedBackRepository;
 import cc.bitky.clusterdeviceplatform.server.tcp.statistic.except.TcpFeedbackItem;
 import cc.bitky.clusterdeviceplatform.server.web.spa.utils.ResMsg;
+import cc.bitky.clusterdeviceplatform.server.web.spa.utils.WebUtil;
 
 /**
  * 服务器数据处理模块
@@ -35,8 +36,7 @@ public class FeedbackMsgController {
         logger.info("/server/feedback/items/exception");
         long l1 = System.currentTimeMillis();
         List<TcpFeedbackItem> items = webProcessor.getTcpFeedBackItems(TcpFeedBackRepository.ItemType.EXCEPTION);
-        long l2 = System.currentTimeMillis();
-        logger.info("耗时：" + (l2 - l1) + " ms");
+        WebUtil.printTimeConsumed(l1, logger);
         return new ResMsg(items);
     }
 
@@ -45,8 +45,7 @@ public class FeedbackMsgController {
         logger.info("/server/feedback/items/timeout");
         long l1 = System.currentTimeMillis();
         List<TcpFeedbackItem> items = webProcessor.getTcpFeedBackItems(TcpFeedBackRepository.ItemType.TIMEOUT);
-        long l2 = System.currentTimeMillis();
-        logger.info("耗时：" + (l2 - l1) + " ms");
+        WebUtil.printTimeConsumed(l1, logger);
         return new ResMsg(items);
     }
 
@@ -55,8 +54,7 @@ public class FeedbackMsgController {
         logger.info("/server/feedback/items/clear");
         long l1 = System.currentTimeMillis();
         webProcessor.getTcpFeedBackRepository().clearItems();
-        long l2 = System.currentTimeMillis();
-        logger.info("耗时：" + (l2 - l1) + " ms");
+        WebUtil.printTimeConsumed(l1, logger);
         return new ResMsg("success");
     }
 }

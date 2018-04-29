@@ -23,6 +23,7 @@ import cc.bitky.clusterdeviceplatform.server.web.spa.data.bean.EmployeeGatherByD
 import cc.bitky.clusterdeviceplatform.server.web.spa.data.bean.EmployeeGatherByGroup;
 import cc.bitky.clusterdeviceplatform.server.web.spa.data.bean.EmployeeGatherOutline;
 import cc.bitky.clusterdeviceplatform.server.web.spa.utils.ResMsg;
+import cc.bitky.clusterdeviceplatform.server.web.spa.utils.WebUtil;
 
 
 /**
@@ -46,8 +47,7 @@ public class StatusGatherController {
         logger.info("/server/dataprocess/statusgather/rebuild");
         long l1 = System.currentTimeMillis();
         boolean isSuccess = centerProcessor.rebuildEmployeeStatus();
-        long l2 = System.currentTimeMillis();
-        logger.info("总耗时：" + (l2 - l1) + " ms");
+        WebUtil.printTimeConsumed(l1, logger);
         if (isSuccess) {
             return new ResMsg("success");
         }else {
@@ -74,8 +74,7 @@ public class StatusGatherController {
             EmployeeCategory category = classifyDeviceStatusItems(list);
             departmentList.add(new EmployeeGatherByDepartment(department, list.size(), category));
         });
-        long l2 = System.currentTimeMillis();
-        logger.info("总耗时：" + (l2 - l1) + " ms");
+        WebUtil.printTimeConsumed(l1, logger);
         return new ResMsg(new EmployeeGatherOutline(departmentList, groupList));
     }
 
