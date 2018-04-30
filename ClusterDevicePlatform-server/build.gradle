@@ -16,7 +16,7 @@ apply plugin: 'org.springframework.boot'
 apply plugin: 'io.spring.dependency-management'
 
 group = 'cc.bitky.ClusterDevicePlatform'
-version = '1.9.1-release'
+version = '1.9.2-release'
 sourceCompatibility = 1.8
 
 repositories {
