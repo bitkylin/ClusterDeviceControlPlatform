@@ -8,7 +8,6 @@ import java.util.List;
 import java.util.concurrent.Executors;
 
 import cc.bitky.clusterdeviceplatform.server.db.bean.Employee;
-import cc.bitky.clusterdeviceplatform.server.db.work.bean.EmployeeItem;
 import cc.bitky.clusterdeviceplatform.server.server.repo.DeviceStatusRepository;
 import cc.bitky.clusterdeviceplatform.server.server.utils.DeviceOutBoundDetect;
 
@@ -35,7 +34,7 @@ public class ServerRunner implements CommandLineRunner {
             if (DeviceOutBoundDetect.detect(employee.getGroupId(), employee.getDeviceId())) {
                 return;
             }
-            repository.addEmployeeItemsRef(employee.getGroupId(), employee.getDeviceId(), EmployeeItem.create(employee));
+            repository.addEmployeeItemsRef(employee.getGroupId(), employee.getDeviceId(), employee);
         });
         return true;
     }

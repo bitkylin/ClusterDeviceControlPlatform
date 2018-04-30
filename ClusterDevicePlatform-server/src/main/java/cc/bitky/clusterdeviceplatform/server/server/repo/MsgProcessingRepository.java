@@ -18,13 +18,13 @@ import cc.bitky.clusterdeviceplatform.server.config.DeviceSetting;
 import cc.bitky.clusterdeviceplatform.server.config.ServerSetting;
 import cc.bitky.clusterdeviceplatform.server.db.DbPresenter;
 import cc.bitky.clusterdeviceplatform.server.db.bean.Device;
-import cc.bitky.clusterdeviceplatform.server.db.work.bean.StatusItem;
 import cc.bitky.clusterdeviceplatform.server.db.statistic.pressure.GroupCacheItem;
 import cc.bitky.clusterdeviceplatform.server.db.statistic.pressure.MsgCount;
 import cc.bitky.clusterdeviceplatform.server.db.statistic.status.DeviceGroupItem;
 import cc.bitky.clusterdeviceplatform.server.db.statistic.status.DeviceGroupOutline;
-import cc.bitky.clusterdeviceplatform.server.db.statistic.status.DeviceItem;
+import cc.bitky.clusterdeviceplatform.server.db.statistic.status.DeviceStatusItem;
 import cc.bitky.clusterdeviceplatform.server.server.ServerCenterProcessor;
+import cc.bitky.clusterdeviceplatform.server.server.repo.bean.StatusItem;
 import cc.bitky.clusterdeviceplatform.server.tcp.statistic.channel.ChannelItem;
 
 /**
@@ -62,7 +62,7 @@ public class MsgProcessingRepository {
      * @return 单设备组服务器缓存信息bean
      */
     private DeviceGroupItem createSingleDeviceGroup(int groupId, boolean needDetail) {
-        List<DeviceItem> deviceItems = new ArrayList<>(DeviceSetting.MAX_DEVICE_ID);
+        List<DeviceStatusItem> deviceStatusItems = new ArrayList<>(DeviceSetting.MAX_DEVICE_ID);
         int deviceCount = DeviceSetting.MAX_DEVICE_ID;
         int usingCount = 0;
         int chargingCount = 0;
@@ -102,13 +102,13 @@ public class MsgProcessingRepository {
             if (work < 4) {
                 work = 1;
             }
-            DeviceItem deviceItem = new DeviceItem(deviceId, charge, work);
-            deviceItems.add(deviceItem);
+            DeviceStatusItem deviceStatusItem = new DeviceStatusItem(deviceId, charge, work);
+            deviceStatusItems.add(deviceStatusItem);
         }
         if (!needDetail) {
-            deviceItems = null;
+            deviceStatusItems = null;
         }
-        return new DeviceGroupItem(groupId, deviceItems, msgCount, deviceCount, usingCount, chargingCount, fullCount, uninitCount);
+        return new DeviceGroupItem(groupId, deviceStatusItems, msgCount, deviceCount, usingCount, chargingCount, fullCount, uninitCount);
     }
 
     /**

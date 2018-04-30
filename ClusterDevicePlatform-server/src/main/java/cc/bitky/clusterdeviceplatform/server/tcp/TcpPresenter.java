@@ -106,7 +106,6 @@ public class TcpPresenter {
             logger.warn("设备号出错「GroupId:" + msg.getGroupId() + "; DeviceId:" + msg.getDeviceId() + "」");
             return;
         }
-        logger.debug("收到正常消息对象：「" + msg.msgDetailToString() + "」");
         switch (msg.getJointMsgFlag()) {
             case JointMsgType.replyWorkStatus:
             case JointMsgType.replyChargeStatus:
@@ -119,6 +118,7 @@ public class TcpPresenter {
             default:
                 if (msg instanceof MsgReplyNormal) {
                     tcpRepository.touchNormalReplyMsg((MsgReplyNormal) msg);
+                    server.touchNormalReplyMsg((MsgReplyNormal)msg);
                 } else {
                     server.huntMessage(msg);
                 }

@@ -17,7 +17,7 @@ import cc.bitky.clusterdeviceplatform.server.tcp.statistic.except.TcpFeedbackIte
 import cc.bitky.clusterdeviceplatform.server.tcp.statistic.except.TypeEnum;
 
 /**
- * 用于TCP反馈消息对象的缓存容器
+ * 用于 TCP 异常反馈消息对象的缓存容器
  */
 @Repository
 public class TcpFeedBackRepository {
@@ -26,7 +26,6 @@ public class TcpFeedBackRepository {
      * 设备运行状态正常「无未响应，无断开，无重发」
      */
     private final AtomicBoolean[] channelNormalList = new AtomicBoolean[DeviceSetting.MAX_GROUP_ID + 1];
-
     {
         for (int i = 1; i <= DeviceSetting.MAX_GROUP_ID; i++) {
             channelNormalList[i] = new AtomicBoolean(true);

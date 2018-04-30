@@ -3,7 +3,7 @@ from utils import namecreater
 from datetime import datetime
 import random
 
-db = device_create.get_creator("cdg-pc", "bitkyTest")
+db = device_create.get_creator("localhost", "bitkyTest")
 device = db.Device
 employee = db.Employee
 device.drop()

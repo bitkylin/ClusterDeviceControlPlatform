@@ -22,7 +22,7 @@ import cc.bitky.clusterdeviceplatform.server.db.operate.DbRoutineOperate;
 import cc.bitky.clusterdeviceplatform.server.db.operate.DeviceOperate;
 import cc.bitky.clusterdeviceplatform.server.db.operate.EmployeeOperate;
 import cc.bitky.clusterdeviceplatform.server.db.statistic.repo.ProcessedMsgRepo;
-import cc.bitky.clusterdeviceplatform.server.db.work.bean.StatusItem;
+import cc.bitky.clusterdeviceplatform.server.server.repo.bean.StatusItem;
 import cc.bitky.clusterdeviceplatform.server.server.repo.DeviceStatusRepository;
 import cc.bitky.clusterdeviceplatform.server.server.repo.TcpFeedBackRepository;
 import cc.bitky.clusterdeviceplatform.server.tcp.statistic.except.TcpFeedbackItem;
@@ -107,17 +107,6 @@ public class DbPresenter {
     public StatusItem obtainStatusByCache(int groupId, int deviceId, MsgReplyDeviceStatus.Type type) {
         return deviceStatusRepository.getStatus(groupId, deviceId, type);
     }
-
-    /**
-     * 获取设备组最近通信时刻的时间戳
-     *
-     * @param groupId 设备组 ID
-     * @return 特定的时间戳
-     */
-    public long getDeviceGroupRecentCommTime(int groupId) {
-        return deviceStatusRepository.getDeviceGroupRecentCommTime(groupId);
-    }
-
 
     /**
      * 总帧数统计

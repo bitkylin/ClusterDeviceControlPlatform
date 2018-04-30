@@ -13,8 +13,8 @@ import cc.bitky.clusterdeviceplatform.server.config.DeviceSetting;
 import cc.bitky.clusterdeviceplatform.server.db.statistic.pressure.GroupCacheItem;
 import cc.bitky.clusterdeviceplatform.server.db.statistic.status.DeviceGroupOutline;
 import cc.bitky.clusterdeviceplatform.server.server.ServerCenterProcessor;
-import cc.bitky.clusterdeviceplatform.server.web.spa.data.random.MsgCountRandom;
 import cc.bitky.clusterdeviceplatform.server.web.spa.utils.ResMsg;
+import cc.bitky.clusterdeviceplatform.server.web.spa.utils.WebUtil;
 
 import static cc.bitky.clusterdeviceplatform.server.config.ServerSetting.WEB_RANDOM_DEBUG;
 
@@ -26,10 +26,14 @@ import static cc.bitky.clusterdeviceplatform.server.config.ServerSetting.WEB_RAN
 @RestController
 @RequestMapping(value = "/server/dataprocess/devicegroup")
 public class DataProcessController {
-    MsgCountRandom countRandom;
-    @Autowired
-    ServerCenterProcessor webProcessor;
+
+    private final ServerCenterProcessor webProcessor;
     private Logger logger = LoggerFactory.getLogger(getClass());
+
+    @Autowired
+    public DataProcessController(ServerCenterProcessor webProcessor) {
+        this.webProcessor = webProcessor;
+    }
 
     /**
      * 获取设备组的数量
@@ -58,8 +62,7 @@ public class DataProcessController {
             outline = webProcessor.getMsgProcessingRepository().createOutline();
         }
         outline.setAlarmLimit(10, 100);
-        long l2 = System.currentTimeMillis();
-        logger.info("耗时：" + (l2 - l1) + " ms");
+        WebUtil.printTimeConsumed(l1, logger);
         return new ResMsg(outline);
     }
 
@@ -71,6 +74,7 @@ public class DataProcessController {
     @GetMapping("/pressure")
     public ResMsg getDeviceGroupPressure() {
         logger.info("/server/dataprocess/devicegroup/pressure");
+        long l1 = System.currentTimeMillis();
         GroupCacheItem item = null;
         if (WEB_RANDOM_DEBUG) {
             item = GroupCacheItem.randomInstance();
@@ -78,6 +82,7 @@ public class DataProcessController {
             item = webProcessor.getMsgProcessingRepository().statisticChannelLoad();
         }
         item.setAlarmLimit(100, 500);
+        WebUtil.printTimeConsumed(l1, logger);
         return new ResMsg(item);
     }
 
@@ -92,8 +97,7 @@ public class DataProcessController {
             outline = webProcessor.getMsgProcessingRepository().createDetail(groupId);
         }
         outline.setAlarmLimit(10, 100);
-        long l2 = System.currentTimeMillis();
-        logger.info("耗时：" + (l2 - l1) + " ms");
+        WebUtil.printTimeConsumed(l1, logger);
         return new ResMsg(outline);
     }
 

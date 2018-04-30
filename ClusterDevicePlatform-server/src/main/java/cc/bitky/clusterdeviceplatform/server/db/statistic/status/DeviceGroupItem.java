@@ -9,7 +9,7 @@ public class DeviceGroupItem {
     /**
      * 单组的设备数量
      */
-    private List<DeviceItem> items;
+    private List<DeviceStatusItem> items;
     /**
      * 设备总数
      */
@@ -40,7 +40,7 @@ public class DeviceGroupItem {
     private int msgCount;
 
 
-    public DeviceGroupItem(int id, List<DeviceItem> items, int msgCount, int deviceCount, int usingCount, int chargingCount, int fullCount, int uninitCount) {
+    public DeviceGroupItem(int id, List<DeviceStatusItem> items, int msgCount, int deviceCount, int usingCount, int chargingCount, int fullCount, int uninitCount) {
         this.id = id;
         this.items = items;
         this.msgCount = msgCount;
@@ -55,7 +55,7 @@ public class DeviceGroupItem {
         return id;
     }
 
-    public List<DeviceItem> getItems() {
+    public List<DeviceStatusItem> getItems() {
         return items;
     }
 

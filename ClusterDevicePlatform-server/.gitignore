@@ -1,6 +1,7 @@
 setting
 src/test/java/
 *.exe
+*.dll
 
 /.gradle/
 /build/

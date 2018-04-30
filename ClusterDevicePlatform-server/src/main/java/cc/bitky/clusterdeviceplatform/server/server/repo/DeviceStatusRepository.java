@@ -3,102 +3,117 @@ package cc.bitky.clusterdeviceplatform.server.server.repo;
 import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.atomic.AtomicLongArray;
-import java.util.concurrent.atomic.AtomicReferenceArray;
+import java.util.stream.Collectors;
 
+import cc.bitky.clusterdeviceplatform.messageutils.define.base.BaseMsg;
 import cc.bitky.clusterdeviceplatform.messageutils.msg.statusreply.MsgReplyDeviceStatus;
-import cc.bitky.clusterdeviceplatform.server.config.DeviceSetting;
-import cc.bitky.clusterdeviceplatform.server.db.work.bean.EmployeeItem;
-import cc.bitky.clusterdeviceplatform.server.db.work.bean.StatusItem;
+import cc.bitky.clusterdeviceplatform.messageutils.msg.statusreply.MsgReplyNormal;
+import cc.bitky.clusterdeviceplatform.server.db.bean.Employee;
+import cc.bitky.clusterdeviceplatform.server.server.repo.bean.DeviceItem;
+import cc.bitky.clusterdeviceplatform.server.server.repo.bean.StatusItem;
 import cc.bitky.clusterdeviceplatform.server.server.utils.DeviceOutBoundDetect;
 import cc.bitky.clusterdeviceplatform.server.web.spa.data.bean.DeviceStatusItem;
+import cc.bitky.clusterdeviceplatform.server.web.spa.tcp.bean.BaseMsgSending;
+import cc.bitky.clusterdeviceplatform.server.web.spa.tcp.bean.DeviceGroupedMsgSending;
+import cc.bitky.clusterdeviceplatform.server.web.spa.tcp.bean.DeviceItemMsgSending;
+import cc.bitky.clusterdeviceplatform.server.web.spa.tcp.bean.MachineMsgSending;
+import cc.bitky.clusterdeviceplatform.server.web.spa.tcp.bean.MsgSending;
 import io.netty.util.internal.ConcurrentSet;
 
+import static cc.bitky.clusterdeviceplatform.server.config.DeviceSetting.MAX_DEVICE_ID;
+import static cc.bitky.clusterdeviceplatform.server.config.DeviceSetting.MAX_GROUP_ID;
+
+/**
+ * 设备状态的服务器缓存
+ */
 @Repository
 public class DeviceStatusRepository {
     /**
      * 设备状态暂存
      */
-    private final AtomicReferenceArray<AtomicReferenceArray<StatusItem>> CHARGE_STATUS_STORAGE = new AtomicReferenceArray<>(DeviceSetting.MAX_GROUP_ID + 1);
-    private final AtomicReferenceArray<AtomicReferenceArray<StatusItem>> WORK_STATUS_STORAGE = new AtomicReferenceArray<>(DeviceSetting.MAX_GROUP_ID + 1);
-    /**
-     * 员工引用缓存
-     */
-    private final AtomicReferenceArray<AtomicReferenceArray<EmployeeItem>> EMPLOYEE_LINKED_STORAGE = new AtomicReferenceArray<>(DeviceSetting.MAX_GROUP_ID + 1);
+    private final DeviceItem[][] DEVICE_ITEMS = new DeviceItem[MAX_GROUP_ID][MAX_DEVICE_ID];
     /**
      * 员工分部门缓存
      */
-    private final ConcurrentHashMap<String, ConcurrentSet<EmployeeItem>> employeeItemSet = new ConcurrentHashMap<>();
-    /**
-     * 设备组最近通信时间
-     */
-    private final AtomicLongArray DEVICEGROUP_RECENT_COMM = new AtomicLongArray(DeviceSetting.MAX_GROUP_ID + 1);
+    private final ConcurrentHashMap<String, ConcurrentSet<Employee>> employeeItemSetByDepartment = new ConcurrentHashMap<>();
 
     {
-        for (int i = 1; i <= DeviceSetting.MAX_GROUP_ID; i++) {
-            AtomicReferenceArray<StatusItem> array1 = new AtomicReferenceArray<>(DeviceSetting.MAX_DEVICE_ID + 1);
-            AtomicReferenceArray<StatusItem> array2 = new AtomicReferenceArray<>(DeviceSetting.MAX_DEVICE_ID + 1);
-            AtomicReferenceArray<EmployeeItem> array3 = new AtomicReferenceArray<>(DeviceSetting.MAX_DEVICE_ID + 1);
-            for (int j = 0; j <= DeviceSetting.MAX_DEVICE_ID; j++) {
-                array1.set(j, new StatusItem());
-                array2.set(j, new StatusItem());
+        for (int i = 0; i < MAX_GROUP_ID; i++) {
+            for (int j = 0; j < MAX_DEVICE_ID; j++) {
+                DEVICE_ITEMS[i][j] = new DeviceItem(i + 1, j + 1);
             }
-            CHARGE_STATUS_STORAGE.set(i, array1);
-            WORK_STATUS_STORAGE.set(i, array2);
-            EMPLOYEE_LINKED_STORAGE.set(i, array3);
         }
     }
 
     /**
-     * 从服务器暂存库中，获取设备状态
+     * 从服务器暂存库中，获取设备的充电状态
      *
      * @param groupId  设备组号
      * @param deviceId 设备号
-     * @return 指定设备的状态
+     * @return 指定设备的充电状态
      */
     private StatusItem getChargeStatus(int groupId, int deviceId) {
-        return CHARGE_STATUS_STORAGE.get(groupId).get(deviceId);
+        return obtainDeviceItem(groupId, deviceId).obtainChargeStatus();
     }
 
+    /**
+     * 服务器暂存库中，保存设备的充电状态
+     *
+     * @param groupId  设备组号
+     * @param deviceId 设备号
+     * @param item     充电状态对象
+     */
     private void setChargeStatus(int groupId, int deviceId, StatusItem item) {
-        CHARGE_STATUS_STORAGE.get(groupId).set(deviceId, item);
+        obtainDeviceItem(groupId, deviceId).saveChargeStatus(item);
     }
 
+    /**
+     * 从服务器暂存库中，获取设备的工作状态
+     *
+     * @param groupId  设备组号
+     * @param deviceId 设备号
+     * @return 指定设备的工作状态
+     */
     private StatusItem getWorkStatus(int groupId, int deviceId) {
-        return WORK_STATUS_STORAGE.get(groupId).get(deviceId);
+        return obtainDeviceItem(groupId, deviceId).obtainWorkStatus();
     }
 
+    /**
+     * 服务器暂存库中，保存设备的工作状态
+     *
+     * @param groupId  设备组号
+     * @param deviceId 设备号
+     * @param item     工作状态对象
+     */
     private void setWorkStatus(int groupId, int deviceId, StatusItem item) {
-        WORK_STATUS_STORAGE.get(groupId).set(deviceId, item);
+        obtainDeviceItem(groupId, deviceId).saveWorkStatus(item);
     }
 
     /**
-     * 获取设备组最近通信时刻的时间戳
+     * 服务器暂存库中，获取指定的设备
      *
-     * @param groupId 设备组 ID
-     * @return 特定的时间戳
+     * @param groupId  设备组号
+     * @param deviceId 设备号
+     * @return 指定设备的对象
      */
-    public long getDeviceGroupRecentCommTime(int groupId) {
-        if (DeviceOutBoundDetect.detectGroup(groupId)) {
-            return 0;
-        }
-        return DEVICEGROUP_RECENT_COMM.get(groupId);
+    private DeviceItem obtainDeviceItem(int groupId, int deviceId) {
+        return DEVICE_ITEMS[groupId - 1][deviceId - 1];
     }
 
     /**
-     * 更新设备组最近通信时刻的时间戳
+     * 服务器暂存库中，获取指定的设备组
      *
-     * @param groupId 设备组 ID
+     * @param groupId 设备组号
+     * @return 指定设备组的对象
      */
-    private void updateDeviceGroupRecentCommTime(int groupId) {
-        if (DeviceOutBoundDetect.detectGroup(groupId)) {
-            return;
-        }
-        DEVICEGROUP_RECENT_COMM.set(groupId, System.currentTimeMillis());
+    private DeviceItem[] obtainDeviceGroup(int groupId) {
+        return DEVICE_ITEMS[groupId - 1];
     }
 
     /**
@@ -113,7 +128,6 @@ public class DeviceStatusRepository {
         if (DeviceOutBoundDetect.detect(groupId, deviceId)) {
             return new StatusItem();
         }
-        updateDeviceGroupRecentCommTime(groupId);
         if (type == MsgReplyDeviceStatus.Type.CHARGE) {
             return getChargeStatus(groupId, deviceId);
         } else {
@@ -129,18 +143,18 @@ public class DeviceStatusRepository {
         }
     }
 
-
     /**
      * 清理所有员工的引用
      */
     public void clearEmployeeItemsRef() {
-        employeeItemSet.clear();
-        for (int i = 1; i <= DeviceSetting.MAX_GROUP_ID; i++) {
-            AtomicReferenceArray<EmployeeItem> array = new AtomicReferenceArray<>(DeviceSetting.MAX_DEVICE_ID + 1);
-            EMPLOYEE_LINKED_STORAGE.set(i, array);
+        employeeItemSetByDepartment.clear();
+        for (int i = 1; i <= MAX_GROUP_ID; i++) {
+            for (int j = 1; j <= MAX_DEVICE_ID; j++) {
+                DeviceItem deviceItem = obtainDeviceItem(i, j);
+                deviceItem.saveEmployee(null);
+            }
         }
     }
-
 
     /**
      * 添加员工对象的引用
@@ -149,12 +163,12 @@ public class DeviceStatusRepository {
      * @param deviceId 设备 ID
      * @param item     员工对象
      */
-    public void addEmployeeItemsRef(int groupId, int deviceId, EmployeeItem item) {
-        if (!employeeItemSet.containsKey(item.getDepartment())) {
-            employeeItemSet.put(item.getDepartment(), new ConcurrentSet<>());
+    public void addEmployeeItemsRef(int groupId, int deviceId, Employee item) {
+        if (!employeeItemSetByDepartment.containsKey(item.getDepartment())) {
+            employeeItemSetByDepartment.put(item.getDepartment(), new ConcurrentSet<>());
         }
-        employeeItemSet.get(item.getDepartment()).add(item);
-        EMPLOYEE_LINKED_STORAGE.get(groupId).set(deviceId, item);
+        employeeItemSetByDepartment.get(item.getDepartment()).add(item);
+        obtainDeviceItem(groupId, deviceId).saveEmployee(item);
     }
 
     /**
@@ -164,28 +178,10 @@ public class DeviceStatusRepository {
      * @return 设备状态引用集合
      */
     public List<DeviceStatusItem> getEmployeeItemsRefByCoordinate(int groupId) {
-        AtomicReferenceArray<StatusItem> chargeItems = CHARGE_STATUS_STORAGE.get(groupId);
-        AtomicReferenceArray<StatusItem> workItems = WORK_STATUS_STORAGE.get(groupId);
-        List<DeviceStatusItem> itemList = new ArrayList<>(DeviceSetting.MAX_DEVICE_ID);
-        for (int i = 1; i <= DeviceSetting.MAX_DEVICE_ID; i++) {
-            itemList.add(new DeviceStatusItem(chargeItems.get(i).getStatus(), workItems.get(i).getStatus()));
+        List<DeviceStatusItem> itemList = new ArrayList<>(MAX_DEVICE_ID);
+        for (int deviceId = 1; deviceId <= MAX_DEVICE_ID; deviceId++) {
+            itemList.add(new DeviceStatusItem(getChargeStatus(groupId, deviceId).getStatus(), getWorkStatus(groupId, deviceId).getStatus()));
         }
-        return itemList;
-    }
-
-    /**
-     * 获取设备状态引用集合「按部门」
-     *
-     * @param department 指定的部门
-     * @return 设备状态引用集合
-     */
-    public List<DeviceStatusItem> getEmployeeItemsRefByDepartment(String department) {
-        ConcurrentSet<EmployeeItem> map = employeeItemSet.get(department);
-        List<DeviceStatusItem> itemList = new ArrayList<>(map.size());
-        map.iterator().forEachRemaining(item ->
-                itemList.add(new DeviceStatusItem(
-                        getChargeStatus(item.getGroupId(), item.getDeviceId()).getStatus(),
-                        getWorkStatus(item.getGroupId(), item.getDeviceId()).getStatus())));
         return itemList;
     }
 
@@ -195,15 +191,102 @@ public class DeviceStatusRepository {
      * @return 目标数合
      */
     public Map<String, List<DeviceStatusItem>> getDepartmentCategory() {
-        Map<String, List<DeviceStatusItem>> map = new HashMap<>(employeeItemSet.size());
-        employeeItemSet.forEach((department, set) -> {
+        Map<String, List<DeviceStatusItem>> map = new HashMap<>(employeeItemSetByDepartment.size());
+        employeeItemSetByDepartment.forEach((department, set) -> {
             List<DeviceStatusItem> items = new ArrayList<>(set.size());
-            set.iterator().forEachRemaining(item -> {
-                items.add(new DeviceStatusItem(CHARGE_STATUS_STORAGE.get(item.getGroupId()).get(item.getDeviceId()).getStatus(),
-                        WORK_STATUS_STORAGE.get(item.getGroupId()).get(item.getDeviceId()).getStatus()));
-            });
+            set.iterator().forEachRemaining(item -> items.add(new DeviceStatusItem(
+                    getChargeStatus(item.getGroupId(), item.getDeviceId()).getStatus(),
+                    getWorkStatus(item.getGroupId(), item.getDeviceId()).getStatus())));
             map.put(department, items);
         });
         return map;
+    }
+
+    /**
+     * 将待发送消息对象缓存值服务器
+     *
+     * @param msg 待发送的消息对象
+     */
+    public void saveMsg(BaseMsg msg) {
+        obtainDeviceItem(msg.getGroupId(), msg.getDeviceId()).saveMsg(msg);
+    }
+
+    /**
+     * 已收到已发送消息对象的回复，执行缓存的后续清理
+     *
+     * @param msg 回复消息对象
+     */
+    public void removeMsg(MsgReplyNormal msg) {
+        obtainDeviceItem(msg.getGroupId(), msg.getDeviceId()).removeMsg(msg);
+    }
+
+    /**
+     * 「TCP待发送反馈」获取 TCP 通道待发送的消息统计概览
+     *
+     * @param isFlat   扁平化消息细节
+     * @param msgLimit 消息对象的最大数量
+     * @return 整体待发送消息统计
+     */
+    public BaseMsgSending getMsgSendingOutline(boolean isFlat, int msgLimit) {
+
+        List<DeviceGroupedMsgSending> msgSendingGroupedItems = Arrays.stream(DEVICE_ITEMS).map(
+                groupItem -> DeviceGroupedMsgSending.createOutline(groupItem[0].getGroupId(),
+                        Arrays.stream(groupItem).mapToInt(DeviceItem::getMsgCount).sum(),
+                        Arrays.stream(groupItem).mapToInt(DeviceItem::getMsgSendingCount).sum()))
+                .filter(item -> item.getMsgCount() != 0)
+                .collect(Collectors.toList());
+
+        int msgCount = msgSendingGroupedItems.stream().mapToInt(DeviceGroupedMsgSending::getMsgCount).sum();
+        int msgSendingCount = msgSendingGroupedItems.stream().mapToInt(DeviceGroupedMsgSending::getMsgSendingCount).sum();
+        if (isFlat) {
+            return MachineMsgSending.createFlat(msgCount, msgSendingCount, Arrays.stream(DEVICE_ITEMS)
+                    .flatMap(Arrays::stream)
+                    .map(DeviceItem::getCacheMsg)
+                    .flatMap(Collection::stream)
+                    .limit(msgLimit)
+                    .map(MsgSending::new)
+                    .collect(Collectors.toList()));
+        } else {
+            return MachineMsgSending.createGather(msgCount, msgSendingCount, msgSendingGroupedItems);
+        }
+    }
+
+    /**
+     * 「TCP待发送反馈」获取 TCP 通道待发送的消息统计概览
+     *
+     * @param groupId  组号
+     * @param isFlat   扁平化消息细节
+     * @param msgLimit 消息对象的最大数量
+     * @return 设备组待发送消息统计
+     */
+    public BaseMsgSending getMsgSendingGrouped(int groupId, boolean isFlat, int msgLimit) {
+        DeviceItem[] deviceItems = obtainDeviceGroup(groupId);
+        int msgCount = Arrays.stream(deviceItems).mapToInt(DeviceItem::getMsgCount).sum();
+        int msgSendingCount = Arrays.stream(deviceItems).mapToInt(DeviceItem::getMsgSendingCount).sum();
+        if (isFlat) {
+            return DeviceGroupedMsgSending.createFlat(groupId, msgCount, msgSendingCount, Arrays.stream(obtainDeviceGroup(groupId))
+                    .map(DeviceItem::getCacheMsg)
+                    .flatMap(Collection::stream)
+                    .limit(msgLimit)
+                    .map(MsgSending::new)
+                    .collect(Collectors.toList()));
+        } else {
+            return DeviceGroupedMsgSending.createGather(groupId, msgCount, msgSendingCount, Arrays.stream(obtainDeviceGroup(groupId))
+                    .filter(item -> item.getMsgCount() != 0)
+                    .map(item -> DeviceItemMsgSending.create(item, false, msgLimit))
+                    .collect(Collectors.toList()));
+        }
+    }
+
+    /**
+     * 「TCP待发送反馈」获取 TCP 通道待发送的消息统计概览
+     *
+     * @param groupId  组号
+     * @param deviceId 设备号
+     * @param msgLimit 消息对象的最大数量
+     * @return 设备待发送消息统计
+     */
+    public BaseMsgSending getMsgSendingByCoordinate(int groupId, int deviceId, int msgLimit) {
+        return DeviceItemMsgSending.create(obtainDeviceItem(groupId, deviceId), true, msgLimit);
     }
 }

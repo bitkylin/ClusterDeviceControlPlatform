@@ -20,6 +20,7 @@ import cc.bitky.clusterdeviceplatform.server.config.CommSetting;
 import cc.bitky.clusterdeviceplatform.server.config.DbSetting;
 import cc.bitky.clusterdeviceplatform.server.config.LocalProfile;
 import cc.bitky.clusterdeviceplatform.server.config.ServerSetting;
+import cc.bitky.clusterdeviceplatform.server.server.statistic.utils.IpUtil;
 
 @SpringBootApplication
 public class ServerApplication {
@@ -99,6 +100,7 @@ public class ServerApplication {
         if (localProfile != null) {
             trimProfileProperty(localProfile);
             DbSetting.MONGODB_HOST = localProfile.数据库服务器的主机名或IP;
+            DbSetting.MONGODB_IP =  IpUtil.getIP(DbSetting.MONGODB_HOST)[0];
             CommSetting.FRAME_SEND_INTERVAL = localProfile.帧发送间隔;
             CommSetting.DEPLOY_REMAIN_CHARGE_TIMES = localProfile.部署剩余充电次数阈值 >= CommSetting.REMAIN_CHARGE_TIMES_CLEAR ? CommSetting.REMAIN_CHARGE_TIMES_CLEAR - 1 : localProfile.部署剩余充电次数阈值;
             DbSetting.DEFAULT_EMPLOYEE_CARD_NUMBER = localProfile.员工默认卡号;

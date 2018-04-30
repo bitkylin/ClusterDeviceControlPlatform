@@ -2,7 +2,6 @@ package cc.bitky.clusterdeviceplatform.server.web.spa.data;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -23,6 +22,7 @@ import cc.bitky.clusterdeviceplatform.server.web.spa.data.bean.EmployeeGatherByD
 import cc.bitky.clusterdeviceplatform.server.web.spa.data.bean.EmployeeGatherByGroup;
 import cc.bitky.clusterdeviceplatform.server.web.spa.data.bean.EmployeeGatherOutline;
 import cc.bitky.clusterdeviceplatform.server.web.spa.utils.ResMsg;
+import cc.bitky.clusterdeviceplatform.server.web.spa.utils.WebUtil;
 
 
 /**
@@ -33,7 +33,6 @@ import cc.bitky.clusterdeviceplatform.server.web.spa.utils.ResMsg;
 @RequestMapping(value = "/server/dataprocess/statusgather")
 public class StatusGatherController {
 
-    @Autowired
     private final ServerRunner centerProcessor;
     private Logger logger = LoggerFactory.getLogger(getClass());
 
@@ -46,8 +45,7 @@ public class StatusGatherController {
         logger.info("/server/dataprocess/statusgather/rebuild");
         long l1 = System.currentTimeMillis();
         boolean isSuccess = centerProcessor.rebuildEmployeeStatus();
-        long l2 = System.currentTimeMillis();
-        logger.info("总耗时：" + (l2 - l1) + " ms");
+        WebUtil.printTimeConsumed(l1, logger);
         if (isSuccess) {
             return new ResMsg("success");
         }else {
@@ -74,8 +72,7 @@ public class StatusGatherController {
             EmployeeCategory category = classifyDeviceStatusItems(list);
             departmentList.add(new EmployeeGatherByDepartment(department, list.size(), category));
         });
-        long l2 = System.currentTimeMillis();
-        logger.info("总耗时：" + (l2 - l1) + " ms");
+        WebUtil.printTimeConsumed(l1, logger);
         return new ResMsg(new EmployeeGatherOutline(departmentList, groupList));
     }
 
