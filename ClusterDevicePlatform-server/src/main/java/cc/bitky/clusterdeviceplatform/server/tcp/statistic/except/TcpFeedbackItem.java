@@ -9,6 +9,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.Objects;
 
 import cc.bitky.clusterdeviceplatform.messageutils.define.base.BaseMsg;
+import cc.bitky.clusterdeviceplatform.messageutils.msg.statusreply.MsgReplyDeviceStatus;
 
 /**
  * 「信息统计」TCP 反馈消息对象
@@ -78,7 +79,7 @@ public class TcpFeedbackItem {
      * @param baseMsg 工作状态响应消息对象
      * @return 已创建的反馈消息对象
      */
-    public static TcpFeedbackItem createDeviceWorkException(BaseMsg baseMsg) {
+    public static TcpFeedbackItem createDeviceWorkException(MsgReplyDeviceStatus baseMsg) {
         return new TcpFeedbackItem(baseMsg.getGroupId(), baseMsg.getDeviceId(), TypeEnum.WORK_STATUS_EXCEPTION, baseMsg);
     }
 

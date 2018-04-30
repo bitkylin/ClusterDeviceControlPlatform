@@ -23,19 +23,20 @@ import cc.bitky.clusterdeviceplatform.server.web.spa.utils.WebUtil;
 @RestController
 @RequestMapping(value = "/server/feedback/items")
 public class FeedbackMsgController {
-    private final ServerCenterProcessor webProcessor;
+
+    private final ServerCenterProcessor centerProcessor;
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
     @Autowired
-    public FeedbackMsgController(ServerCenterProcessor webProcessor) {
-        this.webProcessor = webProcessor;
+    public FeedbackMsgController(ServerCenterProcessor centerProcessor) {
+        this.centerProcessor = centerProcessor;
     }
 
     @GetMapping("/exception")
     public ResMsg getFeedbackItemsException() {
         logger.info("/server/feedback/items/exception");
         long l1 = System.currentTimeMillis();
-        List<TcpFeedbackItem> items = webProcessor.getTcpFeedBackItems(TcpFeedBackRepository.ItemType.EXCEPTION);
+        List<TcpFeedbackItem> items = centerProcessor.getTcpFeedBackItems(TcpFeedBackRepository.ItemType.EXCEPTION);
         WebUtil.printTimeConsumed(l1, logger);
         return new ResMsg(items);
     }
@@ -44,7 +45,7 @@ public class FeedbackMsgController {
     public ResMsg getFeedbackItemsTimeout() {
         logger.info("/server/feedback/items/timeout");
         long l1 = System.currentTimeMillis();
-        List<TcpFeedbackItem> items = webProcessor.getTcpFeedBackItems(TcpFeedBackRepository.ItemType.TIMEOUT);
+        List<TcpFeedbackItem> items = centerProcessor.getTcpFeedBackItems(TcpFeedBackRepository.ItemType.TIMEOUT);
         WebUtil.printTimeConsumed(l1, logger);
         return new ResMsg(items);
     }
@@ -53,7 +54,7 @@ public class FeedbackMsgController {
     public ResMsg clearFeedbackItems() {
         logger.info("/server/feedback/items/clear");
         long l1 = System.currentTimeMillis();
-        webProcessor.getTcpFeedBackRepository().clearItems();
+        centerProcessor.getTcpFeedBackRepository().clearItems();
         WebUtil.printTimeConsumed(l1, logger);
         return new ResMsg("success");
     }

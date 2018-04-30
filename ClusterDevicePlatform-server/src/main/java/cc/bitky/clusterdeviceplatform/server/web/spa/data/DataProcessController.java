@@ -13,7 +13,6 @@ import cc.bitky.clusterdeviceplatform.server.config.DeviceSetting;
 import cc.bitky.clusterdeviceplatform.server.db.statistic.pressure.GroupCacheItem;
 import cc.bitky.clusterdeviceplatform.server.db.statistic.status.DeviceGroupOutline;
 import cc.bitky.clusterdeviceplatform.server.server.ServerCenterProcessor;
-import cc.bitky.clusterdeviceplatform.server.web.spa.data.random.MsgCountRandom;
 import cc.bitky.clusterdeviceplatform.server.web.spa.utils.ResMsg;
 import cc.bitky.clusterdeviceplatform.server.web.spa.utils.WebUtil;
 
@@ -27,10 +26,14 @@ import static cc.bitky.clusterdeviceplatform.server.config.ServerSetting.WEB_RAN
 @RestController
 @RequestMapping(value = "/server/dataprocess/devicegroup")
 public class DataProcessController {
-    MsgCountRandom countRandom;
-    @Autowired
-    ServerCenterProcessor webProcessor;
+
+    private final ServerCenterProcessor webProcessor;
     private Logger logger = LoggerFactory.getLogger(getClass());
+
+    @Autowired
+    public DataProcessController(ServerCenterProcessor webProcessor) {
+        this.webProcessor = webProcessor;
+    }
 
     /**
      * 获取设备组的数量

@@ -11,6 +11,7 @@ import cc.bitky.clusterdeviceplatform.server.db.statistic.status.DeviceGroupOutl
 import cc.bitky.clusterdeviceplatform.server.db.statistic.status.DeviceStatusItem;
 
 public class KyRandom {
+
     private static Random random = new Random();
 
     public static DeviceGroupOutline createOutline() {

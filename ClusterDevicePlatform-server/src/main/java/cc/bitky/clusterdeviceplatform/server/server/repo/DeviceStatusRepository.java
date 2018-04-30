@@ -3,10 +3,13 @@ package cc.bitky.clusterdeviceplatform.server.server.repo;
 import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Collectors;
 
 import cc.bitky.clusterdeviceplatform.messageutils.define.base.BaseMsg;
 import cc.bitky.clusterdeviceplatform.messageutils.msg.statusreply.MsgReplyDeviceStatus;
@@ -16,6 +19,11 @@ import cc.bitky.clusterdeviceplatform.server.server.repo.bean.DeviceItem;
 import cc.bitky.clusterdeviceplatform.server.server.repo.bean.StatusItem;
 import cc.bitky.clusterdeviceplatform.server.server.utils.DeviceOutBoundDetect;
 import cc.bitky.clusterdeviceplatform.server.web.spa.data.bean.DeviceStatusItem;
+import cc.bitky.clusterdeviceplatform.server.web.spa.tcp.bean.BaseMsgSending;
+import cc.bitky.clusterdeviceplatform.server.web.spa.tcp.bean.DeviceGroupedMsgSending;
+import cc.bitky.clusterdeviceplatform.server.web.spa.tcp.bean.DeviceItemMsgSending;
+import cc.bitky.clusterdeviceplatform.server.web.spa.tcp.bean.MachineMsgSending;
+import cc.bitky.clusterdeviceplatform.server.web.spa.tcp.bean.MsgSending;
 import io.netty.util.internal.ConcurrentSet;
 
 import static cc.bitky.clusterdeviceplatform.server.config.DeviceSetting.MAX_DEVICE_ID;
@@ -38,7 +46,7 @@ public class DeviceStatusRepository {
     {
         for (int i = 0; i < MAX_GROUP_ID; i++) {
             for (int j = 0; j < MAX_DEVICE_ID; j++) {
-                DEVICE_ITEMS[i][j] = new DeviceItem();
+                DEVICE_ITEMS[i][j] = new DeviceItem(i + 1, j + 1);
             }
         }
     }
@@ -96,6 +104,16 @@ public class DeviceStatusRepository {
      */
     private DeviceItem obtainDeviceItem(int groupId, int deviceId) {
         return DEVICE_ITEMS[groupId - 1][deviceId - 1];
+    }
+
+    /**
+     * 服务器暂存库中，获取指定的设备组
+     *
+     * @param groupId 设备组号
+     * @return 指定设备组的对象
+     */
+    private DeviceItem[] obtainDeviceGroup(int groupId) {
+        return DEVICE_ITEMS[groupId - 1];
     }
 
     /**
@@ -200,5 +218,75 @@ public class DeviceStatusRepository {
      */
     public void removeMsg(MsgReplyNormal msg) {
         obtainDeviceItem(msg.getGroupId(), msg.getDeviceId()).removeMsg(msg);
+    }
+
+    /**
+     * 「TCP待发送反馈」获取 TCP 通道待发送的消息统计概览
+     *
+     * @param isFlat   扁平化消息细节
+     * @param msgLimit 消息对象的最大数量
+     * @return 整体待发送消息统计
+     */
+    public BaseMsgSending getMsgSendingOutline(boolean isFlat, int msgLimit) {
+
+        List<DeviceGroupedMsgSending> msgSendingGroupedItems = Arrays.stream(DEVICE_ITEMS).map(
+                groupItem -> DeviceGroupedMsgSending.createOutline(groupItem[0].getGroupId(),
+                        Arrays.stream(groupItem).mapToInt(DeviceItem::getMsgCount).sum(),
+                        Arrays.stream(groupItem).mapToInt(DeviceItem::getMsgSendingCount).sum()))
+                .filter(item -> item.getMsgCount() != 0)
+                .collect(Collectors.toList());
+
+        int msgCount = msgSendingGroupedItems.stream().mapToInt(DeviceGroupedMsgSending::getMsgCount).sum();
+        int msgSendingCount = msgSendingGroupedItems.stream().mapToInt(DeviceGroupedMsgSending::getMsgSendingCount).sum();
+        if (isFlat) {
+            return MachineMsgSending.createFlat(msgCount, msgSendingCount, Arrays.stream(DEVICE_ITEMS)
+                    .flatMap(Arrays::stream)
+                    .map(DeviceItem::getCacheMsg)
+                    .flatMap(Collection::stream)
+                    .limit(msgLimit)
+                    .map(MsgSending::new)
+                    .collect(Collectors.toList()));
+        } else {
+            return MachineMsgSending.createGather(msgCount, msgSendingCount, msgSendingGroupedItems);
+        }
+    }
+
+    /**
+     * 「TCP待发送反馈」获取 TCP 通道待发送的消息统计概览
+     *
+     * @param groupId  组号
+     * @param isFlat   扁平化消息细节
+     * @param msgLimit 消息对象的最大数量
+     * @return 设备组待发送消息统计
+     */
+    public BaseMsgSending getMsgSendingGrouped(int groupId, boolean isFlat, int msgLimit) {
+        DeviceItem[] deviceItems = obtainDeviceGroup(groupId);
+        int msgCount = Arrays.stream(deviceItems).mapToInt(DeviceItem::getMsgCount).sum();
+        int msgSendingCount = Arrays.stream(deviceItems).mapToInt(DeviceItem::getMsgSendingCount).sum();
+        if (isFlat) {
+            return DeviceGroupedMsgSending.createFlat(groupId, msgCount, msgSendingCount, Arrays.stream(obtainDeviceGroup(groupId))
+                    .map(DeviceItem::getCacheMsg)
+                    .flatMap(Collection::stream)
+                    .limit(msgLimit)
+                    .map(MsgSending::new)
+                    .collect(Collectors.toList()));
+        } else {
+            return DeviceGroupedMsgSending.createGather(groupId, msgCount, msgSendingCount, Arrays.stream(obtainDeviceGroup(groupId))
+                    .filter(item -> item.getMsgCount() != 0)
+                    .map(item -> DeviceItemMsgSending.create(item, false, msgLimit))
+                    .collect(Collectors.toList()));
+        }
+    }
+
+    /**
+     * 「TCP待发送反馈」获取 TCP 通道待发送的消息统计概览
+     *
+     * @param groupId  组号
+     * @param deviceId 设备号
+     * @param msgLimit 消息对象的最大数量
+     * @return 设备待发送消息统计
+     */
+    public BaseMsgSending getMsgSendingByCoordinate(int groupId, int deviceId, int msgLimit) {
+        return DeviceItemMsgSending.create(obtainDeviceItem(groupId, deviceId), true, msgLimit);
     }
 }

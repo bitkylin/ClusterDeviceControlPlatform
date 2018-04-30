@@ -2,7 +2,6 @@ package cc.bitky.clusterdeviceplatform.server.web.spa.data;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -34,7 +33,6 @@ import cc.bitky.clusterdeviceplatform.server.web.spa.utils.WebUtil;
 @RequestMapping(value = "/server/dataprocess/statusgather")
 public class StatusGatherController {
 
-    @Autowired
     private final ServerRunner centerProcessor;
     private Logger logger = LoggerFactory.getLogger(getClass());
 

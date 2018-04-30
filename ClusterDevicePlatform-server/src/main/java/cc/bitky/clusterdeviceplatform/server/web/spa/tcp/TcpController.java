@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 import cc.bitky.clusterdeviceplatform.server.server.ServerCenterProcessor;
 import cc.bitky.clusterdeviceplatform.server.server.ServerWebProcessor;
 import cc.bitky.clusterdeviceplatform.server.tcp.statistic.channel.ChannelOutline;
+import cc.bitky.clusterdeviceplatform.server.web.spa.tcp.bean.BaseMsgSending;
 import cc.bitky.clusterdeviceplatform.server.web.spa.utils.ResMsg;
 import cc.bitky.clusterdeviceplatform.server.web.spa.utils.WebUtil;
 
@@ -56,16 +57,13 @@ public class TcpController {
     @GetMapping("/msg/sending/{groupId}/{deviceId}")
     public ResMsg msgSending(@PathVariable int groupId,
                              @PathVariable int deviceId,
-                             @RequestParam(required = false, defaultValue = "false") boolean detail) {
-        logger.info("/server/tcp/msg/sending/" + groupId + "/" + deviceId + "?detail=" + detail);
+                             @RequestParam(required = false, defaultValue = "false") boolean msgflat,
+                             @RequestParam(required = false, defaultValue = "100") int msglimit) {
+        logger.info("/server/tcp/msg/sending/" + groupId + "/" + deviceId + "?msgFlat=" + msgflat + " & msgLimit=" + msglimit);
         long l1 = System.currentTimeMillis();
-
-
-
-
-
+        BaseMsgSending msgSending = centerProcessor.getMsgSendingOutline(groupId, deviceId, msgflat, msglimit);
         WebUtil.printTimeConsumed(l1, logger);
-        return new ResMsg(null);
+        return new ResMsg(msgSending);
     }
 
     @GetMapping("/test")

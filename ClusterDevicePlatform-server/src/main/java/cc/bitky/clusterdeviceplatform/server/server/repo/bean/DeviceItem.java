@@ -1,5 +1,6 @@
 package cc.bitky.clusterdeviceplatform.server.server.repo.bean;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
@@ -15,7 +16,22 @@ public class DeviceItem {
     private final AtomicReference<StatusItem> chargeStatus = new AtomicReference<>(new StatusItem());
     private final AtomicReference<StatusItem> workStatus = new AtomicReference<>(new StatusItem());
     private final Map<Integer, BaseMsg> cacheMsg = new HashMap<>(64);
-    private int msgSendingCount = 0;
+    private final int groupId;
+    private final int deviceId;
+    private int msgCount = 0;
+
+    public DeviceItem(int groupId, int deviceId) {
+        this.groupId = groupId;
+        this.deviceId = deviceId;
+    }
+
+    public int getGroupId() {
+        return groupId;
+    }
+
+    public int getDeviceId() {
+        return deviceId;
+    }
 
     public StatusItem obtainChargeStatus() {
         return chargeStatus.get();
@@ -43,19 +59,27 @@ public class DeviceItem {
 
     public void saveMsg(BaseMsg msg) {
         cacheMsg.put(msg.getJointMsgFlag(), msg);
-        if (msgSendingCount < cacheMsg.size()) {
-            msgSendingCount = cacheMsg.size();
+        if (msgCount < cacheMsg.size()) {
+            msgCount = cacheMsg.size();
         }
     }
 
     public void removeMsg(MsgReplyNormal msg) {
         cacheMsg.remove(msg.getDeployJointMsgFlag());
         if (cacheMsg.isEmpty()) {
-            msgSendingCount = 0;
+            msgCount = 0;
         }
     }
 
+    public Collection<BaseMsg> getCacheMsg() {
+        return cacheMsg.values();
+    }
+
+    public int getMsgCount() {
+        return msgCount;
+    }
+
     public int getMsgSendingCount() {
-        return msgSendingCount;
+        return cacheMsg.size();
     }
 }

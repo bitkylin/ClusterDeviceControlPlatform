@@ -8,7 +8,6 @@ import java.util.List;
 import java.util.concurrent.Executors;
 
 import cc.bitky.clusterdeviceplatform.server.db.bean.Employee;
-import cc.bitky.clusterdeviceplatform.server.server.repo.bean.EmployeeItem;
 import cc.bitky.clusterdeviceplatform.server.server.repo.DeviceStatusRepository;
 import cc.bitky.clusterdeviceplatform.server.server.utils.DeviceOutBoundDetect;
 

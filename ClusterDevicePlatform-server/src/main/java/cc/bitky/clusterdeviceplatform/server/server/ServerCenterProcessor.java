@@ -21,7 +21,9 @@ import cc.bitky.clusterdeviceplatform.server.db.statistic.repo.ProcessedMsgRepo;
 import cc.bitky.clusterdeviceplatform.server.server.repo.DeviceStatusRepository;
 import cc.bitky.clusterdeviceplatform.server.server.repo.MsgProcessingRepository;
 import cc.bitky.clusterdeviceplatform.server.server.repo.TcpFeedBackRepository;
+import cc.bitky.clusterdeviceplatform.server.server.utils.DeviceOutBoundDetect;
 import cc.bitky.clusterdeviceplatform.server.tcp.statistic.except.TcpFeedbackItem;
+import cc.bitky.clusterdeviceplatform.server.web.spa.tcp.bean.BaseMsgSending;
 
 @Service
 public class ServerCenterProcessor {
@@ -72,12 +74,15 @@ public class ServerCenterProcessor {
         if (message == null) {
             return false;
         }
-        deviceStatusRepository.saveMsg(message);
-        return tcpProcessor.sendMessage(message);
+        boolean sendSuccess = tcpProcessor.sendMessage(message);
+        if (sendSuccess) {
+            deviceStatusRepository.saveMsg(message);
+        }
+        return sendSuccess;
     }
 
     /**
-     * 将「消息对象」下发至 TCP，若为成组消息可自动解包
+     * 「TCP发送」将消息对象下发至 TCP，若为成组消息可自动解包
      *
      * @param message 欲下发的消息
      * @return 是否下发成功
@@ -128,7 +133,7 @@ public class ServerCenterProcessor {
     }
 
     /**
-     * 添加关闭系统的钩子
+     * 「系统」添加关闭系统的钩子
      */
     private void addJvmShutDownHook() {
         Runtime.getRuntime().addShutdownHook(new Thread(() -> {
@@ -143,7 +148,7 @@ public class ServerCenterProcessor {
     }
 
     /**
-     * 服务器从TCP捕获到设备状态消息对象，并送入缓冲区等待处理
+     * 「TCP接收」服务器从TCP捕获到设备状态消息对象，并送入缓冲区等待处理
      *
      * @param message 设备状态消息对象
      */
@@ -172,7 +177,7 @@ public class ServerCenterProcessor {
     }
 
     /**
-     * 根据条件对List中的Item进行过滤，返回状态异常消息或超时消息
+     * 「异常消息反馈」根据条件对List中的Item进行过滤，返回状态异常消息或超时消息
      *
      * @param type 请求类型
      * @return 指定的返回的消息集合
@@ -182,12 +187,35 @@ public class ServerCenterProcessor {
     }
 
     /**
-     * 根据条件对List中的Item进行过滤，返回状态异常消息或超时消息的数量
+     * 「异常消息反馈」根据条件对List中的Item进行过滤，返回状态异常消息或超时消息的数量
      *
      * @param type 请求类型
      * @return 指定的返回的消息的数量
      */
     public long getTcpFeedBackItemsCount(TcpFeedBackRepository.ItemType type) {
         return getTcpFeedBackRepository().getItemsCount(type);
+    }
+
+    /**
+     * 「TCP待发送反馈」获取 TCP 通道待发送的消息统计概览
+     *
+     * @param groupId  组号
+     * @param deviceId 设备号
+     * @param isFlat   扁平化消息对象
+     * @param msgLimit 消息对象的最大数量
+     * @return 待发送消息统计
+     */
+    public BaseMsgSending getMsgSendingOutline(int groupId, int deviceId, boolean isFlat, int msgLimit) {
+        if (groupId == WebSetting.BROADCAST_GROUP_ID) {
+            return deviceStatusRepository.getMsgSendingOutline(isFlat, msgLimit);
+        }
+        if (!DeviceOutBoundDetect.detectGroup(groupId) && deviceId == WebSetting.BROADCAST_DEVICE_ID) {
+            return deviceStatusRepository.getMsgSendingGrouped(groupId, isFlat, msgLimit);
+        }
+
+        if (!DeviceOutBoundDetect.detect(groupId, deviceId)) {
+            return deviceStatusRepository.getMsgSendingByCoordinate(groupId, deviceId, msgLimit);
+        }
+        return null;
     }
 }
