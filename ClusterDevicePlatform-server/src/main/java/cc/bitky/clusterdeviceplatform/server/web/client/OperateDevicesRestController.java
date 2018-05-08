@@ -28,8 +28,10 @@ import cc.bitky.clusterdeviceplatform.messageutils.msgcodec.device.MsgCodecDevic
 import cc.bitky.clusterdeviceplatform.messageutils.msgcodec.device.MsgCodecDeviceRemainChargeTimes;
 import cc.bitky.clusterdeviceplatform.messageutils.msgcodec.device.MsgCodecDeviceSetEngineRotateDuration;
 import cc.bitky.clusterdeviceplatform.messageutils.msgcodec.device.MsgCodecDeviceSetOvertimeCharge;
+import cc.bitky.clusterdeviceplatform.messageutils.msgcodec.device.MsgCodecDeviceSetOvertimeDoorOpened;
 import cc.bitky.clusterdeviceplatform.messageutils.msgcodec.device.MsgCodecDeviceSetOvertimeWork;
 import cc.bitky.clusterdeviceplatform.messageutils.msgcodec.device.MsgCodecDeviceSetScreenBrightness;
+import cc.bitky.clusterdeviceplatform.messageutils.msgcodec.device.MsgCodecDeviceSetSoundStatus;
 import cc.bitky.clusterdeviceplatform.messageutils.msgcodec.device.MsgCodecDeviceUnlock;
 import cc.bitky.clusterdeviceplatform.messageutils.msgcodec.device.MsgCodecEmployeeDepartment;
 import cc.bitky.clusterdeviceplatform.messageutils.msgcodec.device.MsgCodecEmployeeName;
@@ -83,6 +85,12 @@ public class OperateDevicesRestController {
         }
     }
 
+    /**
+     * 更新设备时间为当前系统时间
+     *
+     * @param groupId 设备组 ID
+     * @return 更新是否成功
+     */
     @GetMapping("/update/timestamp/current/{groupId}")
     public String updateUnixTimestamp(@PathVariable int groupId) {
         if (webProcessor.sendMessageGrouped(MsgCodecTimestamp.create(groupId, 0, System.currentTimeMillis()))) {
@@ -276,6 +284,42 @@ public class OperateDevicesRestController {
                                                    @PathVariable int deviceId,
                                                    @RequestParam int intensity) {
         if (webProcessor.sendMessageGrouped(MsgCodecDeviceSetScreenBrightness.create(groupId, deviceId, intensity))) {
+            return "success";
+        } else {
+            return "error";
+        }
+    }
+
+    /**
+     * 「操作设备」更新开门超时时间
+     *
+     * @param groupId  设备组 ID
+     * @param deviceId 设备 ID
+     * @return "设置成功"消息
+     */
+    @GetMapping("/option/overtime/dooropened/{groupId}/{deviceId}")
+    public String operateDeviceSetOvertimeDoorOpened(@PathVariable int groupId,
+                                                     @PathVariable int deviceId,
+                                                     @RequestParam int time) {
+        if (webProcessor.sendMessageGrouped(MsgCodecDeviceSetOvertimeDoorOpened.create(groupId, deviceId, time))) {
+            return "success";
+        } else {
+            return "error";
+        }
+    }
+
+    /**
+     * 「操作设备」更新设备语音提醒状态
+     *
+     * @param groupId  设备组 ID
+     * @param deviceId 设备 ID
+     * @return "设置成功"消息
+     */
+    @GetMapping("/option/status/sound/{groupId}/{deviceId}")
+    public String operateDeviceSetSoundStatus(@PathVariable int groupId,
+                                              @PathVariable int deviceId,
+                                              @RequestParam boolean open) {
+        if (webProcessor.sendMessageGrouped(MsgCodecDeviceSetSoundStatus.create(groupId, deviceId, open))) {
             return "success";
         } else {
             return "error";

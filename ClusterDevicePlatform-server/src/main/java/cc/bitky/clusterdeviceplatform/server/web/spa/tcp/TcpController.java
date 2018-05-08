@@ -66,6 +66,15 @@ public class TcpController {
         return new ResMsg(msgSending);
     }
 
+    @GetMapping("/msg/sending/clear")
+    public ResMsg msgSendingClear() {
+        logger.info("/server/tcp/msg/sending/clear");
+        long l1 = System.currentTimeMillis();
+        centerProcessor.clearMsgSendingOutline();
+        WebUtil.printTimeConsumed(l1, logger);
+        return new ResMsg("success");
+    }
+
     @GetMapping("/test")
     public String test() {
         return "success";

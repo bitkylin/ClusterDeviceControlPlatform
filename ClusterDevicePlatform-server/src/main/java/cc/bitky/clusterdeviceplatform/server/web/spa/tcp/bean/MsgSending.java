@@ -7,6 +7,7 @@ public class MsgSending {
     private int groupId;
     private int deviceId;
     private String detail = "";
+    private String type = "";
 
     public MsgSending(BaseMsg msg) {
         groupId = msg.getGroupId();
@@ -14,6 +15,9 @@ public class MsgSending {
         BaseMsgCodec msgCodec = msg.getMsgCodec();
         if (msgCodec != null) {
             detail = msgCodec.getDetail();
+            if (msgCodec.getMajorMsgId() == 0x11) {
+                type = "portrait";
+            }
         }
     }
 
@@ -27,5 +31,9 @@ public class MsgSending {
 
     public String getDetail() {
         return detail;
+    }
+
+    public String getType() {
+        return type;
     }
 }
