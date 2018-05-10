@@ -24,6 +24,11 @@ public class LocalProfile {
      * 是否开启web调用返回随机数据
      */
     public boolean 随机Web数据模式 = false;
+
+    /**
+     * 数据库是否已启动用户鉴权特性
+     */
+    public boolean 数据库认证模式 = false;
     /**
      * 部署员工信息时，若数据库中无指定的相关信息，而部署的默认员工默认信息
      */
@@ -32,7 +37,6 @@ public class LocalProfile {
     public String 员工默认姓名 = "备用";
 
     public String 员工默认部门 = "默认单位";
-
     /**
      * 当剩余充电次数小于该阈值时，服务器下发剩余充电次数
      */
@@ -45,10 +49,6 @@ public class LocalProfile {
      * 检错重发最大次数，服务器向 TCP 通道发送 CAN 帧，最大重复发送次数
      */
     public int 检错重发最大重复次数 = 5;
-//    /**
-//     * 新矿灯的初始化充电次数
-//     */
-//    public int 初始充电次数 = 500;
     /**
      * 服务器 TCP 客户端的端口号
      */
@@ -57,4 +57,12 @@ public class LocalProfile {
      * 数据库服务器的主机名或者IP地址
      */
     public String 数据库服务器的主机名或IP = "localhost";
+    /**
+     * 数据库服务器的鉴权用户名
+     */
+    public String 数据库用户名 = "未设置";
+    /**
+     * 数据库服务器的鉴权密码
+     */
+    public String 数据库密码 = "未设置";
 }
