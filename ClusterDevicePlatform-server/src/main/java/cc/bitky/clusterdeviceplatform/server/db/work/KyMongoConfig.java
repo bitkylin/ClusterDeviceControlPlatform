@@ -20,7 +20,11 @@ public class KyMongoConfig extends AbstractMongoConfiguration {
 
     @Bean
     public com.mongodb.reactivestreams.client.MongoClient reactiveMongoClient() {
-        return MongoClients.create("mongodb://" + DbSetting.DATABASE_USERNAME + ":" + DbSetting.DATABASE_PASSWORD + "@" + DbSetting.MONGODB_HOST + ":" + DbSetting.MONGODB_PORT + "/" + DbSetting.DATABASE);
+        if (DbSetting.AUTHENTICATION_STATUS) {
+            return MongoClients.create("mongodb://" + DbSetting.DATABASE_USERNAME + ":" + DbSetting.DATABASE_PASSWORD + "@" + DbSetting.MONGODB_HOST + ":" + DbSetting.MONGODB_PORT + "/" + DbSetting.DATABASE);
+        } else {
+            return MongoClients.create("mongodb://" + DbSetting.MONGODB_HOST + ":" + DbSetting.MONGODB_PORT);
+        }
     }
 
     @Bean
@@ -30,11 +34,15 @@ public class KyMongoConfig extends AbstractMongoConfiguration {
 
     @Override
     public MongoClient mongoClient() {
-        return new MongoClient(
-                new ServerAddress(DbSetting.MONGODB_HOST, DbSetting.MONGODB_PORT),
-                MongoCredential.createCredential(DbSetting.DATABASE_USERNAME, getDatabaseName(), DbSetting.DATABASE_PASSWORD.toCharArray()),
-                MongoClientOptions.builder().build()
-        );
+        if (DbSetting.AUTHENTICATION_STATUS) {
+            return new MongoClient(
+                    new ServerAddress(DbSetting.MONGODB_HOST, DbSetting.MONGODB_PORT),
+                    MongoCredential.createCredential(DbSetting.DATABASE_USERNAME, getDatabaseName(), DbSetting.DATABASE_PASSWORD.toCharArray()),
+                    MongoClientOptions.builder().build()
+            );
+        } else {
+            return new MongoClient(new ServerAddress(DbSetting.MONGODB_HOST, DbSetting.MONGODB_PORT));
+        }
     }
 
     @Override
