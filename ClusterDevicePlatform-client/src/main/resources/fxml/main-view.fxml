@@ -10,20 +10,20 @@
 
 <fx:root prefHeight="450.0" prefWidth="663.0" type="StackPane" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1">
    <children>
-      <BorderPane stylesheets="@../css/main.css">
-         <top>
-            <JFXToolbar prefWidth="582.0" BorderPane.alignment="CENTER" />
-         </top>
-         <left>
-            <JFXListView fx:id="deviceGroupList" prefWidth="100.0" styleClass="mylistview" BorderPane.alignment="CENTER" />
-         </left>
-         <center>
-            <ScrollPane fitToHeight="true" fitToWidth="true" hbarPolicy="NEVER" BorderPane.alignment="CENTER">
-               <content>
-                  <JFXMasonryPane fx:id="deviceMasonryPane" />
-               </content>
-            </ScrollPane>
-         </center>
-      </BorderPane>
-   </children>
-</fx:root>
+     <BorderPane stylesheets="@../css/main.css">
+<top>
+   <JFXToolbar prefWidth="582.0" BorderPane.alignment="CENTER" />
+</top>
+<left>
+   <JFXListView fx:id="deviceGroupList" prefWidth="100.0" styleClass="mylistview" BorderPane.alignment="CENTER" />
+</left>
+<center>
+   <ScrollPane fitToHeight="true" fitToWidth="true" hbarPolicy="NEVER" BorderPane.alignment="CENTER">
+      <content>
+         <JFXMasonryPane fx:id="deviceMasonryPane" />
+      </content>
+   </ScrollPane>
+</center>
+</BorderPane>
+        </children>
+        </fx:root>
