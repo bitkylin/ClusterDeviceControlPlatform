@@ -8,7 +8,6 @@ import org.springframework.stereotype.Service;
 import java.util.concurrent.Executors;
 import java.util.concurrent.LinkedBlockingDeque;
 import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
 
 import cc.bitky.clusterdeviceplatform.messageutils.MsgProcessor;
 import cc.bitky.clusterdeviceplatform.messageutils.config.JointMsgType;
@@ -87,13 +86,13 @@ public class TcpPresenter {
         //发送心跳包，从而确定 Channel 的ID
         SendableMsgContainer msgContainer = msgProcessor.buildSendableMsgDirectly(MsgCodecHeartbeat.create(), channel);
         channel.writeAndFlush(msgContainer);
-        channel.eventLoop().scheduleAtFixedRate(() -> {
-            if (!channel.isActive()) {
-                channel.eventLoop().shutdownGracefully();
-                channelInactiveCompleted(channel);
-            }
-            channel.writeAndFlush(msgProcessor.buildSendableMsgDirectly(MsgCodecHeartbeat.create(), channel));
-        }, 5, 5, TimeUnit.SECONDS);
+//        channel.eventLoop().scheduleAtFixedRate(() -> {
+//            if (!channel.isActive()) {
+//                channel.eventLoop().shutdownGracefully();
+//                channelInactiveCompleted(channel);
+//            }
+//            channel.writeAndFlush(msgProcessor.buildSendableMsgDirectly(MsgCodecHeartbeat.create(), channel));
+//        }, 5, 5, TimeUnit.SECONDS);
     }
 
     /**

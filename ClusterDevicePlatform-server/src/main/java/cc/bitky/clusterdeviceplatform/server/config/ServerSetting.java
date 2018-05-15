@@ -43,4 +43,8 @@ public class ServerSetting {
      * 是否开启web页面随机数据生成
      */
     public static boolean WEB_RANDOM_DEBUG = true;
+    /**
+     * 授权码
+     */
+    public static String ACTIVATION_CODE = "";
 }

@@ -65,4 +65,8 @@ public class LocalProfile {
      * 数据库服务器的鉴权密码
      */
     public String 数据库密码 = "未设置";
+    /**
+     * 服务器使用的授权码
+     */
+    public String 授权码 = "";
 }

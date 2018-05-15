@@ -12,10 +12,12 @@ import java.io.IOException;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.Socket;
+import java.net.SocketException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
+import cc.bitky.clusterdeviceplatform.serialrawdata.NetCardVerifyPresenter;
 import cc.bitky.clusterdeviceplatform.server.config.CommSetting;
 import cc.bitky.clusterdeviceplatform.server.config.DbSetting;
 import cc.bitky.clusterdeviceplatform.server.config.LocalProfile;
@@ -88,37 +90,50 @@ public class ServerApplication {
      */
 
     private static boolean initSetting() {
-        LocalProfile localProfile = null;
+        LocalProfile localProfile;
         try {
             String strings = new String(Files.readAllBytes(Paths.get(ServerSetting.CONFIG_FILE_PATH)), StandardCharsets.UTF_8);
             localProfile = JSON.parseObject(strings, LocalProfile.class);
+            if (localProfile == null) {
+                return false;
+            }
         } catch (IOException e) {
             printWarn("「外部配置文件」未能读取到配置文件");
+            return false;
         } catch (JSONException e) {
             printWarn("「外部配置文件」反序列化失败");
+            return false;
         }
-        if (localProfile != null) {
-            DbSetting.MONGODB_HOST = trimProperty(localProfile.数据库服务器的主机名或IP);
-            DbSetting.MONGODB_IP = IpUtil.getIP(DbSetting.MONGODB_HOST)[0];
-            CommSetting.FRAME_SEND_INTERVAL = localProfile.帧发送间隔;
-            CommSetting.DEPLOY_REMAIN_CHARGE_TIMES = localProfile.部署剩余充电次数阈值 >= CommSetting.REMAIN_CHARGE_TIMES_CLEAR ? CommSetting.REMAIN_CHARGE_TIMES_CLEAR - 1 : localProfile.部署剩余充电次数阈值;
-            DbSetting.DEFAULT_EMPLOYEE_CARD_NUMBER = trimProperty(localProfile.员工默认卡号);
-            DbSetting.DEFAULT_EMPLOYEE_NAME = trimProperty(localProfile.员工默认姓名);
-            DbSetting.DEFAULT_EMPLOYEE_DEPARTMENT = trimProperty(localProfile.员工默认部门);
-            CommSetting.NO_RESPONSE_INTERVAL = localProfile.通道未响应时间;
-            CommSetting.AUTO_REPEAT_REQUEST_TIMES = localProfile.检错重发最大重复次数;
-            CommSetting.NO_RESPONSE_MONITOR = localProfile.通道无响应监测;
-            CommSetting.DEPLOY_MSG_NEED_REPLY = localProfile.帧送达监测;
-            ServerSetting.DEBUG = localProfile.调试模式;
-            ServerSetting.WEB_RANDOM_DEBUG = localProfile.随机Web数据模式;
-            DbSetting.AUTHENTICATION_STATUS = localProfile.数据库认证模式;
-            ServerSetting.SERVER_TCP_PORT = localProfile.服务器端口号;
-            DbSetting.DATABASE_USERNAME = trimProperty(localProfile.数据库用户名);
-            DbSetting.DATABASE_PASSWORD = trimProperty(localProfile.数据库密码);
-            return true;
+
+        DbSetting.MONGODB_HOST = trimProperty(localProfile.数据库服务器的主机名或IP);
+        DbSetting.MONGODB_IP = IpUtil.getIP(DbSetting.MONGODB_HOST)[0];
+        CommSetting.FRAME_SEND_INTERVAL = localProfile.帧发送间隔;
+        CommSetting.DEPLOY_REMAIN_CHARGE_TIMES = localProfile.部署剩余充电次数阈值 >= CommSetting.REMAIN_CHARGE_TIMES_CLEAR ? CommSetting.REMAIN_CHARGE_TIMES_CLEAR - 1 : localProfile.部署剩余充电次数阈值;
+        DbSetting.DEFAULT_EMPLOYEE_CARD_NUMBER = trimProperty(localProfile.员工默认卡号);
+        DbSetting.DEFAULT_EMPLOYEE_NAME = trimProperty(localProfile.员工默认姓名);
+        DbSetting.DEFAULT_EMPLOYEE_DEPARTMENT = trimProperty(localProfile.员工默认部门);
+        CommSetting.NO_RESPONSE_INTERVAL = localProfile.通道未响应时间;
+        CommSetting.AUTO_REPEAT_REQUEST_TIMES = localProfile.检错重发最大重复次数;
+        CommSetting.NO_RESPONSE_MONITOR = localProfile.通道无响应监测;
+        CommSetting.DEPLOY_MSG_NEED_REPLY = localProfile.帧送达监测;
+        ServerSetting.DEBUG = localProfile.调试模式;
+        ServerSetting.WEB_RANDOM_DEBUG = localProfile.随机Web数据模式;
+        DbSetting.AUTHENTICATION_STATUS = localProfile.数据库认证模式;
+        ServerSetting.SERVER_TCP_PORT = localProfile.服务器端口号;
+        DbSetting.DATABASE_USERNAME = trimProperty(localProfile.数据库用户名);
+        DbSetting.DATABASE_PASSWORD = trimProperty(localProfile.数据库密码);
+        ServerSetting.ACTIVATION_CODE = trimProperty(localProfile.授权码);
+
+        try {
+            if (!NetCardVerifyPresenter.verifyEncryptCode(ServerSetting.ACTIVATION_CODE)) {
+                System.out.println("授权码验证失败");
+                return false;
+            }
+        } catch (SocketException e) {
+            System.out.println("授权码验证未知异常");
+            return false;
         }
-        printWarn("外部配置文件读取错误，请使用「服务器预设置」软件进行设置");
-        return false;
+        return true;
     }
 
     private static String trimProperty(String text) {
