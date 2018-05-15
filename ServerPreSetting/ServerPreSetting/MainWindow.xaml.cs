@@ -76,6 +76,7 @@ namespace ServerPreSetting
             checkBoxNoResponse.IsChecked = kySetting.通道无响应监测;
             textBoxDatabaseUsername.Text = kySetting.数据库用户名.ToString();
             textBoxDatabasePassword.Text = kySetting.数据库密码.ToString();
+            textBoxActivationCode.Text = kySetting.授权码.ToString();
         }
 
         private void writeSettingToFile(string filePath, KySetting kySetting)
@@ -91,9 +92,9 @@ namespace ServerPreSetting
             try
             {
                 var kySetting = new KySetting();
-                kySetting.员工默认卡号 = textBoxDefaultCardNumber.Text.Trim() + "";
-                kySetting.员工默认部门 = textBoxDefaultDepartment.Text.Trim() + "";
-                kySetting.员工默认姓名 = textBoxDefaultName.Text.Trim() + "";
+                kySetting.员工默认卡号 = textBoxDefaultCardNumber.Text.Trim();
+                kySetting.员工默认部门 = textBoxDefaultDepartment.Text.Trim();
+                kySetting.员工默认姓名 = textBoxDefaultName.Text.Trim();
                 kySetting.帧发送间隔 = int.Parse(textBoxFrameSpace.Text.Trim());
                 kySetting.检错重发最大重复次数 = int.Parse(textBoxMaxResendTimes.Text.Trim());
                 kySetting.部署剩余充电次数阈值 = int.Parse(textBoxRemainChargeTimes.Text.Trim());
@@ -107,9 +108,11 @@ namespace ServerPreSetting
                 kySetting.通道未响应时间 = int.Parse(textBoxNoResponseTime.Text.Trim());
                 kySetting.通道无响应监测 = checkBoxNoResponse.IsChecked.GetValueOrDefault(true);
 
-                kySetting.数据库服务器的主机名或IP = textBoxDbServerAddress.Text.Trim() + "";
-                kySetting.数据库用户名 = textBoxDatabaseUsername.Text.Trim() + "";
-                kySetting.数据库密码 = textBoxDatabasePassword.Text.Trim() + "";
+                kySetting.数据库服务器的主机名或IP = textBoxDbServerAddress.Text.Trim();
+                kySetting.数据库用户名 = textBoxDatabaseUsername.Text.Trim();
+                kySetting.数据库密码 = textBoxDatabasePassword.Text.Trim();
+
+                kySetting.授权码 = textBoxActivationCode.Text.Trim();
 
                 writeSettingToFile(FILE_PATH, kySetting);
                 MessageBox.Show("配置文件保存成功！\n请重启服务器应用程序以使配置生效", "提示");

@@ -80,6 +80,11 @@ namespace ServerPreSetting
         /// </summary>
         public string 数据库密码 = "未设置";
 
+        /// <summary>
+        /// 服务器运行授权码
+        /// </summary>
+        public string 授权码 = "";
+
 
     }
 }
