@@ -203,12 +203,14 @@ public class DeviceStatusRepository {
     }
 
     /**
-     * 将待发送消息对象缓存值服务器
+     * 将待发送消息对象缓存至服务器
      *
      * @param msg 待发送的消息对象
      */
     public void saveMsg(BaseMsg msg) {
-        obtainDeviceItem(msg.getGroupId(), msg.getDeviceId()).saveMsg(msg);
+        if (!DeviceOutBoundDetect.detect(msg.getGroupId(), msg.getDeviceId())) {
+            obtainDeviceItem(msg.getGroupId(), msg.getDeviceId()).saveMsg(msg);
+        }
     }
 
     /**
@@ -217,7 +219,9 @@ public class DeviceStatusRepository {
      * @param msg 回复消息对象
      */
     public void removeMsg(MsgReplyNormal msg) {
-        obtainDeviceItem(msg.getGroupId(), msg.getDeviceId()).removeMsg(msg);
+        if (!DeviceOutBoundDetect.detect(msg.getGroupId(), msg.getDeviceId())) {
+            obtainDeviceItem(msg.getGroupId(), msg.getDeviceId()).removeMsg(msg);
+        }
     }
 
     /**
@@ -230,7 +234,7 @@ public class DeviceStatusRepository {
     public BaseMsgSending getMsgSendingOutline(boolean isFlat, int msgLimit) {
 
         List<DeviceGroupedMsgSending> msgSendingGroupedItems = Arrays.stream(DEVICE_ITEMS).map(
-                groupItem -> DeviceGroupedMsgSending.createOutline(groupItem[0].getGroupId(),
+                groupItem -> DeviceGroupedMsgSending.createOutline(groupItem[0].getGroupId(), 0,
                         Arrays.stream(groupItem).mapToInt(DeviceItem::getMsgCount).sum(),
                         Arrays.stream(groupItem).mapToInt(DeviceItem::getMsgSendingCount).sum()))
                 .filter(item -> item.getMsgCount() != 0)
@@ -239,7 +243,7 @@ public class DeviceStatusRepository {
         int msgCount = msgSendingGroupedItems.stream().mapToInt(DeviceGroupedMsgSending::getMsgCount).sum();
         int msgSendingCount = msgSendingGroupedItems.stream().mapToInt(DeviceGroupedMsgSending::getMsgSendingCount).sum();
         if (isFlat) {
-            return MachineMsgSending.createFlat(msgCount, msgSendingCount, Arrays.stream(DEVICE_ITEMS)
+            return MachineMsgSending.createFlat(msgSendingGroupedItems.size(), msgCount, msgSendingCount, Arrays.stream(DEVICE_ITEMS)
                     .flatMap(Arrays::stream)
                     .map(DeviceItem::getCacheMsg)
                     .flatMap(Collection::stream)
@@ -247,7 +251,7 @@ public class DeviceStatusRepository {
                     .map(MsgSending::new)
                     .collect(Collectors.toList()));
         } else {
-            return MachineMsgSending.createGather(msgCount, msgSendingCount, msgSendingGroupedItems);
+            return MachineMsgSending.createGather(msgSendingGroupedItems.size(), msgCount, msgSendingCount, msgSendingGroupedItems);
         }
     }
 
@@ -263,15 +267,16 @@ public class DeviceStatusRepository {
         DeviceItem[] deviceItems = obtainDeviceGroup(groupId);
         int msgCount = Arrays.stream(deviceItems).mapToInt(DeviceItem::getMsgCount).sum();
         int msgSendingCount = Arrays.stream(deviceItems).mapToInt(DeviceItem::getMsgSendingCount).sum();
+        long deviceCount = Arrays.stream(deviceItems).filter(item -> item.getMsgSendingCount() != 0).count();
         if (isFlat) {
-            return DeviceGroupedMsgSending.createFlat(groupId, msgCount, msgSendingCount, Arrays.stream(obtainDeviceGroup(groupId))
+            return DeviceGroupedMsgSending.createFlat(groupId, deviceCount, msgCount, msgSendingCount, Arrays.stream(obtainDeviceGroup(groupId))
                     .map(DeviceItem::getCacheMsg)
                     .flatMap(Collection::stream)
                     .limit(msgLimit)
                     .map(MsgSending::new)
                     .collect(Collectors.toList()));
         } else {
-            return DeviceGroupedMsgSending.createGather(groupId, msgCount, msgSendingCount, Arrays.stream(obtainDeviceGroup(groupId))
+            return DeviceGroupedMsgSending.createGather(groupId, deviceCount, msgCount, msgSendingCount, Arrays.stream(obtainDeviceGroup(groupId))
                     .filter(item -> item.getMsgCount() != 0)
                     .map(item -> DeviceItemMsgSending.create(item, false, msgLimit))
                     .collect(Collectors.toList()));
@@ -288,5 +293,12 @@ public class DeviceStatusRepository {
      */
     public BaseMsgSending getMsgSendingByCoordinate(int groupId, int deviceId, int msgLimit) {
         return DeviceItemMsgSending.create(obtainDeviceItem(groupId, deviceId), true, msgLimit);
+    }
+
+    /**
+     * 「TCP待发送反馈」清除 TCP 通道待发送的消息统计概览
+     */
+    public void clearMsgSendingOutline() {
+        Arrays.stream(DEVICE_ITEMS).flatMap(Arrays::stream).forEach(DeviceItem::clearMsg);
     }
 }

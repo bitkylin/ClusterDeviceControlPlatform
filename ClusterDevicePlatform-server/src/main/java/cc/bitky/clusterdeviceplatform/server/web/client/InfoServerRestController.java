@@ -21,20 +21,16 @@ public class InfoServerRestController {
     public InfoServerRestController(ServerWebProcessor serverProcessor) {
         this.serverProcessor = serverProcessor;
     }
-//    /**
-//     * 获取正在活动的设备组
-//     *
-//     * @return 设备集合
-//     */
-//    @GetMapping("/devicegroup/activated")
-//    public Flux<Integer> getDeviceGroupActivated() {
-//        return serverProcessor.getDeviceGroupActivated();
-//    }
 
     @GetMapping("/database/ip")
     public String obtainDatabaseIP() throws UnknownHostException {
         InetAddress address = InetAddress.getByName(DbSetting.MONGODB_HOST);
         return address.getHostAddress();
+    }
+
+    @GetMapping("/database/auth")
+    public DatabaseAuth obtainDatabaseAuth() {
+        return new DatabaseAuth(DbSetting.DATABASE_USERNAME, DbSetting.DATABASE_PASSWORD);
     }
 
     /**
@@ -47,9 +43,21 @@ public class InfoServerRestController {
         return "success";
     }
 
-//    @RequestMapping(value = "/queueframe", method = RequestMethod.GET)
-//    public QueueInfo obtainQueueFrame() {
-//        return serverProcessor.obtainQueueFrame();
-//    }
+    private class DatabaseAuth {
+        private String username;
+        private String password;
 
+        private DatabaseAuth(String username, String password) {
+            this.username = username;
+            this.password = password;
+        }
+
+        public String getUsername() {
+            return username;
+        }
+
+        public String getPassword() {
+            return password;
+        }
+    }
 }

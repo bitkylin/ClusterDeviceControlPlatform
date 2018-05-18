@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:ServerPreSetting"
         mc:Ignorable="d"
-        Title="服务器预设置" Height="342" Width="525" WindowStartupLocation="CenterScreen" WindowStyle="None" AllowsTransparency="True" Topmost="True" MouseLeftButtonDown="Window_MouseLeftButtonDown" Loaded="Window_Loaded" Opacity="0.93">
+        Title="服务器预设置" Height="450.297" Width="582.688" WindowStartupLocation="CenterScreen" WindowStyle="None" AllowsTransparency="True" Topmost="True" MouseLeftButtonDown="Window_MouseLeftButtonDown" Loaded="Window_Loaded" Opacity="0.93">
     <Window.Background>
         <RadialGradientBrush>
             <GradientStop Color="#FF84EBFF" Offset="1"/>
@@ -13,38 +13,51 @@
         </RadialGradientBrush>
     </Window.Background>
     <Grid>
-        <GroupBox x:Name="groupBox" Header="默认员工信息设置" HorizontalAlignment="Left" Margin="9,47,0,0" VerticalAlignment="Top" Height="135" Width="204" BorderBrush="#BF004F9A"/>
-        <GroupBox x:Name="groupBox_Copy" Header="帧通信设置" HorizontalAlignment="Left" Margin="238,47,0,0" VerticalAlignment="Top" Height="135" Width="267" BorderBrush="#BF004F9A"/>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="0*"/>
+            <ColumnDefinition/>
+        </Grid.ColumnDefinitions>
+        <GroupBox x:Name="groupBox_Copy2" Header="杂项设置" HorizontalAlignment="Left" Margin="9,188,0,0" VerticalAlignment="Top" Height="135" Width="262" BorderBrush="#BF004F9A" Grid.ColumnSpan="2"/>
 
-        <Label x:Name="label" Content="服务器预设置" Margin="10,2,9.8,0" VerticalAlignment="Top" HorizontalContentAlignment="Center" FontSize="18"/>
-        <Button x:Name="buttonConfirm" Content="确定" HorizontalAlignment="Left" Margin="269,0,0,9.6" VerticalAlignment="Bottom" Width="100" Background="#D800C3FF" BorderBrush="#FF4600FF" Height="33" IsDefault="True" Click="buttonConfirm_Click"/>
-        <Button x:Name="buttonCancel" Content="关闭" Margin="0,0,30.8,9.6" VerticalAlignment="Bottom" Background="#D8FF0080" BorderBrush="#FF520000" Height="33" HorizontalAlignment="Right" Width="100" IsCancel="True" Click="buttonCancel_Click"/>
-        <TextBox x:Name="textBoxFrameSpace" HorizontalAlignment="Left" Height="29" Margin="374,70,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120" Background="#7FFFFFFF" Opacity="0.95" VerticalContentAlignment="Center"/>
-        <Label Content="帧发送间隔：" HorizontalAlignment="Left" Margin="248,69,0,0" VerticalAlignment="Top" Height="29" VerticalContentAlignment="Center" Width="121" HorizontalContentAlignment="Right"/>
-        <TextBox x:Name="textBoxDefaultCardNumber" HorizontalAlignment="Left" Height="29" Margin="78,69,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120" Background="#7FFFFFFF" Opacity="0.95" VerticalContentAlignment="Center" IsEnabled="False"/>
-        <Label Content="卡号：" HorizontalAlignment="Left" Margin="25,69,0,0" VerticalAlignment="Top" Height="29" VerticalContentAlignment="Center" Width="48"/>
-        <TextBox x:Name="textBoxDefaultName" HorizontalAlignment="Left" Height="29" Margin="78,102,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120" Background="#7FFFFFFF" Opacity="0.95" VerticalContentAlignment="Center" IsEnabled="False"/>
-        <Label Content="姓名：" HorizontalAlignment="Left" Margin="25,103,0,0" VerticalAlignment="Top" Height="29" VerticalContentAlignment="Center" Width="48"/>
-        <TextBox x:Name="textBoxDefaultDepartment" HorizontalAlignment="Left" Height="29" Margin="78,137,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120" Background="#7FFFFFFF" Opacity="0.95" VerticalContentAlignment="Center" IsEnabled="False"/>
-        <Label Content="部门：" HorizontalAlignment="Left" Margin="25,137,0,0" VerticalAlignment="Top" Height="29" VerticalContentAlignment="Center" Width="48"/>
-        <TextBox x:Name="textBoxServerAddress" HorizontalAlignment="Left" Height="29" Margin="374,187,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120" Background="#7FFFFFFF" Opacity="0.95" VerticalContentAlignment="Center"/>
-        <Label Content="数据库地址：" HorizontalAlignment="Left" Margin="248,187,0,0" VerticalAlignment="Top" Height="29" VerticalContentAlignment="Center" Width="121" HorizontalContentAlignment="Right"/>
-        <TextBox x:Name="textBoxRemainChargeTimes" HorizontalAlignment="Left" Height="29" Margin="374,103,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120" Background="#7FFFFFFF" Opacity="0.95" VerticalContentAlignment="Center"/>
-        <Label Content="剩余充电次数阈值：" HorizontalAlignment="Left" Margin="248,103,0,0" VerticalAlignment="Top" Height="29" VerticalContentAlignment="Center" Width="121" HorizontalContentAlignment="Right"/>
-        <TextBox x:Name="textBoxMaxResendTimes" HorizontalAlignment="Left" Height="29" Margin="374,137,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120" Background="#7FFFFFFF" Opacity="0.95" VerticalContentAlignment="Center"/>
-        <Label Content="检错重发最大次数：" HorizontalAlignment="Left" Margin="248,137,0,0" VerticalAlignment="Top" Height="29" VerticalContentAlignment="Center" Width="121" HorizontalContentAlignment="Right"/>
-        <TextBox x:Name="textBoxInitChargeTimes" HorizontalAlignment="Left" Height="29" Margin="374,221,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120" Background="#7FFFFFFF" Opacity="0.95" VerticalContentAlignment="Center" IsEnabled="False"/>
-        <Label Content="初始充电次数：" HorizontalAlignment="Left" Margin="248,221,0,0" VerticalAlignment="Top" Height="29" VerticalContentAlignment="Center" Width="121" HorizontalContentAlignment="Right"/>
-        <TextBox HorizontalAlignment="Left" Height="29" Margin="138,188,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="60" Background="#7FFFFFFF" Opacity="0.95" VerticalContentAlignment="Center" Text="27017" IsEnabled="False"/>
-        <Label Content="MongoDB 端口号：" HorizontalAlignment="Left" Margin="10,187,0,0" VerticalAlignment="Top" Height="29" VerticalContentAlignment="Center" Width="123" HorizontalContentAlignment="Right"/>
-        <CheckBox x:Name="checkBoxMsgReply" Content="帧送达监测" HorizontalAlignment="Left" Margin="138,261,0,0" VerticalAlignment="Top" FlowDirection="RightToLeft" VerticalContentAlignment="Center"/>
-        <TextBox x:Name="textboxTcpPort" HorizontalAlignment="Left" Height="29" Margin="138,222,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="60" Background="#7FFFFFFF" Opacity="0.95" VerticalContentAlignment="Center" Text="30232"/>
-        <Label Content="TCP 服务端端口号：" HorizontalAlignment="Left" Margin="10,221,0,0" VerticalAlignment="Top" Height="29" VerticalContentAlignment="Center" Width="123" HorizontalContentAlignment="Right"/>
-        <CheckBox x:Name="checkBoxDebug" Content="调试输出模式" HorizontalAlignment="Left" Margin="13,261,0,0" VerticalAlignment="Top" FlowDirection="RightToLeft" VerticalContentAlignment="Center"/>
-        <CheckBox x:Name="checkBoxWebRandom" Content="Web演示模式" HorizontalAlignment="Left" Margin="10,281,0,0" VerticalAlignment="Top" FlowDirection="RightToLeft" VerticalContentAlignment="Center"/>
-        <TextBox x:Name="textBoxNoResponseTime" HorizontalAlignment="Left" Height="29" Margin="374,255,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120" Background="#7FFFFFFF" Opacity="0.95" VerticalContentAlignment="Center"/>
-        <Label Content="设备未响应时间：" HorizontalAlignment="Left" Margin="248,255,0,0" VerticalAlignment="Top" Height="29" VerticalContentAlignment="Center" Width="121" HorizontalContentAlignment="Right"/>
-        <CheckBox x:Name="checkBoxNoResponse" Content="无响应检测" HorizontalAlignment="Left" Margin="138,281,0,0" VerticalAlignment="Top" FlowDirection="RightToLeft" VerticalContentAlignment="Center"/>
+        <GroupBox x:Name="groupBox_Copy1" Header="数据库设置" HorizontalAlignment="Left" Margin="306,188,0,0" VerticalAlignment="Top" Height="135" Width="267" BorderBrush="#BF004F9A" Grid.ColumnSpan="2"/>
+
+        <GroupBox x:Name="groupBox" Header="默认员工信息设置" HorizontalAlignment="Left" Margin="9,47,0,0" VerticalAlignment="Top" Height="135" Width="262" BorderBrush="#BF004F9A" Grid.ColumnSpan="2"/>
+        <GroupBox x:Name="groupBox_Copy" Header="帧通信设置" HorizontalAlignment="Left" Margin="306,47,0,0" VerticalAlignment="Top" Height="135" Width="267" BorderBrush="#BF004F9A" Grid.ColumnSpan="2"/>
+
+        <Label x:Name="label" Content="服务器预设置" Margin="10,2,10,0" VerticalAlignment="Top" HorizontalContentAlignment="Center" FontSize="18" Grid.ColumnSpan="2"/>
+        <Button x:Name="buttonConfirm" Content="确定" HorizontalAlignment="Left" Margin="337,0,0,10" VerticalAlignment="Bottom" Width="100" Background="#D800C3FF" BorderBrush="#FF4600FF" Height="33" IsDefault="True" Click="buttonConfirm_Click" TabIndex="10001" Grid.ColumnSpan="2"/>
+        <Button x:Name="buttonCancel" Content="关闭" Margin="0,0,20,10" VerticalAlignment="Bottom" Background="#D8FF0080" BorderBrush="#FF520000" Height="33" HorizontalAlignment="Right" Width="100" IsCancel="True" Click="buttonCancel_Click" TabIndex="10002" Grid.ColumnSpan="2"/>
+        <TextBox x:Name="textBoxFrameSpace" HorizontalAlignment="Left" Height="29" Margin="442,70,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120" Background="#7FFFFFFF" Opacity="0.95" VerticalContentAlignment="Center" GotKeyboardFocus="OnGotKeyboardFocus" TabIndex="200" Grid.ColumnSpan="2"/>
+        <Label Content="帧发送间隔：" HorizontalAlignment="Left" Margin="316,69,0,0" VerticalAlignment="Top" Height="29" VerticalContentAlignment="Center" Width="121" HorizontalContentAlignment="Right" Grid.ColumnSpan="2"/>
+        <TextBox x:Name="textBoxDefaultCardNumber" HorizontalAlignment="Left" Height="29" Margin="138,70,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120" Background="#7FFFFFFF" Opacity="0.95" VerticalContentAlignment="Center" IsEnabled="False" GotKeyboardFocus="OnGotKeyboardFocus" TabIndex="100" Grid.ColumnSpan="2"/>
+        <Label Content="卡号：" HorizontalAlignment="Left" Margin="85,70,0,0" VerticalAlignment="Top" Height="29" VerticalContentAlignment="Center" Width="48" Grid.ColumnSpan="2"/>
+        <TextBox x:Name="textBoxDefaultName" HorizontalAlignment="Left" Height="29" Margin="138,103,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120" Background="#7FFFFFFF" Opacity="0.95" VerticalContentAlignment="Center" IsEnabled="False" GotKeyboardFocus="OnGotKeyboardFocus" TabIndex="101" Grid.ColumnSpan="2"/>
+        <Label Content="姓名：" HorizontalAlignment="Left" Margin="85,104,0,0" VerticalAlignment="Top" Height="29" VerticalContentAlignment="Center" Width="48" Grid.ColumnSpan="2"/>
+        <TextBox x:Name="textBoxDefaultDepartment" HorizontalAlignment="Left" Height="29" Margin="138,138,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120" Background="#7FFFFFFF" Opacity="0.95" VerticalContentAlignment="Center" IsEnabled="False" GotKeyboardFocus="OnGotKeyboardFocus" TabIndex="102" Grid.ColumnSpan="2"/>
+        <Label Content="部门：" HorizontalAlignment="Left" Margin="85,138,0,0" VerticalAlignment="Top" Height="29" VerticalContentAlignment="Center" Width="48" Grid.ColumnSpan="2"/>
+        <TextBox x:Name="textBoxDbServerAddress" HorizontalAlignment="Left" Height="29" Margin="442,212,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120" Background="#7FFFFFFF" Opacity="0.95" VerticalContentAlignment="Center" GotKeyboardFocus="OnGotKeyboardFocus" TabIndex="400" Grid.ColumnSpan="2"/>
+        <Label Content="数据库地址：" HorizontalAlignment="Left" Margin="316,212,0,0" VerticalAlignment="Top" Height="29" VerticalContentAlignment="Center" Width="121" HorizontalContentAlignment="Right" Grid.ColumnSpan="2"/>
+        <TextBox x:Name="textBoxRemainChargeTimes" HorizontalAlignment="Left" Height="29" Margin="442,103,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120" Background="#7FFFFFFF" Opacity="0.95" VerticalContentAlignment="Center" GotKeyboardFocus="OnGotKeyboardFocus" TabIndex="201" Grid.ColumnSpan="2"/>
+        <Label Content="剩余充电次数阈值：" HorizontalAlignment="Left" Margin="316,103,0,0" VerticalAlignment="Top" Height="29" VerticalContentAlignment="Center" Width="121" HorizontalContentAlignment="Right" Grid.ColumnSpan="2"/>
+        <TextBox x:Name="textBoxMaxResendTimes" HorizontalAlignment="Left" Height="29" Margin="442,137,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120" Background="#7FFFFFFF" Opacity="0.95" VerticalContentAlignment="Center" GotKeyboardFocus="OnGotKeyboardFocus" TabIndex="202" Grid.ColumnSpan="2"/>
+        <Label Content="检错重发最大次数：" HorizontalAlignment="Left" Margin="316,137,0,0" VerticalAlignment="Top" Height="29" VerticalContentAlignment="Center" Width="121" HorizontalContentAlignment="Right" Grid.ColumnSpan="2"/>
+        <TextBox HorizontalAlignment="Left" Height="29" Margin="138,246,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120" Background="#7FFFFFFF" Opacity="0.95" VerticalContentAlignment="Center" Text="27017" IsEnabled="False" TabIndex="301" Grid.ColumnSpan="2" GotKeyboardFocus="OnGotKeyboardFocus"/>
+        <Label Content="MongoDB 端口号：" HorizontalAlignment="Left" Margin="10,245,0,0" VerticalAlignment="Top" Height="29" VerticalContentAlignment="Center" Width="123" HorizontalContentAlignment="Right" Grid.ColumnSpan="2"/>
+        <CheckBox x:Name="checkBoxMsgReply" Content="帧送达监测" HorizontalAlignment="Left" Margin="131,0,0,28" VerticalAlignment="Bottom" FlowDirection="RightToLeft" VerticalContentAlignment="Center" TabIndex="1002" Grid.ColumnSpan="2"/>
+        <TextBox x:Name="textboxTcpPort" HorizontalAlignment="Left" Height="29" Margin="138,212,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120" Background="#7FFFFFFF" Opacity="0.95" VerticalContentAlignment="Center" Text="30232" GotKeyboardFocus="OnGotKeyboardFocus" TabIndex="300" Grid.ColumnSpan="2"/>
+        <Label Content="TCP 服务端端口号：" HorizontalAlignment="Left" Margin="10,211,0,0" VerticalAlignment="Top" Height="29" VerticalContentAlignment="Center" Width="123" HorizontalContentAlignment="Right" Grid.ColumnSpan="2"/>
+        <CheckBox x:Name="checkBoxDebug" Content="调试输出模式" HorizontalAlignment="Left" Margin="17,0,0,28" VerticalAlignment="Bottom" FlowDirection="RightToLeft" VerticalContentAlignment="Center" TabIndex="1000" Grid.ColumnSpan="2"/>
+        <CheckBox x:Name="checkBoxWebRandom" Content="Web演示模式" HorizontalAlignment="Left" Margin="14,0,0,8" VerticalAlignment="Bottom" FlowDirection="RightToLeft" VerticalContentAlignment="Center" TabIndex="1001" Grid.ColumnSpan="2"/>
+        <TextBox x:Name="textBoxNoResponseTime" HorizontalAlignment="Left" Height="29" Margin="138,280,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120" Background="#7FFFFFFF" Opacity="0.95" VerticalContentAlignment="Center" GotKeyboardFocus="OnGotKeyboardFocus" TabIndex="302" Grid.ColumnSpan="2"/>
+        <Label Content="设备未响应时间：" HorizontalAlignment="Left" Margin="12,280,0,0" VerticalAlignment="Top" Height="29" VerticalContentAlignment="Center" Width="121" HorizontalContentAlignment="Right" Grid.ColumnSpan="2"/>
+        <CheckBox x:Name="checkBoxNoResponse" Content="无响应检测" HorizontalAlignment="Left" Margin="131,0,0,8" VerticalAlignment="Bottom" FlowDirection="RightToLeft" VerticalContentAlignment="Center" TabIndex="1003" Grid.ColumnSpan="2"/>
+        <CheckBox x:Name="checkBoxDatabaseAuth" Content="数据库鉴权" HorizontalAlignment="Left" Margin="236,0,0,28" VerticalAlignment="Bottom" FlowDirection="RightToLeft" VerticalContentAlignment="Center" Click="checkBoxDatabaseAuth_Click" TabIndex="1004" Grid.ColumnSpan="2"/>
+        <TextBox x:Name="textBoxDatabaseUsername" HorizontalAlignment="Left" Height="29" Margin="442,245,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120" Background="#7FFFFFFF" Opacity="0.95" VerticalContentAlignment="Center" GotKeyboardFocus="OnGotKeyboardFocus" TabIndex="401" Grid.ColumnSpan="2"/>
+        <Label Content="用户名：" HorizontalAlignment="Left" Margin="316,245,0,0" VerticalAlignment="Top" Height="29" VerticalContentAlignment="Center" Width="121" HorizontalContentAlignment="Right" Grid.ColumnSpan="2"/>
+        <TextBox x:Name="textBoxDatabasePassword" HorizontalAlignment="Left" Height="29" Margin="442,280,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120" Background="#7FFFFFFF" Opacity="0.95" VerticalContentAlignment="Center" GotKeyboardFocus="OnGotKeyboardFocus" TabIndex="402" Grid.ColumnSpan="2"/>
+        <Label Content="密码：" HorizontalAlignment="Left" Margin="316,280,0,0" VerticalAlignment="Top" Height="29" VerticalContentAlignment="Center" Width="121" HorizontalContentAlignment="Right" Grid.ColumnSpan="2"/>
+        <TextBox x:Name="textBoxActivationCode" Grid.ColumnSpan="2" HorizontalAlignment="Left" Height="53" Margin="138,334,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="424" Background="#7FFFFFFF" Opacity="0.95" TabIndex="500" GotKeyboardFocus="OnGotKeyboardFocus"/>
+        <Label Content="服务器授权码：" HorizontalAlignment="Left" Margin="12,334,0,0" VerticalAlignment="Top" Height="26" VerticalContentAlignment="Center" Width="121" HorizontalContentAlignment="Right" Grid.ColumnSpan="2"/>
 
     </Grid>
 </Window>

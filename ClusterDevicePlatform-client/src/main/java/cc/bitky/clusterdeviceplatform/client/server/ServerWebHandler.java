@@ -73,6 +73,6 @@ public class ServerWebHandler {
     }
 
     public void runTest1() {
-        createNeedMsg(1, 1, 100);
+        createNeedMsg(100, 100, 100);
     }
 }

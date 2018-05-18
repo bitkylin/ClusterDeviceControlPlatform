@@ -1,6 +1,6 @@
 buildscript {
     ext {
-        springBootVersion = '2.0.0.RELEASE'
+        springBootVersion = '2.0.2.RELEASE'
     }
     repositories {
         mavenCentral()
@@ -16,7 +16,7 @@ apply plugin: 'org.springframework.boot'
 apply plugin: 'io.spring.dependency-management'
 
 group = 'cc.bitky.ClusterDevicePlatform'
-version = '1.9.1-release'
+version = '1.15.0-release'
 sourceCompatibility = 1.8
 
 repositories {
@@ -35,7 +35,7 @@ dependencies {
     compile 'com.jfoenix:jfoenix:1.10.0'
     compile 'io.datafx:datafx:8.0.1'
     compile 'io.datafx:flow:8.0.1'
-    compile files('../messageUtils/build/libs/messageUtils-1.9.1.jar')
+    compile files('../messageUtils/build/libs/messageUtils-1.15.0.jar')
 
     testCompile('org.springframework.boot:spring-boot-starter-test')
 }

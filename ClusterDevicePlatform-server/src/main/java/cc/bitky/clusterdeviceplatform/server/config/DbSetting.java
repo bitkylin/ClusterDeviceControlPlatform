@@ -33,4 +33,16 @@ public class DbSetting {
      * 默认员工单位
      */
     public static String DEFAULT_EMPLOYEE_DEPARTMENT = "默认单位";
+    /**
+     * 数据库认证用户名
+     */
+    public static String DATABASE_USERNAME = "数据库用户名";
+    /**
+     * 数据库认证密码
+     */
+    public static String DATABASE_PASSWORD = "数据库密码";
+    /**
+     * 数据库认证状态
+     */
+    public static boolean AUTHENTICATION_STATUS = false;
 }

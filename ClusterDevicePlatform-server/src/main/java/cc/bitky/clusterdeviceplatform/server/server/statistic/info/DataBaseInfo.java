@@ -23,6 +23,10 @@ public class DataBaseInfo {
      * 数据库
      */
     private String database;
+    /**
+     * 数据库鉴权用户名
+     */
+    private String databaseUsername;
 
     public DataBaseInfo() {
         this.type = "MongoDB";
@@ -30,6 +34,11 @@ public class DataBaseInfo {
         this.host = DbSetting.MONGODB_HOST;
         this.ip = DbSetting.MONGODB_IP;
         this.database = DbSetting.DATABASE;
+        this.databaseUsername = DbSetting.DATABASE_USERNAME;
+    }
+
+    public String getDatabaseUsername() {
+        return databaseUsername;
     }
 
     public String getType() {

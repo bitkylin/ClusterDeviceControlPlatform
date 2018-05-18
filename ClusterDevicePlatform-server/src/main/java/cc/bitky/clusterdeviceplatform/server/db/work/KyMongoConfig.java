@@ -1,6 +1,9 @@
 package cc.bitky.clusterdeviceplatform.server.db.work;
 
 import com.mongodb.MongoClient;
+import com.mongodb.MongoClientOptions;
+import com.mongodb.MongoCredential;
+import com.mongodb.ServerAddress;
 import com.mongodb.reactivestreams.client.MongoClients;
 
 import org.springframework.context.annotation.Bean;
@@ -17,17 +20,29 @@ public class KyMongoConfig extends AbstractMongoConfiguration {
 
     @Bean
     public com.mongodb.reactivestreams.client.MongoClient reactiveMongoClient() {
-        return MongoClients.create("mongodb://" + DbSetting.MONGODB_HOST);
+        if (DbSetting.AUTHENTICATION_STATUS) {
+            return MongoClients.create("mongodb://" + DbSetting.DATABASE_USERNAME + ":" + DbSetting.DATABASE_PASSWORD + "@" + DbSetting.MONGODB_HOST + ":" + DbSetting.MONGODB_PORT + "/" + DbSetting.DATABASE);
+        } else {
+            return MongoClients.create("mongodb://" + DbSetting.MONGODB_HOST + ":" + DbSetting.MONGODB_PORT);
+        }
     }
 
     @Bean
     public ReactiveMongoTemplate reactiveMongoTemplate() {
-        return new ReactiveMongoTemplate(reactiveMongoClient(), DbSetting.DATABASE);
+        return new ReactiveMongoTemplate(reactiveMongoClient(), getDatabaseName());
     }
 
     @Override
     public MongoClient mongoClient() {
-        return new MongoClient(DbSetting.MONGODB_HOST);
+        if (DbSetting.AUTHENTICATION_STATUS) {
+            return new MongoClient(
+                    new ServerAddress(DbSetting.MONGODB_HOST, DbSetting.MONGODB_PORT),
+                    MongoCredential.createCredential(DbSetting.DATABASE_USERNAME, getDatabaseName(), DbSetting.DATABASE_PASSWORD.toCharArray()),
+                    MongoClientOptions.builder().build()
+            );
+        } else {
+            return new MongoClient(new ServerAddress(DbSetting.MONGODB_HOST, DbSetting.MONGODB_PORT));
+        }
     }
 
     @Override

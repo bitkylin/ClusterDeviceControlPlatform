@@ -1,0 +1,3 @@
+chcp 65001
+java -jar -'Dfile.encoding'=UTF-8 .\{clientName} localhost 100
+$x = $host.UI.RawUI.ReadKey("NoEcho,IncludeKeyDown")

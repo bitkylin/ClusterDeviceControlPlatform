@@ -218,4 +218,11 @@ public class ServerCenterProcessor {
         }
         return null;
     }
+
+    /**
+     * 「TCP待发送反馈」清除 TCP 通道待发送的消息统计概览
+     */
+    public void clearMsgSendingOutline() {
+        deviceStatusRepository.clearMsgSendingOutline();
+    }
 }

@@ -219,7 +219,6 @@ public class TcpRepository {
      */
     public void accessChannelSuccessful(BaseMsg msg, Channel channel) {
         String id = channel.id().asLongText();
-        logger.info("「Channel[" + msg.getGroupId() + "]待接入」" + "新的 Channel 接入 [" + id + "]");
         CHANNEL_MAP.put(id, msg.getGroupId());
     }
 
@@ -248,7 +247,7 @@ public class TcpRepository {
         String id = channel.id().asLongText();
         Integer index = CHANNEL_MAP.remove(id);
         if (index == null || index <= 0 || index > DeviceSetting.MAX_GROUP_ID) {
-            logger.info("「Channel[" + (index == null ? "无" : index) + "]」" + "移除成功 Channel [" + id + "]");
+            logger.info("「Channel[" + (index == null ? "无" : index) + "]」" + "已移除 Channel [" + id + "]");
             return -1;
         }
         CHANNEL_ARRAY.set(index, null);

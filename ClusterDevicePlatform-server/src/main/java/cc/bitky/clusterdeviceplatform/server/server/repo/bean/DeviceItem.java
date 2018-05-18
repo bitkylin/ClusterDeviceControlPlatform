@@ -71,6 +71,13 @@ public class DeviceItem {
         }
     }
 
+    public void clearMsg() {
+        if (msgCount != 0) {
+            cacheMsg.clear();
+            msgCount = 0;
+        }
+    }
+
     public Collection<BaseMsg> getCacheMsg() {
         return cacheMsg.values();
     }
