@@ -8,6 +8,8 @@ import org.springframework.stereotype.Service;
 import java.util.concurrent.Executors;
 import java.util.concurrent.LinkedBlockingDeque;
 import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ScheduledFuture;
+import java.util.concurrent.TimeUnit;
 
 import cc.bitky.clusterdeviceplatform.messageutils.MsgProcessor;
 import cc.bitky.clusterdeviceplatform.messageutils.config.JointMsgType;
@@ -18,6 +20,7 @@ import cc.bitky.clusterdeviceplatform.messageutils.dynamicsetting.DefaultEmploye
 import cc.bitky.clusterdeviceplatform.messageutils.msg.statusreply.MsgReplyDeviceStatus;
 import cc.bitky.clusterdeviceplatform.messageutils.msg.statusreply.MsgReplyNormal;
 import cc.bitky.clusterdeviceplatform.messageutils.msgcodec.controlcenter.MsgCodecHeartbeat;
+import cc.bitky.clusterdeviceplatform.messageutils.msgcodec.controlcenter.MsgCodecTimestamp;
 import cc.bitky.clusterdeviceplatform.server.config.DbSetting;
 import cc.bitky.clusterdeviceplatform.server.config.DeviceSetting;
 import cc.bitky.clusterdeviceplatform.server.server.ServerTcpProcessor;
@@ -54,7 +57,11 @@ public class TcpPresenter {
     public boolean sendMessageToTcp(BaseMsg message) {
         if (channelIsActivated(message.getGroupId())) {
             LinkedBlockingDeque<BaseMsg> deque = tcpRepository.touchMessageQueue(message.getGroupId());
-            deque.offer(message);
+            if (message.isPrior()) {
+                deque.offerFirst(message);
+            } else {
+                deque.offer(message);
+            }
             return true;
         }
         return false;
@@ -86,13 +93,6 @@ public class TcpPresenter {
         //发送心跳包，从而确定 Channel 的ID
         SendableMsgContainer msgContainer = msgProcessor.buildSendableMsgDirectly(MsgCodecHeartbeat.create(), channel);
         channel.writeAndFlush(msgContainer);
-//        channel.eventLoop().scheduleAtFixedRate(() -> {
-//            if (!channel.isActive()) {
-//                channel.eventLoop().shutdownGracefully();
-//                channelInactiveCompleted(channel);
-//            }
-//            channel.writeAndFlush(msgProcessor.buildSendableMsgDirectly(MsgCodecHeartbeat.create(), channel));
-//        }, 5, 5, TimeUnit.SECONDS);
     }
 
     /**
@@ -120,7 +120,11 @@ public class TcpPresenter {
                 break;
             case JointMsgType.replyHeartBeat:
                 // 收到心跳包，设备组已激活
-                tcpRepository.accessChannelSuccessful(msg, channel);
+                int groupId = msg.getGroupId();
+                //设定设备时间校对计划任务
+                ScheduledFuture future = channel.eventLoop().scheduleAtFixedRate(
+                        () -> sendMessageToTcp(MsgCodecTimestamp.create(groupId)), 1, DeviceSetting.TIMESYNC_INTERVAL, TimeUnit.SECONDS);
+                tcpRepository.accessChannelSuccessful(msg, channel, future);
                 break;
             default:
                 if (msg instanceof MsgReplyNormal) {
