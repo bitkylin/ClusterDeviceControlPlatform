@@ -58,7 +58,7 @@ mkdir -p $TARGET_PATH
 cd $TARGET_PATH
 cp $CLIENT_PATH/build/libs/* .
 cp $SERVER_PATH/build/libs/* .
-cp $SH_PATH/template/* .
+cp -r $SH_PATH/template/* .
 
 # 组装 Client、Server 的运行脚本
 CLIENT_NAME=`ls $CLIENT_PATH/build/libs`
