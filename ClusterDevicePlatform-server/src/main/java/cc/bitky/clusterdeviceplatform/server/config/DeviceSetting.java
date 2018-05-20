@@ -13,5 +13,5 @@ public class DeviceSetting {
     /**
      * 「时间同步计划任务」执行时间间隔『分钟』
      */
-    public static final int TIMESYNC_INTERVAL = 60;
+    public static final int TIMESYNC_INTERVAL = 30;
 }

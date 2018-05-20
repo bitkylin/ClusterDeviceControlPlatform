@@ -22,9 +22,9 @@ import cc.bitky.clusterdeviceplatform.server.db.operate.DbRoutineOperate;
 import cc.bitky.clusterdeviceplatform.server.db.operate.DeviceOperate;
 import cc.bitky.clusterdeviceplatform.server.db.operate.EmployeeOperate;
 import cc.bitky.clusterdeviceplatform.server.db.statistic.repo.ProcessedMsgRepo;
-import cc.bitky.clusterdeviceplatform.server.server.repo.bean.StatusItem;
 import cc.bitky.clusterdeviceplatform.server.server.repo.DeviceStatusRepository;
 import cc.bitky.clusterdeviceplatform.server.server.repo.TcpFeedBackRepository;
+import cc.bitky.clusterdeviceplatform.server.server.repo.bean.StatusItem;
 import cc.bitky.clusterdeviceplatform.server.tcp.statistic.except.TcpFeedbackItem;
 import cc.bitky.clusterdeviceplatform.server.web.client.bean.CardType;
 import reactor.core.publisher.Mono;
@@ -199,7 +199,7 @@ public class DbPresenter {
         //设备状态已改变时，继续更新考勤信息
         long l2 = System.currentTimeMillis();
         //根据设备中记录的考勤表索引，获取并更新员工的考勤表
-        if (device.getEmployeeObjectId() != null) {
+        if (device.getEmployeeObjectId() != null && device.getEmployeeObjectId().trim().length() > 0) {
             dbRoutineOperate.updateRoutineById(device.getEmployeeObjectId(), msgStatus, msgStatus.getType());
         } else {
             logger.info("无指定设备对应的员工，故未更新考勤表");

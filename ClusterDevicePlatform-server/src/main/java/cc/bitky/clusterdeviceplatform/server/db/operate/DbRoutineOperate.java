@@ -1,9 +1,12 @@
 package cc.bitky.clusterdeviceplatform.server.db.operate;
 
+import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.mongodb.core.MongoOperations;
+import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
+import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Repository;
-
-import java.util.Optional;
 
 import cc.bitky.clusterdeviceplatform.messageutils.msg.statusreply.MsgReplyDeviceStatus;
 import cc.bitky.clusterdeviceplatform.server.db.bean.routineinfo.HistoryInfo;
@@ -13,10 +16,12 @@ import cc.bitky.clusterdeviceplatform.server.db.repository.RoutineTableRepositor
 @Repository
 public class DbRoutineOperate {
     private final RoutineTableRepository repository;
+    private final MongoOperations operations;
 
     @Autowired
-    public DbRoutineOperate(RoutineTableRepository repository) {
+    public DbRoutineOperate(RoutineTableRepository repository, MongoOperations operations) {
         this.repository = repository;
+        this.operations = operations;
     }
 
     /**
@@ -26,21 +31,38 @@ public class DbRoutineOperate {
      * @param chargeStatus     设备状态包
      */
     public void updateRoutineById(String employeeObjectId, MsgReplyDeviceStatus chargeStatus, MsgReplyDeviceStatus.Type type) {
-        Optional<LampStatusHistory> optional = repository.findById(employeeObjectId);
-        LampStatusHistory document = optional.orElseGet(() -> {
-            LampStatusHistory temp = new LampStatusHistory();
-            temp.setId(employeeObjectId);
-            return temp;
-        });
+
+        Query query = new Query(Criteria.where("_id").is(new ObjectId(employeeObjectId)));
+
+        HistoryInfo historyInfo = new HistoryInfo(chargeStatus.getTime(), chargeStatus.getStatus());
+        Update update;
+
         switch (type) {
             case WORK:
-                document.getWorkStatus().add(new HistoryInfo(chargeStatus.getTime(), chargeStatus.getStatus()));
+                update = new Update().push("WorkStatus", historyInfo);
                 break;
             case CHARGE:
-                document.getChargeStatus().add(new HistoryInfo(chargeStatus.getTime(), chargeStatus.getStatus()));
+                update = new Update().push("ChargeStatus", historyInfo);
                 break;
             default:
+                return;
         }
-        repository.save(document);
+        operations.upsert(query, update, LampStatusHistory.class);
+//        Optional<LampStatusHistory> optional = repository.findById(employeeObjectId);
+//        LampStatusHistory document = optional.orElseGet(() -> {
+//            LampStatusHistory temp = new LampStatusHistory();
+//            temp.setId(employeeObjectId);
+//            return temp;
+//        });
+//        switch (type) {
+//            case WORK:
+//                document.getWorkStatus().add(new HistoryInfo(chargeStatus.getTime(), chargeStatus.getStatus()));
+//                break;
+//            case CHARGE:
+//                document.getChargeStatus().add(new HistoryInfo(chargeStatus.getTime(), chargeStatus.getStatus()));
+//                break;
+//            default:
+//        }
+//        repository.save(document);
     }
 }

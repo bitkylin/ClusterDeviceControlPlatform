@@ -123,7 +123,7 @@ public class TcpPresenter {
                 int groupId = msg.getGroupId();
                 //设定设备时间校对计划任务
                 ScheduledFuture future = channel.eventLoop().scheduleAtFixedRate(
-                        () -> sendMessageToTcp(MsgCodecTimestamp.create(groupId)), 1, DeviceSetting.TIMESYNC_INTERVAL, TimeUnit.SECONDS);
+                        () -> sendMessageToTcp(MsgCodecTimestamp.create(groupId)), 5, DeviceSetting.TIMESYNC_INTERVAL, TimeUnit.SECONDS);
                 tcpRepository.accessChannelSuccessful(msg, channel, future);
                 break;
             default:
