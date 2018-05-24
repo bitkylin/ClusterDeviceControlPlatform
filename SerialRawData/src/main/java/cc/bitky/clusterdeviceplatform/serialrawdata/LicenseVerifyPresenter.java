@@ -47,6 +47,9 @@ public class LicenseVerifyPresenter {
             System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>\n");
             System.out.println(licenseKey);
             System.out.println("\n>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
+
+            writeFile(licenseKey, "serverLicense.txt");
+            System.out.println("\n该授权码已保存至文件 serverLicense.txt 中");
             scanner.nextLine();
             return;
         }
@@ -104,7 +107,8 @@ public class LicenseVerifyPresenter {
 
     /**
      * 创建授权码
-     * @param netCards  Mac 地址集合对象
+     *
+     * @param netCards Mac 地址集合对象
      * @return 已创建的授权码
      */
     private static String createLicenseKey(List<NetCard> netCards) {
