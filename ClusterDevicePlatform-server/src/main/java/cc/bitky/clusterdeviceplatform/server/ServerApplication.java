@@ -17,7 +17,7 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
-import cc.bitky.clusterdeviceplatform.serialrawdata.NetCardVerifyPresenter;
+import cc.bitky.clusterdeviceplatform.serialrawdata.LicenseVerifyPresenter;
 import cc.bitky.clusterdeviceplatform.server.config.CommSetting;
 import cc.bitky.clusterdeviceplatform.server.config.DbSetting;
 import cc.bitky.clusterdeviceplatform.server.config.LocalProfile;
@@ -125,7 +125,7 @@ public class ServerApplication {
         ServerSetting.ACTIVATION_CODE = trimProperty(localProfile.授权码);
 
         try {
-            if (!NetCardVerifyPresenter.verifyEncryptCode(ServerSetting.ACTIVATION_CODE)) {
+            if (!LicenseVerifyPresenter.verifyLicenseKey(ServerSetting.ACTIVATION_CODE)) {
                 System.out.println("授权码验证失败");
                 return false;
             }

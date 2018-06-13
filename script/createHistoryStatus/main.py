@@ -2,7 +2,7 @@ from utils import device_create
 from utils.history_item import HistoryItem
 from datetime import datetime
 
-db = device_create.get_creator("202.193.57.131", "bitkyTest")
+db = device_create.get_creator("202.193.57.44", "bitkyTest")
 LampStatusHistory = db.LampStatusHistory
 LampStatusHistory.drop()
 device_list = []
@@ -11,11 +11,11 @@ print('共需执行次数：' + str(employees.count()))
 print('开始执行...')
 i = 1
 for employee in employees:
-    if i % 100 == 0:
-        print('正在执行第' + str(i) + '次')
+  #  if i % 100 == 0:
+    print('正在执行第' + str(i) + '次')
     i += 1
     hisItem = {'_id': employee['_id']}
-    hisInit = HistoryItem(datetime(2015, 4, 19), 100)
+    hisInit = HistoryItem(datetime(2015, 4, 19), 3650)
     hisItem['ChargeStatus'] = hisInit.ChargeStatus
     hisItem['WorkStatus'] = hisInit.WorkStatus
     device_list.append(hisItem)

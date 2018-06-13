@@ -93,7 +93,7 @@ public class OperateDevicesRestController {
      */
     @GetMapping("/update/timestamp/current/{groupId}")
     public String updateUnixTimestamp(@PathVariable int groupId) {
-        if (webProcessor.sendMessageGrouped(MsgCodecTimestamp.create(groupId, 0, System.currentTimeMillis()))) {
+        if (webProcessor.sendMessageGrouped(MsgCodecTimestamp.create(groupId))) {
             return "success";
         } else {
             return "error";

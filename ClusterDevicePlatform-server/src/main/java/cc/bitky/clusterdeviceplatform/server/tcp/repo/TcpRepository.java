@@ -10,6 +10,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.Executors;
 import java.util.concurrent.LinkedBlockingDeque;
 import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicReferenceArray;
 
@@ -42,6 +43,10 @@ public class TcpRepository {
      * 已激活的 Channel 容器
      */
     private final AtomicReferenceArray<Channel> CHANNEL_ARRAY = new AtomicReferenceArray<>(DeviceSetting.MAX_GROUP_ID + 1);
+    /**
+     * 已激活的「时间同步计划任务」容器
+     */
+    private final AtomicReferenceArray<ScheduledFuture> ScheduledFuture_ARRAY = new AtomicReferenceArray<>(DeviceSetting.MAX_GROUP_ID + 1);
     /**
      * 已接入的 Channel 容器「待识别及已激活」
      */
@@ -157,11 +162,14 @@ public class TcpRepository {
                 logger.info("消息已收到回复:" + msg.msgDetailToString());
                 return;
             }
+            if (!server.channelIsActivated(msg.getGroupId())) {
+                return;
+            }
             if (msg.getResendTimes() < AUTO_REPEAT_REQUEST_TIMES - 1) {
                 logger.warn("消息未收到回复:" + msg.msgDetailToString());
                 msg.doResend();
                 server.sendMessageToTcp(msg);
-            } else if (server != null) {
+            } else {
                 logger.warn("消息未收到回复已达上限:" + msg.msgDetailToString());
                 server.touchUnusualMsg(TcpFeedbackItem.createResendOutBound(msg));
             }
@@ -217,9 +225,10 @@ public class TcpRepository {
      * @param msg     心跳包
      * @param channel 已接入成功的 Channel
      */
-    public void accessChannelSuccessful(BaseMsg msg, Channel channel) {
+    public void accessChannelSuccessful(BaseMsg msg, Channel channel, ScheduledFuture future) {
         String id = channel.id().asLongText();
         CHANNEL_MAP.put(id, msg.getGroupId());
+        ScheduledFuture_ARRAY.set(msg.getGroupId(), future);
     }
 
     /**
@@ -252,6 +261,11 @@ public class TcpRepository {
         }
         CHANNEL_ARRAY.set(index, null);
         SENDING_MESSAGE_QUEUE.get(index).clear();
+        ScheduledFuture future = ScheduledFuture_ARRAY.get(index);
+        if (future != null) {
+            future.cancel(true);
+            ScheduledFuture_ARRAY.set(index, null);
+        }
         logger.info("「Channel[" + index + "]」" + "移除成功 Channel [" + id + "]");
         return index;
     }
