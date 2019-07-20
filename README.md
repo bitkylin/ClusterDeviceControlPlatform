@@ -1,15 +1,15 @@
-# 集群设备管理云平台「Java、SPA、Spring、Netty、Vue.js 2.0、Element 2.0」
+# 集群设备管理云平台「Java、SPA、Spring Boot 2.0、Netty、Vue.js 2.0、Element 2.0」
 
 [![GitHub stars](https://img.shields.io/github/stars/bitkylin/ClusterDeviceControlPlatform.svg)](https://github.com/bitkylin/ClusterDeviceControlPlatform/stargazers)
 [![Build Status](https://travis-ci.org/bitkylin/ClusterDeviceControlPlatform.svg?branch=master)](https://travis-ci.org/bitkylin/ClusterDeviceControlPlatform)
 [![许可证](https://img.shields.io/badge/许可证-MIT-blue.svg)](https://github.com/bitkylin/ClusterDeviceControlPlatform/blob/master/LICENSE)
-![技术](https://img.shields.io/badge/%E6%8A%80%E6%9C%AF-Spring%7CVue.js%7CNetty%7CJavaFX%7CMongoDB-brightgreen.svg)
+![技术](https://img.shields.io/badge/%E6%8A%80%E6%9C%AF-SpringBoot%7CVue.js%7CNetty%7CJavaFX%7CMongoDB-brightgreen.svg)
 
 ## 项目描述
 
 Java & Vue.js 全栈项目，大规模集群设备管理云平台，由以下几部分组成：**Java 后端服务器、基于 Vue.js 的 Web 前端「SPA」单页应用程序、JavaFX 集群设备模拟客户端、辅助工具组件「Python 脚本、基于 C# & WPF 的可视化配置工具」**，简要介绍如下：
 
-- **Java 后端服务器**：使用 Spring 作为基础框架，使用 Netty 搭建 TCP 服务器与**上万台设备**组成的集群通信，采用自定义帧格式。
+- **Java 后端服务器**：使用 Spring Boot 2.0 作为基础框架，使用 Netty 搭建 TCP 服务器与**上万台设备**组成的集群通信，采用自定义帧格式。
 
 - **基于 Vue.js 的 Web 前端「SPA」单页应用程序**：绚丽的现代化 SPA 应用程序，可视化展现服务器内部的各项数据，包括服务器消息队列、通信压力、实时通信信息等。
 
@@ -108,7 +108,7 @@ java -jar -Dfile.encoding=UTF-8 clusterdeviceplatform-demo-1.0.0.jar
 
 ### 服务器架构描述
 
-- 以 Spring 为基础框架，集成 Netty、Spring Data、Spring MVC 等框架搭建服务器。
+- 以 Spring Boot 2.0 为基础框架，集成 Netty、Spring Data、Spring MVC 等框架搭建服务器。
 
 - 采用 Netty 开发 TCP 服务器，与至少 1W 台设备「智能充电柜」进行通信，处理能力 2000 帧/秒以上，已有效解决粘包、半包问题。遵循 CAN 协议自定义帧格式，实现丰富的业务功能。
 
