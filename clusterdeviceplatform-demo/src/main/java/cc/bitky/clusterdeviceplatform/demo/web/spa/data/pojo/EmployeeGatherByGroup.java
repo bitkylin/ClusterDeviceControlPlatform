@@ -1,4 +1,4 @@
-package cc.bitky.clusterdeviceplatform.demo.web.spa.data.bean;
+package cc.bitky.clusterdeviceplatform.demo.web.spa.data.pojo;
 
 public class EmployeeGatherByGroup {
     /**

@@ -1,29 +1,25 @@
 package cc.bitky.clusterdeviceplatform.demo.web.spa.data;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-
 import cc.bitky.clusterdeviceplatform.demo.config.DeviceSetting;
 import cc.bitky.clusterdeviceplatform.demo.db.statistic.pressure.GroupCacheItem;
 import cc.bitky.clusterdeviceplatform.demo.db.statistic.status.DeviceGroupOutline;
-import cc.bitky.clusterdeviceplatform.demo.web.spa.data.random.MsgCountRandom;
 import cc.bitky.clusterdeviceplatform.demo.web.spa.utils.ResMsg;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.web.bind.annotation.*;
 
 
 /**
  * 服务器数据处理模块
+ *
+ * @author limingliang
  */
 @CrossOrigin
 @RestController
 @RequestMapping(value = "/server/dataprocess/devicegroup")
 public class DataProcessController {
-    MsgCountRandom countRandom;
-    private Logger logger = LoggerFactory.getLogger(getClass());
+
+    private final Logger logger = LoggerFactory.getLogger(getClass());
 
     /**
      * 获取设备组的数量
@@ -49,7 +45,7 @@ public class DataProcessController {
 
         outline.setAlarmLimit(10, 100);
         long l2 = System.currentTimeMillis();
-        logger.info("耗时：" + (l2 - l1) + " ms");
+        logger.info("耗时：{} ms", (l2 - l1));
         return new ResMsg(outline);
     }
 
@@ -70,14 +66,14 @@ public class DataProcessController {
 
     @GetMapping("/detail/{groupId}")
     public ResMsg getDeviceByGroupId(@PathVariable int groupId) {
-        logger.info("/server/dataprocess/devicegroup/detail/" + groupId);
+        logger.info("/server/dataprocess/devicegroup/detail/{}", groupId);
         long l1 = System.currentTimeMillis();
         DeviceGroupOutline outline;
         outline = KyRandom.createDetail(groupId);
 
         outline.setAlarmLimit(10, 100);
         long l2 = System.currentTimeMillis();
-        logger.info("耗时：" + (l2 - l1) + " ms");
+        logger.info("耗时：{} ms", (l2 - l1));
         return new ResMsg(outline);
     }
 
