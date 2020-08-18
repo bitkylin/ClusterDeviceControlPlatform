@@ -1,8 +1,8 @@
 language: java
 
 jdk:
-  - oraclejdk8
+  - openjdk8
 
 script:
   - cd clusterdeviceplatform-demo
-  - gradle assemble
+  - /bin/bash gradlew build
