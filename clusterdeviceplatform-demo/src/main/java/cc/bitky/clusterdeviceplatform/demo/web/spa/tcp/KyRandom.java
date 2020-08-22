@@ -1,16 +1,21 @@
 package cc.bitky.clusterdeviceplatform.demo.web.spa.tcp;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
-
 import cc.bitky.clusterdeviceplatform.demo.config.DeviceSetting;
 import cc.bitky.clusterdeviceplatform.demo.tcp.statistic.channel.ChannelItem;
 import cc.bitky.clusterdeviceplatform.demo.tcp.statistic.channel.ChannelOutline;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
+import java.util.concurrent.ThreadLocalRandom;
+
+/**
+ * @author limingliang
+ */
 public class KyRandom {
+
     public ChannelOutline create() {
-        Random random = new Random();
+        Random random = ThreadLocalRandom.current();
         int size = DeviceSetting.MAX_GROUP_ID;
         List<ChannelItem> items = new ArrayList<>(size);
         int activatedCount = 0;

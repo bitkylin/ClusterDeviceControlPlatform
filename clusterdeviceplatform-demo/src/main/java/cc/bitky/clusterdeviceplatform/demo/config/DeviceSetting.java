@@ -1,5 +1,8 @@
 package cc.bitky.clusterdeviceplatform.demo.config;
 
+/**
+ * @author limingliang
+ */
 public class DeviceSetting {
     /**
      * 最大设备组号
@@ -9,4 +12,7 @@ public class DeviceSetting {
      * 设备组内的最大设备号
      */
     public static final int MAX_DEVICE_ID = 100;
+
+    private DeviceSetting() {
+    }
 }

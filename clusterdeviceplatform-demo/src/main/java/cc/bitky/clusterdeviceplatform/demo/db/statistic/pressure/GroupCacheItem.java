@@ -1,14 +1,15 @@
 package cc.bitky.clusterdeviceplatform.demo.db.statistic.pressure;
 
+import cc.bitky.clusterdeviceplatform.demo.config.DeviceSetting;
+import cc.bitky.clusterdeviceplatform.demo.tcp.statistic.channel.ChannelItem;
+import cc.bitky.clusterdeviceplatform.demo.web.spa.data.random.MsgCountRandom;
+import lombok.Getter;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-import cc.bitky.clusterdeviceplatform.demo.config.DeviceSetting;
-import cc.bitky.clusterdeviceplatform.demo.tcp.statistic.channel.ChannelItem;
-import cc.bitky.clusterdeviceplatform.demo.web.spa.data.random.MsgCountRandom;
-
-
+@Getter
 public class GroupCacheItem {
     private static MsgCountRandom countRandom;
     /**
@@ -48,14 +49,6 @@ public class GroupCacheItem {
         return new GroupCacheItem(items, countRandom);
     }
 
-    public MsgCount getMsgCount() {
-        return msgCount;
-    }
-
-    public List<ChannelItem> getChannelItems() {
-        return channelItems;
-    }
-
     /**
      * 设置前端界面报警的限定
      *
@@ -65,13 +58,5 @@ public class GroupCacheItem {
     public void setAlarmLimit(int normalLimit, int exceptionLimit) {
         this.normalLimit = normalLimit;
         this.exceptionLimit = exceptionLimit;
-    }
-
-    public int getNormalLimit() {
-        return normalLimit;
-    }
-
-    public int getExceptionLimit() {
-        return exceptionLimit;
     }
 }

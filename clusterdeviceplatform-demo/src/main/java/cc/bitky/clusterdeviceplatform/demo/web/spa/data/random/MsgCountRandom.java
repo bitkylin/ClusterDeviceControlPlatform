@@ -1,6 +1,7 @@
 package cc.bitky.clusterdeviceplatform.demo.web.spa.data.random;
 
 import java.util.Random;
+import java.util.concurrent.ThreadLocalRandom;
 
 import cc.bitky.clusterdeviceplatform.demo.db.statistic.pressure.MsgCount;
 
@@ -14,7 +15,7 @@ public class MsgCountRandom extends MsgCount {
         if (random == null) {
             return;
         }
-        Random r = new Random();
+        Random r = ThreadLocalRandom.current();
         setMsgChargeCountFixed(random.getMsgChargeCountFixed() + r.nextInt(100));
         setMsgChargeCountVariable(random.getMsgChargeCountVariable() + r.nextInt(100));
         setMsgWorkCountFixed(random.getMsgWorkCountFixed() + r.nextInt(100));

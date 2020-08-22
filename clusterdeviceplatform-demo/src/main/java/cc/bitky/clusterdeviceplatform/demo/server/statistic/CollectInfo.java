@@ -1,22 +1,17 @@
 package cc.bitky.clusterdeviceplatform.demo.server.statistic;
 
 
-import cc.bitky.clusterdeviceplatform.demo.server.statistic.info.DataBaseInfo;
-import cc.bitky.clusterdeviceplatform.demo.server.statistic.info.ServerInfo;
-import cc.bitky.clusterdeviceplatform.demo.server.statistic.info.ServerSettingInfo;
-import cc.bitky.clusterdeviceplatform.demo.server.statistic.info.ServerStatusInfo;
-import cc.bitky.clusterdeviceplatform.demo.server.statistic.info.SysEnvInfo;
-import cc.bitky.clusterdeviceplatform.demo.server.statistic.info.TcpDetailInfo;
-import cc.bitky.clusterdeviceplatform.demo.server.statistic.info.TcpInfo;
+import cc.bitky.clusterdeviceplatform.demo.server.statistic.info.*;
 
 public class CollectInfo {
-    private ServerInfo serverInfo;
-    private ServerSettingInfo serverSettingInfo;
-    private ServerStatusInfo serverStatusInfo;
-    private SysEnvInfo sysEnvInfo;
-    private DataBaseInfo dataBaseInfo;
-    private TcpInfo tcpInfo;
-    private TcpDetailInfo tcpDetailInfo;
+
+    private final ServerInfo serverInfo;
+    private final ServerSettingInfo serverSettingInfo;
+    private final ServerStatusInfo serverStatusInfo;
+    private final SysEnvInfo sysEnvInfo;
+    private final DataBaseInfo dataBaseInfo;
+    private final TcpInfo tcpInfo;
+    private final TcpDetailInfo tcpDetailInfo;
 
     public CollectInfo() {
         this.serverInfo = new ServerInfo();

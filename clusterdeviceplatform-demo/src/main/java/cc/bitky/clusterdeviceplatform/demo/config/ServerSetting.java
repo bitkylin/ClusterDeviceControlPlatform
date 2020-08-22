@@ -20,6 +20,22 @@ public class ServerSetting {
      */
     public static final String CONFIG_FILE_PATH = "setting";
     /**
+     * 服务器TCP模块端口号
+     */
+    public static final int SERVER_TCP_PORT = 30232;
+    /**
+     * 服务器Web模块端口号
+     */
+    public static final int SERVER_WEB_PORT = 8080;
+    /**
+     * 是否开启调试信息输出
+     */
+    public static final boolean DEBUG = false;
+    /**
+     * 是否开启web页面随机数据生成
+     */
+    public static final boolean WEB_RANDOM_DEBUG = true;
+    /**
      * 运行时环境
      */
     private static final RuntimeMXBean RUNTIME = ManagementFactory.getRuntimeMXBean();
@@ -27,20 +43,4 @@ public class ServerSetting {
      * PID
      */
     public static final String PID = RUNTIME.getName().split("@")[0];
-    /**
-     * 服务器TCP模块端口号
-     */
-    public static int SERVER_TCP_PORT = 30232;
-    /**
-     * 服务器Web模块端口号
-     */
-    public static int SERVER_WEB_PORT = 8080;
-    /**
-     * 是否开启调试信息输出
-     */
-    public static boolean DEBUG = false;
-    /**
-     * 是否开启web页面随机数据生成
-     */
-    public static boolean WEB_RANDOM_DEBUG = true;
 }

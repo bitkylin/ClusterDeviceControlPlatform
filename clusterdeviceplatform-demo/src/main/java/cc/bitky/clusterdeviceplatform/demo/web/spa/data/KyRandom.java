@@ -16,7 +16,7 @@ import java.util.Random;
  */
 public class KyRandom {
 
-    private static final Random RANDOM = new Random();
+    private static final Random RANDOM = ThreadLocalRandom.current();
 
     public static DeviceGroupOutline createOutline() {
         List<DeviceGroupItem> groupItems = new ArrayList<>(DeviceSetting.MAX_GROUP_ID);

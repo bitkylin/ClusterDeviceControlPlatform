@@ -18,35 +18,35 @@ public class ServerStatusInfo {
     /**
      * PID
      */
-    String pid = ServerSetting.PID;
+    private final String pid = ServerSetting.PID;
     /**
      * 服务器开机时间
      */
-    String StartTime;
+    private final String startTime;
     /**
      * 服务器已运行时长
      */
-    String runningTime;
+    private final String runningTime;
     /**
      * 当前日期
      */
-    String currentDate;
+    private final  String currentDate;
     /**
      * 当前时间
      */
-    String currentTime;
+    private final  String currentTime;
     /**
      * 未处理消息数
      */
-    long exceptionMsgCount;
+    private  long exceptionMsgCount;
     /**
      * 超时消息数
      */
-    long timeoutMsgCount;
+    private  long timeoutMsgCount;
 
     public ServerStatusInfo() {
         LocalDateTime start = ServerSetting.SYSTEM_START_DATE_TIME;
-        StartTime = start.format(DateTimeFormatter.ISO_LOCAL_DATE_TIME).replace('T', ' ').split("\\.")[0];
+        startTime = start.format(DateTimeFormatter.ISO_LOCAL_DATE_TIME).replace('T', ' ').split("\\.")[0];
         LocalDateTime now = LocalDateTime.ofInstant(Instant.now(), ZoneId.systemDefault());
 
         LocalDate nowDate = now.toLocalDate();
@@ -89,7 +89,7 @@ public class ServerStatusInfo {
     }
 
     public String getStartTime() {
-        return StartTime;
+        return startTime;
     }
 
     public String getRunningTime() {
