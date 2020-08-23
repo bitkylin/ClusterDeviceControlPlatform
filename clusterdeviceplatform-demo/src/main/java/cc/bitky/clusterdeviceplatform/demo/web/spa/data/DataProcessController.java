@@ -3,6 +3,7 @@ package cc.bitky.clusterdeviceplatform.demo.web.spa.data;
 import cc.bitky.clusterdeviceplatform.demo.config.DeviceSetting;
 import cc.bitky.clusterdeviceplatform.demo.db.statistic.pressure.GroupCacheItem;
 import cc.bitky.clusterdeviceplatform.demo.db.statistic.status.DeviceGroupOutline;
+import cc.bitky.clusterdeviceplatform.demo.web.spa.data.random.KyRandom;
 import cc.bitky.clusterdeviceplatform.demo.web.spa.utils.ResMsg;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

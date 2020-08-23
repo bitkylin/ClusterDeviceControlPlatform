@@ -1,4 +1,4 @@
-package cc.bitky.clusterdeviceplatform.demo.server.statistic.utils;
+package cc.bitky.clusterdeviceplatform.demo.server.statistic.util;
 
 import java.lang.management.ClassLoadingMXBean;
 import java.lang.management.CompilationMXBean;

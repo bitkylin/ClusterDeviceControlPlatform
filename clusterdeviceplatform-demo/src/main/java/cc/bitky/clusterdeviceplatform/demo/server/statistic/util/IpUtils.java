@@ -1,10 +1,17 @@
-package cc.bitky.clusterdeviceplatform.demo.server.statistic.utils;
+package cc.bitky.clusterdeviceplatform.demo.server.statistic.util;
 
 import java.net.InetAddress;
 import java.util.ArrayList;
 import java.util.List;
 
-public class IpUtil {
+/**
+ * @author limingliang
+ */
+public class IpUtils {
+
+    private IpUtils() {
+    }
+
     public static String getLocalHostName() {
         try {
             InetAddress addr = InetAddress.getLocalHost();

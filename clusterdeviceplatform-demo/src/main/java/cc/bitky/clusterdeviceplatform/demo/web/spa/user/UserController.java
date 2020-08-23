@@ -10,9 +10,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import cc.bitky.clusterdeviceplatform.demo.web.spa.user.bean.Token;
-import cc.bitky.clusterdeviceplatform.demo.web.spa.user.bean.UserInfo;
-import cc.bitky.clusterdeviceplatform.demo.web.spa.user.bean.UserLogin;
+import cc.bitky.clusterdeviceplatform.demo.web.spa.user.pojo.Token;
+import cc.bitky.clusterdeviceplatform.demo.web.spa.user.pojo.UserInfo;
+import cc.bitky.clusterdeviceplatform.demo.web.spa.user.pojo.UserLogin;
 import cc.bitky.clusterdeviceplatform.demo.web.spa.utils.ResMsg;
 
 @CrossOrigin

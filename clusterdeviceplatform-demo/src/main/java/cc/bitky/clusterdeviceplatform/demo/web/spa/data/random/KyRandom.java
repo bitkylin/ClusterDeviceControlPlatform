@@ -1,4 +1,4 @@
-package cc.bitky.clusterdeviceplatform.demo.web.spa.data;
+package cc.bitky.clusterdeviceplatform.demo.web.spa.data.random;
 
 import cc.bitky.clusterdeviceplatform.demo.config.DeviceSetting;
 import cc.bitky.clusterdeviceplatform.demo.db.statistic.status.DeviceGroupItem;
@@ -9,6 +9,7 @@ import cc.bitky.clusterdeviceplatform.messageutils.config.ChargeStatus;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+import java.util.concurrent.ThreadLocalRandom;
 
 
 /**
@@ -17,6 +18,9 @@ import java.util.Random;
 public class KyRandom {
 
     private static final Random RANDOM = ThreadLocalRandom.current();
+
+    private KyRandom() {
+    }
 
     public static DeviceGroupOutline createOutline() {
         List<DeviceGroupItem> groupItems = new ArrayList<>(DeviceSetting.MAX_GROUP_ID);

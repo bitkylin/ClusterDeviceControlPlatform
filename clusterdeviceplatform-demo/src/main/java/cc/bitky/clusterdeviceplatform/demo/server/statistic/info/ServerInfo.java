@@ -2,7 +2,7 @@ package cc.bitky.clusterdeviceplatform.demo.server.statistic.info;
 
 
 import cc.bitky.clusterdeviceplatform.demo.config.ServerSetting;
-import cc.bitky.clusterdeviceplatform.demo.server.statistic.utils.IpUtil;
+import cc.bitky.clusterdeviceplatform.demo.server.statistic.util.IpUtils;
 
 public class ServerInfo {
     /**
@@ -27,8 +27,8 @@ public class ServerInfo {
     String[] ipAddress;
 
     public ServerInfo() {
-        this.hostName = IpUtil.getLocalHostName();
-        this.ipAddress = IpUtil.getIP(hostName);
+        this.hostName = IpUtils.getLocalHostName();
+        this.ipAddress = IpUtils.getIP(hostName);
     }
 
     public int getWebPort() {
