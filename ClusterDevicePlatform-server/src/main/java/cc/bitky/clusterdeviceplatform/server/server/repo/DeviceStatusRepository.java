@@ -18,12 +18,12 @@ import cc.bitky.clusterdeviceplatform.server.db.bean.Employee;
 import cc.bitky.clusterdeviceplatform.server.server.repo.bean.DeviceItem;
 import cc.bitky.clusterdeviceplatform.server.server.repo.bean.StatusItem;
 import cc.bitky.clusterdeviceplatform.server.server.utils.DeviceOutBoundDetect;
-import cc.bitky.clusterdeviceplatform.server.web.spa.data.bean.DeviceStatusItem;
-import cc.bitky.clusterdeviceplatform.server.web.spa.tcp.bean.BaseMsgSending;
-import cc.bitky.clusterdeviceplatform.server.web.spa.tcp.bean.DeviceGroupedMsgSending;
-import cc.bitky.clusterdeviceplatform.server.web.spa.tcp.bean.DeviceItemMsgSending;
-import cc.bitky.clusterdeviceplatform.server.web.spa.tcp.bean.MachineMsgSending;
-import cc.bitky.clusterdeviceplatform.server.web.spa.tcp.bean.MsgSending;
+import cc.bitky.clusterdeviceplatform.server.pojo.dataprocess.DeviceStatusItem;
+import cc.bitky.clusterdeviceplatform.server.pojo.tcp.BaseMsgSending;
+import cc.bitky.clusterdeviceplatform.server.pojo.tcp.DeviceGroupedMsgSending;
+import cc.bitky.clusterdeviceplatform.server.pojo.tcp.DeviceItemMsgSending;
+import cc.bitky.clusterdeviceplatform.server.pojo.tcp.MachineMsgSending;
+import cc.bitky.clusterdeviceplatform.server.pojo.tcp.MsgSending;
 import io.netty.util.internal.ConcurrentSet;
 
 import static cc.bitky.clusterdeviceplatform.server.config.DeviceSetting.MAX_DEVICE_ID;

@@ -43,7 +43,7 @@ import cc.bitky.clusterdeviceplatform.server.db.bean.Device;
 import cc.bitky.clusterdeviceplatform.server.db.bean.Employee;
 import cc.bitky.clusterdeviceplatform.server.server.ServerWebProcessor;
 import cc.bitky.clusterdeviceplatform.server.server.utils.DeviceOutBoundDetect;
-import cc.bitky.clusterdeviceplatform.server.web.client.bean.QueueDevice;
+import cc.bitky.clusterdeviceplatform.server.pojo.client.QueueDevice;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 

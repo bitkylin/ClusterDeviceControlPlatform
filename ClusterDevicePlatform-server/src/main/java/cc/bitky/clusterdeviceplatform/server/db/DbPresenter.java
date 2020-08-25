@@ -26,7 +26,7 @@ import cc.bitky.clusterdeviceplatform.server.server.repo.DeviceStatusRepository;
 import cc.bitky.clusterdeviceplatform.server.server.repo.TcpFeedBackRepository;
 import cc.bitky.clusterdeviceplatform.server.server.repo.bean.StatusItem;
 import cc.bitky.clusterdeviceplatform.server.tcp.statistic.except.TcpFeedbackItem;
-import cc.bitky.clusterdeviceplatform.server.web.client.bean.CardType;
+import cc.bitky.clusterdeviceplatform.server.pojo.client.CardType;
 import reactor.core.publisher.Mono;
 
 @Service

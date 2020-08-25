@@ -12,8 +12,8 @@ import cc.bitky.clusterdeviceplatform.server.db.statistic.repo.ProcessedMsgRepo;
 import cc.bitky.clusterdeviceplatform.server.server.ServerCenterProcessor;
 import cc.bitky.clusterdeviceplatform.server.server.statistic.CollectInfo;
 import cc.bitky.clusterdeviceplatform.server.server.statistic.utils.Test;
-import cc.bitky.clusterdeviceplatform.server.web.spa.utils.ResMsg;
-import cc.bitky.clusterdeviceplatform.server.web.spa.utils.WebUtil;
+import cc.bitky.clusterdeviceplatform.server.utils.ResMsg;
+import cc.bitky.clusterdeviceplatform.server.utils.WebUtil;
 
 /**
  * 服务器数据处理模块

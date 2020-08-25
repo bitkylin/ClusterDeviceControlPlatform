@@ -13,8 +13,8 @@ import java.util.List;
 import cc.bitky.clusterdeviceplatform.server.server.ServerCenterProcessor;
 import cc.bitky.clusterdeviceplatform.server.server.repo.TcpFeedBackRepository;
 import cc.bitky.clusterdeviceplatform.server.tcp.statistic.except.TcpFeedbackItem;
-import cc.bitky.clusterdeviceplatform.server.web.spa.utils.ResMsg;
-import cc.bitky.clusterdeviceplatform.server.web.spa.utils.WebUtil;
+import cc.bitky.clusterdeviceplatform.server.utils.ResMsg;
+import cc.bitky.clusterdeviceplatform.server.utils.WebUtil;
 
 /**
  * 服务器数据处理模块

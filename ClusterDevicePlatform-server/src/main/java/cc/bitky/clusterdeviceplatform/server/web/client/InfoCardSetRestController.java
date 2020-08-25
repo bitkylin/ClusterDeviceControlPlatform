@@ -18,10 +18,10 @@ import cc.bitky.clusterdeviceplatform.messageutils.msgcodec.card.MsgCodecCardFre
 import cc.bitky.clusterdeviceplatform.server.config.DbSetting;
 import cc.bitky.clusterdeviceplatform.server.db.bean.CardSet;
 import cc.bitky.clusterdeviceplatform.server.server.ServerWebProcessor;
-import cc.bitky.clusterdeviceplatform.server.web.client.bean.CardType;
+import cc.bitky.clusterdeviceplatform.server.pojo.client.CardType;
 import reactor.core.publisher.Mono;
 
-import static cc.bitky.clusterdeviceplatform.server.web.client.bean.CardType.Free;
+import static cc.bitky.clusterdeviceplatform.server.pojo.client.CardType.Free;
 
 @RestController
 @RequestMapping(value = "/info/cardset")

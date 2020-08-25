@@ -1,8 +1,4 @@
-package cc.bitky.clusterdeviceplatform.server.web.spa.data;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
+package cc.bitky.clusterdeviceplatform.server.server.demonstrate.msgprocess;
 
 import cc.bitky.clusterdeviceplatform.messageutils.config.ChargeStatus;
 import cc.bitky.clusterdeviceplatform.server.config.DeviceSetting;
@@ -10,9 +6,20 @@ import cc.bitky.clusterdeviceplatform.server.db.statistic.status.DeviceGroupItem
 import cc.bitky.clusterdeviceplatform.server.db.statistic.status.DeviceGroupOutline;
 import cc.bitky.clusterdeviceplatform.server.db.statistic.status.DeviceStatusItem;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
+import java.util.concurrent.ThreadLocalRandom;
+
+/**
+ * @author limingliang
+ */
 public class KyRandom {
 
-    private static Random random = new Random();
+    private static final Random RANDOM = ThreadLocalRandom.current();
+
+    private KyRandom() {
+    }
 
     public static DeviceGroupOutline createOutline() {
         List<DeviceGroupItem> groupItems = new ArrayList<>(DeviceSetting.MAX_GROUP_ID);
@@ -35,10 +42,10 @@ public class KyRandom {
         int chargingCount = 0;
         int fullCount = 0;
         int uninitCount = 0;
-        int msgCount = random.nextInt(150);
+        int msgCount = RANDOM.nextInt(150);
 
         for (int deviceId = 1; deviceId <= DeviceSetting.MAX_DEVICE_ID; deviceId++) {
-            int charge = random.nextInt(4);
+            int charge = RANDOM.nextInt(4);
             switch (charge) {
                 case ChargeStatus.USING:
                     usingCount++;
@@ -55,7 +62,7 @@ public class KyRandom {
                 default:
                     break;
             }
-            int work = random.nextInt(20);
+            int work = RANDOM.nextInt(20);
             if (work < 4 || work > 10) {
                 work = 1;
             }

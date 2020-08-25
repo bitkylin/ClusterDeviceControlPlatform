@@ -13,7 +13,7 @@ import cc.bitky.clusterdeviceplatform.messageutils.msg.controlcenter.led.MsgLedO
 import cc.bitky.clusterdeviceplatform.messageutils.msgcodec.controlcenter.led.MsgCodecLedOff;
 import cc.bitky.clusterdeviceplatform.messageutils.msgcodec.controlcenter.led.MsgCodecLedOn;
 import cc.bitky.clusterdeviceplatform.server.server.ServerWebProcessor;
-import cc.bitky.clusterdeviceplatform.server.web.client.bean.WebLed;
+import cc.bitky.clusterdeviceplatform.server.pojo.client.WebLed;
 
 @RestController
 @RequestMapping(value = "/led")

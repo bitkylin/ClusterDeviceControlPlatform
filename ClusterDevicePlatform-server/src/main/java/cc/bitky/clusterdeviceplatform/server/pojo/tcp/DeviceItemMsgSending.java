@@ -1,4 +1,4 @@
-package cc.bitky.clusterdeviceplatform.server.web.spa.tcp.bean;
+package cc.bitky.clusterdeviceplatform.server.pojo.tcp;
 
 import java.util.stream.Collectors;
 
