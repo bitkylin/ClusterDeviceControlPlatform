@@ -1,5 +1,6 @@
 package cc.bitky.clusterdeviceplatform.server.web.spa.data;
 
+import cc.bitky.clusterdeviceplatform.server.server.demonstrate.msgprocess.KyRandom;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,8 +14,8 @@ import cc.bitky.clusterdeviceplatform.server.config.DeviceSetting;
 import cc.bitky.clusterdeviceplatform.server.db.statistic.pressure.GroupCacheItem;
 import cc.bitky.clusterdeviceplatform.server.db.statistic.status.DeviceGroupOutline;
 import cc.bitky.clusterdeviceplatform.server.server.ServerCenterProcessor;
-import cc.bitky.clusterdeviceplatform.server.web.spa.utils.ResMsg;
-import cc.bitky.clusterdeviceplatform.server.web.spa.utils.WebUtil;
+import cc.bitky.clusterdeviceplatform.server.utils.ResMsg;
+import cc.bitky.clusterdeviceplatform.server.utils.WebUtil;
 
 import static cc.bitky.clusterdeviceplatform.server.config.ServerSetting.WEB_RANDOM_DEBUG;
 

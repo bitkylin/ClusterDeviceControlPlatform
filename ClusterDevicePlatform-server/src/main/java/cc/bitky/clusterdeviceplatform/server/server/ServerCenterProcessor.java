@@ -23,7 +23,7 @@ import cc.bitky.clusterdeviceplatform.server.server.repo.MsgProcessingRepository
 import cc.bitky.clusterdeviceplatform.server.server.repo.TcpFeedBackRepository;
 import cc.bitky.clusterdeviceplatform.server.server.utils.DeviceOutBoundDetect;
 import cc.bitky.clusterdeviceplatform.server.tcp.statistic.except.TcpFeedbackItem;
-import cc.bitky.clusterdeviceplatform.server.web.spa.tcp.bean.BaseMsgSending;
+import cc.bitky.clusterdeviceplatform.server.pojo.tcp.BaseMsgSending;
 
 @Service
 public class ServerCenterProcessor {

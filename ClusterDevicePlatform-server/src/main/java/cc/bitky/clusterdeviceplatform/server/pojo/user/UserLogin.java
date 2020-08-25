@@ -1,4 +1,4 @@
-package cc.bitky.clusterdeviceplatform.server.web.spa.user.bean;
+package cc.bitky.clusterdeviceplatform.server.pojo.user;
 
 public class UserLogin {
     public String username;

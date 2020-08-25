@@ -1,4 +1,4 @@
-package cc.bitky.clusterdeviceplatform.server.web.spa.data.bean;
+package cc.bitky.clusterdeviceplatform.server.pojo.dataprocess;
 
 public class EmployeeCategory {
     private int chargeUsing;

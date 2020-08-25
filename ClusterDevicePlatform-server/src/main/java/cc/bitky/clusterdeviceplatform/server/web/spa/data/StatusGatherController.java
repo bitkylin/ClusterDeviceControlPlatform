@@ -16,13 +16,13 @@ import cc.bitky.clusterdeviceplatform.messageutils.config.WorkStatus;
 import cc.bitky.clusterdeviceplatform.server.config.DeviceSetting;
 import cc.bitky.clusterdeviceplatform.server.server.ServerRunner;
 import cc.bitky.clusterdeviceplatform.server.server.repo.DeviceStatusRepository;
-import cc.bitky.clusterdeviceplatform.server.web.spa.data.bean.DeviceStatusItem;
-import cc.bitky.clusterdeviceplatform.server.web.spa.data.bean.EmployeeCategory;
-import cc.bitky.clusterdeviceplatform.server.web.spa.data.bean.EmployeeGatherByDepartment;
-import cc.bitky.clusterdeviceplatform.server.web.spa.data.bean.EmployeeGatherByGroup;
-import cc.bitky.clusterdeviceplatform.server.web.spa.data.bean.EmployeeGatherOutline;
-import cc.bitky.clusterdeviceplatform.server.web.spa.utils.ResMsg;
-import cc.bitky.clusterdeviceplatform.server.web.spa.utils.WebUtil;
+import cc.bitky.clusterdeviceplatform.server.pojo.dataprocess.DeviceStatusItem;
+import cc.bitky.clusterdeviceplatform.server.pojo.dataprocess.EmployeeCategory;
+import cc.bitky.clusterdeviceplatform.server.pojo.dataprocess.EmployeeGatherByDepartment;
+import cc.bitky.clusterdeviceplatform.server.pojo.dataprocess.EmployeeGatherByGroup;
+import cc.bitky.clusterdeviceplatform.server.pojo.dataprocess.EmployeeGatherOutline;
+import cc.bitky.clusterdeviceplatform.server.utils.ResMsg;
+import cc.bitky.clusterdeviceplatform.server.utils.WebUtil;
 
 
 /**

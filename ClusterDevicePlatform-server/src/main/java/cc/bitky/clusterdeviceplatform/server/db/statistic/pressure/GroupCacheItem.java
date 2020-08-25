@@ -6,7 +6,7 @@ import java.util.Random;
 
 import cc.bitky.clusterdeviceplatform.server.config.DeviceSetting;
 import cc.bitky.clusterdeviceplatform.server.tcp.statistic.channel.ChannelItem;
-import cc.bitky.clusterdeviceplatform.server.web.spa.data.random.MsgCountRandom;
+import cc.bitky.clusterdeviceplatform.server.server.demonstrate.msgprocess.MsgCountRandom;
 
 public class GroupCacheItem {
     private static MsgCountRandom countRandom;

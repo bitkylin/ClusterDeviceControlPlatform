@@ -1,4 +1,4 @@
-package cc.bitky.clusterdeviceplatform.server.web.spa.utils;
+package cc.bitky.clusterdeviceplatform.server.utils;
 
 import org.slf4j.Logger;
 

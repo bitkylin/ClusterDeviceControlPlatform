@@ -1,4 +1,4 @@
-package cc.bitky.clusterdeviceplatform.server.web.client.bean;
+package cc.bitky.clusterdeviceplatform.server.pojo.client;
 
 import cc.bitky.clusterdeviceplatform.messageutils.msg.controlcenter.led.MsgLedOn;
 

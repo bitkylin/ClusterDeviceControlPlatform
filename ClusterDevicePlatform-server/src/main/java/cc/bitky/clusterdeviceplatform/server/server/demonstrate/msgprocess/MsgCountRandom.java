@@ -1,4 +1,4 @@
-package cc.bitky.clusterdeviceplatform.server.web.spa.data.random;
+package cc.bitky.clusterdeviceplatform.server.server.demonstrate.msgprocess;
 
 import java.util.Random;
 
