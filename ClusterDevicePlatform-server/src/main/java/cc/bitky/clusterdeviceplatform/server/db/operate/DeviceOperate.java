@@ -1,7 +1,12 @@
 package cc.bitky.clusterdeviceplatform.server.db.operate;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import cc.bitky.clusterdeviceplatform.messageutils.config.ChargeStatus;
+import cc.bitky.clusterdeviceplatform.messageutils.msg.statusreply.MsgReplyDeviceStatus;
+import cc.bitky.clusterdeviceplatform.server.config.ServerSetting;
+import cc.bitky.clusterdeviceplatform.server.config.WebSetting;
+import cc.bitky.clusterdeviceplatform.server.db.bean.Device;
+import cc.bitky.clusterdeviceplatform.server.db.repository.DeviceRepository;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -9,18 +14,11 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import cc.bitky.clusterdeviceplatform.messageutils.config.ChargeStatus;
-import cc.bitky.clusterdeviceplatform.messageutils.msg.statusreply.MsgReplyDeviceStatus;
-import cc.bitky.clusterdeviceplatform.server.config.ServerSetting;
-import cc.bitky.clusterdeviceplatform.server.config.WebSetting;
-import cc.bitky.clusterdeviceplatform.server.db.bean.Device;
-import cc.bitky.clusterdeviceplatform.server.db.repository.DeviceRepository;
-
+@Slf4j
 @Repository
 public class DeviceOperate {
 
     private final DeviceRepository repository;
-    private Logger logger = LoggerFactory.getLogger(getClass());
 
     @Autowired
     public DeviceOperate(DeviceRepository repository) {
@@ -56,14 +54,14 @@ public class DeviceOperate {
     public Device handleWorkStatus(MsgReplyDeviceStatus msgStatus) {
         Device device = repository.findFirstByGroupIdAndDeviceId(msgStatus.getGroupId(), msgStatus.getDeviceId());
         if (device == null) {
-            logger.warn("设备(" + msgStatus.getGroupId() + ", " + msgStatus.getDeviceId() + ") 不存在，无法处理");
+            log.warn("设备(" + msgStatus.getGroupId() + ", " + msgStatus.getDeviceId() + ") 不存在，无法处理");
             return null;
         }
         int rawStatus = device.getWorkStatus();
         int newStatus = msgStatus.getStatus();
         if (newStatus == rawStatus) {
             if (ServerSetting.DEBUG) {
-                logger.info("设备「" + msgStatus.getGroupId() + ", " + msgStatus.getDeviceId() + "」『"
+                log.info("设备「" + msgStatus.getGroupId() + ", " + msgStatus.getDeviceId() + "」『"
                         + rawStatus + "->" + newStatus + "』: 工作状态无更新");
             }
             return null;
@@ -72,7 +70,7 @@ public class DeviceOperate {
         device.setWorkStatusTime(new Date(msgStatus.getTime()));
         repository.save(device);
         if (ServerSetting.DEBUG) {
-            logger.info("设备「" + msgStatus.getGroupId() + ", " + msgStatus.getDeviceId() + "」『"
+            log.info("设备「" + msgStatus.getGroupId() + ", " + msgStatus.getDeviceId() + "」『"
                     + rawStatus + "->" + newStatus + "』: 工作状态成功更新！");
         }
         return device;
@@ -87,14 +85,14 @@ public class DeviceOperate {
     public Device handleChargeStatus(MsgReplyDeviceStatus msgStatus) {
         Device device = repository.findFirstByGroupIdAndDeviceId(msgStatus.getGroupId(), msgStatus.getDeviceId());
         if (device == null) {
-            logger.warn("设备(" + msgStatus.getGroupId() + ", " + msgStatus.getDeviceId() + ") 不存在，无法处理");
+            log.warn("设备(" + msgStatus.getGroupId() + ", " + msgStatus.getDeviceId() + ") 不存在，无法处理");
             return null;
         }
         int rawStatus = device.getChargeStatus();
         int newStatus = msgStatus.getStatus();
         if (newStatus == rawStatus) {
             if (ServerSetting.DEBUG) {
-                logger.info("设备「" + msgStatus.getGroupId() + ", " + msgStatus.getDeviceId() + "」『"
+                log.info("设备「" + msgStatus.getGroupId() + ", " + msgStatus.getDeviceId() + "」『"
                         + rawStatus + "->" + newStatus + "』: 充电状态无更新");
             }
             return null;
@@ -107,7 +105,7 @@ public class DeviceOperate {
         device.setChargeStatusTime(new Date(msgStatus.getTime()));
         repository.save(device);
         if (ServerSetting.DEBUG) {
-            logger.info("设备「" + msgStatus.getGroupId() + ", " + msgStatus.getDeviceId() + "」『"
+            log.info("设备「" + msgStatus.getGroupId() + ", " + msgStatus.getDeviceId() + "」『"
                     + rawStatus + "->" + newStatus + "』: 充电状态成功更新！");
         }
         return device;

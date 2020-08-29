@@ -10,6 +10,10 @@ buildscript {
     }
 }
 
+plugins {
+    id "io.freefair.lombok" version "5.1.1"
+}
+
 apply plugin: 'java'
 apply plugin: 'eclipse'
 apply plugin: 'org.springframework.boot'
