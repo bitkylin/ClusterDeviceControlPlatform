@@ -5,7 +5,6 @@ src/test/java/
 
 /.gradle/
 /build/
-/gradle/
 /libs/
 /out/
 

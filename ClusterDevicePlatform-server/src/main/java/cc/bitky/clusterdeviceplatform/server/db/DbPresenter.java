@@ -1,16 +1,5 @@
 package cc.bitky.clusterdeviceplatform.server.db;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
-import java.time.Instant;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.util.List;
-import java.util.Optional;
-
 import cc.bitky.clusterdeviceplatform.messageutils.config.ChargeStatus;
 import cc.bitky.clusterdeviceplatform.messageutils.config.WorkStatus;
 import cc.bitky.clusterdeviceplatform.messageutils.msg.statusreply.MsgReplyDeviceStatus;
@@ -22,13 +11,23 @@ import cc.bitky.clusterdeviceplatform.server.db.operate.DbRoutineOperate;
 import cc.bitky.clusterdeviceplatform.server.db.operate.DeviceOperate;
 import cc.bitky.clusterdeviceplatform.server.db.operate.EmployeeOperate;
 import cc.bitky.clusterdeviceplatform.server.db.statistic.repo.ProcessedMsgRepo;
+import cc.bitky.clusterdeviceplatform.server.pojo.client.CardType;
 import cc.bitky.clusterdeviceplatform.server.server.repo.DeviceStatusRepository;
 import cc.bitky.clusterdeviceplatform.server.server.repo.TcpFeedBackRepository;
 import cc.bitky.clusterdeviceplatform.server.server.repo.bean.StatusItem;
 import cc.bitky.clusterdeviceplatform.server.tcp.statistic.except.TcpFeedbackItem;
-import cc.bitky.clusterdeviceplatform.server.pojo.client.CardType;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
 
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.util.List;
+import java.util.Optional;
+
+@Slf4j
 @Service
 public class DbPresenter {
 
@@ -38,7 +37,6 @@ public class DbPresenter {
     private final DeviceStatusRepository deviceStatusRepository;
     private final DbRoutineOperate dbRoutineOperate;
     private final TcpFeedBackRepository feedBackRepository;
-    private Logger logger = LoggerFactory.getLogger(getClass());
 
     @Autowired
     public DbPresenter(CardSetOperate cardSetOperate, DeviceOperate deviceOperate, EmployeeOperate employeeOperate, DeviceStatusRepository deviceStatusRepository, DbRoutineOperate dbRoutineOperate, TcpFeedBackRepository feedBackRepository) {
@@ -154,7 +152,7 @@ public class DbPresenter {
         StatusItem status = obtainStatusByCache(msgStatus.getGroupId(), msgStatus.getDeviceId(), msgStatus.getType());
         if (status.getStatus() == msgStatus.getStatus()) {
             if (ServerSetting.DEBUG) {
-                logger.info("设备「" + msgStatus.getGroupId() + ", " + msgStatus.getDeviceId() + "」『"
+                log.info("设备「" + msgStatus.getGroupId() + ", " + msgStatus.getDeviceId() + "」『"
                         + status.getStatus() + "->" + msgStatus.getStatus() + "』: " + msgStatus.getType().getDetail() + "无更新");
                 statisticUpdateMsgCount(msgStatus, MessageType.fixed);
             }
@@ -163,9 +161,9 @@ public class DbPresenter {
             if (ServerSetting.DEBUG) {
                 Instant cacheInstant = Instant.ofEpochMilli(status.getTime());
                 Instant msgInstant = Instant.ofEpochMilli(msgStatus.getTime());
-                logger.info("已缓存时间:" + LocalDateTime.ofInstant(cacheInstant, ZoneId.systemDefault()).toString());
-                logger.info("消息时间:" + LocalDateTime.ofInstant(msgInstant, ZoneId.systemDefault()).toString());
-                logger.info("设备「" + msgStatus.getGroupId() + ", " + msgStatus.getDeviceId() + "」『"
+                log.info("已缓存时间:" + LocalDateTime.ofInstant(cacheInstant, ZoneId.systemDefault()).toString());
+                log.info("消息时间:" + LocalDateTime.ofInstant(msgInstant, ZoneId.systemDefault()).toString());
+                log.info("设备「" + msgStatus.getGroupId() + ", " + msgStatus.getDeviceId() + "」『"
                         + status.getStatus() + "->" + msgStatus.getStatus() + "』: " + msgStatus.getType().getDetail() + "已过期");
                 statisticUpdateMsgCount(msgStatus, MessageType.fixed);
             }
@@ -202,11 +200,11 @@ public class DbPresenter {
         if (device.getEmployeeObjectId() != null && device.getEmployeeObjectId().trim().length() > 0) {
             dbRoutineOperate.updateRoutineById(device.getEmployeeObjectId(), msgStatus, msgStatus.getType());
         } else {
-            logger.info("无指定设备对应的员工，故未更新考勤表");
+            log.info("无指定设备对应的员工，故未更新考勤表");
         }
         long l3 = System.currentTimeMillis();
         if (ServerSetting.DEBUG) {
-            logger.info("时间耗费：" + (l2 - l1) + "ms; " + (l3 - l2) + "ms");
+            log.info("时间耗费：" + (l2 - l1) + "ms; " + (l3 - l2) + "ms");
         }
         return device;
     }
