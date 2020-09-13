@@ -1,7 +1,14 @@
 package cc.bitky.clusterdeviceplatform.server.web.spa.data;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import cc.bitky.clusterdeviceplatform.messageutils.config.ChargeStatus;
+import cc.bitky.clusterdeviceplatform.messageutils.config.WorkStatus;
+import cc.bitky.clusterdeviceplatform.server.config.DeviceSetting;
+import cc.bitky.clusterdeviceplatform.server.pojo.dataprocess.*;
+import cc.bitky.clusterdeviceplatform.server.server.ServerRunner;
+import cc.bitky.clusterdeviceplatform.server.server.repo.DeviceStatusRepository;
+import cc.bitky.clusterdeviceplatform.server.utils.ResMsg;
+import cc.bitky.clusterdeviceplatform.server.utils.WebUtil;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -11,30 +18,17 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import cc.bitky.clusterdeviceplatform.messageutils.config.ChargeStatus;
-import cc.bitky.clusterdeviceplatform.messageutils.config.WorkStatus;
-import cc.bitky.clusterdeviceplatform.server.config.DeviceSetting;
-import cc.bitky.clusterdeviceplatform.server.server.ServerRunner;
-import cc.bitky.clusterdeviceplatform.server.server.repo.DeviceStatusRepository;
-import cc.bitky.clusterdeviceplatform.server.pojo.dataprocess.DeviceStatusItem;
-import cc.bitky.clusterdeviceplatform.server.pojo.dataprocess.EmployeeCategory;
-import cc.bitky.clusterdeviceplatform.server.pojo.dataprocess.EmployeeGatherByDepartment;
-import cc.bitky.clusterdeviceplatform.server.pojo.dataprocess.EmployeeGatherByGroup;
-import cc.bitky.clusterdeviceplatform.server.pojo.dataprocess.EmployeeGatherOutline;
-import cc.bitky.clusterdeviceplatform.server.utils.ResMsg;
-import cc.bitky.clusterdeviceplatform.server.utils.WebUtil;
-
 
 /**
  * 服务器缓存设备状态信息按要求汇总
  */
+@Slf4j
 @CrossOrigin
 @RestController
 @RequestMapping(value = "/server/dataprocess/statusgather")
 public class StatusGatherController {
 
     private final ServerRunner centerProcessor;
-    private Logger logger = LoggerFactory.getLogger(getClass());
 
     public StatusGatherController(ServerRunner centerProcessor) {
         this.centerProcessor = centerProcessor;
@@ -42,20 +36,20 @@ public class StatusGatherController {
 
     @GetMapping("/rebuild")
     public ResMsg rebuildEmployeeStatus() {
-        logger.info("/server/dataprocess/statusgather/rebuild");
+        log.info("/server/dataprocess/statusgather/rebuild");
         long l1 = System.currentTimeMillis();
         boolean isSuccess = centerProcessor.rebuildEmployeeStatus();
-        WebUtil.printTimeConsumed(l1, logger);
+        WebUtil.printTimeConsumed(l1, log);
         if (isSuccess) {
             return new ResMsg("success");
-        }else {
+        } else {
             return new ResMsg("error");
         }
     }
 
     @GetMapping("/gather")
     public ResMsg gatherEmployeeStatus() {
-        logger.info("/server/dataprocess/statusgather/gather");
+        log.info("/server/dataprocess/statusgather/gather");
         long l1 = System.currentTimeMillis();
 
         DeviceStatusRepository repository = centerProcessor.getCenterProcessor().getDeviceStatusRepository();
@@ -72,7 +66,7 @@ public class StatusGatherController {
             EmployeeCategory category = classifyDeviceStatusItems(list);
             departmentList.add(new EmployeeGatherByDepartment(department, list.size(), category));
         });
-        WebUtil.printTimeConsumed(l1, logger);
+        WebUtil.printTimeConsumed(l1, log);
         return new ResMsg(new EmployeeGatherOutline(departmentList, groupList));
     }
 

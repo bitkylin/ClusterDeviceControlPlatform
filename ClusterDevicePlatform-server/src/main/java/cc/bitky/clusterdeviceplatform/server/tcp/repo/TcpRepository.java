@@ -1,19 +1,5 @@
 package cc.bitky.clusterdeviceplatform.server.tcp.repo;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Repository;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.Executors;
-import java.util.concurrent.LinkedBlockingDeque;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.ScheduledFuture;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.atomic.AtomicReferenceArray;
-
 import cc.bitky.clusterdeviceplatform.messageutils.config.FrameSetting;
 import cc.bitky.clusterdeviceplatform.messageutils.define.base.BaseMsg;
 import cc.bitky.clusterdeviceplatform.messageutils.define.frame.FrameMajorHeader;
@@ -28,11 +14,19 @@ import cc.bitky.clusterdeviceplatform.server.tcp.statistic.except.TcpFeedbackIte
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.Channel;
 import io.netty.util.HashedWheelTimer;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Repository;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.*;
+import java.util.concurrent.atomic.AtomicReferenceArray;
 
 import static cc.bitky.clusterdeviceplatform.messageutils.config.FrameSetting.AWAKE_TO_PROCESS_INTERVAL;
 import static cc.bitky.clusterdeviceplatform.server.config.CommSetting.AUTO_REPEAT_REQUEST_TIMES;
 import static cc.bitky.clusterdeviceplatform.server.config.CommSetting.DEPLOY_MSG_NEED_REPLY;
 
+@Slf4j
 @Repository
 public class TcpRepository {
     /**
@@ -63,7 +57,6 @@ public class TcpRepository {
      * 定时任务「定时检索待发送消息队列」执行线程池
      */
     private final ScheduledExecutorService executorService = Executors.newScheduledThreadPool(DeviceSetting.MAX_GROUP_ID);
-    private final Logger logger = LoggerFactory.getLogger(getClass());
     private TcpPresenter server;
 
     {
@@ -98,7 +91,7 @@ public class TcpRepository {
                 Thread.sleep(AWAKE_TO_PROCESS_INTERVAL);
                 Channel channel = touchChannel(channelId);
                 if (channel == null || !channel.isActive()) {
-                    logger.warn("「Channel」" + " Channel「" + channelId + "」无效，无法下发该帧");
+                    log.warn("「Channel」" + " Channel「" + channelId + "」无效，无法下发该帧");
                     removeChannelCompleted(channel);
                     deque.clear();
                     return;
@@ -131,7 +124,7 @@ public class TcpRepository {
 
                 channel.writeAndFlush(new SendableMsgContainer(frameHeader, dataList));
             } catch (InterruptedException e) {
-                logger.warn("消息队列定时发送任务被中断");
+                log.warn("消息队列定时发送任务被中断");
                 //TODO 消息队列定时发送任务被中断
             }
         }, channelId, CommSetting.FRAME_SEND_INTERVAL, TimeUnit.MILLISECONDS);
@@ -159,18 +152,18 @@ public class TcpRepository {
         RESEND_MSG_MAP.put(msg.getMsgFlag(), msg);
         HASHED_WHEEL_TIMER.newTimeout(task -> {
             if (RESEND_MSG_MAP.get(msg.getMsgFlag()) == null) {
-                logger.info("消息已收到回复:" + msg.msgDetailToString());
+                log.info("消息已收到回复:" + msg.msgDetailToString());
                 return;
             }
             if (!server.channelIsActivated(msg.getGroupId())) {
                 return;
             }
             if (msg.getResendTimes() < AUTO_REPEAT_REQUEST_TIMES - 1) {
-                logger.warn("消息未收到回复:" + msg.msgDetailToString());
+                log.warn("消息未收到回复:" + msg.msgDetailToString());
                 msg.doResend();
                 server.sendMessageToTcp(msg);
             } else {
-                logger.warn("消息未收到回复已达上限:" + msg.msgDetailToString());
+                log.warn("消息未收到回复已达上限:" + msg.msgDetailToString());
                 server.touchUnusualMsg(TcpFeedbackItem.createResendOutBound(msg));
             }
         }, CommSetting.FRAME_SENT_TO_DETECT_INTERVAL, TimeUnit.SECONDS);
@@ -192,7 +185,7 @@ public class TcpRepository {
      */
     public void accessibleChannel(Channel channel) {
         String id = channel.id().asLongText();
-        logger.info("「Channel」" + "新的 Channel 等待接入 [" + id + "]");
+        log.info("「Channel」" + "新的 Channel 等待接入 [" + id + "]");
         CHANNEL_MAP.put(id, -1);
         HASHED_WHEEL_TIMER.newTimeout(task -> {
             Integer index = CHANNEL_MAP.getOrDefault(id, -1);
@@ -203,17 +196,17 @@ public class TcpRepository {
                 if (oldChannel != null && oldChannel.isActive()) {
                     manualRemoveChannel(oldChannel);
                     manualRemoveChannel(channel);
-                    logger.warn("「Channel[" + index + "]」" + "新的 Channel 欲覆盖已激活的 Channel");
+                    log.warn("「Channel[" + index + "]」" + "新的 Channel 欲覆盖已激活的 Channel");
                 } else {
                     CHANNEL_ARRAY.set(index, channel);
-                    logger.info("「Channel[" + index + "]」" + "新的 Channel 已成功装配 [" + id + "]");
+                    log.info("「Channel[" + index + "]」" + "新的 Channel 已成功装配 [" + id + "]");
                 }
                 return;
             }
             if (index == -1) {
-                logger.warn("「Channel[" + index + "]」" + "新的 Channel 未反馈 ID [" + id + "]");
+                log.warn("「Channel[" + index + "]」" + "新的 Channel 未反馈 ID [" + id + "]");
             } else {
-                logger.warn("「Channel[" + index + "]」" + "新的 Channel 的 ID 超出范围 [" + id + "]");
+                log.warn("「Channel[" + index + "]」" + "新的 Channel 的 ID 超出范围 [" + id + "]");
             }
             manualRemoveChannel(channel);
         }, CommSetting.ACCESSIBLE_CHANNEL_REPLY_INTERVAL, TimeUnit.MILLISECONDS);
@@ -256,7 +249,7 @@ public class TcpRepository {
         String id = channel.id().asLongText();
         Integer index = CHANNEL_MAP.remove(id);
         if (index == null || index <= 0 || index > DeviceSetting.MAX_GROUP_ID) {
-            logger.info("「Channel[" + (index == null ? "无" : index) + "]」" + "已移除 Channel [" + id + "]");
+            log.info("「Channel[" + (index == null ? "无" : index) + "]」" + "已移除 Channel [" + id + "]");
             return -1;
         }
         CHANNEL_ARRAY.set(index, null);
@@ -266,7 +259,7 @@ public class TcpRepository {
             future.cancel(true);
             ScheduledFuture_ARRAY.set(index, null);
         }
-        logger.info("「Channel[" + index + "]」" + "移除成功 Channel [" + id + "]");
+        log.info("「Channel[" + index + "]」" + "移除成功 Channel [" + id + "]");
         return index;
     }
 
