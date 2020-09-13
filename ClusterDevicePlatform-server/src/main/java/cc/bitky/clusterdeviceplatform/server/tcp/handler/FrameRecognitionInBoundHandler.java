@@ -1,9 +1,5 @@
 package cc.bitky.clusterdeviceplatform.server.tcp.handler;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Service;
-
 import cc.bitky.clusterdeviceplatform.messageutils.config.FrameSetting;
 import cc.bitky.clusterdeviceplatform.messageutils.define.frame.FrameMajor;
 import cc.bitky.clusterdeviceplatform.messageutils.define.frame.FrameMajorHeader;
@@ -11,14 +7,16 @@ import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Service;
 
 /**
  * 帧识别 - 入站处理器 分割出并向后继处理器传递一个完整的主帧数据体及主帧信息 bean
  */
+@Slf4j
 @Service
 @ChannelHandler.Sharable
 public class FrameRecognitionInBoundHandler extends SimpleChannelInboundHandler<ByteBuf> {
-    private Logger logger = LoggerFactory.getLogger(getClass());
 
 
     @Override
@@ -29,7 +27,7 @@ public class FrameRecognitionInBoundHandler extends SimpleChannelInboundHandler<
             }
             if (byteBuf.readByte() != FrameSetting.MAJOR_FRAME_HEAD_1
                     || byteBuf.readByte() != FrameSetting.MAJOR_FRAME_HEAD_2) {
-                logger.warn("数据接收异常「帧头不匹配」");
+                log.warn("数据接收异常「帧头不匹配」");
                 return;
             }
             int groupId = byteBuf.readByte() & 0xFF;
