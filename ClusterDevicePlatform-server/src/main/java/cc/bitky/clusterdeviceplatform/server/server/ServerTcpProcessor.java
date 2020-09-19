@@ -1,20 +1,19 @@
 package cc.bitky.clusterdeviceplatform.server.server;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import cc.bitky.clusterdeviceplatform.messageutils.define.base.BaseMsg;
 import cc.bitky.clusterdeviceplatform.messageutils.msg.statusreply.MsgReplyDeviceStatus;
 import cc.bitky.clusterdeviceplatform.messageutils.msg.statusreply.MsgReplyNormal;
 import cc.bitky.clusterdeviceplatform.server.tcp.TcpPresenter;
 import cc.bitky.clusterdeviceplatform.server.tcp.statistic.channel.ChannelOutline;
 import cc.bitky.clusterdeviceplatform.server.tcp.statistic.except.TcpFeedbackItem;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
+@Slf4j
 @Service
 public class ServerTcpProcessor {
-    private final Logger logger = LoggerFactory.getLogger(getClass());
+
     private final TcpPresenter tcpPresenter;
     private final ServerCenterProcessor centerProcessor;
 
@@ -32,7 +31,7 @@ public class ServerTcpProcessor {
      * @param message 指定的消息对象
      */
     boolean sendMessage(BaseMsg message) {
-        logger.info("发送消息：「" + message.msgDetailToString() + "」");
+        log.info("发送消息：「" + message.msgDetailToString() + "」");
         return tcpPresenter.sendMessageToTcp(message);
     }
 
@@ -42,7 +41,7 @@ public class ServerTcpProcessor {
      * @param message 消息对象
      */
     public void touchNormalReplyMsg(MsgReplyNormal message) {
-        logger.info("捕获到「正常回复」消息对象：「" + message.msgDetailToString() + "」");
+        log.info("捕获到「正常回复」消息对象：「" + message.msgDetailToString() + "」");
         centerProcessor.getDeviceStatusRepository().removeMsg(message);
     }
 
@@ -52,7 +51,7 @@ public class ServerTcpProcessor {
      * @param message 消息对象
      */
     public void huntMessage(BaseMsg message) {
-        logger.info("捕获到「特殊反馈」消息对象：「" + message.msgDetailToString() + "」");
+        log.info("捕获到「特殊反馈」消息对象：「" + message.msgDetailToString() + "」");
     }
 
     /**
@@ -61,7 +60,7 @@ public class ServerTcpProcessor {
      * @param message 消息对象
      */
     public void huntDeviceStatusMsg(MsgReplyDeviceStatus message) {
-        logger.info("捕获到「设备状态」消息对象：「" + message.msgDetailToString() + "」");
+        log.info("捕获到「设备状态」消息对象：「" + message.msgDetailToString() + "」");
         centerProcessor.getTcpFeedBackRepository().recoveryItem(message.getGroupId());
         centerProcessor.huntDeviceStatusMsg(message);
     }
