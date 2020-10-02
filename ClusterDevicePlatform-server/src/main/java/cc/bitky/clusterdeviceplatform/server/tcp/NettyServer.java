@@ -1,25 +1,23 @@
 package cc.bitky.clusterdeviceplatform.server.tcp;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.CommandLineRunner;
-import org.springframework.stereotype.Service;
-
-import java.net.InetSocketAddress;
-
 import cc.bitky.clusterdeviceplatform.server.config.ServerSetting;
 import cc.bitky.clusterdeviceplatform.server.tcp.handler.ServerChannelInitializer;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.CommandLineRunner;
+import org.springframework.stereotype.Service;
 
+import java.net.InetSocketAddress;
+
+@Slf4j
 @Service
 public class NettyServer implements CommandLineRunner {
 
     private final ServerChannelInitializer serverChannelInitializer;
-    private final Logger logger = LoggerFactory.getLogger(getClass());
 
     @Autowired
     public NettyServer(ServerChannelInitializer serverChannelInitializer) {
@@ -36,9 +34,9 @@ public class NettyServer implements CommandLineRunner {
         ChannelFuture channelFuture = bootstrap.bind(new InetSocketAddress(ServerSetting.SERVER_TCP_PORT));
         channelFuture.addListener(future -> {
             if (future.isSuccess()) {
-                logger.info("「Netty」模块启动成功");
+                log.info("「Netty」模块启动成功");
             } else {
-                logger.info("「Netty」模块启动失败");
+                log.info("「Netty」模块启动失败");
             }
         });
     }

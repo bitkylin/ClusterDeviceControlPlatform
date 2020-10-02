@@ -1,16 +1,5 @@
 package cc.bitky.clusterdeviceplatform.server.tcp;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
-import java.util.concurrent.Executors;
-import java.util.concurrent.LinkedBlockingDeque;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.ScheduledFuture;
-import java.util.concurrent.TimeUnit;
-
 import cc.bitky.clusterdeviceplatform.messageutils.MsgProcessor;
 import cc.bitky.clusterdeviceplatform.messageutils.config.JointMsgType;
 import cc.bitky.clusterdeviceplatform.messageutils.define.base.BaseMsg;
@@ -28,14 +17,19 @@ import cc.bitky.clusterdeviceplatform.server.tcp.repo.TcpRepository;
 import cc.bitky.clusterdeviceplatform.server.tcp.statistic.channel.ChannelOutline;
 import cc.bitky.clusterdeviceplatform.server.tcp.statistic.except.TcpFeedbackItem;
 import io.netty.channel.Channel;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.concurrent.*;
 
 /**
  * TCP 通道的中介者
  */
+@Slf4j
 @Service
 public class TcpPresenter {
     private static final ScheduledExecutorService executorService = Executors.newScheduledThreadPool(DeviceSetting.MAX_GROUP_ID);
-    private static final Logger logger = LoggerFactory.getLogger(TcpPresenter.class);
     private final TcpRepository tcpRepository;
     private final MsgProcessor msgProcessor;
     private ServerTcpProcessor server;
@@ -106,11 +100,11 @@ public class TcpPresenter {
     public void decodeAndHuntMessage(FrameMajorHeader head, int subMsgId, byte[] data, Channel channel) {
         BaseMsg msg = msgProcessor.decode(head, subMsgId, data);
         if (msg == null) {
-            logger.warn("帧解析出错");
+            log.warn("帧解析出错");
             return;
         }
         if (msg.getGroupId() > DeviceSetting.MAX_GROUP_ID && msg.getDeviceId() > DeviceSetting.MAX_DEVICE_ID) {
-            logger.warn("设备号出错「GroupId:" + msg.getGroupId() + "; DeviceId:" + msg.getDeviceId() + "」");
+            log.warn("设备号出错「GroupId:" + msg.getGroupId() + "; DeviceId:" + msg.getDeviceId() + "」");
             return;
         }
         switch (msg.getJointMsgFlag()) {
@@ -152,7 +146,7 @@ public class TcpPresenter {
      * @param msg 一场消息对象
      */
     public void touchUnusualMsg(TcpFeedbackItem msg) {
-        logger.info("捕获到异常消息：" + msg.getDescription() + "原始消息：「" + msg.getBaseMsg().msgDetailToString() + "」");
+        log.info("捕获到异常消息：" + msg.getDescription() + "原始消息：「" + msg.getBaseMsg().msgDetailToString() + "」");
         server.touchUnusualMsg(msg);
     }
 

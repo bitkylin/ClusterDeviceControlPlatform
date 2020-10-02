@@ -1,6 +1,6 @@
 buildscript {
     ext {
-        springBootVersion = '2.0.2.RELEASE'
+        springBootVersion = '2.3.4.RELEASE'
     }
     repositories {
         mavenCentral()
@@ -34,8 +34,8 @@ tasks.withType(JavaCompile) {
 dependencies {
     compile('org.springframework.boot:spring-boot-starter-data-mongodb-reactive')
     compile('org.springframework.boot:spring-boot-starter-web')
-    compile 'io.netty:netty-all:4.1.22.Final'
-    compile 'com.alibaba:fastjson:1.2.46'
+    compile 'io.netty:netty-all:4.1.52.Final'
+    compile 'com.alibaba:fastjson:1.2.73'
     compile files('../messageUtils/build/libs/messageUtils-1.16.0.jar')
     compile files('../SerialRawData/build/libs/SerialRawData-1.1.0.jar')
 }
