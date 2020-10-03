@@ -52,10 +52,10 @@ public class ServerApplication {
      */
     private static boolean dataBaseReachable() {
         try {
-            InetAddress inetAddress = InetAddress.getByName(DbSetting.MONGODB_HOST);
+            InetAddress inetAddress = InetAddress.getByName(DbSetting.mongodbHost);
             if (inetAddress.isReachable(CommSetting.ACCESSIBLE_CHANNEL_REPLY_INTERVAL)) {
                 Socket s = new Socket();
-                s.connect(new InetSocketAddress(inetAddress, DbSetting.MONGODB_PORT));
+                s.connect(new InetSocketAddress(inetAddress, DbSetting.mongodbPort));
                 s.close();
             } else {
                 printWarn("数据库服务器不可达");
@@ -92,7 +92,8 @@ public class ServerApplication {
             String strings = new String(Files.readAllBytes(Paths.get(ServerSetting.CONFIG_FILE_PATH)), StandardCharsets.UTF_8);
             localProfile = JSON.parseObject(strings, LocalProfile.class);
             if (localProfile == null) {
-                return false;
+                printWarn("「外部配置文件」读取到配置文件有误");
+                localProfile = new LocalProfile();
             }
         } catch (IOException e) {
             printWarn("「外部配置文件」未能读取到配置文件");
@@ -102,32 +103,32 @@ public class ServerApplication {
             return false;
         }
 
-        DbSetting.MONGODB_HOST = trimProperty(localProfile.数据库服务器的主机名或IP);
-        DbSetting.MONGODB_IP = IpUtil.getIP(DbSetting.MONGODB_HOST)[0];
+        DbSetting.mongodbHost = trimProperty(localProfile.数据库服务器的主机名或IP);
+        DbSetting.mongodbIp = IpUtil.getIP(DbSetting.mongodbHost)[0];
         CommSetting.FRAME_SEND_INTERVAL = localProfile.帧发送间隔;
         CommSetting.DEPLOY_REMAIN_CHARGE_TIMES = localProfile.部署剩余充电次数阈值 >= CommSetting.REMAIN_CHARGE_TIMES_CLEAR ? CommSetting.REMAIN_CHARGE_TIMES_CLEAR - 1 : localProfile.部署剩余充电次数阈值;
-        DbSetting.DEFAULT_EMPLOYEE_CARD_NUMBER = trimProperty(localProfile.员工默认卡号);
-        DbSetting.DEFAULT_EMPLOYEE_NAME = trimProperty(localProfile.员工默认姓名);
-        DbSetting.DEFAULT_EMPLOYEE_DEPARTMENT = trimProperty(localProfile.员工默认部门);
+        DbSetting.defaultEmployeeCardNumber = trimProperty(localProfile.员工默认卡号);
+        DbSetting.defaultEmployeeName = trimProperty(localProfile.员工默认姓名);
+        DbSetting.defaultEmployeeDepartment = trimProperty(localProfile.员工默认部门);
         CommSetting.NO_RESPONSE_INTERVAL = localProfile.通道未响应时间;
         CommSetting.AUTO_REPEAT_REQUEST_TIMES = localProfile.检错重发最大重复次数;
         CommSetting.NO_RESPONSE_MONITOR = localProfile.通道无响应监测;
         CommSetting.DEPLOY_MSG_NEED_REPLY = localProfile.帧送达监测;
         ServerSetting.DEBUG = localProfile.调试模式;
         ServerSetting.WEB_RANDOM_DEBUG = localProfile.随机Web数据模式;
-        DbSetting.AUTHENTICATION_STATUS = localProfile.数据库认证模式;
+        DbSetting.databaseAuthenticationStatus = localProfile.数据库认证模式;
         ServerSetting.SERVER_TCP_PORT = localProfile.服务器端口号;
-        DbSetting.DATABASE_USERNAME = trimProperty(localProfile.数据库用户名);
-        DbSetting.DATABASE_PASSWORD = trimProperty(localProfile.数据库密码);
+        DbSetting.databaseUsername = trimProperty(localProfile.数据库用户名);
+        DbSetting.databasePassword = trimProperty(localProfile.数据库密码);
         ServerSetting.ACTIVATION_CODE = trimProperty(localProfile.授权码);
 
         try {
             if (!LicenseVerifyPresenter.verifyLicenseKey(ServerSetting.ACTIVATION_CODE)) {
-                System.out.println("授权码验证失败");
+                print("授权码验证失败");
                 return false;
             }
         } catch (SocketException e) {
-            System.out.println("授权码验证未知异常");
+            print("授权码验证未知异常");
             return false;
         }
         return true;
