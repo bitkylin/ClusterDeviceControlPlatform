@@ -69,4 +69,8 @@ public class LocalProfile {
      * 服务器使用的授权码
      */
     public String 授权码 = "";
+    /**
+     * 授权码开关
+     */
+    public Boolean 授权码开关 = Boolean.FALSE;
 }
