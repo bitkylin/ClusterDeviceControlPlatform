@@ -31,7 +31,7 @@ public class ServerSettingInfo {
     private String configFilePath;
 
     public ServerSettingInfo() {
-        this.authMode = DbSetting.AUTHENTICATION_STATUS;
+        this.authMode = DbSetting.databaseAuthenticationStatus;
         this.debugMode = ServerSetting.DEBUG;
         this.needReplyMode = CommSetting.DEPLOY_MSG_NEED_REPLY;
         this.randomDataMode = ServerSetting.WEB_RANDOM_DEBUG;

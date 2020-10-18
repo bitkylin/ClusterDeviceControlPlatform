@@ -30,11 +30,11 @@ public class DataBaseInfo {
 
     public DataBaseInfo() {
         this.type = "MongoDB";
-        this.port = DbSetting.MONGODB_PORT;
-        this.host = DbSetting.MONGODB_HOST;
-        this.ip = DbSetting.MONGODB_IP;
-        this.database = DbSetting.DATABASE;
-        this.databaseUsername = DbSetting.DATABASE_USERNAME;
+        this.port = DbSetting.mongodbPort;
+        this.host = DbSetting.mongodbHost;
+        this.ip = DbSetting.mongodbIp;
+        this.database = DbSetting.database;
+        this.databaseUsername = DbSetting.databaseUsername;
     }
 
     public String getDatabaseUsername() {
