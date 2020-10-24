@@ -40,7 +40,7 @@ public class TcpFeedBackRepository {
     public void putItem(TcpFeedbackItem item) {
         feedbackItems.remove(item);
         feedbackItems.offer(item);
-        if (feedbackItems.size() > DbSetting.FEEDBACK_ITEM_SIZE_MAX) {
+        if (feedbackItems.size() > DbSetting.feedbackItemSizeMax) {
             feedbackItems.poll();
         }
 
