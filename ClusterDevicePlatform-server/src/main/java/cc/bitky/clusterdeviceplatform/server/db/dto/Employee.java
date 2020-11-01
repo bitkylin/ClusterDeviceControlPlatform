@@ -1,11 +1,17 @@
-package cc.bitky.clusterdeviceplatform.server.db.bean;
+package cc.bitky.clusterdeviceplatform.server.db.dto;
 
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 
 import java.util.Objects;
 
+@Getter
+@Setter
+@ToString
 @Document(collection = "Employee")
 public class Employee {
 
@@ -27,57 +33,6 @@ public class Employee {
     public Employee(String name, String department) {
         this.name = name;
         this.department = department;
-    }
-
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getDepartment() {
-        return department;
-    }
-
-    public void setDepartment(String department) {
-        this.department = department;
-    }
-
-    public int getGroupId() {
-        return groupId;
-    }
-
-    public void setGroupId(int groupId) {
-        this.groupId = groupId;
-    }
-
-    public int getDeviceId() {
-        return deviceId;
-    }
-
-    public void setDeviceId(int deviceId) {
-        this.deviceId = deviceId;
-    }
-
-    @Override
-    public String toString() {
-        return "Employee{" +
-                "id='" + id + '\'' +
-                ", name='" + name + '\'' +
-                ", department='" + department + '\'' +
-                ", groupId=" + groupId +
-                ", deviceId=" + deviceId +
-                '}';
     }
 
     @Override

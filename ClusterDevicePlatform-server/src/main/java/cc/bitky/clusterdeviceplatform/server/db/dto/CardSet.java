@@ -1,8 +1,13 @@
-package cc.bitky.clusterdeviceplatform.server.db.bean;
+package cc.bitky.clusterdeviceplatform.server.db.dto;
 
+import lombok.Data;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+/**
+ * @author limingliang
+ */
+@Data
 @Document(collection = "CardSet")
 public class CardSet {
 
@@ -16,22 +21,5 @@ public class CardSet {
     }
 
     public CardSet() {
-    }
-
-
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
-
-    public String[] getCardList() {
-        return cardList;
-    }
-
-    public void setCardList(String[] cardList) {
-        this.cardList = cardList;
     }
 }
