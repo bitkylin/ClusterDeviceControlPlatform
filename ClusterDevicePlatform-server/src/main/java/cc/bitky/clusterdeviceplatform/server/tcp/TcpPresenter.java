@@ -39,7 +39,7 @@ public class TcpPresenter {
         this.tcpRepository = tcpRepository;
         tcpRepository.setServer(this);
         this.msgProcessor = MsgProcessor.getInstance();
-        MsgProcessor.setDeviceDefaultDeploy(new DefaultEmployeeInfo(DbSetting.DEFAULT_EMPLOYEE_CARD_NUMBER, DbSetting.DEFAULT_EMPLOYEE_NAME, DbSetting.DEFAULT_EMPLOYEE_DEPARTMENT));
+        MsgProcessor.setDeviceDefaultDeploy(new DefaultEmployeeInfo(DbSetting.defaultEmployeeCardNumber, DbSetting.defaultEmployeeName, DbSetting.defaultEmployeeDepartment));
     }
 
     /**

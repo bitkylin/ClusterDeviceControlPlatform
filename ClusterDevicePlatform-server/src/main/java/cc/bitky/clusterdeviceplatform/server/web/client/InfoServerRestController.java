@@ -24,13 +24,13 @@ public class InfoServerRestController {
 
     @GetMapping("/database/ip")
     public String obtainDatabaseIP() throws UnknownHostException {
-        InetAddress address = InetAddress.getByName(DbSetting.MONGODB_HOST);
+        InetAddress address = InetAddress.getByName(DbSetting.mongodbHost);
         return address.getHostAddress();
     }
 
     @GetMapping("/database/auth")
     public DatabaseAuth obtainDatabaseAuth() {
-        return new DatabaseAuth(DbSetting.DATABASE_USERNAME, DbSetting.DATABASE_PASSWORD);
+        return new DatabaseAuth(DbSetting.databaseUsername, DbSetting.databasePassword);
     }
 
     /**
