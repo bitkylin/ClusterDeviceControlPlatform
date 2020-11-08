@@ -1,4 +1,4 @@
-package cc.bitky.clusterdeviceplatform.server.db.bean.routineinfo;
+package cc.bitky.clusterdeviceplatform.server.db.dto.routineinfo;
 
 import java.util.Date;
 

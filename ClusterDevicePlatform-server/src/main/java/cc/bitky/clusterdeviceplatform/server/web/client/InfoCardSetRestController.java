@@ -105,7 +105,7 @@ public class InfoCardSetRestController {
      */
     @GetMapping(path = "/freecard/deploy/{groupId}/{deviceId}")
     public String deployFreeCards(@PathVariable int groupId, @PathVariable int deviceId) {
-        String[] cardSet = queryCards(Free).orElse(new String[]{DbSetting.DEFAULT_EMPLOYEE_CARD_NUMBER});
+        String[] cardSet = queryCards(Free).orElse(new String[]{DbSetting.defaultEmployeeCardNumber});
         if (sendCardSetGrouped(groupId, deviceId, cardSet, Free)) {
             return "success";
         } else {
@@ -120,7 +120,7 @@ public class InfoCardSetRestController {
      */
     @GetMapping(path = "/confirmcard/deploy/{groupId}")
     public String deployConfirmCard(@PathVariable int groupId) {
-        String[] cardSet = queryCards(CardType.Confirm).orElse(new String[]{DbSetting.DEFAULT_EMPLOYEE_CARD_NUMBER});
+        String[] cardSet = queryCards(CardType.Confirm).orElse(new String[]{DbSetting.defaultEmployeeCardNumber});
         if (sendCardSetGrouped(groupId, 0, cardSet, CardType.Confirm)) {
             return "success";
         } else {
@@ -135,7 +135,7 @@ public class InfoCardSetRestController {
      */
     @GetMapping(path = "/clearcard/deploy/{groupId}")
     public String deployClearCards(@PathVariable int groupId) {
-        String[] cardSet = queryCards(CardType.Clear).orElse(new String[]{DbSetting.DEFAULT_EMPLOYEE_CARD_NUMBER});
+        String[] cardSet = queryCards(CardType.Clear).orElse(new String[]{DbSetting.defaultEmployeeCardNumber});
         if (sendCardSetGrouped(groupId, 0, cardSet, CardType.Clear)) {
             return "success";
         } else {
