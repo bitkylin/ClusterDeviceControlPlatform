@@ -4,7 +4,7 @@ import cc.bitky.clusterdeviceplatform.messageutils.config.ChargeStatus;
 import cc.bitky.clusterdeviceplatform.messageutils.msg.statusreply.MsgReplyDeviceStatus;
 import cc.bitky.clusterdeviceplatform.server.config.ServerSetting;
 import cc.bitky.clusterdeviceplatform.server.config.WebSetting;
-import cc.bitky.clusterdeviceplatform.server.db.bean.Device;
+import cc.bitky.clusterdeviceplatform.server.db.dto.Device;
 import cc.bitky.clusterdeviceplatform.server.db.repository.DeviceRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;

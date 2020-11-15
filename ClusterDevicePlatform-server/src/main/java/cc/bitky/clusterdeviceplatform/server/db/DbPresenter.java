@@ -4,8 +4,8 @@ import cc.bitky.clusterdeviceplatform.messageutils.config.ChargeStatus;
 import cc.bitky.clusterdeviceplatform.messageutils.config.WorkStatus;
 import cc.bitky.clusterdeviceplatform.messageutils.msg.statusreply.MsgReplyDeviceStatus;
 import cc.bitky.clusterdeviceplatform.server.config.ServerSetting;
-import cc.bitky.clusterdeviceplatform.server.db.bean.CardSet;
-import cc.bitky.clusterdeviceplatform.server.db.bean.Device;
+import cc.bitky.clusterdeviceplatform.server.db.dto.CardSet;
+import cc.bitky.clusterdeviceplatform.server.db.dto.Device;
 import cc.bitky.clusterdeviceplatform.server.db.operate.CardSetOperate;
 import cc.bitky.clusterdeviceplatform.server.db.operate.DbRoutineOperate;
 import cc.bitky.clusterdeviceplatform.server.db.operate.DeviceOperate;
@@ -113,21 +113,21 @@ public class DbPresenter {
      */
     private void statisticUpdateMsgCount(MsgReplyDeviceStatus msgStatus, MessageType type) {
         switch (type) {
-            case all:
+            case ALL:
                 if (msgStatus.getType() == MsgReplyDeviceStatus.Type.CHARGE) {
                     ProcessedMsgRepo.MSG_CHARGE_COUNT.incrementAndGet();
                 } else {
                     ProcessedMsgRepo.MSG_WORK_COUNT.incrementAndGet();
                 }
                 break;
-            case fixed:
+            case FIXED:
                 if (msgStatus.getType() == MsgReplyDeviceStatus.Type.CHARGE) {
                     ProcessedMsgRepo.MSG_CHARGE_COUNT_FIXED.incrementAndGet();
                 } else {
                     ProcessedMsgRepo.MSG_WORK_COUNT_FIXED.incrementAndGet();
                 }
                 break;
-            case variable:
+            case VARIABLE:
                 if (msgStatus.getType() == MsgReplyDeviceStatus.Type.CHARGE) {
                     ProcessedMsgRepo.MSG_CHARGE_COUNT_VARIABLE.incrementAndGet();
                 } else {
@@ -146,7 +146,7 @@ public class DbPresenter {
      */
     public Device handleMsgDeviceStatus(MsgReplyDeviceStatus msgStatus) {
         // 帧数统计
-        statisticUpdateMsgCount(msgStatus, MessageType.all);
+        statisticUpdateMsgCount(msgStatus, MessageType.ALL);
         long l1 = System.currentTimeMillis();
         //比较服务器缓存，是否状态更新，未更新直接 return
         StatusItem status = obtainStatusByCache(msgStatus.getGroupId(), msgStatus.getDeviceId(), msgStatus.getType());
@@ -154,7 +154,7 @@ public class DbPresenter {
             if (ServerSetting.DEBUG) {
                 log.info("设备「" + msgStatus.getGroupId() + ", " + msgStatus.getDeviceId() + "」『"
                         + status.getStatus() + "->" + msgStatus.getStatus() + "』: " + msgStatus.getType().getDetail() + "无更新");
-                statisticUpdateMsgCount(msgStatus, MessageType.fixed);
+                statisticUpdateMsgCount(msgStatus, MessageType.FIXED);
             }
             return null;
         } else if (status.getTime() > msgStatus.getTime()) {
@@ -165,7 +165,7 @@ public class DbPresenter {
                 log.info("消息时间:" + LocalDateTime.ofInstant(msgInstant, ZoneId.systemDefault()).toString());
                 log.info("设备「" + msgStatus.getGroupId() + ", " + msgStatus.getDeviceId() + "」『"
                         + status.getStatus() + "->" + msgStatus.getStatus() + "』: " + msgStatus.getType().getDetail() + "已过期");
-                statisticUpdateMsgCount(msgStatus, MessageType.fixed);
+                statisticUpdateMsgCount(msgStatus, MessageType.FIXED);
             }
             return null;
         } else {
@@ -187,12 +187,12 @@ public class DbPresenter {
             device = deviceOperate.handleWorkStatus(msgStatus);
         }
         if (device == null || device.getChargeStatus() == ChargeStatus.FRAME_EXCEPTION) {
-            statisticUpdateMsgCount(msgStatus, MessageType.fixed);
+            statisticUpdateMsgCount(msgStatus, MessageType.FIXED);
             return null;
         }
 
         // 设备状态已改变时，更新统计信息
-        statisticUpdateMsgCount(msgStatus, MessageType.variable);
+        statisticUpdateMsgCount(msgStatus, MessageType.VARIABLE);
 
         //设备状态已改变时，继续更新考勤信息
         long l2 = System.currentTimeMillis();
@@ -213,14 +213,14 @@ public class DbPresenter {
         /**
          * 类别总数
          */
-        all,
+        ALL,
         /**
          * 类别未更改
          */
-        fixed,
+        FIXED,
         /**
          * 类别已更改
          */
-        variable
+        VARIABLE
     }
 }

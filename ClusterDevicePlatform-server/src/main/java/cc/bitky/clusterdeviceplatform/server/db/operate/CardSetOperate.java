@@ -3,7 +3,7 @@ package cc.bitky.clusterdeviceplatform.server.db.operate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
-import cc.bitky.clusterdeviceplatform.server.db.bean.CardSet;
+import cc.bitky.clusterdeviceplatform.server.db.dto.CardSet;
 import cc.bitky.clusterdeviceplatform.server.db.repository.CardSetRepository;
 import reactor.core.publisher.Mono;
 
