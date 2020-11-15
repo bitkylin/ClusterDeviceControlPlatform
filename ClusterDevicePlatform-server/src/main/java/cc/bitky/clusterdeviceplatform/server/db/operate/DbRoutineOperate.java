@@ -1,5 +1,9 @@
 package cc.bitky.clusterdeviceplatform.server.db.operate;
 
+import cc.bitky.clusterdeviceplatform.messageutils.msg.statusreply.MsgReplyDeviceStatus;
+import cc.bitky.clusterdeviceplatform.server.db.dto.routineinfo.HistoryInfo;
+import cc.bitky.clusterdeviceplatform.server.db.dto.routineinfo.LampStatusHistory;
+import cc.bitky.clusterdeviceplatform.server.db.repository.RoutineTableRepository;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoOperations;
@@ -7,11 +11,6 @@ import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Repository;
-
-import cc.bitky.clusterdeviceplatform.messageutils.msg.statusreply.MsgReplyDeviceStatus;
-import cc.bitky.clusterdeviceplatform.server.db.bean.routineinfo.HistoryInfo;
-import cc.bitky.clusterdeviceplatform.server.db.bean.routineinfo.LampStatusHistory;
-import cc.bitky.clusterdeviceplatform.server.db.repository.RoutineTableRepository;
 
 @Repository
 public class DbRoutineOperate {
@@ -48,21 +47,5 @@ public class DbRoutineOperate {
                 return;
         }
         operations.upsert(query, update, LampStatusHistory.class);
-//        Optional<LampStatusHistory> optional = repository.findById(employeeObjectId);
-//        LampStatusHistory document = optional.orElseGet(() -> {
-//            LampStatusHistory temp = new LampStatusHistory();
-//            temp.setId(employeeObjectId);
-//            return temp;
-//        });
-//        switch (type) {
-//            case WORK:
-//                document.getWorkStatus().add(new HistoryInfo(chargeStatus.getTime(), chargeStatus.getStatus()));
-//                break;
-//            case CHARGE:
-//                document.getChargeStatus().add(new HistoryInfo(chargeStatus.getTime(), chargeStatus.getStatus()));
-//                break;
-//            default:
-//        }
-//        repository.save(document);
     }
 }

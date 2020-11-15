@@ -6,7 +6,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 import java.util.Optional;
 
-import cc.bitky.clusterdeviceplatform.server.db.bean.Employee;
+import cc.bitky.clusterdeviceplatform.server.db.dto.Employee;
 import cc.bitky.clusterdeviceplatform.server.db.repository.EmployeeRepository;
 
 @Repository
