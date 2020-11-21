@@ -4,7 +4,7 @@ import org.springframework.data.mongodb.repository.MongoRepository;
 
 import java.util.List;
 
-import cc.bitky.clusterdeviceplatform.server.db.bean.Device;
+import cc.bitky.clusterdeviceplatform.server.db.dto.Device;
 
 
 public interface DeviceRepository extends MongoRepository<Device, String> {
