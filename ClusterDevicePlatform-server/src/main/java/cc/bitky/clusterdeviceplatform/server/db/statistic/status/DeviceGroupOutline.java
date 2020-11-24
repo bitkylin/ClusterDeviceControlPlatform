@@ -1,10 +1,13 @@
 package cc.bitky.clusterdeviceplatform.server.db.statistic.status;
 
+import lombok.Getter;
+
 import java.util.List;
 
 /**
  * 需统计的通道消息汇总
  */
+@Getter
 public class DeviceGroupOutline {
     /**
      * 设备组集合
@@ -37,21 +40,5 @@ public class DeviceGroupOutline {
     public void setAlarmLimit(int normalLimit, int exceptionLimit) {
         this.normalLimit = normalLimit;
         this.exceptionLimit = exceptionLimit;
-    }
-
-    public List<DeviceGroupItem> getDeviceGroupItems() {
-        return deviceGroupItems;
-    }
-
-    public int getDeviceGroupCount() {
-        return deviceGroupCount;
-    }
-
-    public int getNormalLimit() {
-        return normalLimit;
-    }
-
-    public int getExceptionLimit() {
-        return exceptionLimit;
     }
 }
