@@ -21,7 +21,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.concurrent.*;
+import java.util.concurrent.LinkedBlockingDeque;
+import java.util.concurrent.ScheduledFuture;
+import java.util.concurrent.TimeUnit;
 
 /**
  * TCP 通道的中介者
@@ -29,7 +31,7 @@ import java.util.concurrent.*;
 @Slf4j
 @Service
 public class TcpPresenter {
-    private static final ScheduledExecutorService executorService = Executors.newScheduledThreadPool(DeviceSetting.MAX_GROUP_ID);
+
     private final TcpRepository tcpRepository;
     private final MsgProcessor msgProcessor;
     private ServerTcpProcessor server;
