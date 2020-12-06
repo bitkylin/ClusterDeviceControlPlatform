@@ -1,10 +1,13 @@
 package cc.bitky.clusterdeviceplatform.server.db.statistic.status;
 
+import lombok.Getter;
+
 import java.util.List;
 
 /**
  * TCP模块中单个 Channel 的当前负载量
  */
+@Getter
 public class DeviceGroupItem {
     /**
      * 单组的设备数量
@@ -49,37 +52,5 @@ public class DeviceGroupItem {
         this.chargingCount = chargingCount;
         this.fullCount = fullCount;
         this.uninitCount = uninitCount;
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public List<DeviceStatusItem> getItems() {
-        return items;
-    }
-
-    public int getMsgCount() {
-        return msgCount;
-    }
-
-    public int getDeviceCount() {
-        return deviceCount;
-    }
-
-    public int getUsingCount() {
-        return usingCount;
-    }
-
-    public int getChargingCount() {
-        return chargingCount;
-    }
-
-    public int getFullCount() {
-        return fullCount;
-    }
-
-    public int getUninitCount() {
-        return uninitCount;
     }
 }

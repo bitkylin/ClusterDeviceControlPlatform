@@ -1,23 +1,26 @@
 package cc.bitky.clusterdeviceplatform.server.db.statistic.pressure;
 
+import cc.bitky.clusterdeviceplatform.server.config.DeviceSetting;
+import cc.bitky.clusterdeviceplatform.server.server.demonstrate.msgprocess.MsgCountRandom;
+import cc.bitky.clusterdeviceplatform.server.tcp.statistic.channel.ChannelItem;
+import lombok.Getter;
+
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
+import java.util.concurrent.ThreadLocalRandom;
 
-import cc.bitky.clusterdeviceplatform.server.config.DeviceSetting;
-import cc.bitky.clusterdeviceplatform.server.tcp.statistic.channel.ChannelItem;
-import cc.bitky.clusterdeviceplatform.server.server.demonstrate.msgprocess.MsgCountRandom;
-
+@Getter
 public class GroupCacheItem {
+
     private static MsgCountRandom countRandom;
     /**
      * 通道对象集合
      */
-    private List<ChannelItem> channelItems;
+    private final List<ChannelItem> channelItems;
     /**
      * 消息数量分类统计
      */
-    private MsgCount msgCount;
+    private final MsgCount msgCount;
     /**
      * 负载正常的界限
      */
@@ -38,22 +41,14 @@ public class GroupCacheItem {
      * @return 随机生成的该对象，用于 Web 演示模式
      */
     public static GroupCacheItem randomInstance() {
-        Random random = new Random();
         List<ChannelItem> items = new ArrayList<>(DeviceSetting.MAX_GROUP_ID);
         for (int i = 1; i <= DeviceSetting.MAX_GROUP_ID; i++) {
-            items.add(new ChannelItem(i, true, random.nextInt(600)));
+            items.add(new ChannelItem(i, true, ThreadLocalRandom.current().nextInt(600)));
         }
         countRandom = new MsgCountRandom(countRandom);
         return new GroupCacheItem(items, countRandom);
     }
 
-    public MsgCount getMsgCount() {
-        return msgCount;
-    }
-
-    public List<ChannelItem> getChannelItems() {
-        return channelItems;
-    }
 
     /**
      * 设置前端界面报警的限定
@@ -64,13 +59,5 @@ public class GroupCacheItem {
     public void setAlarmLimit(int normalLimit, int exceptionLimit) {
         this.normalLimit = normalLimit;
         this.exceptionLimit = exceptionLimit;
-    }
-
-    public int getNormalLimit() {
-        return normalLimit;
-    }
-
-    public int getExceptionLimit() {
-        return exceptionLimit;
     }
 }

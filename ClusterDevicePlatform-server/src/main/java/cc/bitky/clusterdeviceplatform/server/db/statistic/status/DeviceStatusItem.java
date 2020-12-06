@@ -2,10 +2,12 @@ package cc.bitky.clusterdeviceplatform.server.db.statistic.status;
 
 import cc.bitky.clusterdeviceplatform.messageutils.config.ChargeStatus;
 import cc.bitky.clusterdeviceplatform.messageutils.config.WorkStatus;
+import lombok.Getter;
 
 /**
  * TCP模块中单个 Channel 的当前负载量
  */
+@Getter
 public class DeviceStatusItem {
     /**
      * 通道的 ID
@@ -34,25 +36,5 @@ public class DeviceStatusItem {
         this.chargeStatusDescription = ChargeStatus.obtainDescription(chargeStatus);
         this.workStatus = workStatus;
         this.workStatusDescription = WorkStatus.obtainDescription(workStatus);
-    }
-
-    public int getChargeStatus() {
-        return chargeStatus;
-    }
-
-    public String getChargeStatusDescription() {
-        return chargeStatusDescription;
-    }
-
-    public int getWorkStatus() {
-        return workStatus;
-    }
-
-    public String getWorkStatusDescription() {
-        return workStatusDescription;
-    }
-
-    public int getId() {
-        return id;
     }
 }
