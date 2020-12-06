@@ -14,7 +14,7 @@ import java.util.stream.Collectors;
 import cc.bitky.clusterdeviceplatform.messageutils.define.base.BaseMsg;
 import cc.bitky.clusterdeviceplatform.messageutils.msg.statusreply.MsgReplyDeviceStatus;
 import cc.bitky.clusterdeviceplatform.messageutils.msg.statusreply.MsgReplyNormal;
-import cc.bitky.clusterdeviceplatform.server.db.bean.Employee;
+import cc.bitky.clusterdeviceplatform.server.db.dto.Employee;
 import cc.bitky.clusterdeviceplatform.server.server.repo.bean.DeviceItem;
 import cc.bitky.clusterdeviceplatform.server.server.repo.bean.StatusItem;
 import cc.bitky.clusterdeviceplatform.server.server.utils.DeviceOutBoundDetect;

@@ -2,7 +2,7 @@ package cc.bitky.clusterdeviceplatform.server;
 
 import java.util.concurrent.atomic.AtomicReference;
 
-import cc.bitky.clusterdeviceplatform.server.db.bean.Employee;
+import cc.bitky.clusterdeviceplatform.server.db.dto.Employee;
 
 //@RunWith(SpringRunner.class)
 //@SpringBootTest

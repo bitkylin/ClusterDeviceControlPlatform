@@ -8,7 +8,7 @@ import java.util.concurrent.atomic.AtomicReference;
 
 import cc.bitky.clusterdeviceplatform.messageutils.define.base.BaseMsg;
 import cc.bitky.clusterdeviceplatform.messageutils.msg.statusreply.MsgReplyNormal;
-import cc.bitky.clusterdeviceplatform.server.db.bean.Employee;
+import cc.bitky.clusterdeviceplatform.server.db.dto.Employee;
 
 public class DeviceItem {
 
