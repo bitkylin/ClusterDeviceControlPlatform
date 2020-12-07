@@ -39,8 +39,8 @@ import cc.bitky.clusterdeviceplatform.messageutils.msgcodec.device.MsgCodecEmplo
 import cc.bitky.clusterdeviceplatform.server.config.CommSetting;
 import cc.bitky.clusterdeviceplatform.server.config.DeviceSetting;
 import cc.bitky.clusterdeviceplatform.server.config.WebSetting;
-import cc.bitky.clusterdeviceplatform.server.db.bean.Device;
-import cc.bitky.clusterdeviceplatform.server.db.bean.Employee;
+import cc.bitky.clusterdeviceplatform.server.db.dto.Device;
+import cc.bitky.clusterdeviceplatform.server.db.dto.Employee;
 import cc.bitky.clusterdeviceplatform.server.server.ServerWebProcessor;
 import cc.bitky.clusterdeviceplatform.server.server.utils.DeviceOutBoundDetect;
 import cc.bitky.clusterdeviceplatform.server.pojo.client.QueueDevice;

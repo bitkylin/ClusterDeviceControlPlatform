@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
-import cc.bitky.clusterdeviceplatform.server.db.bean.Device;
+import cc.bitky.clusterdeviceplatform.server.db.dto.Device;
 import cc.bitky.clusterdeviceplatform.server.server.ServerWebProcessor;
 
 @RestController
