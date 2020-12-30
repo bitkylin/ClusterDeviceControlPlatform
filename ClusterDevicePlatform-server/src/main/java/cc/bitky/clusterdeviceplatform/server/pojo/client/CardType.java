@@ -4,17 +4,17 @@ public enum CardType {
     /**
      * 万能卡
      */
-    Free,
+    FREE,
     /**
      * 确认卡
      */
-    Confirm,
+    CONFIRM,
     /**
      * 清除卡
      */
-    Clear,
+    CLEAR,
     /**
      * 空
      */
-    None
+    NONE
 }

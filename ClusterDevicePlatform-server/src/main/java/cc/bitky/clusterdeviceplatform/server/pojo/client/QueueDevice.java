@@ -39,7 +39,7 @@ public class QueueDevice {
     /**
      * 卡号集合的类型
      */
-    private CardType cardSetType = CardType.None;
+    private CardType cardSetType = CardType.NONE;
     public QueueDevice(int groupId, int deviceId, boolean name, boolean department, boolean card, boolean enabled, boolean remainChargeTime) {
         this(groupId, deviceId);
         this.name = name;
