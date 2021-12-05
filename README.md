@@ -180,7 +180,7 @@ java -jar -Dfile.encoding=UTF-8 clusterdeviceplatform-demo-1.0.0.jar
 
 ### 1. 我的主页
 
-名称|二级域名|原始地址
+名称|域名|原始地址
 ---|---|---
 主页|http://bitky.cc|https://bitkylin.github.io
 GitHub|http://github.bitky.cc|https://github.com/bitkylin
