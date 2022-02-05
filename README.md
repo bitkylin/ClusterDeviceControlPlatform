@@ -108,15 +108,15 @@ java -jar -Dfile.encoding=UTF-8 clusterdeviceplatform-demo-1.0.0.jar
 
 ### 服务器架构描述
 
-- 以 Spring Boot 2.0 为基础框架，集成 Netty、Spring Data、Spring MVC 等框架搭建服务器。
+1. 基于 Spring Boot 实现业务处理，基于 Netty 实现与设备的通信，提供 Rest API 完成系统运行监控、设备管理等。
 
-- 采用 Netty 开发 TCP 服务器，与至少 1W 台设备进行通信，处理能力 2000 帧/秒以上，已有效解决粘包、半包问题。遵循 CAN 协议自定义帧格式，实现丰富的业务功能。
+2. 服务端与至少 1W 台设备进行通信，基于 Netty 实现 TCP 通信、路由转发、设备抽象。
 
-- 采用 MongoDB，对设备集群的状态信息进行持久化。
+3. 为提升系统的吞吐，借鉴 Kafka 的 IO 模型及 Netty 的 IO 模型，结合内存缓存、线程池、发布订阅模式，实现应用实例整体 TPS 高于 2W / s。 
 
-- 采用 Spring MVC，为 .NET 及 Web 客户端提供 RESTFul API 风格的 HTTP 服务。
+4. 服务端与充电柜集群的业务数量众多，所需通信帧的格式、执行策略、处理方式各异，结合责任链模式、策略模式、模板方法模式、命令模式等实现了可插拔的插件式业务接入方案，降低业务处理与底层架构的耦合，新增业务功能及配套的通信帧时成本低、可维护性高。
 
-- 在服务器程序内部采用多种数据结构对数据进行缓存处理，并大量采用线程池等，极大提升数据库的使用效率，将服务器对帧的处理效率提升 2 个数量级以上。
+5. 单台设备性能弱、可靠性差，但设备数量极多，基于时间轮定时器设计了拥塞控制、超时重发、心跳监测方案，在服务端大规模下发数据帧时，保证系统的一致性和稳定性。
 
 ### Netty 服务器设计方案
 
@@ -156,7 +156,7 @@ java -jar -Dfile.encoding=UTF-8 clusterdeviceplatform-demo-1.0.0.jar
 
 > MIT License
 > 
-> Copyright (c) 2018 123lml123
+> Copyright (c) 2022 123lml123
 > 
 > Permission is hereby granted, free of charge, to any person obtaining a copy
 > of this software and associated documentation files (the "Software"), to deal
