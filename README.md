@@ -57,6 +57,8 @@ java -jar -Dfile.encoding=UTF-8 clusterdeviceplatform-demo-1.0.0.jar
 
 ## 项目图示
 
+特别提示：如果无法查看后面的图片，可能需要科学上网。
+
 ### 1. 基于 Vue.js 的 Web 前端「SPA」单页应用程序
 
 **Web 登录页面**
